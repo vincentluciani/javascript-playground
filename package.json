@@ -1,0 +1,25 @@
+{
+  "name": "javascript-playground",
+  "version": "1.0.0",
+  "description": "node.js enabling  the test of javascript concepts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vincentluciani/javascript-playground.git"
+  },
+  "keywords": [
+    "javascript"
+  ],
+  "author": "Vincent Luciani",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vincentluciani/javascript-playground/issues"
+  },
+  "homepage": "https://github.com/vincentluciani/javascript-playground#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
