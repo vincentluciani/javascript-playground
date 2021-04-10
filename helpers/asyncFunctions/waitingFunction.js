@@ -5,9 +5,8 @@ exports.giveTextAfterWaiting = async (text) => {
                 () => {
                     console.log("waiting finished")
                     resolve(text);
-
                 },
-                3000
+                1000
             );
         }
     );

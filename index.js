@@ -10,7 +10,8 @@ const server = http.createServer((req, res) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'text/plain');
     console.log("request received")
-    answerProvider.giveAnswer().then((value) => { res.end(value); console.log("request received") });
+    answerProvider.giveAnswer().then((value) => { res.end(value); console.log("request received") })
+
     console.log("next action")
 });
 

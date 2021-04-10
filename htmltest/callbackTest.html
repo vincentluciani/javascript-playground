@@ -1,0 +1,35 @@
+<html>
+
+<body>
+    <div id="test"></div>
+    <script>
+        /* called function */
+        function giveTextAfterWaiting(text, callback) {
+            setTimeout(
+                function () {
+                    if (text == null) {
+                        callback("no input provided", null);
+                    }
+                    console.log("waiting finished");
+                    callback(null, text);
+                },
+                1000
+            );
+        }
+
+        /* calling function */
+        const dataFromFunction = giveTextAfterWaiting("test",
+            function (err, data) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    document.getElementById("test").innerHTML = data;
+                }
+            }
+        );
+    </script>
+
+</body>
+
+
+</html>
