@@ -3,7 +3,7 @@ const dataFunction = require('./asyncFunctions/getDataFromFileAsync');
 const fs = require('fs');
 const fsPromises = require('fs').promises
 
-const { Worker, parentPort } = require('worker_threads');
+const { Worker, parentPort, workerData } = require('worker_threads');
 
 const testData = './helpers/data/testData.txt';
 const dataHandler = require('./asyncFunctions/getDataFromFile');
@@ -12,11 +12,15 @@ exports.giveAnswer = async () => {
     let current = new Date();
 
     console.log("Instantiating a worker");
-    const myWorker = new Worker('./helpers/workers/my-worker.js');
+    const myWorker = new Worker('./helpers/workers/my-worker.js', {
+        workerData: { "worker_input": "test-data-for-worker" }
+    });
 
     console.log("waiting worker launched " + current.toString());
 
     myWorker.on('message', (msg) => console.log("message from worker:" + msg));
+
+    myWorker.postMessage('message from the main thread');
 
     // Following 3 actions are ran in parallel
     let result_part_1 = waitingFunction.giveTextAfterWaiting("hello");
