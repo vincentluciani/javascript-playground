@@ -1,11 +1,22 @@
 const waitingFunction = require('./asyncFunctions/waitingFunction');
+const dataFunction = require('./asyncFunctions/getDataFromFileAsync');
 const fs = require('fs');
+const fsPromises = require('fs').promises
+
+const { Worker, parentPort } = require('worker_threads');
+
 const testData = './helpers/data/testData.txt';
+const dataHandler = require('./asyncFunctions/getDataFromFile');
 
 exports.giveAnswer = async () => {
     let current = new Date();
 
-    console.log("waiting function launched " + current.toString());
+    console.log("Instantiating a worker");
+    const myWorker = new Worker('./helpers/workers/my-worker.js');
+
+    console.log("waiting worker launched " + current.toString());
+
+    myWorker.on('message', (msg) => console.log("message from worker:" + msg));
 
     // Following 3 actions are ran in parallel
     let result_part_1 = waitingFunction.giveTextAfterWaiting("hello");
@@ -17,15 +28,12 @@ exports.giveAnswer = async () => {
     let result_part_4 = await waitingFunction.giveTextAfterWaiting("luciani");
     values.push(result_part_4);
 
-    /* Calling a function that has callback */
-    const dataFromFile = getDataFromFile((err, data) => {
-        if (err) {
-            console.log(err);
-        } else {
-            values.push(data);
-        }
-    })
-
+    try {
+        const dataFromFile = await dataFunction.getDataFromFileAsync();
+        values.push(dataFromFile);
+    } catch (error) {
+        values.push("error reading file")
+    }
 
     if (values.length > 0) {
         current = new Date();
@@ -36,17 +44,4 @@ exports.giveAnswer = async () => {
                reject('not working');
            }*/
 
-    function getDataFromFile(callback) {
-        /* read a file asynchronously */
-        fs.readFile(testData, 'utf8', (err, data) => {
-            if (err) {
-                callback(err, null); /* null because no data to return */
-            }
-            else {
-                callback(null, data); /* null because no error */
-            }
-
-
-        });
-    }
 }

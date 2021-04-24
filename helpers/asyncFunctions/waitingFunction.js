@@ -4,7 +4,8 @@ exports.giveTextAfterWaiting = async (text) => {
             setTimeout(
                 () => {
                     console.log("waiting finished")
-                    resolve(text);
+                    let finalText = "(" + text + ")"
+                    resolve(finalText);
                 },
                 1000
             );
