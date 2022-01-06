@@ -56,7 +56,7 @@ var resetElements = function(){
     for (var i=0; i< testElements.length; i++){
         testElements[i].style.display =  'block';
         var currentDiv = testElements[i];
-        var progressClasses = currentDiv.getElementsByClassName("progress");
+        var progressClasses = currentDiv.getElementsByClassName("number-of-completion");
         var progressDiv = progressClasses[0];
         refreshProgress(currentDiv);
         
@@ -69,9 +69,9 @@ var resetElements = function(){
 };
 
 var refreshProgress = function(currentDiv){
-    var newCompletion = currentDiv.getElementsByClassName("progress")[0];
-    var newCompletionPercentage = newCompletion.value * 100 / currentDiv.getAttribute("target");
-    currentDiv.getElementsByClassName("completion")[0].value = newCompletionPercentage;
+    var newCompletion = currentDiv.getElementsByClassName("number-of-completion")[0];
+    var newCompletionPercentage = Math.round(newCompletion.value * 100 / parseInt(currentDiv.getAttribute("target")));
+    currentDiv.getElementsByClassName("percentage-completion")[0].value = newCompletionPercentage;
 
     if (newCompletionPercentage>=100){
         currentDiv.style.boxShadow="rgb(0 255 7 / 20%) -1px 2px 20px 12px";
@@ -128,14 +128,14 @@ var addElement = function(elementToAdd){
     const progressInput = document.createElement("input");
     const percentageCompletionInput = document.createElement("input");
 
-    var percentageCompletion = elementToAdd.numberOfCompletions * 100 / elementToAdd.target ;
+    var percentageCompletion = Math.round(elementToAdd.numberOfCompletions * 100 / elementToAdd.target) ;
     
     progressInput.setAttribute("type","number");
-    progressInput.setAttribute("class","progress");
+    progressInput.setAttribute("class","number-of-completion");
     progressInput.setAttribute("value",elementToAdd.numberOfCompletions);
 
     percentageCompletionInput.setAttribute("type","number");
-    percentageCompletionInput.setAttribute("class","completion");
+    percentageCompletionInput.setAttribute("class","percentage-completion");
     percentageCompletionInput.setAttribute("value",percentageCompletion);
 
     dateDiv.appendChild(dateText);
@@ -162,7 +162,7 @@ var addElementFromForm = function(){
     elementToAdd.id = Date.now();
     elementToAdd.habitId = elementToAdd.id * 10;
     elementToAdd.habitDescription = document.getElementById('new-description').value;
-    elementToAdd.target = document.getElementById('new-target').value;
+    elementToAdd.target = parseInt(document.getElementById('new-target').value);
     elementToAdd.progressDate = currentDate;
     elementToAdd.numberOfCompletions = 0;
     elementToAdd.isNewHabit = true;
@@ -212,12 +212,12 @@ var extractElementsForUpdateNoneLoggedIn = function(testElements){
 var readElement = function(elementToRead){
     var outputJson = {};
     outputJson.id = elementToRead.getAttribute("id");
-    outputJson.targetId = elementToRead.getAttribute("habitId");
+    outputJson.habitId = elementToRead.getAttribute("habitId");
     outputJson.habitDescription = elementToRead.getAttribute("habitDescription");
-    outputJson.target = elementToRead.getAttribute("target");
+    outputJson.target = parseInt(elementToRead.getAttribute("target"));
     outputJson.progressDate = elementToRead.getAttribute("progressDate");
 
-    outputJson.numberOfCompletions = elementToRead.getElementsByClassName("completion")[0].value;
+    outputJson.numberOfCompletions = parseInt(elementToRead.getElementsByClassName("number-of-completion")[0].value);
 
     return outputJson;
 };
