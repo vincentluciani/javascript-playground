@@ -2,18 +2,19 @@
     <header>
         <style>
             .box{
-                padding: 10px;
-                box-shadow: -1px 2px 20px 0px rgb(0 0 0 / 20%);
+                padding: 10px;   
                 border-radius: 12px;
                 margin:10px;
             }
             .box.new-habit{
                 width:172px;
                 height:180px;
+                box-shadow: -1px 2px 20px 0px rgb(0 0 0 / 20%);
             }
             .box.habit-update{
                 width:172px;
                 height:180px;
+                box-shadow: -1px 2px 20px 0px rgb(255 124 124);
             }
             .habits-container,.filter-bar{
                 display: flex;
@@ -31,42 +32,9 @@
             <label>Habit:</label><input id="text-filter" type="text" /><label>   Date:</label><input id="date-filter" type="date" />
         </div>
         <div class="main-action-bar">
-            <button class="wide">Update</button>
+            <button id="update-button" class="wide" onClick="extractElementsForUpdate();">Update</button>
         </div>
         <div id="habits-container" class="habits-container">
-            <div class="box habit-update" date="2022-01-05" title="contraction during meeting" target=4>
-                <div>05/01/2022</div> (today)<br>
-                <div>contraction during meeting</div><br>
-                <label>Current Progress:</label>
-                <input type="number" class="progress"/><br><br>
-                <label>Percentage Completion:</label>
-                <input type="number" class="completion"/><br><br>
-            </div>
-            <div class="box habit-update" date="2022-01-05" title="focus moment" target=4>
-                <div>05/01/2022</div> (today)<br>
-                <div>focus moment</div><br>
-                <label>Current Progress:</label>
-                <input type="number" class="progress"/><br><br>
-                <label>Percentage Completion:</label>
-                <input type="number" class="completion"/><br><br>
-            </div>
-            <div class="box habit-update" date="2022-01-04" title="contraction during meeting" target=4>
-                <div>04/01/2022</div><br>
-                <div>contraction during meeting</div><br>
-                <label>Current Progress:</label>
-                <input type="number" class="progress"/><br><br>
-                <label>Percentage Completion:</label>
-                <input type="number" class="completion"/><br><br>
-            </div>
-            <div class="box habit-update" date="2022-01-04" title="focus moment" target=4>
-                <div>04/01/2022</div><br>
-                <div>focus moment</div><br>
-                <label>Current Progress:</label>
-                <input type="number" class="progress" /><br><br>
-                <label>Percentage Completion:</label>
-                <input type="number" class="completion"/><br><br>
-                
-            </div>
             <div class="box new-habit">
                 <div>New Habit</div><br>
                 <label>Description:</label>
