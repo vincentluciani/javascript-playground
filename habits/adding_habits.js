@@ -1,5 +1,5 @@
 
-var loggedIn = true;
+var loggedIn = false;
 var maxForNonLoggedIn = 40;
 
 var currentDateTime = new Date();
@@ -19,18 +19,25 @@ var getHabitProgressWhenLoggedIn = function(){
         method: "GET",
         url: "http://localhost:5000/get-habit-progress"
     };
-    var apiCaller = new APICaller(APIcallParameters,ingestElements);
+    var apiCaller = new APICaller(APIcallParameters,ingestElements,getHabitProgressWhenNotLoggedIn);
 
     apiCaller.executeCall(APIcallParameters.url, {});
 
 };
 
 var getHabitProgressWhenNotLoggedIn = function(){
-    var inputArray=[];
+    var progressArray=[];
+    var habitsArray=[];
+
     for (var i = 0; i < localStorage.length && i < maxForNonLoggedIn; i++){
-        inputArray.push(JSON.parse(localStorage.getItem(localStorage.key(i))));
+        var currentKey = localStorage.key(i);
+        if ( currentKey.indexOf("progress-") >= 0){
+            progressArray.push(JSON.parse(localStorage.getItem(currentKey)));
+        } else if ( currentKey.indexOf("habit-") >= 0){
+            habitsArray.push(JSON.parse(localStorage.getItem(currentKey)));
+        }
     }
-    ingestElements(inputArray);
+    ingestElements(progressArray);
 };
 
 var ingestElements = function(inputData,urlDetails){
@@ -166,7 +173,7 @@ var addElementFromForm = function(){
     elementToAdd.target = parseInt(document.getElementById('new-target').value);
     elementToAdd.progressDate = currentDate;
     elementToAdd.numberOfCompletions = 0;
-    elementToAdd.isNewHabit = true;
+    elementToAdd.isNew = true;
 
     addElement(elementToAdd);
 };
@@ -202,11 +209,21 @@ var extractElementsForUpdateLoggedIn = function(testElements){
     console.log(outputElements);
 };
 
+var convertToHabit = function(progressElement){
+    return {
+        id: progressElement.habitId,
+        habitDescription: progressElement.habitDescription,
+        target: progressElement.target
+    }
+}
 var extractElementsForUpdateNoneLoggedIn = function(testElements){
     localStorage.clear();
     for (var i=0; i< testElements.length  && i < maxForNonLoggedIn; i++){
         var currentOutput = readElement(testElements[i]);
-        window.localStorage.setItem('habit-progress-'+currentOutput.id.toString(), JSON.stringify(currentOutput));
+        window.localStorage.setItem('progress-'+currentOutput.id.toString(), JSON.stringify(currentOutput));
+        if (currentOutput.isNew == true ){
+            window.localStorage.setItem('habit-'+currentOutput.habitId,JSON.stringify(convertToHabit(currentOutput)));
+        }
     }
 
 };
@@ -217,13 +234,13 @@ var readElement = function(elementToRead){
     outputJson.habitDescription = elementToRead.getAttribute("habitDescription");
     outputJson.target = parseInt(elementToRead.getAttribute("target"));
     outputJson.progressDate = elementToRead.getAttribute("progressDate");
-
+    outputJson.isNew = elementToRead.getAttribute("isNew");
     outputJson.numberOfCompletions = parseInt(elementToRead.getElementsByClassName("number-of-completion")[0].value);
 
     return outputJson;
 };
 
-function APICaller(parameters,callback){
+function APICaller(parameters,callback,callbackOnFailure){
 	
 	this.parameters = parameters;
 	this.callback = callback;
@@ -236,7 +253,9 @@ function APICaller(parameters,callback){
 			if (this.readyState == 4 && this.status == 200)
 			{
 				callback(JSON.parse(this.responseText),urlDetails);
-			}
+			} else {
+                callbackOnFailure();
+            }
 		};
 		xhttp.open(parameters.method, url, true);
 		xhttp.send();
@@ -257,10 +276,6 @@ var launchCharts = function(fullData,habitId){
             })
         }
     }
-/* Fake data 
-let dataToShow = [{x: new Date("2017-01-20"),y: 4},{x: new Date("2017-01-21"),y: 12},{x: new Date("2017-01-23"),y: 5},{x: new Date("2017-01-24"),y: 12},{x: new Date("2017-01-25"),y: 2},{x: new Date("2017-01-29"),y: 12}]
-let baseline = [{x: new Date("2017-01-20"),y: 9},{x: new Date("2017-01-21"),y: 9},{x: new Date("2017-01-23"),y: 9},{x: new Date("2017-01-24"),y: 9},{x: new Date("2017-01-25"),y: 9},{x: new Date("2017-01-29"),y: 9}]
-*/
 
     var ctx = document.getElementById('myChart').getContext('2d');
 

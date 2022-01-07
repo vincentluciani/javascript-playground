@@ -1,7 +1,9 @@
 <html>
     <header>
         <style>
-            
+            body{
+                font-family: "candara", "arial";
+            }
             .box{
                 padding: 10px;   
                 border-radius: 12px;
@@ -10,6 +12,11 @@
             .box.new-habit{
                 width:172px;
                 height:180px;
+                box-shadow: -1px 2px 20px 0px rgb(0 0 0 / 20%);
+            }
+            .box.habit-graph{
+                max-width:600px;
+                max-height:600px; 
                 box-shadow: -1px 2px 20px 0px rgb(0 0 0 / 20%);
             }
             .box.habit-update{
@@ -23,19 +30,37 @@
                 flex-direction: row;
                 align-items: flex-start;
             }
-            .filter-bar, .main-action-bar, .wide,.myChart {
+            .filter-bar, .main-action-bar, .myChart {
                 width: 100%;
+            }
+
+            .update-button{
+               background-color:#ff3535;
+               color: white;
+               margin:20px;
+               padding:10px;
+               border-radius: 5px;
+               max-width: 100px;
+               text-align: center;
             }
         </style>
     </header>
     <body>
+
         <div class="filter-bar">
             <label>Habit:</label><input id="text-filter" type="text" /><label>   Date:</label><input id="date-filter" type="date" />
         </div>
-        <div class="main-action-bar">
-            <button id="update-button" class="wide" onClick="extractElementsForUpdate();">Update</button>
-        </div>
+        
         <div id="habits-container" class="habits-container">
+        </div>
+
+        <div class="main-action-bar">
+            <div id="update-button" class="update-button wide" onClick="extractElementsForUpdate();">Update</button>
+        </div>
+
+
+
+        <div id="habits-definition-container" class="habits-container">
             <div class="box new-habit">
                 <div>New Habit</div><br>
                 <label>Description:</label>
@@ -46,7 +71,12 @@
             </div>
         </div>
 
-        <canvas id="myChart"></canvas>
+
+
+
+
+        <div class="box habit-graph" ><canvas id="myChart"></canvas></div>
+        
 
 <script type="text/javascript" src='adding_habits.js'></script>
 
