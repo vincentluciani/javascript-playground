@@ -1,5 +1,5 @@
 
-var loggedIn = false;
+var loggedIn = true;
 var maxForNonLoggedIn = 40;
 
 var currentDateTime = new Date();
@@ -40,6 +40,7 @@ var ingestElements = function(inputData,urlDetails){
     }
 
     applyFilters();
+    launchCharts(inputData,1);
 }
 var filterDivs = function(testElements, filterType, filterValue, exactMatch){
     if (filterValue != null && filterValue != '' ){
@@ -242,3 +243,65 @@ function APICaller(parameters,callback){
 	};
 	
 };
+
+var launchCharts = function(fullData,habitId){
+    var dataToShow = [];
+    var baseline = [];
+    for ( var i=0; i< fullData.length;i++){
+        if (fullData[i].habitId == habitId){
+            dataToShow.push({
+                x: new Date(fullData[i].progressDate),y:fullData[i].numberOfCompletions
+            })
+            baseline.push({
+                x: new Date(fullData[i].progressDate),y:fullData[i].target
+            })
+        }
+    }
+/* Fake data 
+let dataToShow = [{x: new Date("2017-01-20"),y: 4},{x: new Date("2017-01-21"),y: 12},{x: new Date("2017-01-23"),y: 5},{x: new Date("2017-01-24"),y: 12},{x: new Date("2017-01-25"),y: 2},{x: new Date("2017-01-29"),y: 12}]
+let baseline = [{x: new Date("2017-01-20"),y: 9},{x: new Date("2017-01-21"),y: 9},{x: new Date("2017-01-23"),y: 9},{x: new Date("2017-01-24"),y: 9},{x: new Date("2017-01-25"),y: 9},{x: new Date("2017-01-29"),y: 9}]
+*/
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+
+
+    let options = {
+    scales: {
+    xAxes: [{type: 'time', time: {parser: 'YYYY-MM-DD', unit: 'day'}}],
+    yAxes: [{
+        scaleLabel: {
+        display: true,
+        labelString: 'Your Score'
+        }
+    }]
+    },
+    legend: {
+        display: true
+    },
+    };
+
+    let chartData = {
+
+    datasets: [
+                    {
+                        label: 'Your target',
+                        data: baseline,
+                        fill: false,
+                        order: 2
+                    }, 
+                    {
+                        label: 'Your daily score',
+                        data: dataToShow,
+                        backgroundColor: '#cad1f3',
+                        order: 1
+                    }
+    ]
+    };
+
+    var chart = new Chart(ctx, {
+    data: chartData,
+    options: options,
+    type:'line',
+    });
+
+}
