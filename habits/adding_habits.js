@@ -37,15 +37,17 @@ var getHabitProgressWhenNotLoggedIn = function(){
             habitsArray.push(JSON.parse(localStorage.getItem(currentKey)));
         }
     }
-    ingestElements(progressArray);
+    ingestElements(progressArray,habitsArray);
 };
 
-var ingestElements = function(inputData,urlDetails){
+var ingestElements = function(inputData,habitsArray,urlDetails){
    /* var inputData = getHabitProgress();*/
     for ( var i=0; i < inputData.length;i++){
         addElement(inputData[i]);
     }
-
+    for ( var i=0; i < habitsArray.length;i++){
+        addHabitElement(habitsArray[i]);
+    }
     applyFilters();
     launchCharts(inputData,1);
 }
@@ -117,22 +119,45 @@ textFilter.addEventListener('input', function (evt) {
     applyFilters();
 });
 
-var addElement = function(elementToAdd){
-    const newDivision = document.createElement("div");
-    newDivision.setAttribute("id", elementToAdd.id );
-    newDivision.setAttribute("habitDescription", elementToAdd.habitDescription);
-    newDivision.setAttribute("target", elementToAdd.target);
-    newDivision.setAttribute("progressDate", elementToAdd.progressDate );
-    newDivision.setAttribute("class", "box habit-update");
-    newDivision.setAttribute("isNew",elementToAdd.isNew);
-    newDivision.setAttribute("habitId",elementToAdd.habitId);
+var addHabitElement = function(elementToAdd){
+    const newHabitDivision = document.createElement("div");
 
+    newHabitDivision.setAttribute("habitDescription", elementToAdd.habitDescription);
+    newHabitDivision.setAttribute("target", elementToAdd.target);
+    newHabitDivision.setAttribute("class", "box habit-setting");
+    newHabitDivision.setAttribute("habitId",elementToAdd.habitId);
+
+    const descriptionText = document.createTextNode(elementToAdd.habitDescription);
+    const targetText = document.createTextNode("Daily Target");
+    const targetValue = document.createElement("input");
+
+    targetValue.value = elementToAdd.target;
+    newHabitDivision.appendChild(descriptionText);
+    newHabitDivision.appendChild(targetText);
+    newHabitDivision.appendChild(targetValue);
+
+    document.getElementById('habits-definition-container').appendChild(newHabitDivision);
+
+
+}
+var addElement = function(elementToAdd){
+    const newProgressDivision = document.createElement("div");
+
+    newProgressDivision.setAttribute("id", elementToAdd.id );
+    newProgressDivision.setAttribute("habitDescription", elementToAdd.habitDescription);
+    newProgressDivision.setAttribute("target", elementToAdd.target);
+    newProgressDivision.setAttribute("progressDate", elementToAdd.progressDate );
+    newProgressDivision.setAttribute("class", "box habit-update");
+    newProgressDivision.setAttribute("isNew",elementToAdd.isNew);
+    newProgressDivision.setAttribute("habitId",elementToAdd.habitId);
+
+ 
     const dateDiv = document.createElement("div");
     const dateText = document.createTextNode(elementToAdd.progressDate);
-    const descriptionText = document.createTextNode(elementToAdd.habitDescription);
+    const habitDescriptionText = document.createTextNode(elementToAdd.habitDescription);
+    const targetValue = document.createElement("input");
     const currentProgressText = document.createTextNode("Number of times completed:");
     const currentCompletionText = document.createTextNode("Percentage Completion:");
-    const descriptionDiv = document.createElement("div");
     const progressInput = document.createElement("input");
     const percentageCompletionInput = document.createElement("input");
 
@@ -147,20 +172,20 @@ var addElement = function(elementToAdd){
     percentageCompletionInput.setAttribute("value",percentageCompletion);
 
     dateDiv.appendChild(dateText);
-    descriptionDiv.appendChild(descriptionText);
 
-    newDivision.appendChild(dateDiv);
-    newDivision.appendChild(descriptionDiv);
-    newDivision.appendChild(currentProgressText);
-    newDivision.appendChild(progressInput);
-    newDivision.appendChild(currentCompletionText);
-    newDivision.appendChild(percentageCompletionInput);
+    newProgressDivision.appendChild(dateDiv);
+    newProgressDivision.appendChild(habitDescriptionText);
+    newProgressDivision.appendChild(currentProgressText);
+    newProgressDivision.appendChild(progressInput);
+    newProgressDivision.appendChild(currentCompletionText);
+    newProgressDivision.appendChild(percentageCompletionInput);
 
-    document.getElementById('habits-container').appendChild(newDivision);
+    targetValue.value = elementToAdd.target;
 
-    newDivision.addEventListener('change', function(newDivision) {
-        return function(){refreshProgress(newDivision)}
-     }(newDivision));
+    document.getElementById('habits-container').appendChild(newProgressDivision);
+    newProgressDivision.addEventListener('change', function(newProgressDivision) {
+        return function(){refreshProgress(newProgressDivision)}
+     }(newProgressDivision));
 
 };
 
@@ -176,6 +201,7 @@ var addElementFromForm = function(){
     elementToAdd.isNew = true;
 
     addElement(elementToAdd);
+    addHabitElement(elementToAdd);
 };
 
 var displayAllElements = function(elementList){
@@ -187,46 +213,51 @@ var displayAllElements = function(elementList){
 
 var extractElementsForUpdate = function(){
 
-    var testElements = document.getElementsByClassName('habit-update');
-
+    var progressElements = document.getElementsByClassName('habit-update');
+    var habitsElements = document.getElementsByClassName('habit-setting');
     if (loggedIn){
-        extractElementsForUpdateLoggedIn(testElements);
+        extractElementsForUpdateLoggedIn(progressElements, habitsElements);
     } else {
-        extractElementsForUpdateNoneLoggedIn(testElements);
+        extractElementsForUpdateNoneLoggedIn(progressElements, habitsElements);
     }
 
 };
 
 
-var extractElementsForUpdateLoggedIn = function(testElements){
+var extractElementsForUpdateLoggedIn = function(progressElements, habitsElements){
     var outputElements = [];
 
-    for (var i=0; i< testElements.length  && i < maxForNonLoggedIn; i++){
-        var currentOutput = readElement(testElements[i]);
+    for (var i=0; i< progressElements.length  && i < maxForNonLoggedIn; i++){
+        var currentOutput = readElement(progressElements[i]);
         outputElements.push(currentOutput);
     }
 
     console.log(outputElements);
 };
 
-var convertToHabit = function(progressElement){
-    return {
-        id: progressElement.habitId,
-        habitDescription: progressElement.habitDescription,
-        target: progressElement.target
-    }
-}
-var extractElementsForUpdateNoneLoggedIn = function(testElements){
+
+var extractElementsForUpdateNoneLoggedIn = function(progressElements, habitsElements){
     localStorage.clear();
-    for (var i=0; i< testElements.length  && i < maxForNonLoggedIn; i++){
-        var currentOutput = readElement(testElements[i]);
+    for (var i=0; i< progressElements.length  && i < maxForNonLoggedIn; i++){
+        var currentOutput = readElement(progressElements[i]);
         window.localStorage.setItem('progress-'+currentOutput.id.toString(), JSON.stringify(currentOutput));
-        if (currentOutput.isNew == true ){
-            window.localStorage.setItem('habit-'+currentOutput.habitId,JSON.stringify(convertToHabit(currentOutput)));
-        }
+    }
+    for ( var j=0; j< habitsElements.length;j++){
+        var currentOutput = readHabitElement(habitsElements[j]);
+        window.localStorage.setItem('habit-'+currentOutput.habitId,JSON.stringify(currentOutput));
+ 
     }
 
 };
+var readHabitElement = function(elementToRead){
+    var outputJson = {};
+    outputJson.habitId = elementToRead.getAttribute("habitId");
+    outputJson.habitDescription = elementToRead.getAttribute("habitDescription");
+    outputJson.target = parseInt(elementToRead.getAttribute("target"));
+ 
+    return outputJson;
+};
+
 var readElement = function(elementToRead){
     var outputJson = {};
     outputJson.id = elementToRead.getAttribute("id");
@@ -263,6 +294,10 @@ function APICaller(parameters,callback,callbackOnFailure){
 	
 };
 
+var addEmptyProgressOnNewDay = function(){
+    /* go through all elements, if nothing with today's date, go through all habits and add new element with this habit id*/
+}
+
 var launchCharts = function(fullData,habitId){
     var dataToShow = [];
     var baseline = [];
@@ -286,7 +321,8 @@ var launchCharts = function(fullData,habitId){
     yAxes: [{
         scaleLabel: {
         display: true,
-        labelString: 'Your Score'
+        labelString: 'Your Score',
+        type: 'line'
         }
     }]
     },
@@ -307,7 +343,9 @@ var launchCharts = function(fullData,habitId){
                     {
                         label: 'Your daily score',
                         data: dataToShow,
-                        backgroundColor: '#cad1f3',
+                        backgroundColor: '#ffecd7',
+                        borderColor:'#f19a40',
+                        color:'blue',
                         order: 1
                     }
     ]
