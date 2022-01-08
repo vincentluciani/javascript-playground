@@ -1,0 +1,8 @@
+extractElementsForUpdateNoneLoggedIn
+
+in there, get text and daily target from .getElementsByClassName('blablabla')[0].value
+=> but must put the class name when building
+Other way is to update the attribute value when changing.
+
+habit-target-definition
+habit-description-definition

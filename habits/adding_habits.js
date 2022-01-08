@@ -131,9 +131,11 @@ var addHabitElement = function(elementToAdd){
 
     const descriptionInput = document.createElement("input");
     descriptionInput.value = elementToAdd.habitDescription;
+    descriptionInput.setAttribute("class","habit-description-definition");
 
     const targetText = document.createTextNode("Daily Target");
     const targetValue = document.createElement("input");
+    targetValue.setAttribute("class","habit-target-definition");
 
     targetValue.value = elementToAdd.target;
     newHabitDivision.appendChild(descriptionInput);
@@ -256,9 +258,10 @@ var extractElementsForUpdateNoneLoggedIn = function(progressElements, habitsElem
 var readHabitElement = function(elementToRead){
     var outputJson = {};
     outputJson.habitId = elementToRead.getAttribute("habitId");
-    outputJson.habitDescription = elementToRead.getAttribute("habitDescription");
-    outputJson.target = parseInt(elementToRead.getAttribute("target"));
- 
+
+    outputJson.habitDescription = elementToRead.getElementsByClassName('habit-description-definition')[0].value;
+    outputJson.target = parseInt(elementToRead.getElementsByClassName('habit-target-definition')[0].value);
+
     return outputJson;
 };
 
