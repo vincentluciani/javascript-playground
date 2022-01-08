@@ -129,12 +129,14 @@ var addHabitElement = function(elementToAdd){
     newHabitDivision.setAttribute("class", "box habit-setting");
     newHabitDivision.setAttribute("habitId",elementToAdd.habitId);
 
-    const descriptionText = document.createTextNode(elementToAdd.habitDescription);
+    const descriptionInput = document.createElement("input");
+    descriptionInput.value = elementToAdd.habitDescription;
+
     const targetText = document.createTextNode("Daily Target");
     const targetValue = document.createElement("input");
 
     targetValue.value = elementToAdd.target;
-    newHabitDivision.appendChild(descriptionText);
+    newHabitDivision.appendChild(descriptionInput);
     newHabitDivision.appendChild(targetText);
     newHabitDivision.appendChild(targetValue);
 
@@ -349,9 +351,12 @@ var launchChart = function(fullData,habitObject){
     }
 
     /*<canvas id="myChart"></canvas>*/
-    const newCanva = document.createElement("canvas");
+    var newCanva = document.createElement("canvas");
+    var newCanvaWrapper = document.createElement("div");
     newCanva.setAttribute("id",habitObject.habitId);
-    document.getElementById("graph-container").appendChild(newCanva);
+    newCanvaWrapper.append(newCanva);
+    newCanvaWrapper.setAttribute("class","box canva-wrapper");
+    document.getElementById("graph-container").appendChild(newCanvaWrapper);
     var ctx = document.getElementById(habitObject.habitId).getContext('2d');
 
 

@@ -4,7 +4,7 @@
             body{
                 font-family: "candara", "arial";
             }
-            .box{
+            .box,.filter-bar{
                 padding: 10px;   
                 border-radius: 12px;
                 margin:10px;
@@ -14,7 +14,7 @@
                 height:180px;
                 box-shadow: -1px 2px 20px 0px rgb(0 0 0 / 20%);
             }
-            .box.habit-graph{
+            .box.canva-wrapper{
                 max-width:600px;
                 max-height:600px; 
                 box-shadow: -1px 2px 20px 0px rgb(0 0 0 / 20%);
@@ -24,7 +24,7 @@
                 height:180px;
                 box-shadow: -1px 2px 20px 0px rgb(255 124 124);
             }
-            .habits-container,.filter-bar{
+            .habits-container,.habits-definition-container,.filter-bar{
                 display: flex;
                 flex-wrap: wrap;
                 flex-direction: row;
@@ -50,13 +50,13 @@
         <div class="filter-bar">
             <label>Habit:</label><input id="text-filter" type="text" /><label>   Date:</label><input id="date-filter" type="date" />
         </div>
-        Update your progress:
+        <br>Update your progress:<br><br>
         <div id="habits-container" class="habits-container">
         </div>
         <div class="main-action-bar">
             <div id="update-button" class="update-button wide" onClick="extractElementsForUpdate();">Update</div>
         </div>
-        Add a new habit, look at your entered habits
+        <br>Add a new habit, look at your entered habit:<br><br>
         <div id="habits-definition-container" class="habits-definition-container">
             <div class="box new-habit">
                 <div>New Habit</div><br>
