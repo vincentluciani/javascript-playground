@@ -49,7 +49,7 @@ var ingestElements = function(inputData,habitsArray,urlDetails){
         addHabitElement(habitsArray[i]);
     }
     applyFilters();
-    launchCharts(inputData,1);
+    launchCharts(inputData,habitsArray);
 }
 var filterDivs = function(testElements, filterType, filterValue, exactMatch){
     if (filterValue != null && filterValue != '' ){
@@ -105,7 +105,9 @@ onload = function(){
     
     document.getElementById("date-filter").value=currentDate;
     /*ingestElements();*/
+
     getHabitProgress();
+    addEmptyProgressOnNewDay();
 
 };
 
@@ -295,14 +297,48 @@ function APICaller(parameters,callback,callbackOnFailure){
 };
 
 var addEmptyProgressOnNewDay = function(){
+
+    var progressElements = document.getElementsByClassName('habit-update');
+    var habitsElements = document.getElementsByClassName('habit-setting');
+
+    for (var i=0; i< habitsElements.length;i++){
+
+        var isHabitProgressExisting = false;
+
+        for (var j=0; j< progressElements.length;j++){
+            if ( habitsElements[i].getAttribute("habitId") == progressElements[j].getAttribute("habitId") && progressElements[j].getAttribute("progressdate") == currentDate){
+                isHabitProgressExisting = true;
+            }
+        }
+
+        if ( isHabitProgressExisting == false){
+            newProgressObject = {
+                id: Date.now(),
+                habitId: habitsElements[i].getAttribute("habitId"),
+                habitDescription: habitsElements[i].getAttribute("habitDescription"),
+                target: habitsElements[i].getAttribute("target"),
+                progressDate: currentDate,
+                isNew: true,
+                numberOfCompletions:0
+            }
+            addElement(newProgressObject);
+        }
+    }
     /* go through all elements, if nothing with today's date, go through all habits and add new element with this habit id*/
 }
 
-var launchCharts = function(fullData,habitId){
+var launchCharts = function(fullData,habitsArray){
+    for ( var i=0;i<habitsArray.length;i++){
+        launchChart(fullData,habitsArray[i])
+    }
+
+}
+
+var launchChart = function(fullData,habitObject){
     var dataToShow = [];
     var baseline = [];
     for ( var i=0; i< fullData.length;i++){
-        if (fullData[i].habitId == habitId){
+        if (fullData[i].habitId == habitObject.habitId){
             dataToShow.push({
                 x: new Date(fullData[i].progressDate),y:fullData[i].numberOfCompletions
             })
@@ -312,7 +348,11 @@ var launchCharts = function(fullData,habitId){
         }
     }
 
-    var ctx = document.getElementById('myChart').getContext('2d');
+    /*<canvas id="myChart"></canvas>*/
+    const newCanva = document.createElement("canvas");
+    newCanva.setAttribute("id",habitObject.habitId);
+    document.getElementById("graph-container").appendChild(newCanva);
+    var ctx = document.getElementById(habitObject.habitId).getContext('2d');
 
 
     let options = {
@@ -321,7 +361,7 @@ var launchCharts = function(fullData,habitId){
     yAxes: [{
         scaleLabel: {
         display: true,
-        labelString: 'Your Score',
+        labelString: 'Your progress for:' + habitObject.habitDescription,
         type: 'line'
         }
     }]
