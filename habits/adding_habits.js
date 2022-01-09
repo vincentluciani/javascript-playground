@@ -83,6 +83,7 @@ var refreshProgress = function(currentDiv){
     var newCompletionPercentage = Math.round(newCompletion.value * 100 / parseInt(currentDiv.getAttribute("target")));
     currentDiv.getElementsByClassName("percentage-completion")[0].value = newCompletionPercentage;
 
+    
     if (newCompletionPercentage>=100){
         currentDiv.style.boxShadow="rgb(0 255 7 / 20%) -1px 2px 20px 12px";
     } else if (newCompletionPercentage>=50){
@@ -90,6 +91,14 @@ var refreshProgress = function(currentDiv){
     } else if (newCompletionPercentage<50){
         currentDiv.style.boxShadow="-1px 2px 20px 0px rgb(255 124 124)";
     }
+
+    // if (newCompletionPercentage>=100){
+    //     currentDiv.style.background="rgb(76 255 81 / 20%)";
+    // } else if (newCompletionPercentage>=50){
+    //     currentDiv.style.background="rgb(255 227 143)";
+    // } else if (newCompletionPercentage<50){
+    //     currentDiv.style.background="rgb(253 171 171)";
+    // }
 
 }
 
@@ -133,9 +142,11 @@ var addHabitElement = function(elementToAdd){
     descriptionInput.value = elementToAdd.habitDescription;
     descriptionInput.setAttribute("class","habit-description-definition");
 
+
     const targetText = document.createTextNode("Daily Target");
     const targetValue = document.createElement("input");
     targetValue.setAttribute("class","habit-target-definition");
+    targetValue.setAttribute("type","number");
 
     targetValue.value = elementToAdd.target;
     newHabitDivision.appendChild(descriptionInput);
@@ -178,9 +189,13 @@ var addElement = function(elementToAdd){
     percentageCompletionInput.setAttribute("value",percentageCompletion);
 
     dateDiv.appendChild(dateText);
+    var brTag = document.createElement("br");
 
     newProgressDivision.appendChild(dateDiv);
     newProgressDivision.appendChild(habitDescriptionText);
+    newProgressDivision.appendChild(brTag);
+    newProgressDivision.appendChild(brTag);
+    newProgressDivision.appendChild(brTag);
     newProgressDivision.appendChild(currentProgressText);
     newProgressDivision.appendChild(progressInput);
     newProgressDivision.appendChild(currentCompletionText);
@@ -208,6 +223,10 @@ var addElementFromForm = function(){
 
     addElement(elementToAdd);
     addHabitElement(elementToAdd);
+
+    document.getElementById('new-description').value = null;
+    document.getElementById('new-target').value = null;
+
 };
 
 var displayAllElements = function(elementList){
@@ -356,26 +375,35 @@ var launchChart = function(fullData,habitObject){
     /*<canvas id="myChart"></canvas>*/
     var newCanva = document.createElement("canvas");
     var newCanvaWrapper = document.createElement("div");
+    const grapTitle = document.createTextNode('Your progress for:' + habitObject.habitDescription);
     newCanva.setAttribute("id",habitObject.habitId);
+    newCanvaWrapper.appendChild(grapTitle);  
     newCanvaWrapper.append(newCanva);
+
     newCanvaWrapper.setAttribute("class","box canva-wrapper");
+
     document.getElementById("graph-container").appendChild(newCanvaWrapper);
+
+
     var ctx = document.getElementById(habitObject.habitId).getContext('2d');
 
 
     let options = {
-    scales: {
-    xAxes: [{type: 'time', time: {parser: 'YYYY-MM-DD', unit: 'day'}}],
-    yAxes: [{
-        scaleLabel: {
-        display: true,
-        labelString: 'Your progress for:' + habitObject.habitDescription,
-        type: 'line'
-        }
-    }]
-    },
-    legend: {
-        display: true
+        responsive: true,
+        legend: {
+            position: 'bottom',
+            display: true
+        },
+        scales: {
+        xAxes: [{type: 'time', time: {parser: 'YYYY-MM-DD', unit: 'day'}}],
+        yAxes: [{
+            scaleLabel: {
+            display: true,
+            labelString: 'Your progress',
+            type: 'line',
+            suggestedMin: 0
+            }
+        }]
     },
     };
 

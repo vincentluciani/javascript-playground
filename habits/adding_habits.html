@@ -1,13 +1,88 @@
 <html>
     <header>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
             body{
-                font-family: "candara", "arial";
+                margin: 0px;
+                font-family: "Nunito","candara","arial";
+                overflow-wrap: break-word;
             }
-            .box,.filter-bar{
+            .green{
+                background:#17bc25;
+            }
+            .blue{
+                background:rgba(33, 150, 243, 0.92);
+            }
+            .orange{
+                background:#fd683b;
+            }
+            #header{
+                width: 100%;
+                height: 77px;
+                text-align: center;
+                color: white;
+                background: rgba(33, 150, 243, 1);
+                margin: 0px;
+                font-size: 15px;
+                z-index: 100;
+                cursor: pointer;
+                position: fixed;
+                top:0;
+                opacity:1;
+            }
+            #nav-container{
+                display: flex;
+                flex-direction: row;
+                /*margin-left: auto;
+                margin-right: auto;*/
+                margin-left: 30px;
+                text-align: center;
+                max-width: 925px;
+                padding-top: 12px;
+            }
+            .horizontal-menu{
+                list-style-type: none;
+                margin: 14px 0px 0px 0px;
+                text-align: left;
+                float: left;
+            }
+            .horizontal-menu li{
+                float: left;
+                margin-right: 27px;
+                margin-top: 0px;
+            }
+            a, a:active, a:visited, a span {
+                text-decoration: none;
+                color: white;
+                margin-right: 5px;
+            }
+            .filter-bar{
+                background: white;
+                opacity: 1;
+                max-width: 500px;
+                height: 30px;
+                margin: 0px 0px 10px 0px;
+                padding: 10px;
+                border-radius: 5px;
+                box-shadow:-1px 2px 20px 0px rgb(0 0 0 / 20%);
+            }
+            #progress-section{
+                /*margin-top: 80px;*/
+            }
+            .divider{
+                margin-bottom:65px;
+            }
+            .box,.main-section{
                 padding: 10px;   
                 border-radius: 12px;
                 margin:10px;
+            }
+            .box,.filter-bar{
+                background:white;
+            }
+            .main-section,.habit-graph{
+                background: white;
             }
             .box.new-habit,.habit-setting{
                 width:172px;
@@ -15,27 +90,30 @@
                 box-shadow: -1px 2px 20px 0px rgb(0 0 0 / 20%);
             }
             .box.canva-wrapper{
-                max-width:600px;
-                max-height:600px; 
+                max-width:300px;
+                max-height:300px; 
                 box-shadow: -1px 2px 20px 0px rgb(0 0 0 / 20%);
             }
             .box.habit-update{
                 width:172px;
                 height:180px;
                 box-shadow: -1px 2px 20px 0px rgb(255 124 124);
+                /*box-shadow: -1px 2px 20px 0px rgb(0 0 0 / 20%);*/
             }
-            .habits-container,.habits-definition-container,.filter-bar{
+            .habits-container,.habits-definition-container,.filter-bar,.graph-container,.main-action-bar{
                 display: flex;
                 flex-wrap: wrap;
                 flex-direction: row;
                 align-items: flex-start;
             }
-            .filter-bar, .main-action-bar, .myChart {
+            .main-action-bar, .myChart {
                 width: 100%;
+            }
+            h2{
+                color: rgba(33, 150, 243, 0.92);
             }
 
             .update-button{
-               background-color:#ff3535;
                color: white;
                margin:20px;
                padding:10px;
@@ -44,31 +122,69 @@
                text-align: center;
                cursor: pointer;
             }
+            .side-title{
+                margin-right: 30px;
+            }
+
         </style>
     </header>
     <body>
-        <div class="filter-bar">
-            <label>Habit:</label><input id="text-filter" type="text" /><label>   Date:</label><input id="date-filter" type="date" />
-        </div>
-        <br>Update your progress:<br><br>
-        <div id="habits-container" class="habits-container">
-        </div>
-        <div class="main-action-bar">
-            <div id="update-button" class="update-button wide" onClick="extractElementsForUpdate();">Update</div>
-        </div>
-        <br>Add a new habit, look at your entered habit:<br><br>
-        <div id="habits-definition-container" class="habits-definition-container">
-            <div class="box new-habit">
-                <div>New Habit</div><br>
-                <label>Description:</label>
-                <input type="text" id="new-description"/><br><br>
-                <label>Target:</label>
-                <input type="number" id="new-target"/><br><br>
-                <button onClick='addElementFromForm();'>Add</button>
+        <div id="header">
+            <div id="nav-container">
+                <a class="navbar-brand" href="https://www.vincent-luciani.com/">
+                    <svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="50px" viewBox="0 0 175 173" version="1.1" id="svg8" inkscape:version="0.92.3 (2405546, 2018-03-11)" sodipodi:docname="spinnakerlogo_v2.svg"> <defs id="defs2"></defs> <sodipodi:namedview id="base" pagecolor="#000000" bordercolor="#666666" borderopacity="1.0" inkscape:pageopacity="0" inkscape:pageshadow="2" inkscape:zoom="0.7" inkscape:cx="4.4184701" inkscape:cy="335.45816" inkscape:document-units="mm" inkscape:current-layer="layer1" showgrid="false" inkscape:window-width="1366" inkscape:window-height="703" inkscape:window-x="0" inkscape:window-y="0" inkscape:window-maximized="1" inkscape:pagecheckerboard="true"></sodipodi:namedview> <metadata id="metadata5"> <rdf:rdf> <cc:work rdf:about=""> <dc:format>image/svg+xml</dc:format> <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"></dc:type> <dc:title></dc:title> </cc:work> </rdf:rdf> </metadata> <g inkscape:label="Layer 1" inkscape:groupmode="layer" id="layer1" transform="translate(0,-124)"> <path style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="M 117.17263,128.42262 C 57.103952,169.32182 13.143572,226.96862 5.2916662,293.97619 63.194818,268.65226 91.951833,282.95264 143.25298,293.22024 110.28581,231.73502 106.86408,174.11323 117.17263,128.42262 Z" id="path10" inkscape:connector-curvature="0" sodipodi:nodetypes="cccc"></path> </g></svg>
+                </a>
+                <nav>
+                    <ul class="horizontal-menu">
+                        <li><a href="#progress-section-marker" id="menu_dashboard">Progress</a></li>
+                        <li><a href="#habits-section-marker" id="menu_dashboard">Habits</a></li>
+                        <li><a href="#graphs-section-marker" id="menu_dashboard">Graphs</a></li>
+                    </ul>
+                </nav>
             </div>
         </div>
-        <div id="graph-container" class="box habit-graph" ></div>
-        
+
+
+        <div class="divider" id="progress-section-marker"></div>
+        <div id="progress-section" class="main-section">
+            <h2>Update your progress:</h2>
+            <div class="filter-bar">
+                <div class="side-title">Filters:</div>
+                <div><label>Date:</label><input id="date-filter" type="date" /></div>
+                <div></div><label>Habit:</label><input id="text-filter" type="text" /></div>
+            </div>
+            <div id="habits-container" class="habits-container">
+            </div>
+            <div class="main-action-bar">
+                <div id="update-button" class="update-button wide orange" onClick="extractElementsForUpdate();">Update</div>
+                <div id="go-to-habits" class="update-button wide green" ><a href="#habits-section-marker">New Habit</a></div>
+                <div id="go-to-graphs" class="update-button wide blue" ><a href="#graphs-section-marker">Graphs</a></div>
+            </div>
+        </div>
+        <div class="divider" id="habits-section-marker"></div>
+        <div id="habits-section" class="main-section">
+        <h2>Add a new habit, look at your entered habit:</h2>
+            <div id="habits-definition-container" class="habits-definition-container">
+                <div class="box new-habit">
+                    <div>New Habit</div><br>
+                    <label>Description:</label>
+                    <input type="text" id="new-description"/><br><br>
+                    <label>Target:</label>
+                    <input type="number" id="new-target"/><br><br>
+                    <button onClick='addElementFromForm();'>Add</button>
+                </div>
+            </div>
+            <div class="main-action-bar">
+                <div id="update-button" class="update-button wide orange" onClick="extractElementsForUpdate();">Update</div>
+                <div id="go-to-progress" class="update-button wide green" ><a href="#progress-section-marker">Progress</a></div>
+                <div id="go-to-graphs" class="update-button wide blue" ><a href="#graphs-section-marker">Graphs</a></div>
+            </div>
+        </div>
+        <div class="divider" id="graphs-section-marker"></div>
+        <div id="graphs-section" class="main-section" >
+            <h2>Have a look at your superbe progress:</h2>
+            <div id="graph-container" class="graph-container" ></div>
+        </div>
         <script type="text/javascript" src='adding_habits.js'></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
