@@ -85,7 +85,7 @@ var refreshProgress = function(currentDiv){
 
     
     if (newCompletionPercentage>=100){
-        currentDiv.style.boxShadow="rgb(0 255 7 / 20%) -1px 2px 17px 5px";
+        currentDiv.style.boxShadow="rgb(21 173 25 / 20%) -1px 2px 17px 5px";
     } else if (newCompletionPercentage>=50){
         currentDiv.style.boxShadow="-1px 2px 17px 5px rgb(242 255 131)";
     } else if (newCompletionPercentage<50){
@@ -191,6 +191,9 @@ var addElement = function(elementToAdd){
 
     var habitDescriptionContainer = document.createElement("div");
     habitDescriptionContainer.setAttribute("class","habit-description");
+    var taskIcon = document.createElement("i");
+    taskIcon.setAttribute("class","fa fa-tasks");
+    habitDescriptionContainer.appendChild(taskIcon);
     habitDescriptionContainer.appendChild(habitDescriptionText);
     newProgressDivision.appendChild(habitDescriptionContainer);
 

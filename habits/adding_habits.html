@@ -2,6 +2,7 @@
     <header>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://use.fontawesome.com/372afdc18b.js" defer=""></script>
         <style>
             body{
                 margin: 0px;
@@ -163,6 +164,13 @@
             }
             .habit-description{
                 height: 65px;
+                font-weight: bold;
+            }
+            i{
+                margin-right: 6px;  
+            }
+            .bold{
+                font-weight: bold;
             }
 
         </style>
@@ -190,7 +198,8 @@
                 <div id="update-button" class="update-button wide orange" onClick="extractElementsForUpdate();">Save</div>
             </div>
             
-            <div id="habits-container" class="habits-container"></div>
+            <div id="habits-container" class="habits-container">
+            </div>
             <div class="main-action-bar">
                 
                 <div id="go-to-graphs" class="update-button wide blue" onclick="changeTabToGraphs();">Graphs</div>
@@ -199,21 +208,24 @@
         </div>
 
         <div id="habits-section" class="main-section">
-        <h2>Add a new habit, look at your entered habit:</h2>
+            <div id="progress-title">
+                <div><h2>Add a new habit, update your entered habit</h2></div>
+                <div id="update-button" class="update-button wide orange" onClick="extractElementsForUpdate();">Save</div>
+            </div>
+        <h2></h2>
             <div id="habits-definition-container" class="habits-definition-container">
                 <div class="box new-habit">
-                    <div>New Habit</div><br>
+                    <div class="bold"><i class="fa fa-tasks"></i>New Habit</div><br>
                     <label>Description:</label>
-                    <input type="text" id="new-description"/><br><br>
+                    <input type="text" id="new-description"/><br>
                     <label>Target:</label>
-                    <input type="number" id="new-target"/><br><br>
+                    <input type="number" id="new-target"/><br>
                     <button onClick='addElementFromForm();'>Add</button>
                 </div>
             </div>
             <div class="main-action-bar">
-                <div id="update-button" class="update-button wide orange" onClick="extractElementsForUpdate();">Update</div>
-                <div id="go-to-progress" class="update-button wide green" ><a href="#progress-section-marker">Progress</a></div>
-                <div id="go-to-graphs" class="update-button wide blue" ><a href="#graphs-section-marker">Graphs</a></div>
+                <div id="go-to-progress" class="update-button wide green" onclick="changeTabToProgress();">Progress</div>
+                <div id="go-to-graphs" class="update-button wide blue" onclick="changeTabToGraphs();">Graphs</div>
             </div>
         </div>
 
