@@ -81,15 +81,15 @@ var resetElements = function(){
 var refreshProgress = function(currentDiv){
     var newCompletion = currentDiv.getElementsByClassName("number-of-completion")[0];
     var newCompletionPercentage = Math.round(newCompletion.value * 100 / parseInt(currentDiv.getAttribute("target")));
-    currentDiv.getElementsByClassName("percentage-completion")[0].value = newCompletionPercentage;
+    currentDiv.getElementsByClassName("percentage-completion")[0].innerHTML = newCompletionPercentage;
 
     
     if (newCompletionPercentage>=100){
-        currentDiv.style.boxShadow="rgb(0 255 7 / 20%) -1px 2px 20px 12px";
+        currentDiv.style.boxShadow="rgb(0 255 7 / 20%) -1px 2px 17px 5px";
     } else if (newCompletionPercentage>=50){
-        currentDiv.style.boxShadow="-1px 2px 20px 0px #ffc107";
+        currentDiv.style.boxShadow="-1px 2px 17px 5px rgb(242 255 131)";
     } else if (newCompletionPercentage<50){
-        currentDiv.style.boxShadow="-1px 2px 20px 0px rgb(255 124 124)";
+        currentDiv.style.boxShadow="-1px 2px 14px 0px rgb(247 163 163)";
     }
 
     // if (newCompletionPercentage>=100){
@@ -117,7 +117,7 @@ onload = function(){
 
     getHabitProgress();
     addEmptyProgressOnNewDay();
-
+    changeTabToProgress();
 };
 
 var dateFilter = document.getElementById('date-filter');
@@ -168,15 +168,15 @@ var addElement = function(elementToAdd){
     newProgressDivision.setAttribute("isNew",elementToAdd.isNew);
     newProgressDivision.setAttribute("habitId",elementToAdd.habitId);
 
- 
+
     const dateDiv = document.createElement("div");
-    const dateText = document.createTextNode(elementToAdd.progressDate);
+
     const habitDescriptionText = document.createTextNode(elementToAdd.habitDescription);
     const targetValue = document.createElement("input");
     const currentProgressText = document.createTextNode("Number of times completed:");
     const currentCompletionText = document.createTextNode("Percentage Completion:");
     const progressInput = document.createElement("input");
-    const percentageCompletionInput = document.createElement("input");
+    const percentageCompletionInput = document.createElement("div");
 
     var percentageCompletion = Math.round(elementToAdd.numberOfCompletions * 100 / elementToAdd.target) ;
     
@@ -184,21 +184,28 @@ var addElement = function(elementToAdd){
     progressInput.setAttribute("class","number-of-completion");
     progressInput.setAttribute("value",elementToAdd.numberOfCompletions);
 
-    percentageCompletionInput.setAttribute("type","number");
+    /*percentageCompletionInput.setAttribute("type","number");*/
     percentageCompletionInput.setAttribute("class","percentage-completion");
-    percentageCompletionInput.setAttribute("value",percentageCompletion);
+    percentageCompletionInput.innerHTML = percentageCompletion.toString();
 
-    dateDiv.appendChild(dateText);
-    var brTag = document.createElement("br");
 
-    newProgressDivision.appendChild(dateDiv);
-    newProgressDivision.appendChild(habitDescriptionText);
-    newProgressDivision.appendChild(brTag);
-    newProgressDivision.appendChild(brTag);
-    newProgressDivision.appendChild(brTag);
-    newProgressDivision.appendChild(currentProgressText);
+    var habitDescriptionContainer = document.createElement("div");
+    habitDescriptionContainer.setAttribute("class","habit-description");
+    habitDescriptionContainer.appendChild(habitDescriptionText);
+    newProgressDivision.appendChild(habitDescriptionContainer);
+
+    var currentProgressContainer = document.createElement("div");
+
+    currentProgressContainer.appendChild(currentProgressText);
+    currentProgressContainer.setAttribute("class","progress-container");
+    newProgressDivision.appendChild(currentProgressContainer);
     newProgressDivision.appendChild(progressInput);
-    newProgressDivision.appendChild(currentCompletionText);
+
+    var completionTextContainer = document.createElement("div");
+    completionTextContainer.setAttribute("class","progress-container");
+
+    completionTextContainer.appendChild(currentCompletionText);
+    newProgressDivision.appendChild(completionTextContainer);
     newProgressDivision.appendChild(percentageCompletionInput);
 
     targetValue.value = elementToAdd.target;
@@ -357,6 +364,25 @@ var launchCharts = function(fullData,habitsArray){
     }
 
 }
+
+var changeTabToProgress = function(){
+    document.getElementById("habits-section").style.display = "none";
+    document.getElementById("progress-section").style.display = "block";
+    document.getElementById("graphs-section").style.display = "none";
+}
+
+var changeTabToHabits = function(){
+    document.getElementById("habits-section").style.display = "block";
+    document.getElementById("progress-section").style.display = "none";
+    document.getElementById("graphs-section").style.display = "none";
+}
+
+var changeTabToGraphs = function(){
+    document.getElementById("habits-section").style.display = "none";
+    document.getElementById("progress-section").style.display = "none";
+    document.getElementById("graphs-section").style.display = "block";
+}
+
 
 var launchChart = function(fullData,habitObject){
     var dataToShow = [];
