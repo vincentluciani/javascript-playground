@@ -87,7 +87,7 @@ var refreshProgress = function(currentDiv){
     if (newCompletionPercentage>=100){
         currentDiv.style.boxShadow="rgb(21 173 25 / 20%) -1px 2px 17px 5px";
     } else if (newCompletionPercentage>=50){
-        currentDiv.style.boxShadow="-1px 2px 17px 5px rgb(242 255 131)";
+        currentDiv.style.boxShadow="-1px 2px 17px 5px rgb(245 255 157)";
     } else if (newCompletionPercentage<50){
         currentDiv.style.boxShadow="-1px 2px 14px 0px rgb(247 163 163)";
     }
@@ -390,6 +390,7 @@ var changeTabToGraphs = function(){
 var launchChart = function(fullData,habitObject){
     var dataToShow = [];
     var baseline = [];
+
     for ( var i=0; i< fullData.length;i++){
         if (fullData[i].habitId == habitObject.habitId){
             dataToShow.push({
@@ -400,6 +401,10 @@ var launchChart = function(fullData,habitObject){
             })
         }
     }
+
+		dataToShow.sort(function(a, b){
+		return (a.x - b.x)
+		});	
 
     /*<canvas id="myChart"></canvas>*/
     var newCanva = document.createElement("canvas");
