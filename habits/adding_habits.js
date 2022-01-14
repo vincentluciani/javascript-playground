@@ -178,6 +178,11 @@ var addElement = function(elementToAdd){
     const progressInput = document.createElement("input");
     const percentageCompletionInput = document.createElement("div");
 
+    const targetText = document.createTextNode(" of "+elementToAdd.target);
+    const targetTextDiv = document.createElement("div");
+    targetTextDiv.setAttribute('class','side-text');
+    targetTextDiv.appendChild(targetText);
+
     var percentageCompletion = Math.round(elementToAdd.numberOfCompletions * 100 / elementToAdd.target) ;
     
     progressInput.setAttribute("type","number");
@@ -201,8 +206,23 @@ var addElement = function(elementToAdd){
 
     currentProgressContainer.appendChild(currentProgressText);
     currentProgressContainer.setAttribute("class","progress-container");
+
+    var plusButtonText = document.createTextNode("+");
+    var plusButton = document.createElement("div");
+    plusButton.setAttribute("class","plus-button");
+    var minusButtonText = document.createTextNode("-");
+    var minusButton = document.createElement("div");
+    minusButton.appendChild(minusButtonText);
+    minusButton.setAttribute("class","minus-button");
+    plusButton.appendChild(plusButtonText);
+
     newProgressDivision.appendChild(currentProgressContainer);
+    newProgressDivision.appendChild(plusButton);
     newProgressDivision.appendChild(progressInput);
+    newProgressDivision.appendChild(minusButton);
+    newProgressDivision.appendChild(targetTextDiv);
+
+
 
     var completionTextContainer = document.createElement("div");
     completionTextContainer.setAttribute("class","progress-container");
@@ -275,8 +295,16 @@ var extractElementsForUpdateNoneLoggedIn = function(progressElements, habitsElem
     localStorage.clear();
     for (var i=0; i< progressElements.length  && i < maxForNonLoggedIn; i++){
         var currentOutput = readElement(progressElements[i]);
-        window.localStorage.setItem('progress-'+currentOutput.id.toString(), JSON.stringify(currentOutput));
-    }
+        try {
+            window.localStorage.setItem('progress-'+currentOutput.id.toString(), JSON.stringify(currentOutput));
+          } catch (error) {
+            console.error(error);
+            console.error("Problem writing progress:"+currentOutput.id.toString());
+            console.error(currentOutput);
+            // expected output: ReferenceError: nonExistentFunction is not defined
+            // Note - error messages will vary depending on browser
+          }
+           }
     for ( var j=0; j< habitsElements.length;j++){
         var currentOutput = readHabitElement(habitsElements[j]);
         window.localStorage.setItem('habit-'+currentOutput.habitId,JSON.stringify(currentOutput));

@@ -91,11 +91,7 @@
             }
             .main-section{
                 margin:10px;
-            }
-            .action-input{
-                margin-left: 16px;
-                margin-right: 16px;
-                margin-top: 26px;
+                padding-bottom: 80px;
             }
             .box,.filter-bar{
                 /*background:white;*/
@@ -123,7 +119,7 @@
                 padding: 20px;
                 /*box-shadow: -1px 2px 20px 0px rgb(0 0 0 / 20%);*/
             }
-            .habits-container,.habits-definition-container,.filter-bar,.graph-container,.main-action-bar,#progress-title{
+            .habits-container,.habits-definition-container,.filter-bar,.graph-container,.main-action-bar,#progress-title,#footer{
                 display: flex;
                 flex-wrap: wrap;
                 flex-direction: row;
@@ -138,7 +134,7 @@
 
             .update-button{
                color: white;
-               margin:20px 20px 0px 0px;
+               margin:10px 20px 0px 0px;
                padding:10px;
                border-radius: 5px;
                width: 200px;
@@ -156,11 +152,16 @@
             .progress-container{
                 font-size: 13px;
                 color: #423e3e;
-                margin-top: 10px;
+                margin-top: 3px;
+                clear: both;
+                padding-top: 10px;
             }
             .number-of-completion{
                 width: 57px;
                 font-size: 30px;
+                margin-top: 6px;
+                float:left;
+                text-align: center;
             }
             .percentage-completion::after{
                 content: " %";
@@ -176,6 +177,56 @@
                 font-weight: bold;
             }
 
+            #footer{
+                position: fixed;
+                bottom: 0px;
+                background: white;
+                width: 100%;
+                padding: 0px 10px 32px 10px;
+                box-shadow: -1px 2px 20px 0px rgb(0 0 0 / 20%);
+            }
+
+            .plus-button, .minus-button{
+                background: #b657af;
+                width: 20px;
+                text-align: center;
+                border-radius: 20px;
+                color: white;
+                float:left;
+                cursor:pointer;
+            }
+            .plus-button{
+                margin: 14px 5px 0px 0px;
+            }
+            .minus-button{
+                margin: 14px 13px 0px 6px;
+            }
+            .side-text{
+                float: left;
+                margin-top: 14px;
+            }
+            @media (max-width: 999px){
+                .habits-container,.habits-definition-container,.filter-bar,.graph-container,.main-action-bar,#progress-title,#footer{
+                    justify-content: space-around;
+                }
+                .action-input {
+                    margin-left: 10px;
+                    margin-right: 12px;
+                    margin-top: -6px;
+                }
+                #habit-filters{
+                    display: none;
+                }
+            }
+            @media (min-width: 1000px){
+                .action-input{
+                    margin-left: 16px;
+                    margin-right: 16px;
+                    margin-top: 26px;
+                }
+            }
+
+            
         </style>
     </header>
     <body>
@@ -198,24 +249,18 @@
             <div id="progress-title">
                 <div><h2>Update your progress</h2></div>
                 <div><input id="date-filter" type="date" class="action-input"></input></div>
-                <div id="update-button" class="update-button wide orange" onClick="extractElementsForUpdate();">Save</div>
+               
             </div>
             
             <div id="habits-container" class="habits-container">
             </div>
-            <div class="main-action-bar">
-                
-                <div id="go-to-graphs" class="update-button wide blue" onclick="changeTabToGraphs();">Graphs</div>
-                <div id="habit-filters"><label>Filter by habit title:</label><input id="text-filter" class="action-input" type="text" ></input></div>
-            </div>
+
         </div>
 
         <div id="habits-section" class="main-section">
             <div id="progress-title">
                 <div><h2>Add a new habit, update your entered habit</h2></div>
-                <div id="update-button" class="update-button wide orange" onClick="extractElementsForUpdate();">Save</div>
             </div>
-        <h2></h2>
             <div id="habits-definition-container" class="habits-definition-container">
                 <div class="box new-habit orange">
                     <div class="bold"><i class="fa fa-tasks"></i>New Habit</div><br>
@@ -226,15 +271,22 @@
                     <button onClick='addElementFromForm();'>Add</button>
                 </div>
             </div>
-            <div class="main-action-bar">
-                <div id="go-to-progress" class="update-button wide green" onclick="changeTabToProgress();">Progress</div>
-                <div id="go-to-graphs" class="update-button wide blue" onclick="changeTabToGraphs();">Graphs</div>
-            </div>
+
         </div>
 
         <div id="graphs-section" class="main-section" >
             <h2>Have a look at your superbe progress:</h2>
             <div id="graph-container" class="graph-container" ></div>
+        </div>
+
+        <div id="footer">
+            <div id="update-button" class="update-button wide orange" onClick="extractElementsForUpdate();">Save</div>
+       <!--     <div id="go-to-graphs" class="update-button wide blue" onclick="changeTabToGraphs();">Graphs</div>
+            <div id="go-to-habits" class="update-button wide blue" onclick="changeTabToHabits();">Habits</div>
+ 
+            <div id="go-to-progress" class="update-button wide green" onclick="changeTabToProgress();">Progress</div>
+       -->     <div id="habit-filters"><label>Filter by habit title:</label><input id="text-filter" class="action-input" type="text" ></input></div>
+
         </div>
         <script type="text/javascript" src='adding_habits.js'></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
