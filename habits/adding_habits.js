@@ -1,6 +1,6 @@
 
 var loggedIn = false;
-var maxForNonLoggedIn = 40;
+var maxForNonLoggedIn = 80;
 
 var currentDateTime = new Date();
 var currentDate = currentDateTime.getFullYear().toString().padStart(2,'0')+'-'+(currentDateTime.getMonth()+1).toString().padStart(2,'0')+'-'+currentDateTime.getDate().toString().padStart(2,'0'); 
@@ -9,6 +9,16 @@ var plusButtonInAddDiv = document.getElementById("plus-in-add-div");
 var minusButtonInAddDiv = document.getElementById("minus-in-add-div");
                      
 var newTargetDiv = document.getElementById("new-target");
+
+onload = function(){
+    
+    document.getElementById("date-filter").value=currentDate;
+    /*ingestElements();*/
+
+    getHabitProgress();
+    addEmptyProgressOnNewDay();
+    changeTabToProgress();
+};
 
 plusButtonInAddDiv.addEventListener('click', function(newTargetDiv) {
     return function(){
@@ -24,42 +34,7 @@ minusButtonInAddDiv.addEventListener('click', function(newTargetDiv) {
 
 
 
-var weekSelectionDiv = document.getElementById("week-day-selection");
 
-var mondayButtonInAddDiv = weekSelectionDiv.getElementsByClassName("monday")[0];            
-
-mondayButtonInAddDiv.addEventListener('click', function(weekSelectionDiv,mondayButtonInAddDiv) {
-    return function(){
-        setDayOfWeek(weekSelectionDiv, "monday",mondayButtonInAddDiv);
-    }
-    }(weekSelectionDiv,mondayButtonInAddDiv));
-
-
-var setDayOfWeek = function(containerDiv, dayOfWeek,dayOfWeekDiv){
-    /* todo: toggle */
-    if (dayOfWeekDiv.classList.contains("selected")){
-        dayOfWeekDiv.classList.remove("selected");
-        dayOfWeekDiv.classList.add("unselected");
-        var weekArrayString = containerDiv.getAttribute("weekday");
-        var weekArray = weekArrayString.split(" ");
-        weekArray.push(dayOfWeek);
-        weekArrayString=weekArray.join(" ");
-        containerDiv.setAttribute("weekday",weekArrayString);
-
-    } else {
-        dayOfWeekDiv.classList.add("selected");
-        dayOfWeekDiv.classList.remove("unselected");
-        weekArray = containerDiv.getAttribute("weekday");
-        /* todo: use split and join like above */
-        const index = weekArray.indexOf(dayOfWeek);
-        if (index > -1) {
-            weekArray.splice(index, 1);
-        }
-        containerDiv.setAttribute("weekday",weekArray);
-    }
-
-
-}
 
 
 var getHabitProgress = function(){
@@ -167,15 +142,7 @@ var applyFilters = function(){
     filterDivs(testElements,"progressDate",filterDate,true);
     filterDivs(testElements,"habitDescription",filterTitle,false);
 };
-onload = function(){
-    
-    document.getElementById("date-filter").value=currentDate;
-    /*ingestElements();*/
 
-    getHabitProgress();
-    addEmptyProgressOnNewDay();
-    changeTabToProgress();
-};
 
 var dateFilter = document.getElementById('date-filter');
 dateFilter.addEventListener('input', function (evt) {
@@ -187,135 +154,7 @@ textFilter.addEventListener('input', function (evt) {
     applyFilters();
 });
 
-var addHabitElement = function(elementToAdd){
-    const newHabitDivision = document.createElement("div");
 
-    newHabitDivision.setAttribute("habitDescription", elementToAdd.habitDescription);
-    newHabitDivision.setAttribute("target", elementToAdd.target);
-    newHabitDivision.setAttribute("class", "box habit-setting");
-    newHabitDivision.setAttribute("habitId",elementToAdd.habitId);
-
-    const descriptionInput = document.createElement("input");
-    descriptionInput.value = elementToAdd.habitDescription;
-    descriptionInput.setAttribute("class","habit-description-definition");
-
-
-    const targetText = document.createTextNode("Daily Target");
-    const targetValue = document.createElement("input");
-    targetValue.setAttribute("class","habit-target-definition");
-    targetValue.setAttribute("type","number");
-
-    targetValue.value = elementToAdd.target;
-    newHabitDivision.appendChild(descriptionInput);
-    newHabitDivision.appendChild(targetText);
-    newHabitDivision.appendChild(targetValue);
-
-    document.getElementById('habits-definition-container').appendChild(newHabitDivision);
-
-
-}
-var addElement = function(elementToAdd){
-    const newProgressDivision = document.createElement("div");
-
-    newProgressDivision.setAttribute("id", elementToAdd.id );
-    newProgressDivision.setAttribute("habitDescription", elementToAdd.habitDescription);
-    newProgressDivision.setAttribute("target", elementToAdd.target);
-    newProgressDivision.setAttribute("progressDate", elementToAdd.progressDate );
-    newProgressDivision.setAttribute("class", "box habit-update");
-    newProgressDivision.setAttribute("isNew",elementToAdd.isNew);
-    newProgressDivision.setAttribute("habitId",elementToAdd.habitId);
-
-
-    const dateDiv = document.createElement("div");
-
-    const habitDescriptionText = document.createTextNode(elementToAdd.habitDescription);
-    const targetValue = document.createElement("input");
-    const currentProgressText = document.createTextNode("Number of times completed:");
-    const currentCompletionText = document.createTextNode("Percentage Completion:");
-    const progressInput = document.createElement("input");
-    const percentageCompletionInput = document.createElement("div");
-
-    const targetText = document.createTextNode(" of "+elementToAdd.target);
-    const targetTextDiv = document.createElement("div");
-    targetTextDiv.setAttribute('class','side-text');
-    targetTextDiv.appendChild(targetText);
-
-    var percentageCompletion = Math.round(elementToAdd.numberOfCompletions * 100 / elementToAdd.target) ;
-    
-    progressInput.setAttribute("type","number");
-    progressInput.setAttribute("class","number-of-completion");
-    progressInput.setAttribute("value",elementToAdd.numberOfCompletions);
-
-    /*percentageCompletionInput.setAttribute("type","number");*/
-    percentageCompletionInput.setAttribute("class","percentage-completion");
-    percentageCompletionInput.innerHTML = percentageCompletion.toString();
-
-
-    var habitDescriptionContainer = document.createElement("div");
-    habitDescriptionContainer.setAttribute("class","habit-description");
-    var taskIcon = document.createElement("i");
-    taskIcon.setAttribute("class","fa fa-tasks");
-    habitDescriptionContainer.appendChild(taskIcon);
-    habitDescriptionContainer.appendChild(habitDescriptionText);
-    newProgressDivision.appendChild(habitDescriptionContainer);
-
-    var currentProgressContainer = document.createElement("div");
-
-    currentProgressContainer.appendChild(currentProgressText);
-    currentProgressContainer.setAttribute("class","progress-container");
-
-    var plusButtonText = document.createTextNode("+");
-    var plusButton = document.createElement("div");
-    plusButton.setAttribute("class","plus-button normal");
-    var minusButtonText = document.createTextNode("-");
-    var minusButton = document.createElement("div");
-    minusButton.appendChild(minusButtonText);
-    minusButton.setAttribute("class","minus-button normal");
-    plusButton.appendChild(plusButtonText);
-
-    plusButton.addEventListener('click', function(newProgressDivision) {
-        return function(){
-            var progressInput = newProgressDivision.getElementsByClassName("number-of-completion")[0]
-            addOneToProgress(progressInput);
-            refreshProgress(newProgressDivision);
-        }
-     }(newProgressDivision));
-
-     minusButton.addEventListener('click', function(newProgressDivision) {
-        return function(){
-            var progressInput = newProgressDivision.getElementsByClassName("number-of-completion")[0]         
-            minusOneToProgress(progressInput);
-            refreshProgress(newProgressDivision);
-        }
-     }(newProgressDivision));
-
-    newProgressDivision.appendChild(currentProgressContainer);
-    newProgressDivision.appendChild(plusButton);
-    newProgressDivision.appendChild(progressInput);
-    newProgressDivision.appendChild(minusButton);
-    newProgressDivision.appendChild(targetTextDiv);
-
-
-
-    var completionTextContainer = document.createElement("div");
-    completionTextContainer.setAttribute("class","progress-container");
-
-    completionTextContainer.appendChild(currentCompletionText);
-    newProgressDivision.appendChild(completionTextContainer);
-    newProgressDivision.appendChild(percentageCompletionInput);
-
-    targetValue.value = elementToAdd.target;
-
-    document.getElementById('habits-container').appendChild(newProgressDivision);
-    newProgressDivision.addEventListener('change', function(newProgressDivision) {
-        return function(){refreshProgress(newProgressDivision)}
-     }(newProgressDivision));
-
-
-
-
-
-};
 
 var minusOneToProgress = function(divElement){
     console.log("minus one");
@@ -341,6 +180,7 @@ var addElementFromForm = function(){
     elementToAdd.progressDate = currentDate;
     elementToAdd.numberOfCompletions = 0;
     elementToAdd.isNew = true;
+    elementToAdd.weekDay = document.getElementById('week-day-selection').getAttribute('weekDay');
 
     addElement(elementToAdd);
     addHabitElement(elementToAdd);
@@ -409,6 +249,7 @@ var readHabitElement = function(elementToRead){
 
     outputJson.habitDescription = elementToRead.getElementsByClassName('habit-description-definition')[0].value;
     outputJson.target = parseInt(elementToRead.getElementsByClassName('habit-target-definition')[0].value);
+    outputJson.weekDay = elementToRead.getAttribute("weekDay");
 
     return outputJson;
 };
@@ -449,6 +290,9 @@ function APICaller(parameters,callback,callbackOnFailure){
 	
 };
 
+
+
+
 var addEmptyProgressOnNewDay = function(){
 
     var progressElements = document.getElementsByClassName('habit-update');
@@ -465,16 +309,22 @@ var addEmptyProgressOnNewDay = function(){
         }
 
         if ( isHabitProgressExisting == false){
-            newProgressObject = {
-                id: Date.now(),
-                habitId: habitsElements[i].getAttribute("habitId"),
-                habitDescription: habitsElements[i].getAttribute("habitDescription"),
-                target: habitsElements[i].getAttribute("target"),
-                progressDate: currentDate,
-                isNew: true,
-                numberOfCompletions:0
+
+            if (habitsElements[i].getAttribute("weekDays")){
+                var isDayOK = isDayOfWeekInHabitWeeks(currentDateTime, habitsElements[i].getAttribute("weekDays"));
             }
-            addElement(newProgressObject);
+            if (isDayOK != null && isDayOK == true) {
+                newProgressObject = {
+                    id: Date.now(),
+                    habitId: habitsElements[i].getAttribute("habitId"),
+                    habitDescription: habitsElements[i].getAttribute("habitDescription"),
+                    target: habitsElements[i].getAttribute("target"),
+                    progressDate: currentDate,
+                    isNew: true,
+                    numberOfCompletions:0
+                }
+                addElement(newProgressObject);
+            }
         }
     }
     /* go through all elements, if nothing with today's date, go through all habits and add new element with this habit id*/
