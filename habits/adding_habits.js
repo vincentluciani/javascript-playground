@@ -5,6 +5,25 @@ var maxForNonLoggedIn = 40;
 var currentDateTime = new Date();
 var currentDate = currentDateTime.getFullYear().toString().padStart(2,'0')+'-'+(currentDateTime.getMonth()+1).toString().padStart(2,'0')+'-'+currentDateTime.getDate().toString().padStart(2,'0'); 
 
+var plusButtonInAddDiv = document.getElementById("plus-in-add-div");
+var minusButtonInAddDiv = document.getElementById("minus-in-add-div");
+                     
+var newTargetDiv = document.getElementById("new-target");
+
+plusButtonInAddDiv.addEventListener('click', function(newTargetDiv) {
+    return function(){
+        addOneToProgress(newTargetDiv);
+    }
+    }(newTargetDiv));
+
+minusButtonInAddDiv.addEventListener('click', function(newTargetDiv) {
+        return function(){
+            minusOneToProgress(newTargetDiv);
+        }
+        }(newTargetDiv));
+
+
+
 var getHabitProgress = function(){
 
     if (loggedIn){
@@ -209,12 +228,28 @@ var addElement = function(elementToAdd){
 
     var plusButtonText = document.createTextNode("+");
     var plusButton = document.createElement("div");
-    plusButton.setAttribute("class","plus-button");
+    plusButton.setAttribute("class","plus-button normal");
     var minusButtonText = document.createTextNode("-");
     var minusButton = document.createElement("div");
     minusButton.appendChild(minusButtonText);
-    minusButton.setAttribute("class","minus-button");
+    minusButton.setAttribute("class","minus-button normal");
     plusButton.appendChild(plusButtonText);
+
+    plusButton.addEventListener('click', function(newProgressDivision) {
+        return function(){
+            var progressInput = newProgressDivision.getElementsByClassName("number-of-completion")[0]
+            addOneToProgress(progressInput);
+            refreshProgress(newProgressDivision);
+        }
+     }(newProgressDivision));
+
+     minusButton.addEventListener('click', function(newProgressDivision) {
+        return function(){
+            var progressInput = newProgressDivision.getElementsByClassName("number-of-completion")[0]         
+            minusOneToProgress(progressInput);
+            refreshProgress(newProgressDivision);
+        }
+     }(newProgressDivision));
 
     newProgressDivision.appendChild(currentProgressContainer);
     newProgressDivision.appendChild(plusButton);
@@ -238,7 +273,25 @@ var addElement = function(elementToAdd){
         return function(){refreshProgress(newProgressDivision)}
      }(newProgressDivision));
 
+
+
+
+
 };
+
+var minusOneToProgress = function(divElement){
+    console.log("minus one");
+
+    if (parseInt(divElement.value) > 0){
+        divElement.value = (parseInt(divElement.value) - 1).toString();
+    }
+}
+
+var addOneToProgress = function(divElement){
+    console.log("plus one");
+
+    divElement.value = (parseInt(divElement.value) + 1).toString();
+}
 
 var addElementFromForm = function(){
 

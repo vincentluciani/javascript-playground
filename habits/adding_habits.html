@@ -103,9 +103,10 @@
                 background: white;
             }
             .box.new-habit,.habit-setting{
-                width:172px;
-                height:180px;
-                box-shadow: -1px 2px 17px 5px rgb(0 0 0 / 20%);
+                width: 200px;
+                height: 255px;
+                box-shadow: -1px 2px 14px 0px rgb(0 0 0 / 20%);
+                padding: 20px;
             }
             .box.canva-wrapper{
                 max-width:300px;
@@ -176,6 +177,10 @@
             .bold{
                 font-weight: bold;
             }
+            #new-description{
+                width: 191px;
+                margin-bottom: 10px;
+            }
 
             #footer{
                 position: fixed;
@@ -187,14 +192,24 @@
             }
 
             .plus-button, .minus-button{
-                background: #b657af;
+
                 width: 20px;
                 text-align: center;
                 border-radius: 20px;
-                color: white;
+
                 float:left;
                 cursor:pointer;
             }
+            .plus-button.normal, .minus-button.normal{
+                background: #b657af;
+                color: white;
+            }
+
+            .plus-button.inverted, .minus-button.inverted{
+                color: #b657af;
+                background: white;
+            }
+
             .plus-button{
                 margin: 14px 5px 0px 0px;
             }
@@ -204,6 +219,25 @@
             .side-text{
                 float: left;
                 margin-top: 14px;
+            }
+
+            .label{
+                clear: both;
+            }
+
+            .add-button{
+                clear: both;
+                background: white;
+                color: #b657af;
+                text-align: center;
+                padding: 10px;
+                border-radius: 5px;
+                margin-top: 16px;
+            }
+
+            .target-container{
+                width: 122px;
+                height: 50px;
             }
             @media (max-width: 999px){
                 .habits-container,.habits-definition-container,.filter-bar,.graph-container,.main-action-bar,#progress-title,#footer{
@@ -264,11 +298,15 @@
             <div id="habits-definition-container" class="habits-definition-container">
                 <div class="box new-habit orange">
                     <div class="bold"><i class="fa fa-tasks"></i>New Habit</div><br>
-                    <label>Description:</label>
-                    <input type="text" id="new-description"/><br>
-                    <label>Target:</label>
-                    <input type="number" id="new-target"/><br>
-                    <button onClick='addElementFromForm();'>Add</button>
+                    <label class="label">Description:</label>
+                    <textarea  rows=3 type="text" id="new-description" class="large"></textarea><br>
+                    <div><label class="label">Target:</label></div>
+                    <div class="target-container">
+                        <div id="plus-in-add-div" class="plus-button inverted">+</div>
+                        <input type="number" id="new-target" class="number-of-completion" value=0 />
+                        <div id="minus-in-add-div" class="minus-button inverted">-</div>
+                    </div>
+                    <div onClick='addElementFromForm();' id="add-button" class="add-button">Add</div>
                 </div>
             </div>
 
