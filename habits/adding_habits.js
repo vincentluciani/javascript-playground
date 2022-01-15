@@ -24,6 +24,44 @@ minusButtonInAddDiv.addEventListener('click', function(newTargetDiv) {
 
 
 
+var weekSelectionDiv = document.getElementById("week-day-selection");
+
+var mondayButtonInAddDiv = weekSelectionDiv.getElementsByClassName("monday")[0];            
+
+mondayButtonInAddDiv.addEventListener('click', function(weekSelectionDiv,mondayButtonInAddDiv) {
+    return function(){
+        setDayOfWeek(weekSelectionDiv, "monday",mondayButtonInAddDiv);
+    }
+    }(weekSelectionDiv,mondayButtonInAddDiv));
+
+
+var setDayOfWeek = function(containerDiv, dayOfWeek,dayOfWeekDiv){
+    /* todo: toggle */
+    if (dayOfWeekDiv.classList.contains("selected")){
+        dayOfWeekDiv.classList.remove("selected");
+        dayOfWeekDiv.classList.add("unselected");
+        var weekArrayString = containerDiv.getAttribute("weekday");
+        var weekArray = weekArrayString.split(" ");
+        weekArray.push(dayOfWeek);
+        weekArrayString=weekArray.join(" ");
+        containerDiv.setAttribute("weekday",weekArrayString);
+
+    } else {
+        dayOfWeekDiv.classList.add("selected");
+        dayOfWeekDiv.classList.remove("unselected");
+        weekArray = containerDiv.getAttribute("weekday");
+        /* todo: use split and join like above */
+        const index = weekArray.indexOf(dayOfWeek);
+        if (index > -1) {
+            weekArray.splice(index, 1);
+        }
+        containerDiv.setAttribute("weekday",weekArray);
+    }
+
+
+}
+
+
 var getHabitProgress = function(){
 
     if (loggedIn){

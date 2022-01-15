@@ -103,8 +103,8 @@
                 background: white;
             }
             .box.new-habit,.habit-setting{
-                width: 200px;
-                height: 255px;
+                width: 208px;
+                height: 335px;
                 box-shadow: -1px 2px 14px 0px rgb(0 0 0 / 20%);
                 padding: 20px;
             }
@@ -120,7 +120,7 @@
                 padding: 20px;
                 /*box-shadow: -1px 2px 20px 0px rgb(0 0 0 / 20%);*/
             }
-            .habits-container,.habits-definition-container,.filter-bar,.graph-container,.main-action-bar,#progress-title,#footer{
+            .week-day-selection,.habits-container,.habits-definition-container,.filter-bar,.graph-container,.main-action-bar,#progress-title,#footer{
                 display: flex;
                 flex-wrap: wrap;
                 flex-direction: row;
@@ -239,6 +239,27 @@
                 width: 122px;
                 height: 50px;
             }
+
+            .weekday{
+                margin: 3px;
+                padding: 4px;
+                cursor: pointer;
+                font-size:13px;
+                width: 13px;
+                border-radius: 13px;
+                text-align: center;
+            }
+            .weekday.selected{
+                color:#b657af;
+                background-color: white;
+            }
+            .weekday.unselected{
+                color: white;
+                background-color: #b657af;
+            }
+            .week-day-selection{
+                margin-top: 7px;
+            }
             @media (max-width: 999px){
                 .habits-container,.habits-definition-container,.filter-bar,.graph-container,.main-action-bar,#progress-title,#footer{
                     justify-content: space-around;
@@ -305,6 +326,16 @@
                         <div id="plus-in-add-div" class="plus-button inverted">+</div>
                         <input type="number" id="new-target" class="number-of-completion" value=0 />
                         <div id="minus-in-add-div" class="minus-button inverted">-</div>
+                    </div>
+                    <div class="week-day-selection" id="week-day-selection" weekday='tuesday wednesday' >
+                        <label>Applies to the following days of the week:</label>
+                        <div class="weekday monday selected">M</div>
+                        <div class="weekday tuesday selected">T</div>
+                        <div class="weekday wednesday selected">W</div>
+                        <div class="weekday thursday selected">T</div>
+                        <div class="weekday friday selected">F</div>
+                        <div class="weekday saturday selected">S</div>
+                        <div class="weekday sunday selected">S</div>
                     </div>
                     <div onClick='addElementFromForm();' id="add-button" class="add-button">Add</div>
                 </div>
