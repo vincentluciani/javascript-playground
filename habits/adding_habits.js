@@ -182,7 +182,15 @@ var addElementFromForm = function(){
     elementToAdd.isNew = true;
     elementToAdd.weekDay = document.getElementById('week-day-selection').getAttribute('weekDay');
 
-    addElement(elementToAdd);
+    if (elementToAdd.weekDay){
+        var isDayOK = isDayOfWeekInHabitWeeks(currentDateTime, elementToAdd.weekDay);
+    } else {
+        var isDayOK = true;
+    }
+    if (isDayOK != null && isDayOK == true)
+    {
+        addElement(elementToAdd);
+    }
     addHabitElement(elementToAdd);
 
     document.getElementById('new-description').value = null;
@@ -226,14 +234,22 @@ var extractElementsForUpdateNoneLoggedIn = function(progressElements, habitsElem
     localStorage.clear();
     for (var i=0; i< progressElements.length  && i < maxForNonLoggedIn; i++){
         var currentOutput = readElement(progressElements[i]);
+        var jsonOutput = JSON.stringify(currentOutput);
+
         try {
-            window.localStorage.setItem('progress-'+currentOutput.id.toString(), JSON.stringify(currentOutput));
+            window.localStorage.setItem('progress-'+currentOutput.id.toString(), jsonOutput);
           } catch (error) {
             console.error(error);
             console.error("Problem writing progress:"+currentOutput.id.toString());
             console.error(currentOutput);
             // expected output: ReferenceError: nonExistentFunction is not defined
             // Note - error messages will vary depending on browser
+          }
+
+          var verificationObject = window.localStorage.getItem('progress-'+currentOutput.id.toString());
+
+          if (verificationObject != jsonOutput){
+            console.error("Problem writing progress - write is not same as intented:"+currentOutput.id.toString());
           }
            }
     for ( var j=0; j< habitsElements.length;j++){
@@ -310,8 +326,10 @@ var addEmptyProgressOnNewDay = function(){
 
         if ( isHabitProgressExisting == false){
 
-            if (habitsElements[i].getAttribute("weekDays")){
-                var isDayOK = isDayOfWeekInHabitWeeks(currentDateTime, habitsElements[i].getAttribute("weekDays"));
+            if (habitsElements[i].getAttribute("weekDay")){
+                var isDayOK = isDayOfWeekInHabitWeeks(currentDateTime, habitsElements[i].getAttribute("weekDay"));
+            } else {
+                var isDayOK = true;
             }
             if (isDayOK != null && isDayOK == true) {
                 newProgressObject = {
