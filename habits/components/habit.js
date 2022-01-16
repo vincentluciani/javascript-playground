@@ -7,6 +7,16 @@ var addHabitElement = function(elementToAdd){
     newHabitDivision.setAttribute("habitId",elementToAdd.habitId);
     newHabitDivision.setAttribute("weekDay",elementToAdd.weekDay);
 
+    const titleText = document.createTextNode("Update habit:");
+    var taskIcon = document.createElement("i");
+    taskIcon.setAttribute("class","fa fa-tasks");
+
+    const titleTextDiv = document.createElement("div");
+    titleTextDiv.appendChild(taskIcon);
+    titleTextDiv.appendChild(titleText);
+
+    titleTextDiv.setAttribute("class", "habit-title");
+
     const descriptionText = document.createTextNode("Habit description:");
     const descriptionTextDiv = document.createElement("div");
     descriptionTextDiv.appendChild(descriptionText);
@@ -26,6 +36,7 @@ var addHabitElement = function(elementToAdd){
     targetValue.setAttribute("type","number");
 
     targetValue.value = elementToAdd.target;
+    newHabitDivision.appendChild(titleTextDiv);
     newHabitDivision.appendChild(descriptionTextDiv);
     newHabitDivision.appendChild(descriptionInput);
     newHabitDivision.appendChild(targetTextDiv);

@@ -119,7 +119,7 @@ var refreshProgress = function(currentDiv){
     if (newCompletionPercentage>=100){
         currentDiv.style.boxShadow="rgb(21 173 25 / 20%) -1px 2px 17px 5px";
     } else if (newCompletionPercentage>=50){
-        currentDiv.style.boxShadow="-1px 2px 17px 5px rgb(245 255 157)";
+        currentDiv.style.boxShadow="-1px 2px 17px 5px rgb(243 229 176)";
     } else if (newCompletionPercentage<50){
         currentDiv.style.boxShadow="-1px 2px 14px 0px rgb(247 163 163)";
     }
