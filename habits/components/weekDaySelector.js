@@ -87,7 +87,7 @@ var weekDayNumbers = {
     4:'thursday',
     5:'friday',
     6:'saturday',
-    7:'sunday'
+    0:'sunday'
 }
 
 var isDayOfWeekInHabitWeeks = function(currentDate, stringOfWeekDays){
@@ -105,3 +105,60 @@ var isDayOfWeekInHabitWeeks = function(currentDate, stringOfWeekDays){
     return false;
 }
 
+var dynamicWeekDaySelector = function(weekDay){
+
+    var weekDaySelector = document.createElement("div");
+    weekDaySelector.setAttribute("class","week-day-selection");
+    weekDaySelector.setAttribute("weekday", weekDay);
+
+    const descriptionTextLabel = document.createElement("label");
+
+    const descriptionText = document.createTextNode("Applies to the following days of the week:");
+    descriptionTextLabel.appendChild(descriptionText);
+
+    var mondayDiv = dayOfWeek("monday","M",weekDay);
+    var tuesdayDiv = dayOfWeek("tuesday","T",weekDay);
+    var wednesdayDiv = dayOfWeek("wednesday","W",weekDay);
+    var thursdayDiv = dayOfWeek("thursday","T",weekDay);
+    var fridayDiv = dayOfWeek("friday","F",weekDay);
+    var saturdayDiv = dayOfWeek("saturday","S",weekDay);
+    var sundayDiv = dayOfWeek("sunday","S",weekDay);
+
+    weekDaySelector.appendChild(descriptionTextLabel);
+    weekDaySelector.appendChild(mondayDiv);
+    weekDaySelector.appendChild(tuesdayDiv);
+    weekDaySelector.appendChild(wednesdayDiv);
+    weekDaySelector.appendChild(thursdayDiv);
+    weekDaySelector.appendChild(fridayDiv);
+    weekDaySelector.appendChild(saturdayDiv);
+    weekDaySelector.appendChild(sundayDiv);
+
+    return weekDaySelector;
+
+}
+
+var dayOfWeek = function(day, label, weekday){
+    var dayOfWeekDiv = document.createElement("div");
+
+    if (isDayInListOfDaysString(day, weekday) == true){
+        var className = "weekday "+day+" selected";
+    } else {
+        var className = "weekday "+day+" unselected";
+    }
+    
+    dayOfWeekDiv.setAttribute("class",className);
+    dayOfWeekDiv.innerHTML = label;
+
+    return dayOfWeekDiv;
+
+}
+
+var isDayInListOfDaysString = function(dayToCheck, weekDayString){
+    var arrayOfWeekDays = weekDayString.split(" ");
+
+    const index = arrayOfWeekDays.indexOf(dayToCheck);
+    if (index > -1) {
+        return true;
+    }
+    return false;
+}
