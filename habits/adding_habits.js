@@ -17,7 +17,7 @@ onload = function(){
 
     getHabitProgress();
     addEmptyProgressOnNewDay();
-    changeTabToProgress();
+
 };
 
 plusButtonInAddDiv.addEventListener('click', function(newTargetDiv) {
@@ -69,6 +69,11 @@ var getHabitProgressWhenNotLoggedIn = function(){
             habitsArray.push(JSON.parse(localStorage.getItem(currentKey)));
         }
     }
+    if (habitsArray.length > 0){
+        changeTabToProgress();
+    }
+
+
     ingestElements(progressArray,habitsArray);
 };
 
@@ -117,20 +122,15 @@ var refreshProgress = function(currentDiv){
 
     
     if (newCompletionPercentage>=100){
-        currentDiv.style.boxShadow="rgb(21 173 25 / 20%) -1px 2px 17px 5px";
+        currentDiv.style.background="#f7fff6";
+        currentDiv.style.boxShadow="rgb(21 173 25 / 20%) -1px 2px 12px 5px";
     } else if (newCompletionPercentage>=50){
-        currentDiv.style.boxShadow="-1px 2px 17px 5px rgb(243 229 176)";
+        currentDiv.style.background="#fffded";
+        currentDiv.style.boxShadow="-1px 2px 17px 0px rgb(243 229 176)";
     } else if (newCompletionPercentage<50){
-        currentDiv.style.boxShadow="-1px 2px 14px 0px rgb(247 163 163)";
+        currentDiv.style.background="#fff6f9";
+        currentDiv.style.boxShadow="-1px 2px 10px 0px rgb(255 190 190)";
     }
-
-    // if (newCompletionPercentage>=100){
-    //     currentDiv.style.background="rgb(76 255 81 / 20%)";
-    // } else if (newCompletionPercentage>=50){
-    //     currentDiv.style.background="rgb(255 227 143)";
-    // } else if (newCompletionPercentage<50){
-    //     currentDiv.style.background="rgb(253 171 171)";
-    // }
 
 }
 
