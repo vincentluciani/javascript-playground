@@ -265,7 +265,7 @@ var readHabitElement = function(elementToRead){
 
     outputJson.habitDescription = elementToRead.getElementsByClassName('habit-description-definition')[0].value;
     outputJson.target = parseInt(elementToRead.getElementsByClassName('habit-target-definition')[0].value);
-    outputJson.weekDay = elementToRead.getAttribute("weekDay");
+    outputJson.weekDay = elementToRead.getElementsByClassName("week-day-selection")[0].getAttribute("weekDay");
 
     return outputJson;
 };

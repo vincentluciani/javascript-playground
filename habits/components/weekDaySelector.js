@@ -124,6 +124,15 @@ var dynamicWeekDaySelector = function(weekDay){
     var saturdayDiv = dayOfWeek("saturday","S",weekDay);
     var sundayDiv = dayOfWeek("sunday","S",weekDay);
 
+
+    addWeekDayListener(weekDaySelector,mondayDiv,'monday');
+    addWeekDayListener(weekDaySelector,tuesdayDiv,'tuesday');
+    addWeekDayListener(weekDaySelector,wednesdayDiv,'wednesday');
+    addWeekDayListener(weekDaySelector,thursdayDiv,'thursday');
+    addWeekDayListener(weekDaySelector,fridayDiv,'friday');
+    addWeekDayListener(weekDaySelector,saturdayDiv,'saturday');
+    addWeekDayListener(weekDaySelector,sundayDiv,'sunday');
+
     weekDaySelector.appendChild(descriptionTextLabel);
     weekDaySelector.appendChild(mondayDiv);
     weekDaySelector.appendChild(tuesdayDiv);
@@ -137,18 +146,28 @@ var dynamicWeekDaySelector = function(weekDay){
 
 }
 
+var addWeekDayListener = function(mainDiv,childDiv,dayName){
+    childDiv.addEventListener('click', function(mainDiv,childDiv) {
+        return function(){
+            setDayOfWeek(mainDiv, dayName,childDiv);
+        }
+        }(mainDiv,childDiv));
+   
+        
+}
+
 var dayOfWeek = function(day, label, weekday){
     var dayOfWeekDiv = document.createElement("div");
 
     if (isDayInListOfDaysString(day, weekday) == true){
-        var className = "weekday "+day+" selected";
+        var className = "weekday "+day+" selected reverse";
     } else {
-        var className = "weekday "+day+" unselected";
+        var className = "weekday "+day+" unselected reverse";
     }
     
     dayOfWeekDiv.setAttribute("class",className);
     dayOfWeekDiv.innerHTML = label;
-
+ 
     return dayOfWeekDiv;
 
 }
