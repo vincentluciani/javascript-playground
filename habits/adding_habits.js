@@ -105,12 +105,16 @@ var resetElements = function(){
         var currentDiv = testElements[i];
         var progressClasses = currentDiv.getElementsByClassName("number-of-completion");
         var progressDiv = progressClasses[0];
-        refreshProgress(currentDiv);
-        
-        /* javascript feature known as closure */
-        progressDiv.addEventListener('change', function(currentDiv) {
+
+        if (progressDiv != null){
+            refreshProgress(currentDiv);
+            progressDiv.addEventListener('change', function(currentDiv) {
                 return function(){refreshProgress(currentDiv)}
              }(currentDiv));
+        }
+        
+        /* javascript feature known as closure */
+        
     }
     return testElements;
 };
@@ -365,6 +369,7 @@ var changeTabToHabits = function(){
     document.getElementById("habits-section").style.display = "block";
     document.getElementById("progress-section").style.display = "none";
     document.getElementById("graphs-section").style.display = "none";
+    document.getElementById('new-description').focus();
 }
 
 var changeTabToGraphs = function(){

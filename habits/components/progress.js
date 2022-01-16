@@ -53,9 +53,10 @@ var addElement = function(elementToAdd){
     plusButton.setAttribute("class","plus-button normal");
     var minusButtonText = document.createTextNode("-");
     var minusButton = document.createElement("div");
-    minusButton.appendChild(minusButtonText);
-    minusButton.setAttribute("class","minus-button normal");
     plusButton.appendChild(plusButtonText);
+    minusButton.setAttribute("class","minus-button normal");
+    minusButton.appendChild(minusButtonText);
+
 
     plusButton.addEventListener('click', function(newProgressDivision) {
         return function(){
@@ -74,9 +75,10 @@ var addElement = function(elementToAdd){
      }(newProgressDivision));
 
     newProgressDivision.appendChild(currentProgressContainer);
-    newProgressDivision.appendChild(plusButton);
-    newProgressDivision.appendChild(progressInput);
     newProgressDivision.appendChild(minusButton);
+    newProgressDivision.appendChild(progressInput);
+    newProgressDivision.appendChild(plusButton);
+
     newProgressDivision.appendChild(targetTextDiv);
 
 

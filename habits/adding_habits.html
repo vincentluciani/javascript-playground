@@ -113,14 +113,48 @@
                 max-height:300px; 
                 box-shadow: -1px 2px 17px 5px rgb(0 0 0 / 20%);
             }
-            .box.habit-update{
+            .box.habit-update,.box.big-action-button{
                 width:200px;
                 height: 190px;
+                padding: 20px;
+            }
+            .box.big-action-button{
+                background-color:#b657af;
+                display: flex;
+                color: white;
+                font-weight: bold;
+                font-size: 26px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-evenly;
+                align-items: center;
+                box-shadow: -1px 2px 10px 0px rgb(255 168 168);
+                cursor: pointer;
+                order:100;
+            }
+            .huge-button{
+                width: 208px;
+                height: 355px;
+                background-color: #b657af;
+                box-shadow: -1px 2px 14px 0px rgb(0 0 0 / 20%);
+                color: white;
+                font-size: 23px;
+                font-weight: bold;
+                padding: 10px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-evenly;
+                align-items: center;
+                cursor: pointer;
+            }
+            .huge-button i{
+                font-size:100px;
+            }
+            .box.habit-update{
                 background-color:#fff6f9;
                 box-shadow: -1px 2px 10px 0px rgb(255 190 190);
-                padding: 20px;
-                /*box-shadow: -1px 2px 20px 0px rgb(0 0 0 / 20%);*/
             }
+
             .week-day-selection,.habits-container,.habits-definition-container,.filter-bar,.graph-container,.main-action-bar,#progress-title,#footer{
                 display: flex;
                 flex-wrap: wrap;
@@ -194,10 +228,10 @@
 
             .plus-button, .minus-button{
 
-                width: 20px;
+                width: 25px;
                 text-align: center;
-                border-radius: 20px;
-
+                height: 32px;
+                padding-top: 9px;
                 float:left;
                 cursor:pointer;
             }
@@ -212,10 +246,12 @@
             }
 
             .plus-button{
-                margin: 14px 5px 0px 0px;
+                margin: 6px 5px 0px 0px;
+                border-radius: 0px 20px 20px 0px;
             }
             .minus-button{
-                margin: 14px 13px 0px 6px;
+                margin: 6px 0px 0px 0px;
+                border-radius: 20px 0px 0px 20px;
             }
             .side-text{
                 float: left;
@@ -228,8 +264,8 @@
 
             .add-button{
                 clear: both;
-                background: white;
-                color: #b657af;
+                background: #b657af;
+                color: white;
                 text-align: center;
                 padding: 10px;
                 border-radius: 5px;
@@ -251,12 +287,12 @@
                 text-align: center;
             }
             .weekday.selected, .weekday.unselected.reverse{
-                color:#b657af;
+                color:#718bea;
                 background-color: white;
             }
             .weekday.unselected, .weekday.selected.reverse{
                 color: white;
-                background-color: #b657af;
+                background-color: #718bea;
             }
             .week-day-selection{
                 margin-top: 13px;
@@ -273,6 +309,9 @@
             .habit-title{
                 font-weight: bold;
                 margin-bottom: 20px;
+            }
+            .box.big-action-button i{
+                font-size:100px;
             }
             #progress-section,#graphs-section{
                 display: none;
@@ -325,6 +364,15 @@
             </div>
             
             <div id="habits-container" class="habits-container">
+                <div class="box big-action-button" onclick="changeTabToHabits();">
+                    <div>New Habit</div>
+                    <i class="fa fa-plus"></i>
+
+                </div>
+                <div class="box big-action-button" onclick="changeTabToGraphs();">
+                    <div>Graphs</div>
+                    <i class="fa fa-bar-chart"></i>
+                </div>
             </div>
 
         </div>
@@ -334,15 +382,15 @@
                 <div><h2>Add a new habit, update your entered habit</h2></div>
             </div>
             <div id="habits-definition-container" class="habits-definition-container">
-                <div class="box new-habit orange">
+                <div class="box new-habit blue">
                     <div class="bold"><i class="fa fa-tasks"></i>New Habit</div><br>
                     <label class="label">Description:</label>
                     <textarea  rows=3 type="text" id="new-description" class="large"></textarea><br>
                     <div><label class="label">Target:</label></div>
                     <div class="target-container">
-                        <div id="plus-in-add-div" class="plus-button inverted">+</div>
+                        <div id="minus-in-add-div" class="minus-button normal">-</div>
                         <input type="number" id="new-target" class="number-of-completion" value=0 />
-                        <div id="minus-in-add-div" class="minus-button inverted">-</div>
+                        <div id="plus-in-add-div" class="plus-button normal">+</div>
                     </div>
                     <div class="week-day-selection" id="week-day-selection" weekday='monday tuesday wednesday thursday friday saturday sunday' >
                         <label>Applies to the following days of the week:</label>
@@ -356,8 +404,11 @@
                     </div>
                     <div onClick='addElementFromForm();' id="add-button" class="add-button">Add</div>
                 </div>
+                <div onclick="changeTabToProgress();" class="box huge-button">
+                    <div>Start Updating Your Progress</div>
+                    <i class="fa fa-tasks"></i>
+                </div>
             </div>
-
         </div>
 
         <div id="graphs-section" class="main-section" >
