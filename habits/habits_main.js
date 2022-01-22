@@ -243,8 +243,10 @@ var extractElementsForUpdateLoggedIn = function(progressElements, habitsElements
 };
 
 
+
+
 var extractElementsForUpdateNoneLoggedIn = function(progressElements, habitsElements){
-    localStorage.clear();
+    /*localStorage.clear();
     for (var i=0; i< progressElements.length  && i < maxForNonLoggedIn; i++){
         var currentOutput = readElement(progressElements[i]);
         var jsonOutput = JSON.stringify(currentOutput);
@@ -255,8 +257,6 @@ var extractElementsForUpdateNoneLoggedIn = function(progressElements, habitsElem
             console.error(error);
             console.error("Problem writing progress:"+currentOutput.id.toString());
             console.error(currentOutput);
-            // expected output: ReferenceError: nonExistentFunction is not defined
-            // Note - error messages will vary depending on browser
           }
 
           var verificationObject = window.localStorage.getItem('progress-'+currentOutput.id.toString());
@@ -264,11 +264,14 @@ var extractElementsForUpdateNoneLoggedIn = function(progressElements, habitsElem
           if (verificationObject != jsonOutput){
             console.error("Problem writing progress - write is not same as intented:"+currentOutput.id.toString());
           }
-           }
+        
+ 
+    }*/
+    readQueueProgress();
+
     for ( var j=0; j< habitsElements.length;j++){
         var currentOutput = readHabitElement(habitsElements[j]);
         window.localStorage.setItem('habit-'+currentOutput.habitId,JSON.stringify(currentOutput));
- 
     }
 
 };

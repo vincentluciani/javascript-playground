@@ -3,8 +3,8 @@ var pushProgressToQueue = function(divToAnalyze) {
     var progressArray = readElement(divToAnalyze);
 
     var elementToAdd = {
-        'id': progressArray.id,
-        'value': progressArray
+        'id': 'progress-'+progressArray.id,
+        'value': JSON.stringify(progressArray)
     }
 
     executePushToQueue(elementToAdd);
@@ -14,8 +14,8 @@ var pushProgressToQueue = function(divToAnalyze) {
 var pushProgressArrayToQueue = function(objectToPush){
 
     var elementToAdd = {
-        'id': objectToPush.id,
-        'value': objectToPush
+        'id': 'progress-'+objectToPush.id,
+        'value': JSON.stringify(objectToPush)
     }
 
     executePushToQueue(elementToAdd);
