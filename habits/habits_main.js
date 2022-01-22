@@ -203,6 +203,7 @@ var addElementFromForm = function(){
         addElement(elementToAdd);
     }
     addHabitElement(elementToAdd);
+    pushProgressArrayToQueue(elementToAdd);
 
     document.getElementById('new-description').value = null;
     document.getElementById('new-target').value = null;

@@ -31,6 +31,6 @@ var executePushToQueue = function(newObject){
     }
 
     updateQueue.push(newObject);
-
+    console.log(updateQueue);
 
 }
