@@ -58,11 +58,13 @@ var addElement = function(elementToAdd){
     minusButton.appendChild(minusButtonText);
 
 
+
     plusButton.addEventListener('click', function(newProgressDivision) {
         return function(){
             var progressInput = newProgressDivision.getElementsByClassName("number-of-completion")[0]
             addOneToProgress(progressInput);
             refreshProgress(newProgressDivision);
+            pushProgressToQueue(newProgressDivision);
         }
      }(newProgressDivision));
 
@@ -71,6 +73,7 @@ var addElement = function(elementToAdd){
             var progressInput = newProgressDivision.getElementsByClassName("number-of-completion")[0]         
             minusOneToProgress(progressInput);
             refreshProgress(newProgressDivision);
+            pushProgressToQueue(newProgressDivision);
         }
      }(newProgressDivision));
 
@@ -94,11 +97,8 @@ var addElement = function(elementToAdd){
 
     document.getElementById('habits-container').appendChild(newProgressDivision);
     newProgressDivision.addEventListener('change', function(newProgressDivision) {
-        return function(){refreshProgress(newProgressDivision)}
+        return function(){refreshProgress(newProgressDivision);pushProgressToQueue(newProgressDivision);}
      }(newProgressDivision));
-
-
-
 
 
 };

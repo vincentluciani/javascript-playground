@@ -1,6 +1,7 @@
 
 var loggedIn = false;
 var maxForNonLoggedIn = 80;
+var updateQueue = [];
 
 var currentDateTime = new Date();
 var currentDate = currentDateTime.getFullYear().toString().padStart(2,'0')+'-'+(currentDateTime.getMonth()+1).toString().padStart(2,'0')+'-'+currentDateTime.getDate().toString().padStart(2,'0'); 
@@ -109,7 +110,10 @@ var resetElements = function(){
         if (progressDiv != null){
             refreshProgress(currentDiv);
             progressDiv.addEventListener('change', function(currentDiv) {
-                return function(){refreshProgress(currentDiv)}
+                return function(){
+                    refreshProgress(currentDiv);
+                    
+                }
              }(currentDiv));
         }
         
@@ -135,6 +139,8 @@ var refreshProgress = function(currentDiv){
         currentDiv.style.background="#fff6f9";
         currentDiv.style.boxShadow="-1px 2px 10px 0px rgb(255 190 190)";
     }
+
+
 
 }
 
@@ -174,6 +180,7 @@ var addOneToProgress = function(divElement){
     divElement.value = (parseInt(divElement.value) + 1).toString();
 }
 
+/* Get information from the form to add new habits and add a habit (dom+memory for both)*/ 
 var addElementFromForm = function(){
 
     var elementToAdd={};
@@ -209,6 +216,7 @@ var displayAllElements = function(elementList){
     }
 };
 
+/* get information from all progress and habits boxes (calls functions to do it)*/
 var extractElementsForUpdate = function(){
 
     var progressElements = document.getElementsByClassName('habit-update');
@@ -274,6 +282,7 @@ var readHabitElement = function(elementToRead){
     return outputJson;
 };
 
+/* Read progress from the dom */
 var readElement = function(elementToRead){
     var outputJson = {};
     outputJson.id = elementToRead.getAttribute("id");
@@ -346,6 +355,7 @@ var addEmptyProgressOnNewDay = function(){
                     numberOfCompletions:0
                 }
                 addElement(newProgressObject);
+                pushProgressArrayToQueue(newProgressObject);
             }
         }
     }
