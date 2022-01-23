@@ -278,6 +278,7 @@
                 padding: 10px;
                 border-radius: 5px;
                 margin-top: 16px;
+                cursor:pointer;
             }
 
             .target-container{
@@ -323,6 +324,34 @@
             }
             #progress-section,#graphs-section{
                 display: none;
+            }
+
+            .overlay-for-message{
+                width: 100%;
+                height: 100%;
+                z-index: 100;
+                background-color: rgba(0,0,0,0.4);
+                position: fixed;
+                top: 0;
+                left: 0;
+                /*display: flex;*/
+                display: none;
+                flex-direction: column;
+                justify-content: space-evenly;
+                align-items: center;
+
+            }
+            .message-in-overlay{
+                width:60%;
+                /*height:60%;*/
+                background-color:white;
+                opacity:1;
+                padding: 20px;
+                border-radius: 10px;
+                /*margin: auto;*/
+            }
+            #daily-journal{
+                width:100%;
             }
             @media (max-width: 999px){
                 .habits-container,.habits-definition-container,.filter-bar,.graph-container,.main-action-bar,#progress-title,#footer{
@@ -372,6 +401,10 @@
             </div>
             
             <div id="habits-container" class="habits-container">
+                <div class="box big-action-button" onclick="displayJournalEditBox();">
+                    <div>Daily Journal</div>
+                    <i class="fa fa-edit"></i>
+                </div>
                 <div class="box big-action-button" onclick="extractElementsForUpdate();">
                     <div>Save</div>
                     <i class="fa fa-save"></i>
@@ -423,7 +456,7 @@
                 </div>
                     <div onclick="changeTabToProgress();" class="box huge-button">
                         <div>Start Updating Your Progress</div>
-                        <i class="fa fa-tasks"></i>
+                         <i class="fa fa-tasks"></i>
                     </div>
 
             </div>
@@ -434,6 +467,14 @@
             <div id="graph-container" class="graph-container" ></div>
         </div>
 
+        <div class="overlay-for-message" id="journal-edit-box">
+            <div class="message-in-overlay">
+                <div class="bold"><i class="fa fa-edit"></i>What do you think about your day ?</div><br>
+                <textarea rows="10" type="text" id="daily-journal" class="large"></textarea>
+                <div onClick='closeJournal();' id="close-journal-button" class="add-button">OK</div>
+            </div>
+            
+        </div>
         <div id="footer">
           <!--  <div id="update-button" class="update-button wide orange" onClick="extractElementsForUpdate();">Save</div>
             <div id="go-to-graphs" class="update-button wide blue" onclick="changeTabToGraphs();">Graphs</div>
@@ -446,6 +487,7 @@
         <script type="text/javascript" src='habits_main.js'></script>
         <script type="text/javascript" src='components/weekDaySelector.js'></script>
         <script type="text/javascript" src='components/habit.js'></script>
+        <script type="text/javascript" src='components/journal.js'></script>
         <script type="text/javascript" src='components/progress.js'></script>
 
         <script type="text/javascript" src='synchronization/pushProgressToQueue.js'></script>    

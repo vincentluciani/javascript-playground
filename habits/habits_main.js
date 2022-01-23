@@ -246,27 +246,7 @@ var extractElementsForUpdateLoggedIn = function(progressElements, habitsElements
 
 
 var extractElementsForUpdateNoneLoggedIn = function(progressElements, habitsElements){
-    /*localStorage.clear();
-    for (var i=0; i< progressElements.length  && i < maxForNonLoggedIn; i++){
-        var currentOutput = readElement(progressElements[i]);
-        var jsonOutput = JSON.stringify(currentOutput);
 
-        try {
-            window.localStorage.setItem('progress-'+currentOutput.id.toString(), jsonOutput);
-          } catch (error) {
-            console.error(error);
-            console.error("Problem writing progress:"+currentOutput.id.toString());
-            console.error(currentOutput);
-          }
-
-          var verificationObject = window.localStorage.getItem('progress-'+currentOutput.id.toString());
-
-          if (verificationObject != jsonOutput){
-            console.error("Problem writing progress - write is not same as intented:"+currentOutput.id.toString());
-          }
-        
- 
-    }*/
     readQueueProgress();
 
     for ( var j=0; j< habitsElements.length;j++){
@@ -412,6 +392,10 @@ var launchChart = function(fullData,habitObject){
 		return (a.x - b.x)
 		});	
 
+        baseline.sort(function(a, b){
+            return (a.x - b.x)
+            });	
+
     /*<canvas id="myChart"></canvas>*/
     var newCanva = document.createElement("canvas");
     var newCanvaWrapper = document.createElement("div");
@@ -441,7 +425,8 @@ var launchChart = function(fullData,habitObject){
             display: true,
             labelString: 'Your progress',
             type: 'line',
-            suggestedMin: 0
+            suggestedMin: 0,
+            beginAtZero: true
             }
         }]
     },
@@ -450,12 +435,12 @@ var launchChart = function(fullData,habitObject){
     let chartData = {
 
     datasets: [
-                    {
+                  /*  {
                         label: 'Your target',
                         data: baseline,
                         fill: false,
                         order: 2
-                    }, 
+                    }, */
                     {
                         label: 'Your daily score',
                         data: dataToShow,
