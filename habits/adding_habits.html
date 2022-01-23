@@ -87,7 +87,7 @@
                 border-radius: 12px;
             }
             .box{
-                margin:20px 20px 20px 0px;
+                margin:20px 20px 2px 0px;
             }
             .main-section{
                 margin:10px;
@@ -97,7 +97,7 @@
                 /*background:white;*/
             }
             .main-section{
-                margin-top:70px;
+                margin-top:66px;
             }
             .main-section,.habit-graph{
                 background: white;
@@ -166,6 +166,7 @@
             }
             h2{
                 color: #424242;
+                margin: 0px;
             }
 
             .update-button{
@@ -192,12 +193,18 @@
                 clear: both;
                 padding-top: 10px;
             }
-            .number-of-completion{
+            .number-of-completion[type=number]{
                 width: 57px;
                 font-size: 30px;
                 margin-top: 6px;
                 float:left;
                 text-align: center;
+            }
+            .number-of-completion[type=checkbox]{
+                width: 57px;
+                height: 27px;
+                font-size: 30px;
+                margin-top: 13px;
             }
             .percentage-completion::after{
                 content: " %";
@@ -218,6 +225,7 @@
             }
 
             #footer{
+                display: none;
                 position: fixed;
                 bottom: 0px;
                 background: white;
@@ -333,7 +341,7 @@
                 .action-input{
                     margin-left: 16px;
                     margin-right: 16px;
-                    margin-top: 26px;
+                    margin-top: 5px;
                 }
             }
 
@@ -360,10 +368,15 @@
             <div id="progress-title">
                 <div><h2>Update your progress</h2></div>
                 <div><input id="date-filter" type="date" class="action-input"></input></div>
-               
+                <div id="habit-filters"><label>Filter by habit title:</label><input id="text-filter" class="action-input" type="text" ></input></div>
             </div>
             
             <div id="habits-container" class="habits-container">
+                <div class="box big-action-button" onclick="extractElementsForUpdate();">
+                    <div>Save</div>
+                    <i class="fa fa-save"></i>
+
+                </div>
                 <div class="box big-action-button" onclick="changeTabToHabits();">
                     <div>New Habit</div>
                     <i class="fa fa-plus"></i>
@@ -404,10 +417,15 @@
                     </div>
                     <div onClick='addElementFromForm();' id="add-button" class="add-button">Add</div>
                 </div>
-                <div onclick="changeTabToProgress();" class="box huge-button">
-                    <div>Start Updating Your Progress</div>
-                    <i class="fa fa-tasks"></i>
+                <div class="box huge-button" onclick="extractElementsForUpdate();">
+                    <div>Save</div>
+                    <i class="fa fa-save"></i>
                 </div>
+                    <div onclick="changeTabToProgress();" class="box huge-button">
+                        <div>Start Updating Your Progress</div>
+                        <i class="fa fa-tasks"></i>
+                    </div>
+
             </div>
         </div>
 
@@ -417,12 +435,12 @@
         </div>
 
         <div id="footer">
-            <div id="update-button" class="update-button wide orange" onClick="extractElementsForUpdate();">Save</div>
-       <!--     <div id="go-to-graphs" class="update-button wide blue" onclick="changeTabToGraphs();">Graphs</div>
+          <!--  <div id="update-button" class="update-button wide orange" onClick="extractElementsForUpdate();">Save</div>
+            <div id="go-to-graphs" class="update-button wide blue" onclick="changeTabToGraphs();">Graphs</div>
             <div id="go-to-habits" class="update-button wide blue" onclick="changeTabToHabits();">Habits</div>
  
             <div id="go-to-progress" class="update-button wide green" onclick="changeTabToProgress();">Progress</div>
-       -->     <div id="habit-filters"><label>Filter by habit title:</label><input id="text-filter" class="action-input" type="text" ></input></div>
+       -->     
 
         </div>
         <script type="text/javascript" src='habits_main.js'></script>

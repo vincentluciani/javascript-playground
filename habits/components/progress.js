@@ -1,7 +1,9 @@
 
 var addElement = function(elementToAdd){
+
     const newProgressDivision = document.createElement("div");
 
+    /* Main Attributes */
     newProgressDivision.setAttribute("id", elementToAdd.id );
     newProgressDivision.setAttribute("habitDescription", elementToAdd.habitDescription);
     newProgressDivision.setAttribute("target", elementToAdd.target);
@@ -15,6 +17,7 @@ var addElement = function(elementToAdd){
     const habitDescriptionText = document.createTextNode(elementToAdd.habitDescription);
     const targetValue = document.createElement("input");
     const currentProgressText = document.createTextNode("Number of times completed:");
+    const currentProgressTextOneTarget = document.createTextNode("Check when completed:");
     const currentCompletionText = document.createTextNode("Percentage Completion:");
     const progressInput = document.createElement("input");
     const percentageCompletionInput = document.createElement("div");
@@ -26,14 +29,14 @@ var addElement = function(elementToAdd){
 
     var percentageCompletion = Math.round(elementToAdd.numberOfCompletions * 100 / elementToAdd.target) ;
     
-    progressInput.setAttribute("type","number");
-    progressInput.setAttribute("class","number-of-completion");
-    progressInput.setAttribute("value",elementToAdd.numberOfCompletions);
 
-    /*percentageCompletionInput.setAttribute("type","number");*/
+    progressInput.setAttribute("class","number-of-completion");
+
+    
+
+
     percentageCompletionInput.setAttribute("class","percentage-completion");
     percentageCompletionInput.innerHTML = percentageCompletion.toString();
-
 
     var habitDescriptionContainer = document.createElement("div");
     habitDescriptionContainer.setAttribute("class","habit-description");
@@ -45,44 +48,75 @@ var addElement = function(elementToAdd){
 
     var currentProgressContainer = document.createElement("div");
 
-    currentProgressContainer.appendChild(currentProgressText);
+
     currentProgressContainer.setAttribute("class","progress-container");
 
-    var plusButtonText = document.createTextNode("+");
-    var plusButton = document.createElement("div");
-    plusButton.setAttribute("class","plus-button normal");
-    var minusButtonText = document.createTextNode("-");
-    var minusButton = document.createElement("div");
-    plusButton.appendChild(plusButtonText);
-    minusButton.setAttribute("class","minus-button normal");
-    minusButton.appendChild(minusButtonText);
 
 
+    if (elementToAdd.target > 1){
+    /*if (1==1){*/
 
-    plusButton.addEventListener('click', function(newProgressDivision) {
-        return function(){
-            var progressInput = newProgressDivision.getElementsByClassName("number-of-completion")[0]
-            addOneToProgress(progressInput);
-            refreshProgress(newProgressDivision);
-            pushProgressToQueue(newProgressDivision);
+        progressInput.setAttribute("type","number");
+        progressInput.setAttribute("value",elementToAdd.numberOfCompletions);
+        currentProgressContainer.appendChild(currentProgressText);
+        var plusButtonText = document.createTextNode("+");
+        var plusButton = document.createElement("div");
+        plusButton.setAttribute("class","plus-button normal");
+        var minusButtonText = document.createTextNode("-");
+        var minusButton = document.createElement("div");
+        plusButton.appendChild(plusButtonText);
+        minusButton.setAttribute("class","minus-button normal");
+        minusButton.appendChild(minusButtonText);
+        plusButton.addEventListener('click', function(newProgressDivision) {
+            return function(){
+                var progressInput = newProgressDivision.getElementsByClassName("number-of-completion")[0];
+                addOneToProgress(progressInput);
+                refreshProgress(newProgressDivision);
+                pushProgressToQueue(newProgressDivision);
+            }
+        }(newProgressDivision));
+
+        minusButton.addEventListener('click', function(newProgressDivision) {
+            return function(){
+                var progressInput = newProgressDivision.getElementsByClassName("number-of-completion")[0];         
+                minusOneToProgress(progressInput);
+                refreshProgress(newProgressDivision);
+                pushProgressToQueue(newProgressDivision);
+            }
+        }(newProgressDivision));
+        newProgressDivision.appendChild(currentProgressContainer);
+        newProgressDivision.appendChild(minusButton);
+        newProgressDivision.appendChild(progressInput);
+        newProgressDivision.appendChild(plusButton);
+        newProgressDivision.appendChild(targetTextDiv);
+    } else {
+        currentProgressContainer.appendChild(currentProgressTextOneTarget);
+        progressInput.setAttribute("type","checkbox");
+        if (elementToAdd.numberOfCompletions == 1){
+            progressInput.checked = true;
+            progressInput.setAttribute("value","1");
+        } else {
+            progressInput.checked = false;
+            progressInput.setAttribute("value","0");
         }
-     }(newProgressDivision));
+        progressInput.addEventListener('click', function(newProgressDivision) {
+            return function(){
+                var progressInput = newProgressDivision.getElementsByClassName("number-of-completion")[0];         
+                if (progressInput.checked == true){
+                    progressInput.setAttribute("value","1");
+                } else {
+                    progressInput.setAttribute("value","0");
+                }
+                refreshProgress(newProgressDivision);
+                pushProgressToQueue(newProgressDivision);
+            }
+        }(newProgressDivision));
+        newProgressDivision.appendChild(currentProgressContainer);
+        newProgressDivision.appendChild(progressInput);
+    }
 
-     minusButton.addEventListener('click', function(newProgressDivision) {
-        return function(){
-            var progressInput = newProgressDivision.getElementsByClassName("number-of-completion")[0]         
-            minusOneToProgress(progressInput);
-            refreshProgress(newProgressDivision);
-            pushProgressToQueue(newProgressDivision);
-        }
-     }(newProgressDivision));
 
-    newProgressDivision.appendChild(currentProgressContainer);
-    newProgressDivision.appendChild(minusButton);
-    newProgressDivision.appendChild(progressInput);
-    newProgressDivision.appendChild(plusButton);
 
-    newProgressDivision.appendChild(targetTextDiv);
 
 
 
@@ -97,7 +131,9 @@ var addElement = function(elementToAdd){
 
     document.getElementById('habits-container').appendChild(newProgressDivision);
     newProgressDivision.addEventListener('change', function(newProgressDivision) {
-        return function(){refreshProgress(newProgressDivision);pushProgressToQueue(newProgressDivision);}
+        return function(){
+            refreshProgress(newProgressDivision);
+            pushProgressToQueue(newProgressDivision);}
      }(newProgressDivision));
 
 
