@@ -2,6 +2,8 @@ var pushProgressToQueue = function(divToAnalyze) {
 
     var progressArray = readElement(divToAnalyze);
 
+    encourageIfPassedTarget(progressArray.numberOfCompletions, progressArray.target);
+
     var elementToAdd = {
         'id': 'progress-'+progressArray.id,
         'value': JSON.stringify(progressArray)
@@ -31,6 +33,7 @@ var executePushToQueue = function(newObject){
     }
 
     updateQueue.push(newObject);
+    console.log("pushing to queue:");
     console.log(updateQueue);
 
 }

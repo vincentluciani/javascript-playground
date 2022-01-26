@@ -125,19 +125,29 @@ var resetElements = function(){
 
 var refreshProgress = function(currentDiv){
     var newCompletion = currentDiv.getElementsByClassName("number-of-completion")[0];
-    var newCompletionPercentage = Math.round(newCompletion.value * 100 / parseInt(currentDiv.getAttribute("target")));
+    var newCompletionPercentage = 0;
+
+    var isNegative = currentDiv.getAttribute("isNegative");
+    if (isNegative != null && isNegative == "true"){
+        if ( newCompletion.value <= parseInt(currentDiv.getAttribute("target")) ){
+            newCompletionPercentage = 100;
+        } 
+    } else {
+        newCompletionPercentage = Math.round(newCompletion.value * 100 / parseInt(currentDiv.getAttribute("target")));
+    }
+
     currentDiv.getElementsByClassName("percentage-completion")[0].innerHTML = newCompletionPercentage;
 
     
     if (newCompletionPercentage>=100){
         currentDiv.style.background="#f7fff6";
-        currentDiv.style.boxShadow="rgb(21 173 25 / 20%) -1px 2px 12px 5px";
+        currentDiv.style.boxShadow="rgb(90 189 93 / 20%) -1px 2px 12px 5px";
     } else if (newCompletionPercentage>=50){
         currentDiv.style.background="#fffded";
-        currentDiv.style.boxShadow="-1px 2px 17px 0px rgb(243 229 176)";
+        currentDiv.style.boxShadow="rgb(219 213 191) -1px 2px 17px 0px";
     } else if (newCompletionPercentage<50){
         currentDiv.style.background="#fff6f9";
-        currentDiv.style.boxShadow="-1px 2px 10px 0px rgb(255 190 190)";
+        currentDiv.style.boxShadow="rgb(233 206 206) -1px 2px 10px 0px";
     }
 
 
@@ -188,6 +198,7 @@ var addElementFromForm = function(){
     elementToAdd.habitId = elementToAdd.id * 10;
     elementToAdd.habitDescription = document.getElementById('new-description').value;
     elementToAdd.target = parseInt(document.getElementById('new-target').value);
+    elementToAdd.isNegative = document.getElementById('new-is-negative-flag').checked;
     elementToAdd.progressDate = currentDate;
     elementToAdd.numberOfCompletions = 0;
     elementToAdd.isNew = true;
@@ -207,7 +218,7 @@ var addElementFromForm = function(){
 
     document.getElementById('new-description').value = null;
     document.getElementById('new-target').value = null;
-
+    document.getElementById('new-is-negative-flag').checked = false;
 };
 
 var displayAllElements = function(elementList){
@@ -258,7 +269,7 @@ var extractElementsForUpdateNoneLoggedIn = function(progressElements, habitsElem
 var readHabitElement = function(elementToRead){
     var outputJson = {};
     outputJson.habitId = elementToRead.getAttribute("habitId");
-
+    outputJson.isNegative = elementToRead.getAttribute("isNegative");
     outputJson.habitDescription = elementToRead.getElementsByClassName('habit-description-definition')[0].value;
     outputJson.target = parseInt(elementToRead.getElementsByClassName('habit-target-definition')[0].value);
     outputJson.weekDay = elementToRead.getElementsByClassName("week-day-selection")[0].getAttribute("weekDay");
@@ -275,6 +286,7 @@ var readElement = function(elementToRead){
     outputJson.target = parseInt(elementToRead.getAttribute("target"));
     outputJson.progressDate = elementToRead.getAttribute("progressDate");
     outputJson.isNew = elementToRead.getAttribute("isNew");
+    outputJson.isNegative = elementToRead.getAttribute("isNegative");
     outputJson.numberOfCompletions = parseInt(elementToRead.getElementsByClassName("number-of-completion")[0].value);
 
     return outputJson;
@@ -399,9 +411,19 @@ var launchChart = function(fullData,habitObject){
     /*<canvas id="myChart"></canvas>*/
     var newCanva = document.createElement("canvas");
     var newCanvaWrapper = document.createElement("div");
-    const grapTitle = document.createTextNode('Your progress for:' + habitObject.habitDescription);
+    var brDiv = document.createElement("br");
+    const grapTitle = document.createTextNode(habitObject.habitDescription);
+    const grapTitleDiv = document.createElement("div");
+    var graphIcon = document.createElement("i");
+    graphIcon.setAttribute("class","fa fa-bar-chart");
+
+    grapTitleDiv.setAttribute("class","graph-title");
+    grapTitleDiv.appendChild(graphIcon);
+    grapTitleDiv.appendChild(grapTitle);
     newCanva.setAttribute("id",habitObject.habitId);
-    newCanvaWrapper.appendChild(grapTitle);  
+    newCanvaWrapper.appendChild(grapTitleDiv); 
+    newCanvaWrapper.appendChild(brDiv); 
+    newCanvaWrapper.appendChild(brDiv); 
     newCanvaWrapper.append(newCanva);
 
     newCanvaWrapper.setAttribute("class","box canva-wrapper");
@@ -416,14 +438,14 @@ var launchChart = function(fullData,habitObject){
         responsive: true,
         legend: {
             position: 'bottom',
-            display: true
+            display: false
         },
         scales: {
         xAxes: [{type: 'time', time: {parser: 'YYYY-MM-DD', unit: 'day'}}],
         yAxes: [{
             scaleLabel: {
             display: true,
-            labelString: 'Your progress',
+            labelString: 'Progress',
             type: 'line',
             suggestedMin: 0,
             beginAtZero: true

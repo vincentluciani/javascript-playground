@@ -11,6 +11,7 @@ var addElement = function(elementToAdd){
     newProgressDivision.setAttribute("class", "box habit-update");
     newProgressDivision.setAttribute("isNew",elementToAdd.isNew);
     newProgressDivision.setAttribute("habitId",elementToAdd.habitId);
+    newProgressDivision.setAttribute("isNegative", elementToAdd.isNegative);
 
     const dateDiv = document.createElement("div");
 
@@ -27,8 +28,15 @@ var addElement = function(elementToAdd){
     targetTextDiv.setAttribute('class','side-text');
     targetTextDiv.appendChild(targetText);
 
-    var percentageCompletion = Math.round(elementToAdd.numberOfCompletions * 100 / elementToAdd.target) ;
-    
+    var percentageCompletion = 0;
+    if ( elementToAdd.isNegative != null && elementToAdd.isNegative == "true"){
+            if ( elementToAdd.numberOfCompletions <= elementToAdd.target ){
+                percentageCompletion = 100;
+            }
+    } else {
+        percentageCompletion = Math.round(elementToAdd.numberOfCompletions * 100 / elementToAdd.target) ;
+    }
+ 
 
     progressInput.setAttribute("class","number-of-completion");
 

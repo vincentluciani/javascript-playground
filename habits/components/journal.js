@@ -5,7 +5,7 @@ var displayJournalEditBox = function(){
 
     var currentText = getCurrentDateJournal(progressDate);
     editBoxTextBox.value = "";
-    if (currentText){
+    if (currentText && currentText.length>0){
         editBoxTextBox.value = JSON.parse(currentText);
     }
 

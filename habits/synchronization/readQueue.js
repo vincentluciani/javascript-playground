@@ -1,6 +1,7 @@
 var readQueueProgress = function() {
     while (updateQueue.length > 0) {
         var elementToProcess = updateQueue.shift();
+        console.log("reading from queue");
         console.log(elementToProcess);
 
         try {

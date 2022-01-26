@@ -6,6 +6,7 @@ var addHabitElement = function(elementToAdd){
     newHabitDivision.setAttribute("class", "box habit-setting");
     newHabitDivision.setAttribute("habitId",elementToAdd.habitId);
     newHabitDivision.setAttribute("weekDay",elementToAdd.weekDay);
+    newHabitDivision.setAttribute("isNegative",elementToAdd.isNegative);
 
     const titleText = document.createTextNode("Update habit:");
     var taskIcon = document.createElement("i");
