@@ -367,24 +367,26 @@
             }
             .positive-message{
                 /*display: flex;*/
-                background-color: #4bb74b;
+                background-color: #b657af;
                 z-index: 102;
                 color: white;
             }  
 
             .positive-message-button{
                 background-color: white;
-                color: #4bb74b;
+                color: #b657af;
+                width: 200px;
                 font-size: 18px;
                 padding: 15px;
-                border-radius: 5px; 
+                border-radius: 30px; 
                 cursor:pointer;
+                text-align: center;
             }
             .positive-message .icon{
-                font-size:158px;
+                font-size:88px;
             }
             .positive-message .title{
-                font-size:81px;
+                font-size:69px;
             }
             .positive-message .sub-title{
                 font-size:30px;
@@ -425,8 +427,8 @@
     <body>
         <div id="positive-message" class="positive-message">
             <i class="fa fa-trophy icon"></i>
-            <div class="title">Awesome !</div>
-            <div class="sub-title">You did well !</div>
+            <div class="title" id="positive-message-title">Awesome :)</div>
+            <div class="sub-title">You have completed your target ! You did well !</div>
             <div class="positive-message-button" onclick="closeMessage();">OK</div>
         </div>
         <div id="header">
@@ -537,6 +539,9 @@
        -->     
 
         </div>
+        <script type="text/javascript" src='language/general.js'></script>
+        <script type="text/javascript" src='language/english.js'></script>
+        <script type="text/javascript" src='libraries/random.js'></script>
         <script type="text/javascript" src='habits_main.js'></script>
         <script type="text/javascript" src='components/weekDaySelector.js'></script>
         <script type="text/javascript" src='components/habit.js'></script>
