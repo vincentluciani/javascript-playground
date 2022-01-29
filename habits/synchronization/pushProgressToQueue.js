@@ -25,15 +25,27 @@ var pushProgressArrayToQueue = function(objectToPush){
 }
 
 var executePushToQueue = function(newObject){
+    console.log("pushing to queue:");
+    console.log(newObject);
+    var sizeBeforePush = updateQueue.length;
 
     var lastElement = updateQueue.pop();
 
     if (lastElement != null &&  lastElement.id != newObject.id) {
+        console.log("putting back previous");
         updateQueue.push(lastElement);
+    } else {
+        console.log("did not put back previous:");
+        console.log(lastElement);
     }
 
+    /*var intervalID = setInterval(pushItemInQueue, 50, newObject);*/
     updateQueue.push(newObject);
-    console.log("pushing to queue:");
+    
     console.log(updateQueue);
+    console.log("size before push:"+sizeBeforePush.toString()+" size after push:"+ updateQueue.length.toString())
+}
 
+var pushItemInQueue = function(newItem){
+    updateQueue.push(newItem);
 }

@@ -4,7 +4,7 @@ var encourageIfPassedTarget = function(result, target){
 
         if ( result == target){
             document.getElementById("positive-message").style.display="flex";
-            document.getElementById("positive-message-title").innerHTML = buildCongratulationMessage('en_US')+" ;)";
+            document.getElementById("positive-message-title").innerHTML = buildCongratulationMessage('en_US')+" :)";
         }
 }
 

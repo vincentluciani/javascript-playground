@@ -214,6 +214,7 @@ var addElementFromForm = function(){
         addElement(elementToAdd);
     }
     addHabitElement(elementToAdd);
+    
     pushProgressArrayToQueue(elementToAdd);
 
     document.getElementById('new-description').value = null;
@@ -351,6 +352,8 @@ var addEmptyProgressOnNewDay = function(){
                     numberOfCompletions:0
                 }
                 addElement(newProgressObject);
+                console.log("added progress");
+                console.log(newProgressObject);
                 pushProgressArrayToQueue(newProgressObject);
             }
         }

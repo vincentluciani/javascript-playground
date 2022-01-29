@@ -80,6 +80,9 @@ var addElement = function(elementToAdd){
                 var progressInput = newProgressDivision.getElementsByClassName("number-of-completion")[0];
                 addOneToProgress(progressInput);
                 refreshProgress(newProgressDivision);
+                console.log("added progress:");
+                console.log(newProgressDivision);
+
                 pushProgressToQueue(newProgressDivision);
             }
         }(newProgressDivision));
@@ -89,6 +92,8 @@ var addElement = function(elementToAdd){
                 var progressInput = newProgressDivision.getElementsByClassName("number-of-completion")[0];         
                 minusOneToProgress(progressInput);
                 refreshProgress(newProgressDivision);
+                console.log("added progress");
+                console.log(newProgressDivision);
                 pushProgressToQueue(newProgressDivision);
             }
         }(newProgressDivision));
@@ -116,6 +121,8 @@ var addElement = function(elementToAdd){
                     progressInput.setAttribute("value","0");
                 }
                 refreshProgress(newProgressDivision);
+                console.log("added progress");
+                console.log(newProgressDivision);
                 pushProgressToQueue(newProgressDivision);
             }
         }(newProgressDivision));
@@ -141,6 +148,8 @@ var addElement = function(elementToAdd){
     newProgressDivision.addEventListener('change', function(newProgressDivision) {
         return function(){
             refreshProgress(newProgressDivision);
+            console.log("added progress");
+            console.log(newProgressDivision);
             pushProgressToQueue(newProgressDivision);}
      }(newProgressDivision));
 
