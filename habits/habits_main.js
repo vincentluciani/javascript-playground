@@ -343,7 +343,7 @@ var addEmptyProgressOnNewDay = function(){
             }
             if (isDayOK != null && isDayOK == true) {
                 newProgressObject = {
-                    id: Date.now()+i,
+                    id: Date.now()*100+i,
                     habitId: habitsElements[i].getAttribute("habitId"),
                     habitDescription: habitsElements[i].getAttribute("habitDescription"),
                     target: habitsElements[i].getAttribute("target"),
