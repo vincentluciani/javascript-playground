@@ -371,13 +371,19 @@ var launchCharts = function(fullData,habitsArray){
 var changeTabToProgress = function(){
     document.getElementById("habits-section").style.display = "none";
     document.getElementById("progress-section").style.display = "block";
-    document.getElementById("graphs-section").style.display = "none";
+    document.getElementById("graphs-section").style.display = "none"; 
+    document.getElementById("progress-menu").classList.add("active");
+    document.getElementById("habits-menu").classList.remove("active");
+    document.getElementById("graphs-menu").classList.remove("active");
 }
 
 var changeTabToHabits = function(){
     document.getElementById("habits-section").style.display = "block";
     document.getElementById("progress-section").style.display = "none";
     document.getElementById("graphs-section").style.display = "none";
+    document.getElementById("progress-menu").classList.remove("active");
+    document.getElementById("habits-menu").classList.add("active");
+    document.getElementById("graphs-menu").classList.remove("active");
     document.getElementById('new-description').focus();
 }
 
@@ -385,6 +391,9 @@ var changeTabToGraphs = function(){
     document.getElementById("habits-section").style.display = "none";
     document.getElementById("progress-section").style.display = "none";
     document.getElementById("graphs-section").style.display = "block";
+    document.getElementById("progress-menu").classList.remove("active");
+    document.getElementById("habits-menu").classList.remove("active");
+    document.getElementById("graphs-menu").classList.add("active");
 }
 
 

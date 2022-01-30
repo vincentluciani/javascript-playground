@@ -8,14 +8,15 @@
                 margin: 0px;
                 font-family: "Nunito","candara","arial";
                 overflow-wrap: break-word;
+                background: #718bea;
             }
             .green{
                 background:#17bc25;
                 color:white;
             }
             .blue{
-                background:#718bea;
-                color:white;
+                background:#f2dbff;
+                color:black;
             }
             .orange{
                 background:#b657af;
@@ -53,19 +54,31 @@
                 padding-left:10px;
             }
             .horizontal-menu li{
-                height: 53px;
-                width: 65px;
+                height: 32px;
+                width: 86px;
                 border-radius: 10px 10px 0px 0px;
                 float: left;
-                margin-right: 27px;
+                margin-right: 7px;
                 margin-top: 0px;
                 text-align:center;
+                padding-top:8px;
+                background-color:#7171cd;
+                height:31px;
+            }
+            .horizontal-menu li.active{
+                background: white;
+                height: 33px;
             }
             a, a:active, a:visited, a span {
                 text-decoration: none;
                 color: white;
                 margin-right: 5px;
             }
+            li.active a, li.active a:active, li.active a:visited, li.active a span {
+                color: black;
+                font-weight: bold;
+            }
+
             .filter-bar{
                 background: white;
                 opacity: 1;
@@ -83,21 +96,20 @@
                 margin-bottom:65px;
             }
             .box,.main-section{
-                padding: 10px;   
+                padding: 16px;   
                 border-radius: 12px;
             }
-            .box{
-                margin:20px 40px 7px 0px;
-            }
+
             .main-section{
-                margin:10px;
+                margin:0px 6px 0px 6px;
                 padding-bottom: 80px;
             }
             .box,.filter-bar{
                 /*background:white;*/
             }
             .main-section{
-                margin-top:66px;
+                margin-top:58px;
+                border-radius:10px;
             }
             .main-section,.habit-graph{
                 background: white;
@@ -105,7 +117,7 @@
             .box.new-habit,.habit-setting{
                 width: 208px;
                 height: 407px;
-                box-shadow: rgb(233 206 206) -1px 2px 10px 0px;
+                box-shadow: rgb(203 203 203) -1px 2px 10px 4px;
                 padding: 20px;
             }
             .box.canva-wrapper{
@@ -306,13 +318,12 @@
                 border-radius: 13px;
                 text-align: center;
             }
-            .weekday.selected, .weekday.unselected.reverse{
-                color:#718bea;
-                background-color: white;
+            .weekday.selected{
+                color:white;
+                background-color: #b657af;
             }
-            .weekday.unselected, .weekday.selected.reverse{
-                color: white;
-                background-color: #718bea;
+            .weekday{
+                color: #b5b5b5;
             }
             .week-day-selection{
                 margin-top: 13px;
@@ -321,7 +332,7 @@
                 margin-bottom: 10px;
             }
             .habit-setting{
-                background: #fbfbfb;
+                background: #f1ceff;
             }
             .habit-update{
                 background:#f7f6f6;
@@ -385,12 +396,6 @@
             .positive-message .icon{
                 font-size:88px;
             }
-            .positive-message .title{
-                font-size:69px;
-            }
-            .positive-message .sub-title{
-                font-size:45px;
-            }
             #daily-journal{
                 width:100%;
             }
@@ -398,7 +403,7 @@
             input, textarea{
                 border: 1px solid lightgrey;
                 font-family: "Nunito","candara","arial";
-
+                background-color: white;
             }
             input[type="checkbox"],input[type="date"],textarea{
                 border-radius: 5px;
@@ -415,13 +420,41 @@
                 #habit-filters{
                     display: none;
                 }
+                .box{
+                margin:20px 0px 7px 0px;
+                }
+                #date-filter{
+                    margin: 10px 0px 0px 0px;
+                }
+                .positive-message .sub-title{
+                    margin:20px;
+                }
+                .positive-message .title{
+                    font-size:50px;
+                    text-align: center;
+                }
+                .positive-message .sub-title{
+                    font-size: 34px;
+                    text-align: center;
+                }
+
             }
             @media (min-width: 1000px){
+                .box{
+                margin:20px 40px 7px 0px;
+                }
                 .action-input{
                     margin-left: 16px;
                     margin-right: 16px;
                     margin-top: 5px;
                 }
+                .positive-message .title{
+                font-size:69px;
+                }
+                .positive-message .sub-title{
+                    font-size:45px;
+                }
+
             }
 
             
@@ -441,9 +474,9 @@
                 </a>
                 <nav>
                     <ul class="horizontal-menu">
-                        <li><a onclick="changeTabToProgress();" id="menu_dashboard">Progress</a></li>
-                        <li><a onclick="changeTabToHabits();" id="menu_dashboard">Habits</a></li>
-                        <li><a onclick="changeTabToGraphs();" id="menu_dashboard">Graphs</a></li>
+                        <li id="progress-menu"><a onclick="changeTabToProgress();" id="menu_dashboard">Progress</a></li>
+                        <li id="habits-menu"><a onclick="changeTabToHabits();" id="menu_dashboard">Habits</a></li>
+                        <li id="graphs-menu"><a onclick="changeTabToGraphs();" id="menu_dashboard">Graphs</a></li>
                     </ul>
                 </nav>
             </div>
@@ -496,23 +529,23 @@
                         <input type="number" id="new-target" class="number-of-completion" value=0 />
                         <div id="plus-in-add-div" class="plus-button normal">+</div>
                     </div>
-                    <div class="week-day-selection" id="week-day-selection" weekday='monday tuesday wednesday thursday friday saturday sunday' >
+                    <div class="week-day-selection" id="week-day-selection" weekday='' >
                         <label>Applies to the following days of the week:</label>
-                        <div class="weekday monday selected">M</div>
-                        <div class="weekday tuesday selected">T</div>
-                        <div class="weekday wednesday selected">W</div>
-                        <div class="weekday thursday selected">T</div>
-                        <div class="weekday friday selected">F</div>
-                        <div class="weekday saturday selected">S</div>
-                        <div class="weekday sunday selected">S</div>
+                        <div class="weekday monday">M</div>
+                        <div class="weekday tuesday">T</div>
+                        <div class="weekday wednesday">W</div>
+                        <div class="weekday thursday">T</div>
+                        <div class="weekday friday">F</div>
+                        <div class="weekday saturday">S</div>
+                        <div class="weekday sunday">S</div>
                     </div>
                     <div onClick='addElementFromForm();' id="add-button" class="add-button">Add</div>
                 </div>
-                <div class="box huge-button" onclick="extractElementsForUpdate();">
+                <div class="box big-action-button" onclick="extractElementsForUpdate();">
                     <div>Save</div>
                     <i class="fa fa-save"></i>
                 </div>
-                    <div onclick="changeTabToProgress();" class="box huge-button">
+                    <div onclick="changeTabToProgress();" class="box big-action-button">
                         <div>Start Updating Your Progress</div>
                          <i class="fa fa-tasks"></i>
                     </div>

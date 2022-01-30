@@ -160,9 +160,9 @@ var dayOfWeek = function(day, label, weekday){
     var dayOfWeekDiv = document.createElement("div");
 
     if (isDayInListOfDaysString(day, weekday) == true){
-        var className = "weekday "+day+" selected reverse";
+        var className = "weekday "+day+" selected";
     } else {
-        var className = "weekday "+day+" unselected reverse";
+        var className = "weekday "+day+" unselected";
     }
     
     dayOfWeekDiv.setAttribute("class",className);
