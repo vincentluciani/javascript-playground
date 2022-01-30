@@ -4,6 +4,7 @@ var addHabitElement = function(elementToAdd){
     newHabitDivision.setAttribute("habitDescription", elementToAdd.habitDescription);
     newHabitDivision.setAttribute("target", elementToAdd.target);
     newHabitDivision.setAttribute("class", "box habit-setting");
+    newHabitDivision.setAttribute("id",elementToAdd.habitId.toString());
     newHabitDivision.setAttribute("habitId",elementToAdd.habitId);
     newHabitDivision.setAttribute("weekDay",elementToAdd.weekDay);
     newHabitDivision.setAttribute("isNegative",elementToAdd.isNegative);
@@ -45,8 +46,22 @@ var addHabitElement = function(elementToAdd){
 
     var weekDaySelector = dynamicWeekDaySelector(elementToAdd.weekDay);
     newHabitDivision.appendChild(weekDaySelector);
+    const deleteButton = document.createElement("div");
+    var onClickFunctionCall = "deleteHabit(" + elementToAdd.habitId.toString()+ ');';
+    deleteButton.setAttribute("onClick",onClickFunctionCall);
+    deleteButton.setAttribute("class","add-button");
+    deleteButton.innerHTML = "Delete";
+    newHabitDivision.appendChild(deleteButton);
+
 
     document.getElementById('habits-definition-container').appendChild(newHabitDivision);
 
 
+}
+
+var deleteHabit = function(habitId){
+    var habitKey = "habit-"+habitId.toString();
+    var element = document.getElementById(habitId.toString());
+    element.parentNode.removeChild(element);
+    window.localStorage.removeItem(habitKey);
 }

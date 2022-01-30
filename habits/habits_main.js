@@ -18,8 +18,14 @@ onload = function(){
 
     getHabitProgress();
     addEmptyProgressOnNewDay();
-
+    saveLoop();
 };
+
+var saveLoop = function(){
+
+    setInterval(extractElementsForUpdate, 5000);
+
+}
 
 plusButtonInAddDiv.addEventListener('click', function(newTargetDiv) {
     return function(){
@@ -32,10 +38,6 @@ minusButtonInAddDiv.addEventListener('click', function(newTargetDiv) {
             minusOneToProgress(newTargetDiv);
         }
         }(newTargetDiv));
-
-
-
-
 
 
 var getHabitProgress = function(){
@@ -61,6 +63,7 @@ var getHabitProgressWhenLoggedIn = function(){
 var getHabitProgressWhenNotLoggedIn = function(){
     var progressArray=[];
     var habitsArray=[];
+    var journalArray = [];
 
     for (var i = 0; i < localStorage.length && i < maxForNonLoggedIn; i++){
         var currentKey = localStorage.key(i);
@@ -68,17 +71,21 @@ var getHabitProgressWhenNotLoggedIn = function(){
             progressArray.push(JSON.parse(localStorage.getItem(currentKey)));
         } else if ( currentKey.indexOf("habit-") >= 0){
             habitsArray.push(JSON.parse(localStorage.getItem(currentKey)));
+        } else if ( currentKey.indexOf("journal-") >= 0){
+            journalArray.push({'key':currentKey,'text':JSON.parse(localStorage.getItem(currentKey))});
         }
     }
     if (habitsArray.length > 0){
         changeTabToProgress();
+    } else {
+        changeTabToHabits();
     }
 
 
-    ingestElements(progressArray,habitsArray);
+    ingestElements(progressArray,habitsArray,journalArray);
 };
 
-var ingestElements = function(inputData,habitsArray,urlDetails){
+var ingestElements = function(inputData,habitsArray,journalArray,urlDetails){
    /* var inputData = getHabitProgress();*/
     for ( var i=0; i < inputData.length;i++){
         addElement(inputData[i]);
@@ -88,6 +95,29 @@ var ingestElements = function(inputData,habitsArray,urlDetails){
     }
     applyFilters();
     launchCharts(inputData,habitsArray);
+    readJournal(journalArray);
+}
+
+var readJournal = function(journalArray){
+
+    for ( var i=0; i< journalArray.length; i++){
+        var journalText = journalArray[i].text;
+        if ( journalText.length > 2){
+            var brDiv = document.createElement("br");
+            var journalDiv = document.createElement("div");
+            var dateDiv = document.createElement("div");
+            dateDiv.innerHTML = journalArray[i].key.substr(8);
+            dateDiv.setAttribute("class","date-label");
+            var textDiv = document.createElement("div");
+            textDiv.innerHTML = journalText;
+            textDiv.setAttribute("class","text-label");
+            journalDiv.appendChild(brDiv);
+            journalDiv.appendChild(dateDiv);
+            journalDiv.appendChild(textDiv);   
+            document.getElementById("journal-container").appendChild(journalDiv);
+        }     
+    }
+
 }
 var filterDivs = function(testElements, filterType, filterValue, exactMatch){
     if (filterValue != null && filterValue != '' ){
@@ -127,7 +157,7 @@ var refreshProgress = function(currentDiv){
     var newCompletion = currentDiv.getElementsByClassName("number-of-completion")[0];
     var newCompletionPercentage = 0;
 
-    var isNegative = currentDiv.getAttribute("isNegative");
+    var isNegative = currentDiv.getAttribute("isNegative"); 
     if (isNegative != null && isNegative == "true"){
         if ( newCompletion.value <= parseInt(currentDiv.getAttribute("target")) ){
             newCompletionPercentage = 100;
@@ -232,6 +262,7 @@ var displayAllElements = function(elementList){
 /* get information from all progress and habits boxes (calls functions to do it)*/
 var extractElementsForUpdate = function(){
 
+    console.log("saving");
     var progressElements = document.getElementsByClassName('habit-update');
     var habitsElements = document.getElementsByClassName('habit-setting');
     if (loggedIn){
@@ -239,7 +270,6 @@ var extractElementsForUpdate = function(){
     } else {
         extractElementsForUpdateNoneLoggedIn(progressElements, habitsElements);
     }
-
 };
 
 
@@ -432,7 +462,7 @@ var launchChart = function(fullData,habitObject){
     grapTitleDiv.setAttribute("class","graph-title");
     grapTitleDiv.appendChild(graphIcon);
     grapTitleDiv.appendChild(grapTitle);
-    newCanva.setAttribute("id",habitObject.habitId);
+    newCanva.setAttribute("id","graph-"+habitObject.habitId);
     newCanvaWrapper.appendChild(grapTitleDiv); 
     newCanvaWrapper.appendChild(brDiv); 
     newCanvaWrapper.appendChild(brDiv); 
@@ -443,7 +473,7 @@ var launchChart = function(fullData,habitObject){
     document.getElementById("graph-container").appendChild(newCanvaWrapper);
 
 
-    var ctx = document.getElementById(habitObject.habitId).getContext('2d');
+    var ctx = document.getElementById("graph-"+habitObject.habitId).getContext('2d');
 
 
     let options = {

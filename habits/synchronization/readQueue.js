@@ -4,7 +4,10 @@ var readQueueProgress = function() {
         var elementToProcess = updateQueue.shift();
         console.log("reading from queue");
         console.log(elementToProcess);
-        var intervalID = setInterval(putInStorage, 50, elementToProcess.id, elementToProcess.value);        
+        putInStorage(elementToProcess.id, elementToProcess.value); 
+        var currentDate = new Date();
+        document.getElementById('last-saved-information').innerHTML = "Last saved: "+currentDate.toLocaleTimeString();
+           
     }
 }
 

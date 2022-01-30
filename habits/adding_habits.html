@@ -8,7 +8,7 @@
                 margin: 0px;
                 font-family: "Nunito","candara","arial";
                 overflow-wrap: break-word;
-                background: #718bea;
+                background: #99afff;
             }
             .green{
                 background:#17bc25;
@@ -27,7 +27,7 @@
                 height: 57px;
                 text-align: center;
                 color: white;
-                background: #718bea;
+                background: #99afff;
                 margin: 0px;
                 font-size: 15px;
                 z-index: 100;
@@ -63,7 +63,6 @@
                 text-align:center;
                 padding-top:8px;
                 background-color:#b657af;
-                height:31px;
             }
             .horizontal-menu li.active{
                 background: white;
@@ -116,7 +115,7 @@
             }
             .box.new-habit,.habit-setting{
                 width: 208px;
-                height: 407px;  
+                /*height: 407px;*/  
                 padding: 20px;
             }
             .box.new-habit{
@@ -413,6 +412,20 @@
             input[type="checkbox"],input[type="date"],textarea{
                 border-radius: 5px;
             }
+            #habits-section{
+                display:none;
+            }
+            #last-saved-information{
+                color: lightgrey;
+                font-size: 13px;
+            }
+            .date-label{
+                color:#838383;
+            }
+
+            .hidden{
+                display:none;
+            }
             @media (max-width: 999px){
                 .habits-container,.habits-definition-container,.filter-bar,.graph-container,.main-action-bar,#progress-title,#footer{
                     justify-content: space-around;
@@ -491,7 +504,11 @@
             <div id="progress-title">
                 <div><h2>Update your progress</h2></div>
                 <div><input id="date-filter" type="date" class="action-input"></input></div>
-                <div id="habit-filters"><label>Filter by habit title:</label><input id="text-filter" class="action-input" type="text" ></input></div>
+                <div id="habit-filters">
+                    <label>Filter by habit title:</label>
+                    <input id="text-filter" class="action-input" type="text" ></input>
+                    <label id="last-saved-information"></label>
+                </div>
             </div>
             
             <div id="habits-container" class="habits-container">
@@ -525,9 +542,9 @@
                 <div class="box new-habit blue">
                     <div class="bold"><i class="fa fa-tasks"></i>New Habit</div><br>
                     <label class="label">Description:</label>
-                    <textarea  rows=3 type="text" id="new-description" class="large"></textarea><br>
-                    <label class="label">Check here if it is something you should NOT do:</label>
-                    <input type="checkbox" id="new-is-negative-flag" value=0 /><br>
+                    <textarea  rows=3 type="text" id="new-description" class="large"></textarea>
+                    <label class="label hidden">Check here if it is something you should NOT do:</label>
+                    <input type="checkbox" id="new-is-negative-flag" class="hidden" value=0 />
                     <br><div><label class="label">Daily Target:</label></div>
                     <div class="target-container">
                         <div id="minus-in-add-div" class="minus-button normal">-</div>
@@ -561,6 +578,8 @@
         <div id="graphs-section" class="main-section" >
             <h2>Check your progress:</h2>
             <div id="graph-container" class="graph-container" ></div>
+            <h2>Check your journal:</h2>
+            <div id="journal-container" class="journal-container" ></div>
         </div>
 
         <div class="overlay-for-message" id="journal-edit-box">
@@ -568,8 +587,7 @@
                 <div class="bold"><i class="fa fa-edit"></i>What do you think about your day ?</div><br>
                 <textarea rows="10" type="text" id="daily-journal" class="large"></textarea>
                 <div onClick='closeJournal();' id="close-journal-button" class="add-button">OK</div>
-            </div>
-            
+            </div>     
         </div>
         <div id="footer">
           <!--  <div id="update-button" class="update-button wide orange" onClick="extractElementsForUpdate();">Save</div>
