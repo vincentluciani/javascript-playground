@@ -102,7 +102,7 @@ var readJournal = function(journalArray){
 
     for ( var i=0; i< journalArray.length; i++){
         var journalText = journalArray[i].text;
-        if ( journalText.length > 2){
+        if ( journalText.length > 0){
             var brDiv = document.createElement("br");
             var journalDiv = document.createElement("div");
             var dateDiv = document.createElement("div");
@@ -171,7 +171,7 @@ var refreshProgress = function(currentDiv){
     
     if (newCompletionPercentage>=100){
         currentDiv.style.background="#f7fff6";
-        currentDiv.style.boxShadow="rgb(90 189 93 / 20%) -1px 2px 12px 5px";
+        currentDiv.style.boxShadow="rgb(55 110 57 / 20%) 1px 4px 16px 5px";
     } else if (newCompletionPercentage>=50){
         currentDiv.style.background="#fffded";
         currentDiv.style.boxShadow="rgb(219 213 191) -1px 2px 17px 0px";
@@ -450,22 +450,76 @@ var launchChart = function(fullData,habitObject){
             return (a.x - b.x)
             });	
 
+    /* Analysis */
+    var completionAccumulation=0;
+    for (var i =  dataToShow.length - 1 ; i>=0; i--){
+        if ( dataToShow[i].y < baseline[i].y ) {
+            break;
+        } else {
+            completionAccumulation++;
+        }
+
+    }
+
+    var tableData = {};
+    var j = dataToShow.length - 1;
+    var todayWeekDay = dataToShow[j].x.getDay();
+    var isTargetOK = ( dataToShow[j].y >= baseline[j].y) ? "<i class='fa fa-trophy icon'></i>" : "x";
+    tableData[todayWeekDay]= (isTargetOK != null)?isTargetOK:" ";
+
+    do  {
+        j--;
+        var currentWeekDay = dataToShow[j].x.getDay();
+        if ( currentWeekDay > todayWeekDay || currentWeekDay == 0){
+            break;
+        }
+        isTargetOK = ( dataToShow[j].y >= baseline[j].y) ?  "<i class='fa fa-trophy icon'></i>" : "x";
+        tableData[currentWeekDay]=isTargetOK;
+        tableData[currentWeekDay]= (isTargetOK != null)?isTargetOK:" ";
+
+    } while (currentWeekDay > 1)
+
+
+    var tableCode = "<table><tr><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>";
+    tableCode += "<tr><td>"+getElementToPutOnTable(tableData[1])+"</td>"+"<td>"+getElementToPutOnTable(tableData[2])+"</td>"+"<td>"+getElementToPutOnTable(tableData[3])+"</td>"+"<td>"+getElementToPutOnTable(tableData[4])+"</td>"+"<td>"+getElementToPutOnTable(tableData[5])+"</td>"+"<td>"+getElementToPutOnTable(tableData[6])+"</td>"+"<td>"+getElementToPutOnTable(tableData[0])+"</td></tr></table>";
+
+
+
     /*<canvas id="myChart"></canvas>*/
     var newCanva = document.createElement("canvas");
     var newCanvaWrapper = document.createElement("div");
     var brDiv = document.createElement("br");
     const grapTitle = document.createTextNode(habitObject.habitDescription);
     const grapTitleDiv = document.createElement("div");
+    const weekSummaryTable = document.createElement("div");
     var graphIcon = document.createElement("i");
     graphIcon.setAttribute("class","fa fa-bar-chart");
+
+    const streaksTitleDiv = document.createElement("div");
+    streaksTitleDiv.innerHTML = "Number of streaks: "+ completionAccumulation.toString();
+    streaksTitleDiv.setAttribute("class","subtitle");
 
     grapTitleDiv.setAttribute("class","graph-title");
     grapTitleDiv.appendChild(graphIcon);
     grapTitleDiv.appendChild(grapTitle);
+
+    const weekSummaryTableTitle = document.createElement("div");
+    weekSummaryTableTitle.innerHTML = "This week summary:";
+    weekSummaryTableTitle.setAttribute("class","subtitle");
+
+    weekSummaryTable.setAttribute("class","table-summary");
+    weekSummaryTable.innerHTML = tableCode;
+
+    const graphTitle = document.createElement("div");
+    graphTitle.innerHTML = "Graph:";
+    graphTitle.setAttribute("class","subtitle");
+
     newCanva.setAttribute("id","graph-"+habitObject.habitId);
     newCanvaWrapper.appendChild(grapTitleDiv); 
-    newCanvaWrapper.appendChild(brDiv); 
-    newCanvaWrapper.appendChild(brDiv); 
+    newCanvaWrapper.appendChild(streaksTitleDiv);
+    newCanvaWrapper.appendChild(weekSummaryTableTitle);
+    newCanvaWrapper.appendChild(weekSummaryTable);
+    newCanvaWrapper.appendChild(graphTitle); 
     newCanvaWrapper.append(newCanva);
 
     newCanvaWrapper.setAttribute("class","box canva-wrapper");
@@ -521,5 +575,14 @@ var launchChart = function(fullData,habitObject){
     options: options,
     type:'line',
     });
+
+}
+
+var getElementToPutOnTable = function (value) {
+    if ( value ) {
+        return value;
+    } else {
+        return " ";
+    }
 
 }
