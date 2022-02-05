@@ -1,6 +1,6 @@
 
 var loggedIn = false;
-var maxForNonLoggedIn = 80;
+var maxForNonLoggedIn = 200;
 var updateQueue = [];
 
 var currentDateTime = new Date();
@@ -98,7 +98,15 @@ var ingestElements = function(inputData,habitsArray,journalArray,urlDetails){
     readJournal(journalArray);
 }
 
+var convertJournalKeyToDateInt = function(journalKey){
+    var resultString = journalKey.substring(8,12) + journalKey.substring(13,15)  + journalKey.substring(16,19)   
+    return parseInt(resultString);
+}
 var readJournal = function(journalArray){
+
+    journalArray.sort(function(a, b){
+		return ( convertJournalKeyToDateInt(b.key) - convertJournalKeyToDateInt(a.key))
+		});	
 
     for ( var i=0; i< journalArray.length; i++){
         var journalText = journalArray[i].text;
@@ -111,9 +119,9 @@ var readJournal = function(journalArray){
             var textDiv = document.createElement("div");
             textDiv.innerHTML = journalText;
             textDiv.setAttribute("class","text-label");
-            journalDiv.appendChild(brDiv);
             journalDiv.appendChild(dateDiv);
             journalDiv.appendChild(textDiv);   
+            journalDiv.appendChild(brDiv);
             document.getElementById("journal-container").appendChild(journalDiv);
         }     
     }
@@ -462,10 +470,18 @@ var launchChart = function(fullData,habitObject){
     }
 
     var tableData = {};
+    var numberOfMissesInWeek=0;
     var j = dataToShow.length - 1;
+    var isTargetOK;
     var todayWeekDay = dataToShow[j].x.getDay();
-    var isTargetOK = ( dataToShow[j].y >= baseline[j].y) ? "<i class='fa fa-trophy icon'></i>" : "x";
+    if ( dataToShow[j].y >= baseline[j].y){
+        isTargetOK = "<i class='fa fa-circle icon'></i>";
+    } else {
+        isTargetOK = "x";
+        numberOfMissesInWeek++;
+    }
     tableData[todayWeekDay]= (isTargetOK != null)?isTargetOK:" ";
+
 
     do  {
         j--;
@@ -473,8 +489,12 @@ var launchChart = function(fullData,habitObject){
         if ( currentWeekDay > todayWeekDay || currentWeekDay == 0){
             break;
         }
-        isTargetOK = ( dataToShow[j].y >= baseline[j].y) ?  "<i class='fa fa-trophy icon'></i>" : "x";
-        tableData[currentWeekDay]=isTargetOK;
+        if ( dataToShow[j].y >= baseline[j].y){
+            isTargetOK = "<i class='fa fa-circle icon'></i>";
+        } else {
+            isTargetOK = "x";
+            numberOfMissesInWeek++;
+        }
         tableData[currentWeekDay]= (isTargetOK != null)?isTargetOK:" ";
 
     } while (currentWeekDay > 1)
@@ -516,13 +536,22 @@ var launchChart = function(fullData,habitObject){
 
     newCanva.setAttribute("id","graph-"+habitObject.habitId);
     newCanvaWrapper.appendChild(grapTitleDiv); 
-    newCanvaWrapper.appendChild(streaksTitleDiv);
     newCanvaWrapper.appendChild(weekSummaryTableTitle);
     newCanvaWrapper.appendChild(weekSummaryTable);
+    newCanvaWrapper.appendChild(brDiv); 
+    newCanvaWrapper.appendChild(streaksTitleDiv);
     newCanvaWrapper.appendChild(graphTitle); 
     newCanvaWrapper.append(newCanva);
 
     newCanvaWrapper.setAttribute("class","box canva-wrapper");
+
+    if (numberOfMissesInWeek==0){
+        newCanvaWrapper.style.background="#f7fff6";
+    } else if (numberOfMissesInWeek==1){
+        newCanvaWrapper.style.background="#fffded";
+    } else if (numberOfMissesInWeek>1){
+        newCanvaWrapper.style.background="#fff6f9";
+    }
 
     document.getElementById("graph-container").appendChild(newCanvaWrapper);
 
@@ -550,7 +579,16 @@ var launchChart = function(fullData,habitObject){
     },
     };
 
+    
+    if (completionAccumulation >= 10){
+        graphBackgroundColor = "#b5f7b1";
+        graphColor = "#3ce132";
+    } else {
+        graphBackgroundColor = "#f9dbdb";
+        graphColor = "#fd2121";
+    }
     let chartData = {
+
 
     datasets: [
                   /*  {
@@ -562,8 +600,8 @@ var launchChart = function(fullData,habitObject){
                     {
                         label: 'Your daily score',
                         data: dataToShow,
-                        backgroundColor: '#ffecd7',
-                        borderColor:'#f19a40',
+                        backgroundColor: graphBackgroundColor,
+                        borderColor: graphColor,
                         color:'blue',
                         order: 1
                     }
