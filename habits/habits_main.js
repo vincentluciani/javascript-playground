@@ -177,6 +177,13 @@ var refreshProgress = function(currentDiv){
     currentDiv.getElementsByClassName("percentage-completion")[0].innerHTML = newCompletionPercentage;
 
     
+    putColorBasedOnCompletion(currentDiv,newCompletionPercentage);
+
+    updateDailyProgress();
+
+}
+
+var putColorBasedOnCompletion = function(currentDiv,newCompletionPercentage){
     if (newCompletionPercentage>=100){
         currentDiv.style.background="#f7fff6";
         currentDiv.style.boxShadow="rgb(55 110 57 / 20%) 1px 4px 16px 5px";
@@ -187,8 +194,28 @@ var refreshProgress = function(currentDiv){
         currentDiv.style.background="#fff6f9";
         currentDiv.style.boxShadow="rgb(233 206 206) -1px 2px 10px 0px";
     }
+}
+
+var updateDailyProgress = function(){
+    
+    var progressDivs = document.getElementsByClassName("percentage-completion");
+    var currentDate = document.getElementById("date-filter").value;
 
 
+    var fullScore = 0;
+    var numberOfDivs = 0;
+    for ( var i=0; i< progressDivs.length; i++){
+        var progressDate = progressDivs[i].getAttribute("progressDate");
+        if (progressDate==currentDate){
+            fullScore += parseInt(progressDivs[i].innerHTML);
+            numberOfDivs++;
+        }
+    }
+
+    var dailyPercentage = Math.round(fullScore / numberOfDivs);
+    var dailySummaryDiv = document.getElementById("daily-summary");
+    dailySummaryDiv.innerHTML = dailyPercentage.toString();
+    putColorBasedOnCompletion(dailySummaryDiv.parentNode,dailyPercentage);
 
 }
 
@@ -486,8 +513,15 @@ var launchChart = function(fullData,habitObject){
     do  {
         j--;
         var currentWeekDay = dataToShow[j].x.getDay();
-        if ( currentWeekDay > todayWeekDay || currentWeekDay == 0){
-            break;
+
+        if ( todayWeekDay != 0){
+            if ( currentWeekDay > todayWeekDay || currentWeekDay == 0){
+                break;
+            }
+        } else {
+            if ( currentWeekDay == 0){
+                break;
+            }
         }
         if ( dataToShow[j].y >= baseline[j].y){
             isTargetOK = "<i class='fa fa-circle icon'></i>";
@@ -495,7 +529,9 @@ var launchChart = function(fullData,habitObject){
             isTargetOK = "x";
             numberOfMissesInWeek++;
         }
-        tableData[currentWeekDay]= (isTargetOK != null)?isTargetOK:" ";
+        if (tableData[currentWeekDay]==null){
+            tableData[currentWeekDay]= (isTargetOK != null)?isTargetOK:" ";
+        }
 
     } while (currentWeekDay > 1)
 

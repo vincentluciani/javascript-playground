@@ -133,7 +133,7 @@
                 box-shadow: 1px 12px 17px 5px rgb(159 159 159 / 20%);
                 font-weight:bold;
             }
-            .box.habit-update,.box.big-action-button{
+            .box.habit-update,.box.big-action-button,.daily-summary{
                 width:200px;
                 height: 190px;
                 padding: 20px;
@@ -179,7 +179,7 @@
             .huge-button i{
                 font-size:100px;
             }
-            .box.habit-update{
+            .box.habit-update,.daily-summary{
                 background-color:#fff6f9;
                 box-shadow: rgb(233 206 206) -1px 2px 10px 0px;
             }
@@ -235,7 +235,7 @@
                 font-size: 30px;
                 margin-top: 13px;
             }
-            .percentage-completion::after{
+            .percentage-completion::after, #daily-summary::after{
                 content: " %";
             }
             .habit-description{
@@ -447,7 +447,7 @@
                 color: #545454;
             }
             td,th, td i{
-                width:40px;
+                width:30px;
                 text-align: center;
             }
             td i{
@@ -556,6 +556,11 @@
             </div>
             
             <div id="habits-container" class="habits-container">
+                <div class="box first daily-summary">
+                    <div class="habit-description"><i class="fa fa-trophy icon"></i>Daily Summary</div>
+                    <div class="progress-container">Daily Completion Percentage:</div>
+                    <div id="daily-summary"></div>
+                </div>
                 <div class="box big-action-button" onclick="displayJournalEditBox();">
                     <div>Daily Journal</div>
                     <i class="fa fa-edit"></i>

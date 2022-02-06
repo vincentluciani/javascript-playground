@@ -44,6 +44,7 @@ var addElement = function(elementToAdd){
 
 
     percentageCompletionInput.setAttribute("class","percentage-completion");
+    percentageCompletionInput.setAttribute("progressDate",elementToAdd.progressDate);
     percentageCompletionInput.innerHTML = percentageCompletion.toString();
 
     var habitDescriptionContainer = document.createElement("div");
@@ -58,6 +59,7 @@ var addElement = function(elementToAdd){
 
 
     currentProgressContainer.setAttribute("class","progress-container");
+
 
 
 
