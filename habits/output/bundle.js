@@ -777,7 +777,9 @@ var updateDailyProgress = function(){
     for ( var i=0; i< progressDivs.length; i++){
         var progressDate = progressDivs[i].getAttribute("progressDate");
         if (progressDate==currentDate){
-            fullScore += parseInt(progressDivs[i].innerHTML);
+            var currentScore = parseInt(progressDivs[i].innerHTML);
+            currentScore = (currentScore > 100) ? 100 : currentScore;
+            fullScore += currentScore;
             numberOfDivs++;
         }
     }
