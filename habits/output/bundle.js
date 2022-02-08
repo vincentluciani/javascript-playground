@@ -649,12 +649,40 @@ var getHabitProgressWhenNotLoggedIn = function(){
         changeTabToProgress();
     } else {
         changeTabToHabits();
+        hideProgressTab();
+        hideGraphsTab();
+        hideSaveButtonOnHabits();
+        hideStartProgressButtonOnHabits();
     }
 
 
     ingestElements(progressArray,habitsArray,journalArray);
 };
 
+var hideProgressTab = function(){
+    document.getElementById("progress-menu").style.display = "none";
+}
+var showProgressTab = function(){
+    document.getElementById("progress-menu").style.display = "block";
+}
+var hideGraphsTab = function(){
+    document.getElementById("graphs-menu").style.display = "none"; 
+}
+var showGraphsTab = function(){
+    document.getElementById("graphs-menu").style.display = "block"; 
+}
+var hideSaveButtonOnHabits = function(){
+ document.getElementById("save-button-in-habits").style.display = "none";
+}
+var showSaveButtonOnHabits = function(){
+    document.getElementById("save-button-in-habits").style.display = "flex";
+}
+var hideStartProgressButtonOnHabits = function(){
+    document.getElementById("go-to-progress-button").style.display = "none";
+}
+var showStartProgressButtonOnHabits = function(){
+    document.getElementById("go-to-progress-button").style.display = "flex";
+}
 var ingestElements = function(inputData,habitsArray,journalArray,urlDetails){
    /* var inputData = getHabitProgress();*/
     for ( var i=0; i < inputData.length;i++){
@@ -674,6 +702,9 @@ var convertJournalKeyToDateInt = function(journalKey){
 }
 var readJournal = function(journalArray){
 
+    if (journalArray.length == 0){
+        return 0;
+    }
     journalArray.sort(function(a, b){
 		return ( convertJournalKeyToDateInt(b.key) - convertJournalKeyToDateInt(a.key))
 		});	
@@ -857,6 +888,11 @@ var addElementFromForm = function(){
     document.getElementById('new-description').value = null;
     document.getElementById('new-target').value = null;
     document.getElementById('new-is-negative-flag').checked = false;
+
+    showProgressTab();
+
+    showSaveButtonOnHabits();
+    showStartProgressButtonOnHabits();
 };
 
 var displayAllElements = function(elementList){
@@ -1053,6 +1089,9 @@ var launchChart = function(fullData,habitObject){
 		return (a.x - b.x)
 		});	
 
+        if ( dataToShow.length > 1){
+            showGraphsTab();
+        }
         baseline.sort(function(a, b){
             return (a.x - b.x)
             });	
@@ -1084,6 +1123,10 @@ var launchChart = function(fullData,habitObject){
 
     do  {
         j--;
+
+        if (j < 0){
+            break;
+        }
         var currentWeekDay = dataToShow[j].x.getDay();
 
         if ( todayWeekDay != 0){

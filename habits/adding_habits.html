@@ -138,6 +138,14 @@
                 height: 190px;
                 padding: 20px;
             }
+            .box{
+                animation-name: appear;
+                animation-duration: 2s;
+            }
+            @keyframes appear {
+                0%   {opacity: 0;}
+                100% {opacity: 1;}
+            }
             .box.big-action-button:hover{
                 box-shadow: -1px 2px 17px 7px rgb(255 168 168);
             }
@@ -612,11 +620,11 @@
                     </div>
                     <div onClick='addElementFromForm();' id="add-button" class="add-button">Add</div>
                 </div>
-                <div class="box big-action-button" onclick="extractElementsForUpdate();">
+                <div class="box big-action-button" id="save-button-in-habits" onclick="extractElementsForUpdate();">
                     <div>Save</div>
                     <i class="fa fa-save"></i>
                 </div>
-                    <div onclick="changeTabToProgress();" class="box big-action-button">
+                    <div onclick="changeTabToProgress();" id="go-to-progress-button" class="box big-action-button">
                         <div>Start Updating Your Progress</div>
                          <i class="fa fa-tasks"></i>
                     </div>
@@ -648,7 +656,7 @@
        -->     
 
         </div>
-    <!--    <script type="text/javascript" src='language/general.js'></script>
+       <!-- <script type="text/javascript" src='language/general.js'></script>
         <script type="text/javascript" src='language/english.js'></script>
         <script type="text/javascript" src='libraries/random.js'></script>
         <script type="text/javascript" src='habits_main.js'></script>
