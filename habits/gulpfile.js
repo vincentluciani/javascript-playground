@@ -7,6 +7,8 @@ var rename = require('gulp-rename');
 var replace = require('gulp-replace');
 var fs = require('fs');
 
+var newValue = '<script type="text/javascript" src="output/bundle-min.js"></script> '
+
 gulp.task('pack-js', function () {    
     return gulp.src(['components/*.js', 'libraries/*.js', 'language/general.js','language/english.js', 'synchronization/*.js','habits_main.js'])
         .pipe(concat('bundle.js'))
@@ -30,7 +32,18 @@ gulp.task('pack-css', function () {
 gulp.task('process-html', function () {    
     return gulp.src(['adding_habits.html'])
         .pipe(replace('<script type="text/javascript" src="output/bundle-min.js"></script>', '<script>'+fs.readFileSync('output/bundle-min.js', 'utf8')+'</script>'))
-        .pipe(replace('<link rel="stylesheet" href="components/full.css">', '<style>'+fs.readFileSync('output/bundle.css', 'utf8')+'</style>'))   
+        .pipe(replace('<link rel="stylesheet" href="components/full.css">', '<style>'+fs.readFileSync('output/bundle.css', 'utf8')+'</style>'))  
+        .pipe(replace('<script type="text/javascript" src="language/general.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="language/english.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="libraries/random.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="habits_main.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/weekDaySelector.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/habit.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/journal.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/progress.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/encourage.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="synchronization/pushProgressToQueue.js"></script>',''))     
+        .pipe(replace('<script type="text/javascript" src="language/general.js"></script>','<script type="text/javascript" src="output/bundle-min.js"></script>'))       
         .pipe(htmlmin({ collapseWhitespace: true }))
         .pipe(rename('index.html'))
         .pipe(gulp.dest('output'));
