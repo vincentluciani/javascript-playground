@@ -252,7 +252,12 @@ var updateDailyProgress = function(){
 
     var dailyPercentage = Math.round(fullScore / numberOfDivs);
     var dailySummaryDiv = document.getElementById("daily-summary");
-    dailySummaryDiv.innerHTML = dailyPercentage.toString();
+    if (dailyPercentage>0){
+        dailySummaryDiv.innerHTML = dailyPercentage.toString();
+    } else {
+        var dailyPercentage = 0;
+        dailySummaryDiv.innerHTML = "0"
+    }
     putColorBasedOnCompletion(dailySummaryDiv.parentNode,dailyPercentage);
 
 }
@@ -457,7 +462,7 @@ var addEmptyProgressOnNewDay = function(){
                     target: habitsElements[i].getAttribute("target"),
                     progressDate: currentDate,
                     isNew: true,
-                    numberOfCompletions:0
+                    numberOfCompletions:0,
                 }
                 addElement(newProgressObject);
                 console.log("added progress");
@@ -545,46 +550,54 @@ var launchChart = function(fullData,habitObject){
     var tableData = {};
     var numberOfMissesInWeek=0;
     var j = dataToShow.length - 1;
+
+    if ( j < 1){
+        return false;
+    };
     var isTargetOK;
-    var todayWeekDay = dataToShow[j].x.getDay();
-    if ( dataToShow[j].y >= baseline[j].y){
-        isTargetOK = "<i class='fa fa-circle icon'></i>";
-    } else {
-        isTargetOK = "x";
-        numberOfMissesInWeek++;
-    }
-    tableData[todayWeekDay]= (isTargetOK != null)?isTargetOK:" ";
-
-
-    do  {
-        j--;
-
-        if (j < 0){
-            break;
-        }
-        var currentWeekDay = dataToShow[j].x.getDay();
-
-        if ( todayWeekDay != 0){
-            if ( currentWeekDay > todayWeekDay || currentWeekDay == 0){
-                break;
-            }
-        } else {
-            if ( currentWeekDay == 0){
-                break;
-            }
-        }
+    if (j >= 0 && dataToShow[j] && dataToShow[j].x){
+        var todayWeekDay = dataToShow[j].x.getDay();
         if ( dataToShow[j].y >= baseline[j].y){
             isTargetOK = "<i class='fa fa-circle icon'></i>";
         } else {
             isTargetOK = "x";
             numberOfMissesInWeek++;
         }
-        if (tableData[currentWeekDay]==null){
-            tableData[currentWeekDay]= (isTargetOK != null)?isTargetOK:" ";
-        }
+        tableData[todayWeekDay]= (isTargetOK != null)?isTargetOK:" ";
 
-    } while (currentWeekDay > 1)
 
+        do  {
+            j--;
+
+            if (j < 0){
+                break;
+            }
+            if (j >= 0 && dataToShow[j] && dataToShow[j].x){
+                var currentWeekDay = dataToShow[j].x.getDay();
+
+                if ( todayWeekDay != 0){
+                    if ( currentWeekDay > todayWeekDay || currentWeekDay == 0){
+                        break;
+                    }
+                } else {
+                    if ( currentWeekDay == 0){
+                        break;
+                    }
+                }
+                if ( dataToShow[j].y >= baseline[j].y){
+                    isTargetOK = "<i class='fa fa-circle icon'></i>";
+                } else {
+                    isTargetOK = "x";
+                    numberOfMissesInWeek++;
+                }
+                if (tableData[currentWeekDay]==null){
+                    tableData[currentWeekDay]= (isTargetOK != null)?isTargetOK:" ";
+                }
+            }
+        } while (currentWeekDay > 1)
+    } else {
+        return false;
+    }
 
     var tableCode = "<table><tr><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>";
     tableCode += "<tr><td>"+getElementToPutOnTable(tableData[1])+"</td>"+"<td>"+getElementToPutOnTable(tableData[2])+"</td>"+"<td>"+getElementToPutOnTable(tableData[3])+"</td>"+"<td>"+getElementToPutOnTable(tableData[4])+"</td>"+"<td>"+getElementToPutOnTable(tableData[5])+"</td>"+"<td>"+getElementToPutOnTable(tableData[6])+"</td>"+"<td>"+getElementToPutOnTable(tableData[0])+"</td></tr></table>";
