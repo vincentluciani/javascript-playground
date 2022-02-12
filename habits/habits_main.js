@@ -252,7 +252,7 @@ var updateDailyProgress = function(){
 
     var dailyPercentage = Math.round(fullScore / numberOfDivs);
     var dailySummaryDiv = document.getElementById("daily-summary");
-    if (dailyPercentage>0){
+    if (dailyPercentage && dailyPercentage>0){
         dailySummaryDiv.innerHTML = dailyPercentage.toString();
     } else {
         var dailyPercentage = 0;
@@ -436,6 +436,9 @@ var addEmptyProgressOnNewDay = function(){
 
     var progressElements = document.getElementsByClassName('habit-update');
     var habitsElements = document.getElementsByClassName('habit-setting');
+
+    var dailySummaryDiv = document.getElementById("daily-summary");
+    dailySummaryDiv.innerHTML = "0"
 
     for (var i=0; i< habitsElements.length;i++){
 
