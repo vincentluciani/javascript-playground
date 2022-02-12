@@ -582,7 +582,12 @@ var minusButtonInAddDiv = document.getElementById("minus-in-add-div");
 var newTargetDiv = document.getElementById("new-target");
 
 onload = function(){
-    
+    "use strict";
+
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("./sw-min.js");
+      }
+
     document.getElementById("date-filter").value=currentDate;
     /*ingestElements();*/
 

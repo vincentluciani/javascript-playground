@@ -1,0 +1,1 @@
+let cacheName="discipline-pwa",filesToCache=["/","/index.html"];self.addEventListener("install",e=>{e.waitUntil(caches.open(cacheName).then(function(e){return e.addAll(filesToCache)}))}),self.addEventListener("fetch",e=>{e.respondWith(caches.match(e.request).then(t=>t||fetch(e.request)))});

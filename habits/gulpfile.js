@@ -14,6 +14,12 @@ gulp.task('pack-js', function () {
         .pipe(gulp.dest('output'));
 });
  
+gulp.task('pack-service-worker', function () {    
+    return gulp.src(['sw.js'])
+        .pipe(minify())
+        .pipe(gulp.dest('output'));
+});
+
 gulp.task('pack-css', function () {    
     return gulp.src(['components/*.css'])
         .pipe(concat('bundle.css'))
