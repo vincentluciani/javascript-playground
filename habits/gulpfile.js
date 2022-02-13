@@ -10,7 +10,7 @@ var fs = require('fs');
 var newValue = '<script type="text/javascript" src="output/bundle-min.js"></script> '
 
 gulp.task('pack-js', function () {    
-    return gulp.src(['components/*.js', 'libraries/*.js', 'language/general.js','language/english.js', 'synchronization/*.js','habits_main.js'])
+    return gulp.src(['components/*.js', 'libraries/random.js', 'language/general.js','language/english.js', 'synchronization/*.js','habits_main.js','libraries/moment.min.js','libraries/chart.min.js'])
         .pipe(concat('bundle.js'))
         .pipe(minify())
         .pipe(gulp.dest('output'));
@@ -29,9 +29,9 @@ gulp.task('pack-css', function () {
         .pipe(gulp.dest('output'));
 });
 
+
 gulp.task('process-html', function () {    
     return gulp.src(['adding_habits.html'])
-        .pipe(replace('<script type="text/javascript" src="output/bundle-min.js"></script>', '<script>'+fs.readFileSync('output/bundle-min.js', 'utf8')+'</script>'))
         .pipe(replace('<link rel="stylesheet" href="components/full.css">', '<style>'+fs.readFileSync('output/bundle.css', 'utf8')+'</style>'))  
         .pipe(replace('<script type="text/javascript" src="language/general.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="language/english.js"></script>',''))
@@ -42,11 +42,14 @@ gulp.task('process-html', function () {
         .pipe(replace('<script type="text/javascript" src="components/journal.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/progress.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/encourage.js"></script>',''))
-        .pipe(replace('<script type="text/javascript" src="synchronization/pushProgressToQueue.js"></script>',''))     
-        .pipe(replace('<script type="text/javascript" src="language/general.js"></script>','<script type="text/javascript" src="output/bundle-min.js"></script>'))       
+        .pipe(replace('<script type="text/javascript" src="synchronization/pushProgressToQueue.js"></script>','')) 
+        .pipe(replace('<script type="text/javascript" src="synchronization/readQueue.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/moment.min.js"></script>',''))   
+        .pipe(replace('<script type="text/javascript" src="components/Chart.min.js"></script>','<script>'+fs.readFileSync('output/bundle-min.js', 'utf8')+'</script>'))       
         .pipe(htmlmin({ collapseWhitespace: true }))
         .pipe(rename('index.html'))
         .pipe(gulp.dest('output'));
 });
 
-gulp.task('default', gulp.series(['pack-js','pack-css','process-html']));
+
+gulp.task('default', gulp.series(['pack-js','pack-css','process-html','pack-service-worker']));
