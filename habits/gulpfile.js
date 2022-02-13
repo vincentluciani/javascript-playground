@@ -10,7 +10,7 @@ var fs = require('fs');
 var newValue = '<script type="text/javascript" src="output/bundle-min.js"></script> '
 
 gulp.task('pack-js', function () {    
-    return gulp.src(['components/*.js', 'libraries/random.js', 'language/general.js','language/english.js', 'synchronization/*.js','habits_main.js','libraries/moment.min.js','libraries/chart.min.js'])
+    return gulp.src(['components/*.js', 'libraries/random.js', 'language/general.js','language/english.js', 'synchronization/*.js','habits_main.js'])
         .pipe(concat('bundle.js'))
         .pipe(minify())
         .pipe(gulp.dest('output'));
