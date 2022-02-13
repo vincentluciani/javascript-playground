@@ -654,8 +654,13 @@ var getHabitProgressWhenNotLoggedIn = function(){
             journalArray.push({'key':currentKey,'text':JSON.parse(localStorage.getItem(currentKey))});
         }
     }
-    if (habitsArray.length > 0){
+
+    if (habitsArray.length > 1){
         changeTabToProgress();
+    }
+    else if (habitsArray.length > 0){
+        changeTabToProgress();
+        hideGraphsTab();
     } else {
         changeTabToHabits();
         hideProgressTab();
@@ -664,10 +669,15 @@ var getHabitProgressWhenNotLoggedIn = function(){
         hideStartProgressButtonOnHabits();
     }
 
+    if (journalArray.length < 1){
+        hideJournalBox();
+    }
 
     ingestElements(progressArray,habitsArray,journalArray);
 };
-
+var hideJournalBox = function(){
+    document.getElementById("journal-container").innerHTML = "no entry yet";
+}
 var hideProgressTab = function(){
     document.getElementById("progress-menu").style.display = "none";
 }
