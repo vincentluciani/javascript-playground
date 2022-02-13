@@ -43,9 +43,7 @@ gulp.task('process-html', function () {
         .pipe(replace('<script type="text/javascript" src="components/progress.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/encourage.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="synchronization/pushProgressToQueue.js"></script>','')) 
-        .pipe(replace('<script type="text/javascript" src="synchronization/readQueue.js"></script>',''))
-        .pipe(replace('<script type="text/javascript" src="components/moment.min.js"></script>',''))   
-        .pipe(replace('<script type="text/javascript" src="components/Chart.min.js"></script>','<script>'+fs.readFileSync('output/bundle-min.js', 'utf8')+'</script>'))       
+        .pipe(replace('<script type="text/javascript" src="synchronization/readQueue.js"></script>','<script>'+fs.readFileSync('output/bundle-min.js', 'utf8')+'</script>'))   
         .pipe(htmlmin({ collapseWhitespace: true }))
         .pipe(rename('index.html'))
         .pipe(gulp.dest('output'));

@@ -13,11 +13,15 @@ var newTargetDiv = document.getElementById("new-target");
 
 onload = function(){
     "use strict";
-
+/*
     if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("./sw-min.js");
+        navigator.serviceWorker.register("./sw-min.js").then(function(registration) {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }).catch(function(err) {
+              console.log('ServiceWorker registration failed: ', err);
+            });
       }
-
+*/
     document.getElementById("date-filter").value=currentDate;
     /*ingestElements();*/
 
