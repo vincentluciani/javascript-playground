@@ -517,6 +517,10 @@ td{
     border-radius: 25px;
     margin-top: 23px;
 }
+
+#daily-summary-container{
+    order:90;
+}
 @media (max-width: 999px){
     .habits-container,.habits-definition-container,.filter-bar,.graph-container,.main-action-bar,#progress-title,#footer{
         justify-content: space-around;
@@ -539,7 +543,7 @@ td{
         margin:20px;
     }
     .positive-message .title{
-        font-size:50px;
+        font-size:47px;
         text-align: center;
     }
     .positive-message .sub-title{
@@ -587,6 +591,7 @@ td{
     .side-text {
         margin-top: 32px;
         margin-left: 10px;
+    }
 }
 @media (min-width: 1000px){
     .box{

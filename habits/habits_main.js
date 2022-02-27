@@ -235,13 +235,14 @@ var updateDailyProgress = function(){
 
     var dailyPercentage = Math.round(fullScore / numberOfDivs);
     var dailySummaryDiv = document.getElementById("daily-summary");
+    var dailySummaryBox = document.getElementById("daily-summary-container");
     if (dailyPercentage && dailyPercentage>0){
         dailySummaryDiv.innerHTML = dailyPercentage.toString();
-        /*dailySummaryDiv.style.display = "block"*/
+        dailySummaryBox.style.display = "block";
     } else {
         var dailyPercentage = 0;
         dailySummaryDiv.innerHTML = "0"
-        /*dailySummaryDiv.style.display = "none"*/
+        dailySummaryBox.style.display = "none";
     }
     putColorBasedOnCompletion(dailySummaryDiv.parentNode,dailyPercentage);
 
