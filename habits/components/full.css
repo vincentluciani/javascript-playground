@@ -547,6 +547,46 @@ td{
         text-align: center;
     }
 
+    .habit-description{
+        font-size: 20px;
+    }
+
+    .progress-container{
+        font-size: 18px;
+    }
+
+    .box.habit-update, .box.daily-summary, .box.big-action-button{
+        width: 300px;
+        height: 238px;
+    }
+
+    .box.habit-update .number-of-completion[type=number]{
+        height: 54px;
+        margin-top: 15px;
+    }
+
+    .plus-button, .minus-button{
+        width: 48px;
+        height: 48.5px;
+        font-size: 26px;
+        margin-top: 15px;
+    }
+    
+    .minus-button{
+        border-radius: 40px 0px 0px 40px;
+    }
+
+    .plus-button{
+        border-radius: 0px 40px 40px 0px;
+    }
+
+    .progress-container{
+        font-size: 18px;
+    }
+
+    .side-text {
+        margin-top: 32px;
+        margin-left: 10px;
 }
 @media (min-width: 1000px){
     .box{

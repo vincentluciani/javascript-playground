@@ -47,7 +47,7 @@ var addHabitElement = function(elementToAdd){
     var weekDaySelector = dynamicWeekDaySelector(elementToAdd.weekDay);
     newHabitDivision.appendChild(weekDaySelector);
     const deleteButton = document.createElement("div");
-    var onClickFunctionCall = "deleteHabit(" + elementToAdd.habitId.toString()+ ');';
+    var onClickFunctionCall = "deleteHabit(" + elementToAdd.habitId.toString()+ ");deleteProgressFromHabitToday(" + elementToAdd.habitId.toString()+ ")";
     deleteButton.setAttribute("onClick",onClickFunctionCall);
     deleteButton.setAttribute("class","add-button");
     deleteButton.innerHTML = "Delete";
@@ -64,4 +64,27 @@ var deleteHabit = function(habitId){
     var element = document.getElementById(habitId.toString());
     element.parentNode.removeChild(element);
     window.localStorage.removeItem(habitKey);
+}
+
+
+var deleteProgressFromHabitToday = function(habitId){
+    var progressDivs = document.getElementsByClassName("habit-update");    
+     
+    for ( var i=progressDivs.length-1; i >= 0; i--){
+        var progressHabitId = progressDivs[i].getAttribute("habitid");
+        var progressDate = progressDivs[i].getAttribute("progressDate");
+
+        var currentDateString = currentDateTime.getFullYear().toString().padStart(2,'0')+'-'+(currentDateTime.getMonth()+1).toString().padStart(2,'0')+'-'+currentDateTime.getDate().toString().padStart(2,'0'); 
+
+        if ( (currentDateString == progressDate) && ( progressHabitId == habitId)) {
+            var progressId = progressDivs[i].getAttribute("id");
+            progressDivs[i].parentNode.removeChild(progressDivs[i]);
+            var progressKey = "progress-"+progressId.toString();
+            window.localStorage.removeItem(progressKey);
+        }
+    }
+
+
+
+
 }
