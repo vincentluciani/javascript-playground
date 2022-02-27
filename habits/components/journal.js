@@ -33,3 +33,38 @@ var closeJournal = function(){
 
     editBox.style.display="none";
 }
+
+
+var convertJournalKeyToDateInt = function(journalKey){
+    var resultString = journalKey.substring(8,12) + journalKey.substring(13,15)  + journalKey.substring(16,19)   
+    return parseInt(resultString);
+}
+var readJournal = function(journalArray){
+
+    if (journalArray.length == 0){
+        return 0;
+    }
+    journalArray.sort(function(a, b){
+		return ( convertJournalKeyToDateInt(b.key) - convertJournalKeyToDateInt(a.key))
+		});	
+
+    for ( var i=0; i< journalArray.length; i++){
+        var journalText = journalArray[i].text;
+        if ( journalText.length > 0){
+            var brDiv = document.createElement("br");
+            var journalDiv = document.createElement("div");
+            var dateDiv = document.createElement("div");
+            dateDiv.innerHTML = journalArray[i].key.substr(8);
+            dateDiv.setAttribute("class","date-label");
+            var textDiv = document.createElement("div");
+            textDiv.innerHTML = journalText;
+            textDiv.setAttribute("class","text-label");
+            journalDiv.appendChild(dateDiv);
+            journalDiv.appendChild(textDiv);   
+            journalDiv.appendChild(brDiv);
+            document.getElementById("journal-container").appendChild(journalDiv);
+        }     
+    }
+
+}
+

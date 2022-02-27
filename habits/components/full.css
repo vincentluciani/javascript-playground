@@ -297,6 +297,7 @@ i{
 }
 
 .add-button{
+    font-size: 23px;
     clear: both;
     background: #b657af;
     color: white;
@@ -446,6 +447,13 @@ i{
     width:100%;
 }
 
+#date-filter{
+    border: 2px solid #b657af;
+    border-radius: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background: #f5bcff;
+}
 input, textarea{
     border: 1px solid lightgrey;
     font-family: "Nunito","candara","arial";

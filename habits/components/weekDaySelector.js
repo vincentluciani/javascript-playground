@@ -181,3 +181,14 @@ var isDayInListOfDaysString = function(dayToCheck, weekDayString){
     }
     return false;
 }
+
+var resetWeekDaySelector = function(weekDaySelector) {
+
+    weekDaySelector.setAttribute("weekday","");
+    var weekDays = weekDaySelector.getElementsByClassName("weekday");
+
+    for ( var i = 0; i < weekDays.length; i++){
+        weekDays[i].classList.remove("selected");
+    }
+
+}

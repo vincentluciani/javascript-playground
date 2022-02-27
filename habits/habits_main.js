@@ -32,7 +32,7 @@ onload = function(){
 
 var saveLoop = function(){
 
-    setInterval(extractElementsForUpdate, 5000);
+    setInterval(extractElementsForUpdate, 1000);
 
 }
 
@@ -121,10 +121,10 @@ var showGraphsTab = function(){
     document.getElementById("graphs-menu").style.display = "block"; 
 }
 var hideSaveButtonOnHabits = function(){
- document.getElementById("save-button-in-habits").style.display = "none";
+ /*document.getElementById("save-button-in-habits").style.display = "none";*/
 }
 var showSaveButtonOnHabits = function(){
-    document.getElementById("save-button-in-habits").style.display = "flex";
+   /* document.getElementById("save-button-in-habits").style.display = "flex";*/
 }
 var hideStartProgressButtonOnHabits = function(){
     document.getElementById("go-to-progress-button").style.display = "none";
@@ -145,38 +145,7 @@ var ingestElements = function(inputData,habitsArray,journalArray,urlDetails){
     readJournal(journalArray);
 }
 
-var convertJournalKeyToDateInt = function(journalKey){
-    var resultString = journalKey.substring(8,12) + journalKey.substring(13,15)  + journalKey.substring(16,19)   
-    return parseInt(resultString);
-}
-var readJournal = function(journalArray){
 
-    if (journalArray.length == 0){
-        return 0;
-    }
-    journalArray.sort(function(a, b){
-		return ( convertJournalKeyToDateInt(b.key) - convertJournalKeyToDateInt(a.key))
-		});	
-
-    for ( var i=0; i< journalArray.length; i++){
-        var journalText = journalArray[i].text;
-        if ( journalText.length > 0){
-            var brDiv = document.createElement("br");
-            var journalDiv = document.createElement("div");
-            var dateDiv = document.createElement("div");
-            dateDiv.innerHTML = journalArray[i].key.substr(8);
-            dateDiv.setAttribute("class","date-label");
-            var textDiv = document.createElement("div");
-            textDiv.innerHTML = journalText;
-            textDiv.setAttribute("class","text-label");
-            journalDiv.appendChild(dateDiv);
-            journalDiv.appendChild(textDiv);   
-            journalDiv.appendChild(brDiv);
-            document.getElementById("journal-container").appendChild(journalDiv);
-        }     
-    }
-
-}
 var filterDivs = function(testElements, filterType, filterValue, exactMatch){
     if (filterValue != null && filterValue != '' ){
         for (var i=0; i<testElements.length; i++){
@@ -268,9 +237,11 @@ var updateDailyProgress = function(){
     var dailySummaryDiv = document.getElementById("daily-summary");
     if (dailyPercentage && dailyPercentage>0){
         dailySummaryDiv.innerHTML = dailyPercentage.toString();
+        /*dailySummaryDiv.style.display = "block"*/
     } else {
         var dailyPercentage = 0;
         dailySummaryDiv.innerHTML = "0"
+        /*dailySummaryDiv.style.display = "none"*/
     }
     putColorBasedOnCompletion(dailySummaryDiv.parentNode,dailyPercentage);
 
@@ -324,7 +295,8 @@ var addElementFromForm = function(){
     elementToAdd.progressDate = currentDate;
     elementToAdd.numberOfCompletions = 0;
     elementToAdd.isNew = true;
-    elementToAdd.weekDay = document.getElementById('week-day-selection').getAttribute('weekDay');
+    var weekDaySelector = document.getElementById('week-day-selection');
+    elementToAdd.weekDay = weekDaySelector.getAttribute('weekDay');
 
     if (elementToAdd.weekDay){
         var isDayOK = isDayOfWeekInHabitWeeks(currentDateTime, elementToAdd.weekDay);
@@ -340,8 +312,9 @@ var addElementFromForm = function(){
     pushProgressArrayToQueue(elementToAdd);
 
     document.getElementById('new-description').value = null;
-    document.getElementById('new-target').value = null;
+    document.getElementById('new-target').value = 1;
     document.getElementById('new-is-negative-flag').checked = false;
+    resetWeekDaySelector(weekDaySelector);
 
     showProgressTab();
 
@@ -405,7 +378,7 @@ var readHabitElement = function(elementToRead){
     return outputJson;
 };
 
-/* Read progress from the dom */
+/* Read progress from the dom and put it in json ( then it can be saved ) */
 var readElement = function(elementToRead){
     var outputJson = {};
     outputJson.id = elementToRead.getAttribute("id");

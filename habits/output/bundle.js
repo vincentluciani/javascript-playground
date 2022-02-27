@@ -131,6 +131,42 @@ var closeJournal = function(){
     editBox.style.display="none";
 }
 
+
+var convertJournalKeyToDateInt = function(journalKey){
+    var resultString = journalKey.substring(8,12) + journalKey.substring(13,15)  + journalKey.substring(16,19)   
+    return parseInt(resultString);
+}
+var readJournal = function(journalArray){
+
+    if (journalArray.length == 0){
+        return 0;
+    }
+    journalArray.sort(function(a, b){
+		return ( convertJournalKeyToDateInt(b.key) - convertJournalKeyToDateInt(a.key))
+		});	
+
+    for ( var i=0; i< journalArray.length; i++){
+        var journalText = journalArray[i].text;
+        if ( journalText.length > 0){
+            var brDiv = document.createElement("br");
+            var journalDiv = document.createElement("div");
+            var dateDiv = document.createElement("div");
+            dateDiv.innerHTML = journalArray[i].key.substr(8);
+            dateDiv.setAttribute("class","date-label");
+            var textDiv = document.createElement("div");
+            textDiv.innerHTML = journalText;
+            textDiv.setAttribute("class","text-label");
+            journalDiv.appendChild(dateDiv);
+            journalDiv.appendChild(textDiv);   
+            journalDiv.appendChild(brDiv);
+            document.getElementById("journal-container").appendChild(journalDiv);
+        }     
+    }
+
+}
+
+
+
 var addElement = function(elementToAdd){
 
     const newProgressDivision = document.createElement("div");
@@ -473,6 +509,17 @@ var isDayInListOfDaysString = function(dayToCheck, weekDayString){
     }
     return false;
 }
+
+var resetWeekDaySelector = function(weekDaySelector) {
+
+    weekDaySelector.setAttribute("weekday","");
+    var weekDays = weekDaySelector.getElementsByClassName("weekday");
+
+    for ( var i; i < weekDays.length; i++){
+        weekDays[i].style.removeClass("selected");
+    }
+
+}
 function getRandomNumber(min,max){
 
     var randomSeed = Math.random();
@@ -715,38 +762,7 @@ var ingestElements = function(inputData,habitsArray,journalArray,urlDetails){
     readJournal(journalArray);
 }
 
-var convertJournalKeyToDateInt = function(journalKey){
-    var resultString = journalKey.substring(8,12) + journalKey.substring(13,15)  + journalKey.substring(16,19)   
-    return parseInt(resultString);
-}
-var readJournal = function(journalArray){
 
-    if (journalArray.length == 0){
-        return 0;
-    }
-    journalArray.sort(function(a, b){
-		return ( convertJournalKeyToDateInt(b.key) - convertJournalKeyToDateInt(a.key))
-		});	
-
-    for ( var i=0; i< journalArray.length; i++){
-        var journalText = journalArray[i].text;
-        if ( journalText.length > 0){
-            var brDiv = document.createElement("br");
-            var journalDiv = document.createElement("div");
-            var dateDiv = document.createElement("div");
-            dateDiv.innerHTML = journalArray[i].key.substr(8);
-            dateDiv.setAttribute("class","date-label");
-            var textDiv = document.createElement("div");
-            textDiv.innerHTML = journalText;
-            textDiv.setAttribute("class","text-label");
-            journalDiv.appendChild(dateDiv);
-            journalDiv.appendChild(textDiv);   
-            journalDiv.appendChild(brDiv);
-            document.getElementById("journal-container").appendChild(journalDiv);
-        }     
-    }
-
-}
 var filterDivs = function(testElements, filterType, filterValue, exactMatch){
     if (filterValue != null && filterValue != '' ){
         for (var i=0; i<testElements.length; i++){
@@ -894,7 +910,8 @@ var addElementFromForm = function(){
     elementToAdd.progressDate = currentDate;
     elementToAdd.numberOfCompletions = 0;
     elementToAdd.isNew = true;
-    elementToAdd.weekDay = document.getElementById('week-day-selection').getAttribute('weekDay');
+    var weekDaySelector = document.getElementById('week-day-selection');
+    elementToAdd.weekDay = weekDaySelector.getAttribute('weekDay');
 
     if (elementToAdd.weekDay){
         var isDayOK = isDayOfWeekInHabitWeeks(currentDateTime, elementToAdd.weekDay);
@@ -910,8 +927,9 @@ var addElementFromForm = function(){
     pushProgressArrayToQueue(elementToAdd);
 
     document.getElementById('new-description').value = null;
-    document.getElementById('new-target').value = null;
+    document.getElementById('new-target').value = 1;
     document.getElementById('new-is-negative-flag').checked = false;
+    resetWeekDaySelector(weekDaySelector);
 
     showProgressTab();
 
@@ -975,7 +993,7 @@ var readHabitElement = function(elementToRead){
     return outputJson;
 };
 
-/* Read progress from the dom */
+/* Read progress from the dom and put it in json ( then it can be saved ) */
 var readElement = function(elementToRead){
     var outputJson = {};
     outputJson.id = elementToRead.getAttribute("id");
