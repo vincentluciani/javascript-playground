@@ -41,9 +41,9 @@
                 <div><input id="date-filter" type="date" class="action-input"></input></div>
                 <div id="habit-filters">
                     <label>Filter by habit title:</label>
-                    <input id="text-filter" class="action-input" type="text" ></input>
-                    <label id="last-saved-information"></label>
+                    <input id="text-filter" class="action-input" type="text" ></input> 
                 </div>
+                <label id="last-saved-information"></label>
             </div>
             
             <div id="habits-container" class="habits-container">
@@ -52,7 +52,7 @@
                     <div class="progress-container">Daily Completion Percentage:</div>
                     <div id="daily-summary"></div>
                 </div>
-                <div class="box big-action-button" onclick="displayJournalEditBox();">
+                <div class="box big-action-button" onclick="displayJournalEditBox();window.scrollTo(0, 0);">
                     <div>Daily Journal</div>
                     <i class="fa fa-edit"></i>
                 </div>
@@ -61,12 +61,12 @@
                     <i class="fa fa-save"></i>
 
                 </div> -->
-                <div class="box big-action-button" onclick="changeTabToHabits();">
+                <div class="box big-action-button" onclick="changeTabToHabits();window.scrollTo(0, 0);">
                     <div>New Habit</div>
                     <i class="fa fa-plus"></i>
 
                 </div>
-                <div class="box big-action-button" onclick="changeTabToGraphs();">
+                <div class="box big-action-button" onclick="changeTabToGraphs();window.scrollTo(0, 0);">
                     <div>Graphs</div>
                     <i class="fa fa-bar-chart"></i>
                 </div>
@@ -77,6 +77,7 @@
         <div id="habits-section" class="main-section">
             <div id="progress-title">
                 <div><h2>Add a new habit, update your entered habit</h2></div>
+                <label id="last-saved-information-habits"></label>
             </div>
             <div id="habits-definition-container" class="habits-definition-container">
                 <div class="box new-habit blue">
@@ -108,7 +109,7 @@
                     <div>Save</div>
                     <i class="fa fa-save"></i> 
                 </div> -->
-                    <div onclick="changeTabToProgress();" id="go-to-progress-button" class="box big-action-button">
+                    <div onclick="changeTabToProgress();window.scrollTo(0, 0);" id="go-to-progress-button" class="box big-action-button">
                         <div>Start Updating Your Progress</div>
                          <i class="fa fa-tasks"></i>
                     </div>

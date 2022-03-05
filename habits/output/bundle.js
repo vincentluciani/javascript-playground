@@ -602,7 +602,7 @@ var readQueueProgress = function() {
         putInStorage(elementToProcess.id, elementToProcess.value); 
         var currentDate = new Date();
         document.getElementById('last-saved-information').innerHTML = "Last saved: "+currentDate.toLocaleTimeString();
-           
+        document.getElementById('last-saved-information-habits').innerHTML = "Last saved: "+currentDate.toLocaleTimeString();
     }
 }
 

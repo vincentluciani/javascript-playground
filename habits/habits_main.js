@@ -1,6 +1,6 @@
 
 var loggedIn = false;
-var maxForNonLoggedIn = 200;
+var maxForNonLoggedIn = 2000;
 var updateQueue = [];
 
 var currentDateTime = new Date();
