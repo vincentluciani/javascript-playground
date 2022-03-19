@@ -106,6 +106,11 @@ var addElement = function(elementToAdd){
         newProgressDivision.appendChild(targetTextDiv);
     } else {
         currentProgressContainer.appendChild(currentProgressTextOneTarget);
+        var checkBoxContainer = document.createElement("label");
+        checkBoxContainer.setAttribute("class","custom-checkbox-container")
+        var checkMark = document.createElement("span");
+        checkMark.setAttribute("class","checkmark");
+
         progressInput.setAttribute("type","checkbox");
         if (elementToAdd.numberOfCompletions == 1){
             progressInput.checked = true;
@@ -129,8 +134,14 @@ var addElement = function(elementToAdd){
             }
         }(newProgressDivision));
 
+
+
+        checkBoxContainer.appendChild(progressInput);
+        checkBoxContainer.appendChild(checkMark);
+
         newProgressDivision.appendChild(currentProgressContainer);
-        newProgressDivision.appendChild(progressInput);
+        newProgressDivision.appendChild(checkBoxContainer);
+
     }
 
 

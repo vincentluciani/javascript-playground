@@ -350,18 +350,7 @@ var addElement = function(elementToAdd){
 
 };
 
-var radialProgressComponent = function(percentageValue, parameters){
-                    
-    var anchorDiv = document.getElementById(parameters.anchorDivId);
-    var circleContainer = CreateProgressElements(parameters);
-    anchorDiv.appendChild(circleContainer);
-    buildRadialProgressComponent(percentageValue, parameters);
-
-    /*setTimeout(function(circleContainer){anchorDiv.appendChild(circleContainer);}, 1000);*/
-    /*setTimeout(buildRadialProgressComponent, 2000, percentageValue, parameters);*/
-
-}
-var buildRadialProgressComponent = function( percentageValue, parameters){
+var updateProgressOnRadial = function( percentageValue, parameters){
 
     circleRadius = ( parameters.containerHeight / 2 ) - parameters.strokeWidth;
 
@@ -371,30 +360,12 @@ var buildRadialProgressComponent = function( percentageValue, parameters){
     
     var percentageCircleContainer = document.getElementById(parameters.suffixForIds+'_percentage-circle-container');
 
-    var svgDiv = percentageCircleContainer.childNodes[0];
     percentageValueDiv.innerHTML = percentageValue + " %";
-
-    svgDiv.setAttribute("height",parameters.containerHeight);
-    svgDiv.setAttribute("width", parameters.containerHeight);
-    svgDiv.style.transform = "rotate(-90deg)";
     
     progressDiv.style.stroke = parameters.progressColor;
     circleDiv.style.stroke  = parameters.emptyColor;
 
-    circleDiv.setAttribute("cx", parameters.containerHeight/2);
-    circleDiv.setAttribute("cy", parameters.containerHeight/2);
-    circleDiv.setAttribute("stroke-width", parameters.strokeWidth);
-
-    progressDiv.setAttribute("cx", parameters.containerHeight/2);
-    progressDiv.setAttribute("cy", parameters.containerHeight/2);
-    progressDiv.setAttribute("stroke-width", parameters.strokeWidth);
-
-
-    var textMarginTop = (-1)*(parameters.containerHeight - parameters.strokeWidth - circleRadius + parameters.fontSize/1.9 + parameters.textTopAdjustment);
-    var textMarginLeft = (parameters.strokeWidth + circleRadius)/1.5 + parameters.textLeftAdjustment;
-    percentageValueDiv.style.marginTop = textMarginTop;
-    percentageValueDiv.style.marginLeft = textMarginLeft;
-    percentageValueDiv.style.fontSize = parameters.fontSize;
+  
     if (isNaN(percentageValue)) {
         percentageValue = 100; 
     }
@@ -421,7 +392,11 @@ var buildRadialProgressComponent = function( percentageValue, parameters){
 }
 
 
-var CreateProgressElements = function(parameters){
+var createProgressElements = function(parameters){
+
+    var circleRadius = ( parameters.containerHeight / 2 ) - parameters.strokeWidth;
+
+    var anchorDiv = document.getElementById(parameters.anchorDivId);
 
 
     var w3uri = 'http://www.w3.org/2000/svg';
@@ -430,10 +405,10 @@ var CreateProgressElements = function(parameters){
     circleContainer.setAttribute("id",parameters.suffixForIds+"_percentage-circle-container");
     const svgProgressBar = document.createElementNS(w3uri,'svg');
     svgProgressBar.setAttributeNS(w3uri,"id",parameters.suffixForIds+"_svg-progress-bar");
+    svgProgressBar.setAttributeNS(w3uri,"z-index",-1);
 
     const backgroundCircle = document.createElementNS(w3uri,'circle');
-    backgroundCircle.setAttribute("id",parameters.suffixForIds+"_background-circle");
-    backgroundCircle.setAttribute("fill","transparent");                    
+    backgroundCircle.setAttribute("id",parameters.suffixForIds+"_background-circle");                 
     backgroundCircle.setAttribute("stroke-dashoffset","0"); 
 
     const progressCircle = document.createElementNS(w3uri,'circle');
@@ -441,8 +416,31 @@ var CreateProgressElements = function(parameters){
     progressCircle.setAttribute("fill","transparent");                    
     progressCircle.setAttribute("stroke-dashoffset","0"); 
 
+    backgroundCircle.setAttribute("cx", parameters.containerHeight/2);
+    backgroundCircle.setAttribute("cy", parameters.containerHeight/2);
+    backgroundCircle.setAttribute("stroke-width", parameters.strokeWidth);
+    backgroundCircle.setAttribute("fill","white");
+    progressCircle.setAttribute("cx", parameters.containerHeight/2);
+    progressCircle.setAttribute("cy", parameters.containerHeight/2);
+    progressCircle.setAttribute("stroke-width", parameters.strokeWidth);
+
     const percentageValue = document.createElement("div");
     percentageValue.setAttribute("id",parameters.suffixForIds+"_percentage-value");
+
+    percentageValue.innerHTML = "0 %";
+
+    var textMarginTop = (-1)*(parameters.containerHeight - parameters.strokeWidth - circleRadius + parameters.fontSize/1.9 + parameters.textTopAdjustment);
+    var textMarginLeft = (parameters.strokeWidth + circleRadius)/1.5 + parameters.textLeftAdjustment;
+  /*  var roundedMarginTop = Math.round(textMarginTop/100)*100;
+    var roundedMarginLeft = Math.round(textMarginLeft/100)*100*/
+    percentageValue.style.marginTop = textMarginTop.toString()+"px";
+    percentageValue.style.marginLeft = textMarginLeft.toString()+"px";
+    percentageValue.style.fontSize = parameters.fontSize.toString()+"px";
+    percentageValue.style.position = "relative";
+
+    svgProgressBar.setAttribute("height",parameters.containerHeight);
+    svgProgressBar.setAttribute("width", parameters.containerHeight);
+    svgProgressBar.style.transform = "rotate(-90deg)"
 
     svgProgressBar.appendChild(backgroundCircle);
     svgProgressBar.appendChild(progressCircle);
@@ -450,9 +448,8 @@ var CreateProgressElements = function(parameters){
     circleContainer.appendChild(svgProgressBar);
     circleContainer.appendChild(percentageValue);
 
-    return circleContainer;
+    anchorDiv.appendChild(circleContainer);
 }
-
 var weekSelectionDiv = document.getElementById("week-day-selection");
 
 var mondayButtonInAddDiv = weekSelectionDiv.getElementsByClassName("monday")[0];            
@@ -746,6 +743,18 @@ var putInStorage = function(id,value){
 var loggedIn = false;
 var maxForNonLoggedIn = 2000;
 var updateQueue = [];
+var radialProgressParameters = {    
+    strokeWidth : 6,
+    containerHeight : 80,
+    fontSize:  15,
+    textLeftAdjustment: -5,
+    textTopAdjustment: 7,
+    progressColor: "rgb(245 184 1)",
+    emptyColor: "rgb(240 221 165)",
+    anchorDivId: "daily-summary",
+    suffixForIds: "12345"
+}
+
 
 var currentDateTime = new Date();
 var currentDate = currentDateTime.getFullYear().toString().padStart(2,'0')+'-'+(currentDateTime.getMonth()+1).toString().padStart(2,'0')+'-'+currentDateTime.getDate().toString().padStart(2,'0'); 
@@ -768,10 +777,12 @@ onload = function(){
 */
     document.getElementById("date-filter").value=currentDate;
     /*ingestElements();*/
-
+    createProgressElements(radialProgressParameters);
     getHabitProgress();
     addEmptyProgressOnNewDay();
+
     saveLoop();
+
 };
 
 var saveLoop = function(){
@@ -984,19 +995,21 @@ var updateDailyProgress = function(){
 
 
         /*dailySummaryDiv.innerHTML = dailyPercentage.toString();*/
-        var radialProgressParameters = {    
-            strokeWidth : 5,
-            containerHeight : 70,
-            fontSize:  15,
-            textLeftAdjustment: 0,
-            textTopAdjustment: 0,
-            progressColor: "rgb(245 184 1)",
-            emptyColor: "rgb(240 221 165)",
-            anchorDivId: "daily-summary-container",
-            suffixForIds: "12345"
+        /*dailySummaryDiv.innerHTML = "";*/
+
+        if (dailyPercentage >= 100){
+            radialProgressParameters.progressColor = "rgb(99 209 129)";
+            radialProgressParameters.emptyColor = "rgb(193 236 205)";
+            radialProgressParameters.textLeftAdjustment = -7;
+        } else if ( dailyPercentage >= 50 ){
+            radialProgressParameters.progressColor = "rgb(245 184 1)";
+            radialProgressParameters.emptyColor = "rgb(240 221 165)";
+        } else {
+            radialProgressParameters.progressColor = "rgb(220 30 159)";
+            radialProgressParameters.emptyColor = "rgb(255 217 235)";
         }
 
-        radialProgressComponent(dailyPercentage, radialProgressParameters);
+       updateProgressOnRadial(dailyPercentage, radialProgressParameters);
 
         dailySummaryBox.style.display = "block";
     } else {
@@ -1185,8 +1198,8 @@ var addEmptyProgressOnNewDay = function(){
     var progressElements = document.getElementsByClassName('habit-update');
     var habitsElements = document.getElementsByClassName('habit-setting');
 
-    var dailySummaryDiv = document.getElementById("daily-summary");
-    dailySummaryDiv.innerHTML = "0"
+    /*var dailySummaryDiv = document.getElementById("daily-summary");
+    dailySummaryDiv.innerHTML = ""*/
 
     for (var i=0; i< habitsElements.length;i++){
 
