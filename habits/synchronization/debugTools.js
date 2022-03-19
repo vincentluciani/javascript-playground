@@ -1,0 +1,47 @@
+var resetMemory = function(){
+    resetHabits();
+    resetProgress();
+}
+
+
+var resetElement = function(elementType){
+    for (var i = 0; i < localStorage.length; i++){
+        var currentKey = localStorage.key(i);
+        if ( currentKey.indexOf(elementType+"-") >= 0){
+            window.localStorage.removeItem(currentKey);
+        } 
+    }
+}
+
+var resetProgress = function(){
+    var progressElements = document.getElementsByClassName("habit-update");
+
+    for ( var i=0; i<progressElements.length; i++){
+        progressElements[i].parentNode. removeChild(progressElements[i]);
+    }
+
+    resetElement("progress");
+
+}
+
+var resetHabits = function(){
+    var progressElements = document.getElementsByClassName("habit-setting");
+
+    for ( var i=0; i<progressElements.length; i++){
+        progressElements[i].parentNode. removeChild(progressElements[i]);
+    }
+
+    resetElement("habit");
+
+}
+
+
+var resetDebugging = function(){
+
+    document.getElementById("debugging-text").innerHTML = "";
+
+}
+
+var debugWrite = function(text){
+    document.getElementById("debugging-text").innerHTML += text + "<br>";
+}

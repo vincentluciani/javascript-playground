@@ -473,6 +473,12 @@ var addEmptyProgressOnNewDay = function(){
         if ( isHabitProgressExisting == false){
 
             if (habitsElements[i].getAttribute("weekDay")){
+                debugWrite("Comparing currrent date time with habit week day");
+                debugWrite("Current date time:");
+                debugWrite(currentDateTime);
+                debugWrite("Habit week day:");
+                debugWrite(habitsElements[i].getAttribute("weekDay"));
+                
                 var isDayOK = isDayOfWeekInHabitWeeks(currentDateTime, habitsElements[i].getAttribute("weekDay"));
             } else {
                 var isDayOK = true;
@@ -579,6 +585,8 @@ var launchChart = function(fullData,habitObject){
     };
     var isTargetOK;
     if (j >= 0 && dataToShow[j] && dataToShow[j].x){
+        debugWrite("Launching Chart");
+        debugWrite(dataToShow[j].x.getDay());
         var todayWeekDay = dataToShow[j].x.getDay();
         if ( dataToShow[j].y >= baseline[j].y){
             isTargetOK = "<i class='fa fa-circle icon'></i>";

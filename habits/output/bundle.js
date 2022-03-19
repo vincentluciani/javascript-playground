@@ -297,6 +297,11 @@ var addElement = function(elementToAdd){
         newProgressDivision.appendChild(targetTextDiv);
     } else {
         currentProgressContainer.appendChild(currentProgressTextOneTarget);
+        var checkBoxContainer = document.createElement("label");
+        checkBoxContainer.setAttribute("class","custom-checkbox-container")
+        var checkMark = document.createElement("span");
+        checkMark.setAttribute("class","checkmark");
+
         progressInput.setAttribute("type","checkbox");
         if (elementToAdd.numberOfCompletions == 1){
             progressInput.checked = true;
@@ -320,8 +325,14 @@ var addElement = function(elementToAdd){
             }
         }(newProgressDivision));
 
+
+
+        checkBoxContainer.appendChild(progressInput);
+        checkBoxContainer.appendChild(checkMark);
+
         newProgressDivision.appendChild(currentProgressContainer);
-        newProgressDivision.appendChild(progressInput);
+        newProgressDivision.appendChild(checkBoxContainer);
+
     }
 
 
@@ -361,6 +372,9 @@ var updateProgressOnRadial = function( percentageValue, parameters){
     var percentageCircleContainer = document.getElementById(parameters.suffixForIds+'_percentage-circle-container');
 
     percentageValueDiv.innerHTML = percentageValue + " %";
+    
+    var textMarginLeft = (parameters.strokeWidth + circleRadius)/1.5 + parameters.textLeftAdjustment;
+    percentageValueDiv.style.marginLeft = textMarginLeft.toString()+"px";
     
     progressDiv.style.stroke = parameters.progressColor;
     circleDiv.style.stroke  = parameters.emptyColor;
@@ -544,11 +558,20 @@ var weekDayNumbers = {
 
 var isDayOfWeekInHabitWeeks = function(currentDate, stringOfWeekDays){
 
+    debugWrite("Checking if day of week is in habit week: getting current week day");
+    debugWrite(currentDate.getDay());
+
     var currentDayOfWeek = currentDate.getDay();
     var currentDayOfWeekString = weekDayNumbers[currentDayOfWeek];
 
+    debugWrite("Corresponding week day according to array:");
+    debugWrite(currentDayOfWeekString);
+
     var arrayOfWeekDays = stringOfWeekDays.split(" ");
 
+    debugWrite("Habit week days:");
+    debugWrite(arrayOfWeekDays.toString());
+    
     const index = arrayOfWeekDays.indexOf(currentDayOfWeekString);
     if (index > -1) {
         return true;
@@ -666,6 +689,53 @@ translations['en_US']  = {
 }
 
 
+var resetMemory = function(){
+    resetHabits();
+    resetProgress();
+}
+
+
+var resetElement = function(elementType){
+    for (var i = 0; i < localStorage.length; i++){
+        var currentKey = localStorage.key(i);
+        if ( currentKey.indexOf(elementType+"-") >= 0){
+            window.localStorage.removeItem(currentKey);
+        } 
+    }
+}
+
+var resetProgress = function(){
+    var progressElements = document.getElementsByClassName("habit-update");
+
+    for ( var i=0; i<progressElements.length; i++){
+        progressElements[i].parentNode. removeChild(progressElements[i]);
+    }
+
+    resetElement("progress");
+
+}
+
+var resetHabits = function(){
+    var progressElements = document.getElementsByClassName("habit-setting");
+
+    for ( var i=0; i<progressElements.length; i++){
+        progressElements[i].parentNode. removeChild(progressElements[i]);
+    }
+
+    resetElement("habit");
+
+}
+
+
+var resetDebugging = function(){
+
+    document.getElementById("debugging-text").innerHTML = "";
+
+}
+
+var debugWrite = function(text){
+    document.getElementById("debugging-text").innerHTML += text + "<br>";
+}
 var pushProgressToQueue = function(divToAnalyze) {
 
     var progressArray = readElement(divToAnalyze);
@@ -1214,6 +1284,12 @@ var addEmptyProgressOnNewDay = function(){
         if ( isHabitProgressExisting == false){
 
             if (habitsElements[i].getAttribute("weekDay")){
+                debugWrite("Comparing currrent date time with habit week day");
+                debugWrite("Current date time:");
+                debugWrite(currentDateTime);
+                debugWrite("Habit week day:");
+                debugWrite(habitsElements[i].getAttribute("weekDay"));
+                
                 var isDayOK = isDayOfWeekInHabitWeeks(currentDateTime, habitsElements[i].getAttribute("weekDay"));
             } else {
                 var isDayOK = true;
@@ -1320,6 +1396,8 @@ var launchChart = function(fullData,habitObject){
     };
     var isTargetOK;
     if (j >= 0 && dataToShow[j] && dataToShow[j].x){
+        debugWrite("Launching Chart");
+        debugWrite(dataToShow[j].x.getDay());
         var todayWeekDay = dataToShow[j].x.getDay();
         if ( dataToShow[j].y >= baseline[j].y){
             isTargetOK = "<i class='fa fa-circle icon'></i>";

@@ -92,11 +92,20 @@ var weekDayNumbers = {
 
 var isDayOfWeekInHabitWeeks = function(currentDate, stringOfWeekDays){
 
+    debugWrite("Checking if day of week is in habit week: getting current week day");
+    debugWrite(currentDate.getDay());
+
     var currentDayOfWeek = currentDate.getDay();
     var currentDayOfWeekString = weekDayNumbers[currentDayOfWeek];
 
+    debugWrite("Corresponding week day according to array:");
+    debugWrite(currentDayOfWeekString);
+
     var arrayOfWeekDays = stringOfWeekDays.split(" ");
 
+    debugWrite("Habit week days:");
+    debugWrite(arrayOfWeekDays.toString());
+    
     const index = arrayOfWeekDays.indexOf(currentDayOfWeekString);
     if (index > -1) {
         return true;
