@@ -77,7 +77,7 @@ var addHabitElement = function(elementToAdd){
     var weekDaySelector = dynamicWeekDaySelector(elementToAdd.weekDay);
     newHabitDivision.appendChild(weekDaySelector);
     const deleteButton = document.createElement("div");
-    var onClickFunctionCall = "deleteHabit(" + elementToAdd.habitId.toString()+ ');';
+    var onClickFunctionCall = "deleteHabit(" + elementToAdd.habitId.toString()+ ");deleteProgressFromHabitToday(" + elementToAdd.habitId.toString()+ ")";
     deleteButton.setAttribute("onClick",onClickFunctionCall);
     deleteButton.setAttribute("class","add-button");
     deleteButton.innerHTML = "Delete";
@@ -94,6 +94,29 @@ var deleteHabit = function(habitId){
     var element = document.getElementById(habitId.toString());
     element.parentNode.removeChild(element);
     window.localStorage.removeItem(habitKey);
+}
+
+
+var deleteProgressFromHabitToday = function(habitId){
+    var progressDivs = document.getElementsByClassName("habit-update");    
+     
+    for ( var i=progressDivs.length-1; i >= 0; i--){
+        var progressHabitId = progressDivs[i].getAttribute("habitid");
+        var progressDate = progressDivs[i].getAttribute("progressDate");
+
+        var currentDateString = currentDateTime.getFullYear().toString().padStart(2,'0')+'-'+(currentDateTime.getMonth()+1).toString().padStart(2,'0')+'-'+currentDateTime.getDate().toString().padStart(2,'0'); 
+
+        if ( (currentDateString == progressDate) && ( progressHabitId == habitId)) {
+            var progressId = progressDivs[i].getAttribute("id");
+            progressDivs[i].parentNode.removeChild(progressDivs[i]);
+            var progressKey = "progress-"+progressId.toString();
+            window.localStorage.removeItem(progressKey);
+        }
+    }
+
+
+
+
 }
 var displayJournalEditBox = function(){
     var progressDate = document.getElementById("date-filter").value;
@@ -296,6 +319,7 @@ var addElement = function(elementToAdd){
                 pushProgressToQueue(newProgressDivision);
             }
         }(newProgressDivision));
+
         newProgressDivision.appendChild(currentProgressContainer);
         newProgressDivision.appendChild(progressInput);
     }
@@ -325,6 +349,109 @@ var addElement = function(elementToAdd){
 
 
 };
+
+var radialProgressComponent = function(percentageValue, parameters){
+                    
+    var anchorDiv = document.getElementById(parameters.anchorDivId);
+    var circleContainer = CreateProgressElements(parameters);
+    anchorDiv.appendChild(circleContainer);
+    buildRadialProgressComponent(percentageValue, parameters);
+
+    /*setTimeout(function(circleContainer){anchorDiv.appendChild(circleContainer);}, 1000);*/
+    /*setTimeout(buildRadialProgressComponent, 2000, percentageValue, parameters);*/
+
+}
+var buildRadialProgressComponent = function( percentageValue, parameters){
+
+    circleRadius = ( parameters.containerHeight / 2 ) - parameters.strokeWidth;
+
+    var circleDiv = document.getElementById(parameters.suffixForIds+'_background-circle');
+    var progressDiv = document.getElementById(parameters.suffixForIds+'_progress-circle');
+    var percentageValueDiv = document.getElementById(parameters.suffixForIds+'_percentage-value');
+    
+    var percentageCircleContainer = document.getElementById(parameters.suffixForIds+'_percentage-circle-container');
+
+    var svgDiv = percentageCircleContainer.childNodes[0];
+    percentageValueDiv.innerHTML = percentageValue + " %";
+
+    svgDiv.setAttribute("height",parameters.containerHeight);
+    svgDiv.setAttribute("width", parameters.containerHeight);
+    svgDiv.style.transform = "rotate(-90deg)";
+    
+    progressDiv.style.stroke = parameters.progressColor;
+    circleDiv.style.stroke  = parameters.emptyColor;
+
+    circleDiv.setAttribute("cx", parameters.containerHeight/2);
+    circleDiv.setAttribute("cy", parameters.containerHeight/2);
+    circleDiv.setAttribute("stroke-width", parameters.strokeWidth);
+
+    progressDiv.setAttribute("cx", parameters.containerHeight/2);
+    progressDiv.setAttribute("cy", parameters.containerHeight/2);
+    progressDiv.setAttribute("stroke-width", parameters.strokeWidth);
+
+
+    var textMarginTop = (-1)*(parameters.containerHeight - parameters.strokeWidth - circleRadius + parameters.fontSize/1.9 + parameters.textTopAdjustment);
+    var textMarginLeft = (parameters.strokeWidth + circleRadius)/1.5 + parameters.textLeftAdjustment;
+    percentageValueDiv.style.marginTop = textMarginTop;
+    percentageValueDiv.style.marginLeft = textMarginLeft;
+    percentageValueDiv.style.fontSize = parameters.fontSize;
+    if (isNaN(percentageValue)) {
+        percentageValue = 100; 
+    }
+    else{
+        circleDiv.setAttribute('r',circleRadius);
+        progressDiv.setAttribute('r',circleRadius);
+        var circonference = Math.PI*circleRadius*2;
+    
+        if (percentageValue < 0) { percentageValue = 0;}
+        if (percentageValue > 100) { percentageValue = 100;}
+        
+        var emptyPathLength = ((100-percentageValue)/100)*circonference;
+        
+        progressDiv.setAttribute("stroke-dashoffset", emptyPathLength);
+
+
+        window.setTimeout(function() {
+            progressDiv.style.strokeDashoffset = emptyPathLength;
+        }, 50)
+
+        progressDiv.setAttribute("stroke-dasharray", circonference);
+        circleDiv.setAttribute("stroke-dasharray", circonference);
+    }
+}
+
+
+var CreateProgressElements = function(parameters){
+
+
+    var w3uri = 'http://www.w3.org/2000/svg';
+
+    const circleContainer = document.createElement("div");
+    circleContainer.setAttribute("id",parameters.suffixForIds+"_percentage-circle-container");
+    const svgProgressBar = document.createElementNS(w3uri,'svg');
+    svgProgressBar.setAttributeNS(w3uri,"id",parameters.suffixForIds+"_svg-progress-bar");
+
+    const backgroundCircle = document.createElementNS(w3uri,'circle');
+    backgroundCircle.setAttribute("id",parameters.suffixForIds+"_background-circle");
+    backgroundCircle.setAttribute("fill","transparent");                    
+    backgroundCircle.setAttribute("stroke-dashoffset","0"); 
+
+    const progressCircle = document.createElementNS(w3uri,'circle');
+    progressCircle.setAttribute("id",parameters.suffixForIds+"_progress-circle");
+    progressCircle.setAttribute("fill","transparent");                    
+    progressCircle.setAttribute("stroke-dashoffset","0"); 
+
+    const percentageValue = document.createElement("div");
+    percentageValue.setAttribute("id",parameters.suffixForIds+"_percentage-value");
+
+    svgProgressBar.appendChild(backgroundCircle);
+    svgProgressBar.appendChild(progressCircle);
+
+    circleContainer.appendChild(svgProgressBar);
+    circleContainer.appendChild(percentageValue);
+
+    return circleContainer;
+}
 
 var weekSelectionDiv = document.getElementById("week-day-selection");
 
@@ -515,8 +642,8 @@ var resetWeekDaySelector = function(weekDaySelector) {
     weekDaySelector.setAttribute("weekday","");
     var weekDays = weekDaySelector.getElementsByClassName("weekday");
 
-    for ( var i; i < weekDays.length; i++){
-        weekDays[i].style.removeClass("selected");
+    for ( var i = 0; i < weekDays.length; i++){
+        weekDays[i].classList.remove("selected");
     }
 
 }
@@ -602,7 +729,7 @@ var readQueueProgress = function() {
         putInStorage(elementToProcess.id, elementToProcess.value); 
         var currentDate = new Date();
         document.getElementById('last-saved-information').innerHTML = "Last saved: "+currentDate.toLocaleTimeString();
-        document.getElementById('last-saved-information-habits').innerHTML = "Last saved: "+currentDate.toLocaleTimeString();
+        document.getElementById('last-saved-information-habits').innerHTML = "Last saved: "+currentDate.toLocaleTimeString();   
     }
 }
 
@@ -617,7 +744,7 @@ var putInStorage = function(id,value){
 }
 
 var loggedIn = false;
-var maxForNonLoggedIn = 200;
+var maxForNonLoggedIn = 2000;
 var updateQueue = [];
 
 var currentDateTime = new Date();
@@ -649,7 +776,7 @@ onload = function(){
 
 var saveLoop = function(){
 
-    setInterval(extractElementsForUpdate, 5000);
+    setInterval(extractElementsForUpdate, 1000);
 
 }
 
@@ -738,10 +865,10 @@ var showGraphsTab = function(){
     document.getElementById("graphs-menu").style.display = "block"; 
 }
 var hideSaveButtonOnHabits = function(){
- document.getElementById("save-button-in-habits").style.display = "none";
+ /*document.getElementById("save-button-in-habits").style.display = "none";*/
 }
 var showSaveButtonOnHabits = function(){
-    document.getElementById("save-button-in-habits").style.display = "flex";
+   /* document.getElementById("save-button-in-habits").style.display = "flex";*/
 }
 var hideStartProgressButtonOnHabits = function(){
     document.getElementById("go-to-progress-button").style.display = "none";
@@ -852,11 +979,30 @@ var updateDailyProgress = function(){
 
     var dailyPercentage = Math.round(fullScore / numberOfDivs);
     var dailySummaryDiv = document.getElementById("daily-summary");
+    var dailySummaryBox = document.getElementById("daily-summary-container");
     if (dailyPercentage && dailyPercentage>0){
-        dailySummaryDiv.innerHTML = dailyPercentage.toString();
+
+
+        /*dailySummaryDiv.innerHTML = dailyPercentage.toString();*/
+        var radialProgressParameters = {    
+            strokeWidth : 5,
+            containerHeight : 70,
+            fontSize:  15,
+            textLeftAdjustment: 0,
+            textTopAdjustment: 0,
+            progressColor: "rgb(245 184 1)",
+            emptyColor: "rgb(240 221 165)",
+            anchorDivId: "daily-summary-container",
+            suffixForIds: "12345"
+        }
+
+        radialProgressComponent(dailyPercentage, radialProgressParameters);
+
+        dailySummaryBox.style.display = "block";
     } else {
         var dailyPercentage = 0;
         dailySummaryDiv.innerHTML = "0"
+        dailySummaryBox.style.display = "none";
     }
     putColorBasedOnCompletion(dailySummaryDiv.parentNode,dailyPercentage);
 
@@ -1257,6 +1403,7 @@ var launchChart = function(fullData,habitObject){
         newCanvaWrapper.style.background="#fff6f9";
     }
 
+    document.getElementById("no-graph").style.display = "none";
     document.getElementById("graph-container").appendChild(newCanvaWrapper);
 
 

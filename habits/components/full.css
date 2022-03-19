@@ -231,7 +231,7 @@ h2{
     font-size: 30px;
     margin-top: 13px;
 }
-.percentage-completion::after, #daily-summary::after{
+.percentage-completion::after{
     content: " %";
 }
 .habit-description{
@@ -528,6 +528,14 @@ td{
 #daily-summary-container{
     order:90;
 }
+
+#daily-summary{
+    margin-top:10px;
+}
+#no-graph{
+    margin-top:10px;
+}
+
 @media (max-width: 999px){
     .habits-container,.habits-definition-container,.filter-bar,.graph-container,.main-action-bar,#progress-title,#footer{
         justify-content: space-around;

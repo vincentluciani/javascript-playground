@@ -2,6 +2,18 @@
 var loggedIn = false;
 var maxForNonLoggedIn = 2000;
 var updateQueue = [];
+var radialProgressParameters = {    
+    strokeWidth : 6,
+    containerHeight : 80,
+    fontSize:  15,
+    textLeftAdjustment: -5,
+    textTopAdjustment: 7,
+    progressColor: "rgb(245 184 1)",
+    emptyColor: "rgb(240 221 165)",
+    anchorDivId: "daily-summary",
+    suffixForIds: "12345"
+}
+
 
 var currentDateTime = new Date();
 var currentDate = currentDateTime.getFullYear().toString().padStart(2,'0')+'-'+(currentDateTime.getMonth()+1).toString().padStart(2,'0')+'-'+currentDateTime.getDate().toString().padStart(2,'0'); 
@@ -24,10 +36,12 @@ onload = function(){
 */
     document.getElementById("date-filter").value=currentDate;
     /*ingestElements();*/
-
+    createProgressElements(radialProgressParameters);
     getHabitProgress();
     addEmptyProgressOnNewDay();
+
     saveLoop();
+
 };
 
 var saveLoop = function(){
@@ -237,7 +251,13 @@ var updateDailyProgress = function(){
     var dailySummaryDiv = document.getElementById("daily-summary");
     var dailySummaryBox = document.getElementById("daily-summary-container");
     if (dailyPercentage && dailyPercentage>0){
-        dailySummaryDiv.innerHTML = dailyPercentage.toString();
+
+
+        /*dailySummaryDiv.innerHTML = dailyPercentage.toString();*/
+        /*dailySummaryDiv.innerHTML = "";*/
+
+       updateProgressOnRadial(dailyPercentage, radialProgressParameters);
+
         dailySummaryBox.style.display = "block";
     } else {
         var dailyPercentage = 0;
@@ -425,8 +445,8 @@ var addEmptyProgressOnNewDay = function(){
     var progressElements = document.getElementsByClassName('habit-update');
     var habitsElements = document.getElementsByClassName('habit-setting');
 
-    var dailySummaryDiv = document.getElementById("daily-summary");
-    dailySummaryDiv.innerHTML = "0"
+    /*var dailySummaryDiv = document.getElementById("daily-summary");
+    dailySummaryDiv.innerHTML = ""*/
 
     for (var i=0; i< habitsElements.length;i++){
 
@@ -643,6 +663,7 @@ var launchChart = function(fullData,habitObject){
         newCanvaWrapper.style.background="#fff6f9";
     }
 
+    document.getElementById("no-graph").style.display = "none";
     document.getElementById("graph-container").appendChild(newCanvaWrapper);
 
 

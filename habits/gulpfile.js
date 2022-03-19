@@ -41,8 +41,10 @@ gulp.task('process-html', function () {
         .pipe(replace('<script type="text/javascript" src="components/habit.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/journal.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/progress.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="<script type="text/javascript" src="components/radialprogress.js"></script>"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/encourage.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="synchronization/pushProgressToQueue.js"></script>','')) 
+
         .pipe(replace('<script type="text/javascript" src="synchronization/readQueue.js"></script>','<script>'+fs.readFileSync('output/bundle-min.js', 'utf8')+'</script>'))   
         .pipe(htmlmin({ collapseWhitespace: true }))
         .pipe(rename('index.html'))

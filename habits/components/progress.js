@@ -128,6 +128,7 @@ var addElement = function(elementToAdd){
                 pushProgressToQueue(newProgressDivision);
             }
         }(newProgressDivision));
+
         newProgressDivision.appendChild(currentProgressContainer);
         newProgressDivision.appendChild(progressInput);
     }
