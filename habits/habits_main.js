@@ -256,6 +256,18 @@ var updateDailyProgress = function(){
         /*dailySummaryDiv.innerHTML = dailyPercentage.toString();*/
         /*dailySummaryDiv.innerHTML = "";*/
 
+        if (dailyPercentage >= 100){
+            radialProgressParameters.progressColor = "rgb(99 209 129)";
+            radialProgressParameters.emptyColor = "rgb(193 236 205)";
+            radialProgressParameters.textLeftAdjustment = -7;
+        } else if ( dailyPercentage >= 50 ){
+            radialProgressParameters.progressColor = "rgb(245 184 1)";
+            radialProgressParameters.emptyColor = "rgb(240 221 165)";
+        } else {
+            radialProgressParameters.progressColor = "rgb(220 30 159)";
+            radialProgressParameters.emptyColor = "rgb(255 217 235)";
+        }
+
        updateProgressOnRadial(dailyPercentage, radialProgressParameters);
 
         dailySummaryBox.style.display = "block";
