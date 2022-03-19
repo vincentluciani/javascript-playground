@@ -42,7 +42,7 @@ body{
     /*padding-top: 12px;*/
 }
 #nav-container svg{
-    padding-top:8px;
+    padding-top:6px;
 }
 .horizontal-menu{
     list-style-type: none;
@@ -52,7 +52,7 @@ body{
     padding-left:10px;
 }
 .horizontal-menu li{
-    height: 33px;
+    height: 29px;
     width: 86px;
     border-radius: 10px 10px 0px 0px;
     float: left;
@@ -64,7 +64,7 @@ body{
 }
 .horizontal-menu li.active{
     background: white;
-    height: 34px;
+    height: 29px;
 }
 a, a:active, a:visited, a span {
     text-decoration: none;
