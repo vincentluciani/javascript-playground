@@ -10,6 +10,9 @@ var updateProgressOnRadial = function( percentageValue, parameters){
 
     percentageValueDiv.innerHTML = percentageValue + " %";
     
+    var textMarginLeft = (parameters.strokeWidth + circleRadius)/1.5 + parameters.textLeftAdjustment;
+    percentageValueDiv.style.marginLeft = textMarginLeft.toString()+"px";
+    
     progressDiv.style.stroke = parameters.progressColor;
     circleDiv.style.stroke  = parameters.emptyColor;
 
