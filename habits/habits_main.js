@@ -273,7 +273,6 @@ var updateDailyProgress = function(){
         dailySummaryBox.style.display = "block";
     } else {
         var dailyPercentage = 0;
-        dailySummaryDiv.innerHTML = "0"
         dailySummaryBox.style.display = "none";
     }
     putColorBasedOnCompletion(dailySummaryDiv.parentNode,dailyPercentage);

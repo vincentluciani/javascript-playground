@@ -8,8 +8,11 @@ var updateProgressOnRadial = function( percentageValue, parameters){
     
     var percentageCircleContainer = document.getElementById(parameters.suffixForIds+'_percentage-circle-container');
 
-    percentageValueDiv.innerHTML = percentageValue + " %";
-    
+    if (percentageValueDiv){
+        percentageValueDiv.innerHTML = percentageValue + " %";
+    } else {
+        return;
+    }
     var textMarginLeft = (parameters.strokeWidth + circleRadius)/1.5 + parameters.textLeftAdjustment;
     percentageValueDiv.style.marginLeft = textMarginLeft.toString()+"px";
     
