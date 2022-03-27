@@ -525,6 +525,9 @@ td{
     margin-top: 23px;
 }
 
+#debug-section{
+    display: none;
+}
 #daily-summary-container{
     order:90;
     display:none;
@@ -615,7 +618,7 @@ td{
 
 
 @media (max-width: 999px){
-    .habits-container,.habits-definition-container,.filter-bar,.graph-container,.main-action-bar,#progress-title,#footer{
+    .habits-container,.habits-definition-container,.filter-bar,.graph-container,.main-action-bar,#footer{
         justify-content: space-around;
     }
     .action-input {
@@ -723,6 +726,7 @@ td{
 
     #last-saved-information{
         margin-top: 13px;
+        margin-left: 10px;
     }
 }
 @media (min-width: 1000px){

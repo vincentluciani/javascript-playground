@@ -34,11 +34,18 @@ onload = function(){
             });
       }
 */
+    var queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const isDebug = urlParams.get('debug');
+    if (isDebug == "true"){
+        document.getElementById("debug-section").style.display = "block";
+    }
+
     document.getElementById("date-filter").value=currentDate;
     /*ingestElements();*/
     createProgressElements(radialProgressParameters);
     getHabitProgress();
-    addEmptyProgressOnNewDay();
+    addEmptyProgressOnNewDay(currentDate, currentDateTime);
 
     saveLoop();
 
@@ -292,6 +299,7 @@ var applyFilters = function(){
 var dateFilter = document.getElementById('date-filter');
 dateFilter.addEventListener('input', function (evt) {
     applyFilters();
+    createMissingElementsForDate(this.value);
 });
 
 var textFilter = document.getElementById('text-filter')
@@ -299,7 +307,14 @@ textFilter.addEventListener('input', function (evt) {
     applyFilters();
 });
 
+var createMissingElementsForDate = function(inputDate){
+    var dateElements = inputDate.split("-");
+    var inputDateTime = new Date(dateElements[0], (parseInt(dateElements[1])-1).toString(), dateElements[2], 0, 0, 0, 0);
+    debugWrite("Creating missing progress elements for date:"+inputDate.toString()+ " time:"+inputDateTime.toString());
+    addEmptyProgressOnNewDay(inputDate,inputDateTime);
 
+    
+}
 
 var minusOneToProgress = function(divElement){
     console.log("minus one");
@@ -451,7 +466,7 @@ function APICaller(parameters,callback,callbackOnFailure){
 
 
 
-var addEmptyProgressOnNewDay = function(){
+var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
 
     var progressElements = document.getElementsByClassName('habit-update');
     var habitsElements = document.getElementsByClassName('habit-setting');
@@ -464,7 +479,7 @@ var addEmptyProgressOnNewDay = function(){
         var isHabitProgressExisting = false;
 
         for (var j=0; j< progressElements.length;j++){
-            if ( habitsElements[i].getAttribute("habitId") == progressElements[j].getAttribute("habitId") && progressElements[j].getAttribute("progressdate") == currentDate){
+            if ( habitsElements[i].getAttribute("habitId") == progressElements[j].getAttribute("habitId") && progressElements[j].getAttribute("progressdate") == inputDate){
                 isHabitProgressExisting = true;
             }
         }
@@ -474,11 +489,11 @@ var addEmptyProgressOnNewDay = function(){
             if (habitsElements[i].getAttribute("weekDay")){
                 debugWrite("Comparing currrent date time with habit week day");
                 debugWrite("Current date time:");
-                debugWrite(currentDateTime);
+                debugWrite(inputDateTime);
                 debugWrite("Habit week day:");
                 debugWrite(habitsElements[i].getAttribute("weekDay"));
                 
-                var isDayOK = isDayOfWeekInHabitWeeks(currentDateTime, habitsElements[i].getAttribute("weekDay"));
+                var isDayOK = isDayOfWeekInHabitWeeks(inputDateTime, habitsElements[i].getAttribute("weekDay"));
             } else {
                 var isDayOK = true;
             }
@@ -488,7 +503,7 @@ var addEmptyProgressOnNewDay = function(){
                     habitId: habitsElements[i].getAttribute("habitId"),
                     habitDescription: habitsElements[i].getAttribute("habitDescription"),
                     target: habitsElements[i].getAttribute("target"),
-                    progressDate: currentDate,
+                    progressDate: inputDate,
                     isNew: true,
                     numberOfCompletions:0,
                 }
