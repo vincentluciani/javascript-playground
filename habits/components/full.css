@@ -745,6 +745,9 @@ td{
         position: relative;
         width:25px;
     }
+    .habit-description i{
+        display: none;
+    }
     .progress-details{
         display: none;
     }

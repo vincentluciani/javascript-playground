@@ -28,8 +28,8 @@
                 <nav>
                     <ul class="horizontal-menu">
                         <li id="progress-menu" onclick="changeTabToProgress();"><a  id="menu_dashboard">Progress</a></li>
-                        <li id="habits-menu" onclick="changeTabToHabits();"><a id="menu_dashboard">Habits</a></li>
                         <li id="graphs-menu" onclick="changeTabToGraphs();"><a id="menu_dashboard">Graphs</a></li>
+                        <li id="habits-menu" onclick="changeTabToHabits();"><a id="menu_dashboard">Habits</a></li>
                     </ul>
                 </nav>
             </div>
@@ -74,6 +74,14 @@
 
         </div>
 
+        <div id="graphs-section" class="main-section" >
+            <h2>Check your progress:</h2>
+            <div id="graph-container" class="graph-container" ><div id="no-graph">Graphs will be shown after adding at least one habit for more than one day.</div></div>
+            <br><br>
+            <h2>Check your journal:</h2>
+            <div id="journal-container" class="journal-container" ></div>
+        </div>
+
         <div id="habits-section" class="main-section">
             <div id="progress-title">
                 <div><h2>Add a new habit, update your entered habit</h2></div>
@@ -110,20 +118,13 @@
                     <i class="fa fa-save"></i> 
                 </div> -->
                     <div onclick="changeTabToProgress();window.scrollTo(0, 0);" id="go-to-progress-button" class="box big-action-button">
-                        <div>Start Updating Your Progress</div>
-                         <i class="fa fa-tasks"></i>
+                        <div>START</div>
+                         <i class="fa fa-play"></i>
                     </div>
 
             </div>
         </div>
 
-        <div id="graphs-section" class="main-section" >
-            <h2>Check your progress:</h2>
-            <div id="graph-container" class="graph-container" ><div id="no-graph">Graphs will be shown after adding at least one habit for more than one day.</div></div>
-            <br><br>
-            <h2>Check your journal:</h2>
-            <div id="journal-container" class="journal-container" ></div>
-        </div>
 
         <div class="overlay-for-message" id="journal-edit-box">
             <div class="message-in-overlay">
