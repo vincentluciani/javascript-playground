@@ -225,14 +225,22 @@ var refreshProgress = function(currentDiv){
 
 var putColorBasedOnCompletion = function(currentDiv,newCompletionPercentage){
     if (newCompletionPercentage>=100){
-        currentDiv.style.background="#f7fff6";
-        currentDiv.style.boxShadow="rgb(55 110 57 / 20%) 1px 4px 16px 5px";
+        currentDiv.style.background="rgb(219 255 215)"/*"#f7fff6"*/;
+        currentDiv.style.boxShadow="none";
+        currentDiv.style.order="95";
+        /*currentDiv.style.boxShadow="rgb(168 218 179) -1px 2px 10px 5px"*//*"rgb(55 110 57 / 20%) 1px 4px 16px 5px"*/;
     } else if (newCompletionPercentage>=50){
-        currentDiv.style.background="#fffded";
-        currentDiv.style.boxShadow="rgb(219 213 191) -1px 2px 17px 0px";
+        currentDiv.style.background="rgb(255 249 201)"/*"#fffded"*/;
+        currentDiv.style.boxShadow="none";
+        currentDiv.style.order="80";
+        /*currentDiv.style.boxShadow="rgb(198 198 197) -1px 2px 17px 0px"*//*"rgb(219 213 191) -1px 2px 17px 0px"*/;
     } else if (newCompletionPercentage<50){
-        currentDiv.style.background="#fff6f9";
-        currentDiv.style.boxShadow="rgb(233 206 206) -1px 2px 10px 0px";
+        currentDiv.style.background="white"/*"#fff6f9"*/;
+        currentDiv.style.boxShadow="rgb(191 179 179) -1px 2px 10px 0px"/*rgb(233 206 206) -1px 2px 10px 0px"*/;
+        currentDiv.style.order="70";
+    }
+    if (currentDiv.id && currentDiv.id == "daily-summary-container"){
+        currentDiv.style.order = "90";
     }
 }
 
@@ -467,6 +475,11 @@ function APICaller(parameters,callback,callbackOnFailure){
 
 
 var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
+
+    var currentDateTimeMidnight = currentDateTime.setHours(0,0,0,0);
+    if ( inputDateTime > currentDateTimeMidnight){
+        return;
+    }
 
     var progressElements = document.getElementsByClassName('habit-update');
     var habitsElements = document.getElementsByClassName('habit-setting');
@@ -709,11 +722,11 @@ var launchChart = function(fullData,habitObject){
     newCanvaWrapper.setAttribute("class","box canva-wrapper");
 
     if (numberOfMissesInWeek==0){
-        newCanvaWrapper.style.background="#f7fff6";
+        newCanvaWrapper.style.background="rgb(219, 255, 215)"/*"#f7fff6"*/;
     } else if (numberOfMissesInWeek==1){
-        newCanvaWrapper.style.background="#fffded";
+        newCanvaWrapper.style.background="rgb(255, 249, 201)"/*"#fffded"*/;
     } else if (numberOfMissesInWeek>1){
-        newCanvaWrapper.style.background="#fff6f9";
+        newCanvaWrapper.style.background="white"/*"#fff6f9"*/;
     }
 
     document.getElementById("no-graph").style.display = "none";
@@ -747,6 +760,9 @@ var launchChart = function(fullData,habitObject){
     if (completionAccumulation >= 10){
         graphBackgroundColor = "#b5f7b1";
         graphColor = "#3ce132";
+    } else if (completionAccumulation >=5 ) {
+        graphBackgroundColor = "rgb(255 249 202)";
+        graphColor = "rgb(235 209 0)";
     } else {
         graphBackgroundColor = "#f9dbdb";
         graphColor = "#fd2121";
