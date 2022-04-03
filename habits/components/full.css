@@ -235,7 +235,6 @@ h2{
     content: " %";
 }
 .habit-description{
-    height: 65px;
     font-weight: bold;
     color:#404040;
 }
@@ -649,6 +648,9 @@ td{
 
     .habit-description{
         font-size: 20px;
+        float: left;
+        width: 241px;
+        margin-bottom: 10px;
     }
 
     .progress-container{
@@ -657,14 +659,21 @@ td{
 
     .box.habit-update, .box.daily-summary, .box.big-action-button{
         width: 300px;
-        height: 238px;
     }
 
-    .box.habit-update .number-of-completion[type=number]{
+    .daily-summary{
+        height: 161px;
+    }
+
+    .number-of-completion[type=number]{
         height: 54px;
         margin-top: 15px;
     }
 
+    .box.habit-update {
+        margin-top: 15px;
+        height: max-content;
+    }
     .plus-button, .minus-button{
         width: 48px;
         height: 48.5px;
@@ -710,7 +719,6 @@ td{
     }
 
     #new-description, .habit-description-definition {
-        width: 272px;
         margin-top: 12px;
     }
     
@@ -728,6 +736,18 @@ td{
         margin-top: 13px;
         margin-left: 10px;
     }
+    .box.habit-update i.fa.fa-plus,.box.habit-update i.fa.fa-minus{
+        float: right;
+        margin-top: 1px;
+        font-size: 24px;
+       /* -ms-transform: translateY(-50%);
+        transform: translateY(-50%);*/
+        position: relative;
+        width:25px;
+    }
+    .progress-details{
+        display: none;
+    }
 }
 @media (min-width: 1000px){
     .box{
@@ -743,6 +763,15 @@ td{
     }
     .positive-message .sub-title{
         font-size:45px;
+    }
+    .box.habit-update i.fa.fa-plus,.box.habit-update i.fa.fa-minus{
+        display: none;
+    }
+    .habit-description{
+        height: 65px;
+    }
+    .daily-summary{
+        height: 190px;
     }
 
 }

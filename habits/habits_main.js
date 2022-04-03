@@ -581,7 +581,7 @@ var launchChart = function(fullData,habitObject){
 
     /* Analysis */
     var completionAccumulation=0;
-    for (var i =  dataToShow.length - 1 ; i>=0; i--){
+    for (var i =  dataToShow.length - 2 ; i>=0; i--){
         if ( dataToShow[i].y < baseline[i].y ) {
             break;
         } else {
@@ -602,14 +602,14 @@ var launchChart = function(fullData,habitObject){
         debugWrite("Launching Chart");
         debugWrite(dataToShow[j].x.getDay());
         var todayWeekDay = dataToShow[j].x.getDay();
-        if ( dataToShow[j].y >= baseline[j].y){
+       /* if ( dataToShow[j].y >= baseline[j].y){
             isTargetOK = "<i class='fa fa-circle icon'></i>";
         } else {
             isTargetOK = "x";
             numberOfMissesInWeek++;
         }
         tableData[todayWeekDay]= (isTargetOK != null)?isTargetOK:" ";
-
+*/
 
         do  {
             j--;

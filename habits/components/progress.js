@@ -13,6 +13,7 @@ var addElement = function(elementToAdd){
     newProgressDivision.setAttribute("habitId",elementToAdd.habitId);
     newProgressDivision.setAttribute("isNegative", elementToAdd.isNegative);
 
+
     const dateDiv = document.createElement("div");
 
     const habitDescriptionText = document.createTextNode(elementToAdd.habitDescription);
@@ -49,19 +50,21 @@ var addElement = function(elementToAdd){
 
     var habitDescriptionContainer = document.createElement("div");
     habitDescriptionContainer.setAttribute("class","habit-description");
+    var expandButtonContainer = document.createElement("i");
+    expandButtonContainer.setAttribute("class","fa fa-plus");
+
     var taskIcon = document.createElement("i");
     taskIcon.setAttribute("class","fa fa-tasks");
     habitDescriptionContainer.appendChild(taskIcon);
     habitDescriptionContainer.appendChild(habitDescriptionText);
     newProgressDivision.appendChild(habitDescriptionContainer);
+    newProgressDivision.appendChild(expandButtonContainer);
 
+    var detailsArea = document.createElement("div");
+    detailsArea.setAttribute("class","progress-details");
+    
     var currentProgressContainer = document.createElement("div");
-
-
     currentProgressContainer.setAttribute("class","progress-container");
-
-
-
 
     if (elementToAdd.target > 1){
     /*if (1==1){*/
@@ -71,6 +74,7 @@ var addElement = function(elementToAdd){
         currentProgressContainer.appendChild(currentProgressText);
         var plusButtonText = document.createTextNode("+");
         var plusButton = document.createElement("div");
+
         plusButton.setAttribute("class","plus-button normal");
         var minusButtonText = document.createTextNode("-");
         var minusButton = document.createElement("div");
@@ -99,11 +103,12 @@ var addElement = function(elementToAdd){
                 pushProgressToQueue(newProgressDivision);
             }
         }(newProgressDivision));
-        newProgressDivision.appendChild(currentProgressContainer);
-        newProgressDivision.appendChild(minusButton);
-        newProgressDivision.appendChild(progressInput);
-        newProgressDivision.appendChild(plusButton);
-        newProgressDivision.appendChild(targetTextDiv);
+        detailsArea.appendChild(currentProgressContainer);
+        detailsArea.appendChild(minusButton);
+        detailsArea.appendChild(progressInput);
+        detailsArea.appendChild(plusButton);
+        detailsArea.appendChild(targetTextDiv);
+
     } else {
         currentProgressContainer.appendChild(currentProgressTextOneTarget);
         var checkBoxContainer = document.createElement("label");
@@ -134,27 +139,22 @@ var addElement = function(elementToAdd){
             }
         }(newProgressDivision));
 
-
-
         checkBoxContainer.appendChild(progressInput);
         checkBoxContainer.appendChild(checkMark);
 
-        newProgressDivision.appendChild(currentProgressContainer);
-        newProgressDivision.appendChild(checkBoxContainer);
+        detailsArea.appendChild(currentProgressContainer);
+        detailsArea.appendChild(checkBoxContainer);
 
     }
-
-
-
-
 
 
     var completionTextContainer = document.createElement("div");
     completionTextContainer.setAttribute("class","progress-container");
 
     completionTextContainer.appendChild(currentCompletionText);
-    newProgressDivision.appendChild(completionTextContainer);
-    newProgressDivision.appendChild(percentageCompletionInput);
+    detailsArea.appendChild(completionTextContainer);
+    detailsArea.appendChild(percentageCompletionInput);
+    newProgressDivision.appendChild(detailsArea);
 
     targetValue.value = elementToAdd.target;
 
@@ -167,5 +167,23 @@ var addElement = function(elementToAdd){
             pushProgressToQueue(newProgressDivision);}
      }(newProgressDivision));
 
+     expandButtonContainer.addEventListener('click', function(expandButtonContainer,detailsArea) {
+        return function(){
+            toggleExpandCollapse(expandButtonContainer,detailsArea);
+        }
+     }(expandButtonContainer,detailsArea));
 
 };
+
+var toggleExpandCollapse = function(toggleButton,divToTransform){
+
+    const targetIsPlus = toggleButton.classList.toggle("fa-plus");
+    const targetIsMinus = toggleButton.classList.toggle("fa-minus");
+
+    if (targetIsPlus && !targetIsMinus){
+        divToTransform.style.display = 'none';
+    } else {
+        divToTransform.style.display = 'block';
+    }
+
+}
