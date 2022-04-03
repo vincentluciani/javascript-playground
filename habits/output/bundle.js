@@ -204,6 +204,7 @@ var addElement = function(elementToAdd){
     newProgressDivision.setAttribute("habitId",elementToAdd.habitId);
     newProgressDivision.setAttribute("isNegative", elementToAdd.isNegative);
 
+
     const dateDiv = document.createElement("div");
 
     const habitDescriptionText = document.createTextNode(elementToAdd.habitDescription);
@@ -240,19 +241,21 @@ var addElement = function(elementToAdd){
 
     var habitDescriptionContainer = document.createElement("div");
     habitDescriptionContainer.setAttribute("class","habit-description");
+    var expandButtonContainer = document.createElement("i");
+    expandButtonContainer.setAttribute("class","fa fa-plus");
+
     var taskIcon = document.createElement("i");
     taskIcon.setAttribute("class","fa fa-tasks");
     habitDescriptionContainer.appendChild(taskIcon);
     habitDescriptionContainer.appendChild(habitDescriptionText);
     newProgressDivision.appendChild(habitDescriptionContainer);
+    newProgressDivision.appendChild(expandButtonContainer);
 
+    var detailsArea = document.createElement("div");
+    detailsArea.setAttribute("class","progress-details");
+    
     var currentProgressContainer = document.createElement("div");
-
-
     currentProgressContainer.setAttribute("class","progress-container");
-
-
-
 
     if (elementToAdd.target > 1){
     /*if (1==1){*/
@@ -262,6 +265,7 @@ var addElement = function(elementToAdd){
         currentProgressContainer.appendChild(currentProgressText);
         var plusButtonText = document.createTextNode("+");
         var plusButton = document.createElement("div");
+
         plusButton.setAttribute("class","plus-button normal");
         var minusButtonText = document.createTextNode("-");
         var minusButton = document.createElement("div");
@@ -290,11 +294,12 @@ var addElement = function(elementToAdd){
                 pushProgressToQueue(newProgressDivision);
             }
         }(newProgressDivision));
-        newProgressDivision.appendChild(currentProgressContainer);
-        newProgressDivision.appendChild(minusButton);
-        newProgressDivision.appendChild(progressInput);
-        newProgressDivision.appendChild(plusButton);
-        newProgressDivision.appendChild(targetTextDiv);
+        detailsArea.appendChild(currentProgressContainer);
+        detailsArea.appendChild(minusButton);
+        detailsArea.appendChild(progressInput);
+        detailsArea.appendChild(plusButton);
+        detailsArea.appendChild(targetTextDiv);
+
     } else {
         currentProgressContainer.appendChild(currentProgressTextOneTarget);
         var checkBoxContainer = document.createElement("label");
@@ -325,27 +330,22 @@ var addElement = function(elementToAdd){
             }
         }(newProgressDivision));
 
-
-
         checkBoxContainer.appendChild(progressInput);
         checkBoxContainer.appendChild(checkMark);
 
-        newProgressDivision.appendChild(currentProgressContainer);
-        newProgressDivision.appendChild(checkBoxContainer);
+        detailsArea.appendChild(currentProgressContainer);
+        detailsArea.appendChild(checkBoxContainer);
 
     }
-
-
-
-
 
 
     var completionTextContainer = document.createElement("div");
     completionTextContainer.setAttribute("class","progress-container");
 
     completionTextContainer.appendChild(currentCompletionText);
-    newProgressDivision.appendChild(completionTextContainer);
-    newProgressDivision.appendChild(percentageCompletionInput);
+    detailsArea.appendChild(completionTextContainer);
+    detailsArea.appendChild(percentageCompletionInput);
+    newProgressDivision.appendChild(detailsArea);
 
     targetValue.value = elementToAdd.target;
 
@@ -358,8 +358,26 @@ var addElement = function(elementToAdd){
             pushProgressToQueue(newProgressDivision);}
      }(newProgressDivision));
 
+     expandButtonContainer.addEventListener('click', function(expandButtonContainer,detailsArea) {
+        return function(){
+            toggleExpandCollapse(expandButtonContainer,detailsArea);
+        }
+     }(expandButtonContainer,detailsArea));
 
 };
+
+var toggleExpandCollapse = function(toggleButton,divToTransform){
+
+    const targetIsPlus = toggleButton.classList.toggle("fa-plus");
+    const targetIsMinus = toggleButton.classList.toggle("fa-minus");
+
+    if (targetIsPlus && !targetIsMinus){
+        divToTransform.style.display = 'none';
+    } else {
+        divToTransform.style.display = 'block';
+    }
+
+}
 
 var updateProgressOnRadial = function( percentageValue, parameters){
 
@@ -861,11 +879,18 @@ onload = function(){
             });
       }
 */
+    var queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const isDebug = urlParams.get('debug');
+    if (isDebug == "true"){
+        document.getElementById("debug-section").style.display = "block";
+    }
+
     document.getElementById("date-filter").value=currentDate;
     /*ingestElements();*/
     createProgressElements(radialProgressParameters);
     getHabitProgress();
-    addEmptyProgressOnNewDay();
+    addEmptyProgressOnNewDay(currentDate, currentDateTime);
 
     saveLoop();
 
@@ -1045,14 +1070,21 @@ var refreshProgress = function(currentDiv){
 
 var putColorBasedOnCompletion = function(currentDiv,newCompletionPercentage){
     if (newCompletionPercentage>=100){
-        currentDiv.style.background="#f7fff6";
-        currentDiv.style.boxShadow="rgb(55 110 57 / 20%) 1px 4px 16px 5px";
+        currentDiv.style.border="10px solid rgb(167 211 162)"/*"#f7fff6"*/;
+        currentDiv.style.order="95";
+        currentDiv.style.background="#daffd9";
+        /*currentDiv.style.boxShadow="rgb(168 218 179) -1px 2px 10px 5px"*//*"rgb(55 110 57 / 20%) 1px 4px 16px 5px"*/;
     } else if (newCompletionPercentage>=50){
-        currentDiv.style.background="#fffded";
-        currentDiv.style.boxShadow="rgb(219 213 191) -1px 2px 17px 0px";
+        currentDiv.style.border="10px solid rgb(254 238 112)"/*"#fffded"*/;
+        currentDiv.style.background="rgb(255 252 238)";
+        currentDiv.style.order="80";
+        /*currentDiv.style.boxShadow="rgb(198 198 197) -1px 2px 17px 0px"*//*"rgb(219 213 191) -1px 2px 17px 0px"*/;
     } else if (newCompletionPercentage<50){
-        currentDiv.style.background="#fff6f9";
-        currentDiv.style.boxShadow="rgb(233 206 206) -1px 2px 10px 0px";
+        currentDiv.style.background="white"/*"#fff6f9"*/;
+        currentDiv.style.order="70";
+    }
+    if (currentDiv.id && currentDiv.id == "daily-summary-container"){
+        currentDiv.style.order = "90";
     }
 }
 
@@ -1084,12 +1116,12 @@ var updateDailyProgress = function(){
         /*dailySummaryDiv.innerHTML = "";*/
 
         if (dailyPercentage >= 100){
-            radialProgressParameters.progressColor = "rgb(99 209 129)";
+            radialProgressParameters.progressColor = "rgb(167, 211, 162)";
             radialProgressParameters.emptyColor = "rgb(193 236 205)";
             radialProgressParameters.textLeftAdjustment = -7;
         } else if ( dailyPercentage >= 50 ){
-            radialProgressParameters.progressColor = "rgb(245 184 1)";
-            radialProgressParameters.emptyColor = "rgb(240 221 165)";
+            radialProgressParameters.progressColor = "rgb(254, 238, 112)";
+            radialProgressParameters.emptyColor = "rgb(255 250 211)";
         } else {
             radialProgressParameters.progressColor = "rgb(220 30 159)";
             radialProgressParameters.emptyColor = "rgb(255 217 235)";
@@ -1119,6 +1151,7 @@ var applyFilters = function(){
 var dateFilter = document.getElementById('date-filter');
 dateFilter.addEventListener('input', function (evt) {
     applyFilters();
+    createMissingElementsForDate(this.value);
 });
 
 var textFilter = document.getElementById('text-filter')
@@ -1126,7 +1159,14 @@ textFilter.addEventListener('input', function (evt) {
     applyFilters();
 });
 
+var createMissingElementsForDate = function(inputDate){
+    var dateElements = inputDate.split("-");
+    var inputDateTime = new Date(dateElements[0], (parseInt(dateElements[1])-1).toString(), dateElements[2], 0, 0, 0, 0);
+    debugWrite("Creating missing progress elements for date:"+inputDate.toString()+ " time:"+inputDateTime.toString());
+    addEmptyProgressOnNewDay(inputDate,inputDateTime);
 
+    
+}
 
 var minusOneToProgress = function(divElement){
     console.log("minus one");
@@ -1278,7 +1318,12 @@ function APICaller(parameters,callback,callbackOnFailure){
 
 
 
-var addEmptyProgressOnNewDay = function(){
+var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
+
+    var currentDateTimeMidnight = currentDateTime.setHours(0,0,0,0);
+    if ( inputDateTime > currentDateTimeMidnight){
+        return;
+    }
 
     var progressElements = document.getElementsByClassName('habit-update');
     var habitsElements = document.getElementsByClassName('habit-setting');
@@ -1291,7 +1336,7 @@ var addEmptyProgressOnNewDay = function(){
         var isHabitProgressExisting = false;
 
         for (var j=0; j< progressElements.length;j++){
-            if ( habitsElements[i].getAttribute("habitId") == progressElements[j].getAttribute("habitId") && progressElements[j].getAttribute("progressdate") == currentDate){
+            if ( habitsElements[i].getAttribute("habitId") == progressElements[j].getAttribute("habitId") && progressElements[j].getAttribute("progressdate") == inputDate){
                 isHabitProgressExisting = true;
             }
         }
@@ -1301,11 +1346,11 @@ var addEmptyProgressOnNewDay = function(){
             if (habitsElements[i].getAttribute("weekDay")){
                 debugWrite("Comparing currrent date time with habit week day");
                 debugWrite("Current date time:");
-                debugWrite(currentDateTime);
+                debugWrite(inputDateTime);
                 debugWrite("Habit week day:");
                 debugWrite(habitsElements[i].getAttribute("weekDay"));
                 
-                var isDayOK = isDayOfWeekInHabitWeeks(currentDateTime, habitsElements[i].getAttribute("weekDay"));
+                var isDayOK = isDayOfWeekInHabitWeeks(inputDateTime, habitsElements[i].getAttribute("weekDay"));
             } else {
                 var isDayOK = true;
             }
@@ -1315,7 +1360,7 @@ var addEmptyProgressOnNewDay = function(){
                     habitId: habitsElements[i].getAttribute("habitId"),
                     habitDescription: habitsElements[i].getAttribute("habitDescription"),
                     target: habitsElements[i].getAttribute("target"),
-                    progressDate: currentDate,
+                    progressDate: inputDate,
                     isNew: true,
                     numberOfCompletions:0,
                 }
@@ -1394,6 +1439,19 @@ var launchChart = function(fullData,habitObject){
     /* Analysis */
     var completionAccumulation=0;
     for (var i =  dataToShow.length - 1 ; i>=0; i--){
+        var dataDate = dataToShow[i].x;
+        if (
+            dataDate.getFullYear() === currentDateTime.getFullYear() &&
+            dataDate.getMonth() === currentDateTime.getMonth() &&
+            dataDate.getDate() === currentDateTime.getDate()
+          ) 
+        {
+            if ( dataToShow[i].y >= baseline[i].y ){
+                completionAccumulation++;
+            } 
+            continue;
+        }
+
         if ( dataToShow[i].y < baseline[i].y ) {
             break;
         } else {
@@ -1404,7 +1462,7 @@ var launchChart = function(fullData,habitObject){
 
     var tableData = {};
     var numberOfMissesInWeek=0;
-    var j = dataToShow.length - 1;
+    var j = dataToShow.length-1;
 
     if ( j < 1){
         return false;
@@ -1417,11 +1475,17 @@ var launchChart = function(fullData,habitObject){
         if ( dataToShow[j].y >= baseline[j].y){
             isTargetOK = "<i class='fa fa-circle icon'></i>";
         } else {
-            isTargetOK = "x";
-            numberOfMissesInWeek++;
+            dataDate = dataToShow[j].x;
+            if (
+                dataDate.getFullYear() != currentDateTime.getFullYear() ||
+                dataDate.getMonth() != currentDateTime.getMonth() ||
+                dataDate.getDate() != currentDateTime.getDate()
+            ) {
+                isTargetOK = "x";
+                numberOfMissesInWeek++;
+            }
         }
         tableData[todayWeekDay]= (isTargetOK != null)?isTargetOK:" ";
-
 
         do  {
             j--;
@@ -1502,11 +1566,13 @@ var launchChart = function(fullData,habitObject){
     newCanvaWrapper.setAttribute("class","box canva-wrapper");
 
     if (numberOfMissesInWeek==0){
-        newCanvaWrapper.style.background="#f7fff6";
+        newCanvaWrapper.style.background="#daffd9"/*"#f7fff6"*/;
+        newCanvaWrapper.style.border="10px solid rgb(167 211 162)"
     } else if (numberOfMissesInWeek==1){
-        newCanvaWrapper.style.background="#fffded";
+        newCanvaWrapper.style.background="rgb(255 252 238)"/*"#fffded"*/;
+        newCanvaWrapper.style.border="10px solid rgb(254 238 112)"
     } else if (numberOfMissesInWeek>1){
-        newCanvaWrapper.style.background="#fff6f9";
+        newCanvaWrapper.style.background="white"/*"#fff6f9"*/;
     }
 
     document.getElementById("no-graph").style.display = "none";
@@ -1540,6 +1606,9 @@ var launchChart = function(fullData,habitObject){
     if (completionAccumulation >= 10){
         graphBackgroundColor = "#b5f7b1";
         graphColor = "#3ce132";
+    } else if (completionAccumulation >=5 ) {
+        graphBackgroundColor = "rgb(255 249 202)";
+        graphColor = "rgb(235 209 0)";
     } else {
         graphBackgroundColor = "#f9dbdb";
         graphColor = "#fd2121";

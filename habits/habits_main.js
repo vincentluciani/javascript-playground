@@ -225,18 +225,17 @@ var refreshProgress = function(currentDiv){
 
 var putColorBasedOnCompletion = function(currentDiv,newCompletionPercentage){
     if (newCompletionPercentage>=100){
-        currentDiv.style.background="rgb(219 255 215)"/*"#f7fff6"*/;
-        currentDiv.style.boxShadow="none";
+        currentDiv.style.border="10px solid rgb(167 211 162)"/*"#f7fff6"*/;
         currentDiv.style.order="95";
+        currentDiv.style.background="#daffd9";
         /*currentDiv.style.boxShadow="rgb(168 218 179) -1px 2px 10px 5px"*//*"rgb(55 110 57 / 20%) 1px 4px 16px 5px"*/;
     } else if (newCompletionPercentage>=50){
-        currentDiv.style.background="rgb(255 249 201)"/*"#fffded"*/;
-        currentDiv.style.boxShadow="none";
+        currentDiv.style.border="10px solid rgb(254 238 112)"/*"#fffded"*/;
+        currentDiv.style.background="rgb(255 252 238)";
         currentDiv.style.order="80";
         /*currentDiv.style.boxShadow="rgb(198 198 197) -1px 2px 17px 0px"*//*"rgb(219 213 191) -1px 2px 17px 0px"*/;
     } else if (newCompletionPercentage<50){
         currentDiv.style.background="white"/*"#fff6f9"*/;
-        currentDiv.style.boxShadow="rgb(191 179 179) -1px 2px 10px 0px"/*rgb(233 206 206) -1px 2px 10px 0px"*/;
         currentDiv.style.order="70";
     }
     if (currentDiv.id && currentDiv.id == "daily-summary-container"){
@@ -272,12 +271,12 @@ var updateDailyProgress = function(){
         /*dailySummaryDiv.innerHTML = "";*/
 
         if (dailyPercentage >= 100){
-            radialProgressParameters.progressColor = "rgb(99 209 129)";
+            radialProgressParameters.progressColor = "rgb(167, 211, 162)";
             radialProgressParameters.emptyColor = "rgb(193 236 205)";
             radialProgressParameters.textLeftAdjustment = -7;
         } else if ( dailyPercentage >= 50 ){
-            radialProgressParameters.progressColor = "rgb(245 184 1)";
-            radialProgressParameters.emptyColor = "rgb(240 221 165)";
+            radialProgressParameters.progressColor = "rgb(254, 238, 112)";
+            radialProgressParameters.emptyColor = "rgb(255 250 211)";
         } else {
             radialProgressParameters.progressColor = "rgb(220 30 159)";
             radialProgressParameters.emptyColor = "rgb(255 217 235)";
@@ -722,9 +721,11 @@ var launchChart = function(fullData,habitObject){
     newCanvaWrapper.setAttribute("class","box canva-wrapper");
 
     if (numberOfMissesInWeek==0){
-        newCanvaWrapper.style.background="rgb(219, 255, 215)"/*"#f7fff6"*/;
+        newCanvaWrapper.style.background="#daffd9"/*"#f7fff6"*/;
+        newCanvaWrapper.style.border="10px solid rgb(167 211 162)"
     } else if (numberOfMissesInWeek==1){
-        newCanvaWrapper.style.background="rgb(255, 249, 201)"/*"#fffded"*/;
+        newCanvaWrapper.style.background="rgb(255 252 238)"/*"#fffded"*/;
+        newCanvaWrapper.style.border="10px solid rgb(254 238 112)"
     } else if (numberOfMissesInWeek>1){
         newCanvaWrapper.style.background="white"/*"#fff6f9"*/;
     }
