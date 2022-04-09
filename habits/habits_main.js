@@ -517,7 +517,9 @@ function APICaller(parameters,callback,callbackOnFailure){
 
 var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
 
-    var currentDateTimeMidnight = currentDateTime.setHours(0,0,0,0);
+    var newCurrentDateTime = new Date();
+
+    var currentDateTimeMidnight = newCurrentDateTime.setHours(0,0,0,0);
     if ( inputDateTime > currentDateTimeMidnight){
         return;
     }
