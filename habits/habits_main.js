@@ -274,13 +274,21 @@ var updateDailyProgress = function(){
         if (dailyPercentage >= 100){
             radialProgressParameters.progressColor = "rgb(167, 211, 162)";
             radialProgressParameters.emptyColor = "rgb(193 236 205)";
-            radialProgressParameters.textLeftAdjustment = -7;
         } else if ( dailyPercentage >= 50 ){
             radialProgressParameters.progressColor = "rgb(254, 238, 112)";
             radialProgressParameters.emptyColor = "rgb(255 250 211)";
         } else {
             radialProgressParameters.progressColor = "rgb(220 30 159)";
             radialProgressParameters.emptyColor = "rgb(255 217 235)";
+        }
+
+        if ( dailyPercentage >= 100){
+            radialProgressParameters.textLeftAdjustment = -9;
+        }
+        else if ( dailyPercentage >= 10){
+            radialProgressParameters.textLeftAdjustment = -5;
+        } else {
+            radialProgressParameters.textLeftAdjustment = -2;
         }
 
        updateProgressOnRadial(dailyPercentage, radialProgressParameters);
