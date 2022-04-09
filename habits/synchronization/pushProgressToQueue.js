@@ -24,6 +24,18 @@ var pushProgressArrayToQueue = function(objectToPush){
 
 }
 
+var pushHabitArrayToQueue = function(objectToPush){
+
+    var elementToAdd = {
+        'id': 'habit-'+objectToPush.habitId,
+        'value': JSON.stringify(objectToPush)
+    }
+
+    executePushToQueue(elementToAdd);
+
+}
+
+
 var executePushToQueue = function(newObject){
     console.log("pushing to queue:");
     console.log(newObject);

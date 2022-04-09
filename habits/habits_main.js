@@ -338,7 +338,9 @@ var addOneToProgress = function(divElement){
     divElement.value = (parseInt(divElement.value) + 1).toString();
 }
 
-/* Get information from the form to add new habits and add a habit (dom+memory for both)*/ 
+/* Get information from the form to add new habits and add a PROGRESS (dom+memory for both)*/
+/* CAREFUL elementToAdd has data to build A PROGRESS */ 
+/* both habit and progress are added with this function */
 var addElementFromForm = function(){
 
     var elementToAdd={};
@@ -360,6 +362,7 @@ var addElementFromForm = function(){
     }
     if (isDayOK != null && isDayOK == true)
     {
+        /* add progress */
         addElement(elementToAdd);
     }
     addHabitElement(elementToAdd);
@@ -376,8 +379,31 @@ var addElementFromForm = function(){
     showSaveButtonOnHabits();
     showStartProgressButtonOnHabits();
 
+    saveChangesInHabitFromObject(elementToAdd);
+
     confirmAddition(elementToAdd.habitId);
 };
+
+var saveChangesInHabit = function(habitId){
+    var habitDiv = document.getElementById(habitId);
+    var habitJSON = readHabitElement(habitDiv);
+    pushHabitArrayToQueue(habitJSON);
+
+}
+
+var saveChangesInHabitFromObject = function(habitElement){
+
+    var habitJSON = {};
+    habitJSON.habitId = habitElement.habitId;
+    habitJSON.isNegative = habitElement.isNegative;
+    habitJSON.habitDescription = habitElement.habitDescription;
+    habitJSON.target = habitElement.target;
+    habitJSON.weekDay = habitElement.weekDay;
+
+    pushHabitArrayToQueue(habitJSON);
+    
+}
+
 
 var closeAdditionConfirmation = function(){
     document.getElementById("addition-message").style.display="none";
@@ -431,10 +457,10 @@ var extractElementsForUpdateNoneLoggedIn = function(progressElements, habitsElem
 
     readQueueProgress();
 
-    for ( var j=0; j< habitsElements.length;j++){
+   /* for ( var j=0; j< habitsElements.length;j++){
         var currentOutput = readHabitElement(habitsElements[j]);
         window.localStorage.setItem('habit-'+currentOutput.habitId,JSON.stringify(currentOutput));
-    }
+    }*/
 
 };
 var readHabitElement = function(elementToRead){

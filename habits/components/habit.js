@@ -46,12 +46,21 @@ var addHabitElement = function(elementToAdd){
 
     var weekDaySelector = dynamicWeekDaySelector(elementToAdd.weekDay);
     newHabitDivision.appendChild(weekDaySelector);
+
+    const saveButton = document.createElement("div");
+    var onClickSaveFunctionCall = "saveChangesInHabit(" + elementToAdd.habitId.toString()+ ")";
+    saveButton.setAttribute("onClick",onClickSaveFunctionCall);
+    saveButton.setAttribute("class","add-button");
+    saveButton.innerHTML = '<i class="fa fa-save"></i> Save';
+    newHabitDivision.appendChild(saveButton);
+
     const deleteButton = document.createElement("div");
     var onClickFunctionCall = "requestHabitDeletion(" + elementToAdd.habitId.toString()+ ")";
     deleteButton.setAttribute("onClick",onClickFunctionCall);
     deleteButton.setAttribute("class","add-button");
-    deleteButton.innerHTML = "Delete";
+    deleteButton.innerHTML = '<i class="fa fa-trash"></i> Delete';
     newHabitDivision.appendChild(deleteButton);
+
 
 
     document.getElementById('habits-definition-container').appendChild(newHabitDivision);
