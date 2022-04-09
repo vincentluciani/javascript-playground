@@ -76,17 +76,46 @@ var addHabitElement = function(elementToAdd){
 
     var weekDaySelector = dynamicWeekDaySelector(elementToAdd.weekDay);
     newHabitDivision.appendChild(weekDaySelector);
+
+    const saveButton = document.createElement("div");
+    var onClickSaveFunctionCall = "saveChangesInHabit(" + elementToAdd.habitId.toString()+ ")";
+    saveButton.setAttribute("onClick",onClickSaveFunctionCall);
+    saveButton.setAttribute("class","add-button");
+    saveButton.innerHTML = '<i class="fa fa-save"></i> Save';
+    newHabitDivision.appendChild(saveButton);
+
     const deleteButton = document.createElement("div");
-    var onClickFunctionCall = "deleteHabit(" + elementToAdd.habitId.toString()+ ");deleteProgressFromHabitToday(" + elementToAdd.habitId.toString()+ ")";
+    var onClickFunctionCall = "requestHabitDeletion(" + elementToAdd.habitId.toString()+ ")";
     deleteButton.setAttribute("onClick",onClickFunctionCall);
     deleteButton.setAttribute("class","add-button");
-    deleteButton.innerHTML = "Delete";
+    deleteButton.innerHTML = '<i class="fa fa-trash"></i> Delete';
     newHabitDivision.appendChild(deleteButton);
+
 
 
     document.getElementById('habits-definition-container').appendChild(newHabitDivision);
 
 
+}
+
+var closeDeleteMessage = function(){
+    document.getElementById("delete-message").style.display="none";
+}
+var requestHabitDeletion = function(habitId){
+
+    document.getElementById("delete-message").style.display="flex";
+
+    var confirmationButton = document.getElementById("confirm-deletion-button");
+
+    var onClickString = "closeDeleteMessage();deleteHabitAndProgress(" + habitId + ")"
+    confirmationButton.setAttribute('onclick',onClickString);
+
+}
+
+
+var deleteHabitAndProgress = function(habitId){
+    deleteHabit(habitId);
+    deleteProgressFromHabitToday(habitId);
 }
 
 var deleteHabit = function(habitId){
@@ -96,8 +125,8 @@ var deleteHabit = function(habitId){
     window.localStorage.removeItem(habitKey);
 }
 
-
 var deleteProgressFromHabitToday = function(habitId){
+    
     var progressDivs = document.getElementsByClassName("habit-update");    
      
     for ( var i=progressDivs.length-1; i >= 0; i--){
@@ -796,6 +825,18 @@ var pushProgressArrayToQueue = function(objectToPush){
 
 }
 
+var pushHabitArrayToQueue = function(objectToPush){
+
+    var elementToAdd = {
+        'id': 'habit-'+objectToPush.habitId,
+        'value': JSON.stringify(objectToPush)
+    }
+
+    executePushToQueue(elementToAdd);
+
+}
+
+
 var executePushToQueue = function(newObject){
     console.log("pushing to queue:");
     console.log(newObject);
@@ -1077,10 +1118,11 @@ var putColorBasedOnCompletion = function(currentDiv,newCompletionPercentage){
     } else if (newCompletionPercentage>=50){
         currentDiv.style.border="10px solid rgb(254 238 112)"/*"#fffded"*/;
         currentDiv.style.background="rgb(255 252 238)";
-        currentDiv.style.order="80";
+        currentDiv.style.order="70";
         /*currentDiv.style.boxShadow="rgb(198 198 197) -1px 2px 17px 0px"*//*"rgb(219 213 191) -1px 2px 17px 0px"*/;
     } else if (newCompletionPercentage<50){
-        currentDiv.style.background="white"/*"#fff6f9"*/;
+        currentDiv.style.border="10px solid  #e9e9e9"/*"#fffded"*/;
+        currentDiv.style.background="#fcfbfb"/*"#fff6f9"*/;
         currentDiv.style.order="70";
     }
     if (currentDiv.id && currentDiv.id == "daily-summary-container"){
@@ -1182,7 +1224,9 @@ var addOneToProgress = function(divElement){
     divElement.value = (parseInt(divElement.value) + 1).toString();
 }
 
-/* Get information from the form to add new habits and add a habit (dom+memory for both)*/ 
+/* Get information from the form to add new habits and add a PROGRESS (dom+memory for both)*/
+/* CAREFUL elementToAdd has data to build A PROGRESS */ 
+/* both habit and progress are added with this function */
 var addElementFromForm = function(){
 
     var elementToAdd={};
@@ -1204,6 +1248,7 @@ var addElementFromForm = function(){
     }
     if (isDayOK != null && isDayOK == true)
     {
+        /* add progress */
         addElement(elementToAdd);
     }
     addHabitElement(elementToAdd);
@@ -1219,8 +1264,46 @@ var addElementFromForm = function(){
 
     showSaveButtonOnHabits();
     showStartProgressButtonOnHabits();
+
+    saveChangesInHabitFromObject(elementToAdd);
+
+    confirmAddition(elementToAdd.habitId);
 };
 
+var saveChangesInHabit = function(habitId){
+    var habitDiv = document.getElementById(habitId);
+    var habitJSON = readHabitElement(habitDiv);
+    pushHabitArrayToQueue(habitJSON);
+
+}
+
+var saveChangesInHabitFromObject = function(habitElement){
+
+    var habitJSON = {};
+    habitJSON.habitId = habitElement.habitId;
+    habitJSON.isNegative = habitElement.isNegative;
+    habitJSON.habitDescription = habitElement.habitDescription;
+    habitJSON.target = habitElement.target;
+    habitJSON.weekDay = habitElement.weekDay;
+
+    pushHabitArrayToQueue(habitJSON);
+    
+}
+
+
+var closeAdditionConfirmation = function(){
+    document.getElementById("addition-message").style.display="none";
+}
+
+var confirmAddition = function(habitId){
+    document.getElementById("addition-message").style.display="flex";
+
+    var checkHabitButton = document.getElementById("check-habit-button");
+
+    var onClickString = "closeAdditionConfirmation();document.getElementById(" + habitId + ").scrollIntoView();"
+    checkHabitButton.setAttribute('onclick',onClickString);
+
+}
 var displayAllElements = function(elementList){
     for (var i=0; i< elementList.length; i++) {
         const newDivision = document.createElement("div");
@@ -1260,10 +1343,10 @@ var extractElementsForUpdateNoneLoggedIn = function(progressElements, habitsElem
 
     readQueueProgress();
 
-    for ( var j=0; j< habitsElements.length;j++){
+   /* for ( var j=0; j< habitsElements.length;j++){
         var currentOutput = readHabitElement(habitsElements[j]);
         window.localStorage.setItem('habit-'+currentOutput.habitId,JSON.stringify(currentOutput));
-    }
+    }*/
 
 };
 var readHabitElement = function(elementToRead){
@@ -1320,7 +1403,9 @@ function APICaller(parameters,callback,callbackOnFailure){
 
 var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
 
-    var currentDateTimeMidnight = currentDateTime.setHours(0,0,0,0);
+    var newCurrentDateTime = new Date();
+
+    var currentDateTimeMidnight = newCurrentDateTime.setHours(0,0,0,0);
     if ( inputDateTime > currentDateTimeMidnight){
         return;
     }

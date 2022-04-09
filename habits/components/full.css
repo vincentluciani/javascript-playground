@@ -653,7 +653,7 @@ td{
         display: none;
     }
     .box{
-    margin:20px 0px 7px 0px;
+    margin:13px 0px 0px 0px;
     }
     #date-filter{
         margin: 10px 0px 0px 0px;
@@ -675,6 +675,7 @@ td{
         float: left;
         width: 225px;
         margin-bottom: 10px;
+        margin-top:2px;
     }
 
     .progress-container{
@@ -695,7 +696,6 @@ td{
     }
 
     .box.habit-update {
-        margin-top: 15px;
         height: max-content;
     }
     .plus-button, .minus-button{
