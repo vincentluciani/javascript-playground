@@ -232,10 +232,11 @@ var putColorBasedOnCompletion = function(currentDiv,newCompletionPercentage){
     } else if (newCompletionPercentage>=50){
         currentDiv.style.border="10px solid rgb(254 238 112)"/*"#fffded"*/;
         currentDiv.style.background="rgb(255 252 238)";
-        currentDiv.style.order="80";
+        currentDiv.style.order="70";
         /*currentDiv.style.boxShadow="rgb(198 198 197) -1px 2px 17px 0px"*//*"rgb(219 213 191) -1px 2px 17px 0px"*/;
     } else if (newCompletionPercentage<50){
-        currentDiv.style.background="white"/*"#fff6f9"*/;
+        currentDiv.style.border="10px solid  #e9e9e9"/*"#fffded"*/;
+        currentDiv.style.background="#fcfbfb"/*"#fff6f9"*/;
         currentDiv.style.order="70";
     }
     if (currentDiv.id && currentDiv.id == "daily-summary-container"){

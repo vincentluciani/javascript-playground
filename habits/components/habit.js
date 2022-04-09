@@ -47,7 +47,7 @@ var addHabitElement = function(elementToAdd){
     var weekDaySelector = dynamicWeekDaySelector(elementToAdd.weekDay);
     newHabitDivision.appendChild(weekDaySelector);
     const deleteButton = document.createElement("div");
-    var onClickFunctionCall = "deleteHabit(" + elementToAdd.habitId.toString()+ ");deleteProgressFromHabitToday(" + elementToAdd.habitId.toString()+ ")";
+    var onClickFunctionCall = "requestHabitDeletion(" + elementToAdd.habitId.toString()+ ")";
     deleteButton.setAttribute("onClick",onClickFunctionCall);
     deleteButton.setAttribute("class","add-button");
     deleteButton.innerHTML = "Delete";
@@ -59,6 +59,26 @@ var addHabitElement = function(elementToAdd){
 
 }
 
+var closeDeleteMessage = function(){
+    document.getElementById("delete-message").style.display="none";
+}
+var requestHabitDeletion = function(habitId){
+
+    document.getElementById("delete-message").style.display="flex";
+
+    var confirmationButton = document.getElementById("confirm-deletion-button");
+
+    var onClickString = "closeDeleteMessage();deleteHabitAndProgress(" + habitId + ")"
+    confirmationButton.setAttribute('onclick',onClickString);
+
+}
+
+
+var deleteHabitAndProgress = function(habitId){
+    deleteHabit(habitId);
+    deleteProgressFromHabitToday(habitId);
+}
+
 var deleteHabit = function(habitId){
     var habitKey = "habit-"+habitId.toString();
     var element = document.getElementById(habitId.toString());
@@ -66,8 +86,8 @@ var deleteHabit = function(habitId){
     window.localStorage.removeItem(habitKey);
 }
 
-
 var deleteProgressFromHabitToday = function(habitId){
+    
     var progressDivs = document.getElementsByClassName("habit-update");    
      
     for ( var i=progressDivs.length-1; i >= 0; i--){
