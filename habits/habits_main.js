@@ -375,8 +375,23 @@ var addElementFromForm = function(){
 
     showSaveButtonOnHabits();
     showStartProgressButtonOnHabits();
+
+    confirmAddition(elementToAdd.habitId);
 };
 
+var closeAdditionConfirmation = function(){
+    document.getElementById("addition-message").style.display="none";
+}
+
+var confirmAddition = function(habitId){
+    document.getElementById("addition-message").style.display="flex";
+
+    var checkHabitButton = document.getElementById("check-habit-button");
+
+    var onClickString = "closeAdditionConfirmation();document.getElementById(" + habitId + ").scrollIntoView();"
+    checkHabitButton.setAttribute('onclick',onClickString);
+
+}
 var displayAllElements = function(elementList){
     for (var i=0; i< elementList.length; i++) {
         const newDivision = document.createElement("div");

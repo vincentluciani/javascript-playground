@@ -26,6 +26,14 @@
             <div class="positive-message-button" id="confirm-deletion-button">Yes</div>
             <div class="positive-message-button" onclick="closeDeleteMessage();">No</div>
         </div>
+        <div id="addition-message" class="positive-message">
+            <i class="fa fa-trophy icon"></i>
+            <div class="title" id="positive-message-title">Habit Successfully Added !</div>
+            <div class="sub-title" id="positive-message-subtitle">What do you want to do next ?</div>
+            <div class="positive-message-button" onclick="changeTabToHabits();window.scrollTo(0, 0);closeAdditionConfirmation();">Add Another Habit</div>
+            <div class="positive-message-button" id="check-habit-button">Check My Habit</div>
+            <div class="positive-message-button" onclick="changeTabToProgress();window.scrollTo(0, 0);;closeAdditionConfirmation();">Start My Day</div>
+        </div>
         <div id="positive-message" class="positive-message">
             <i class="fa fa-trophy icon"></i>
             <div class="title" id="positive-message-title">Awesome :)</div>
