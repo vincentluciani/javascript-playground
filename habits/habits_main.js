@@ -528,7 +528,9 @@ var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
     var newCurrentDateTime = new Date();
 
     var currentDateTimeMidnight = newCurrentDateTime.setHours(0,0,0,0);
-    if ( inputDateTime > currentDateTimeMidnight){
+    var inputDateTimeMidnight = inputDateTime.setHours(0,0,0,0);
+    
+    if ( inputDateTimeMidnight > currentDateTimeMidnight){
         return;
     }
 
