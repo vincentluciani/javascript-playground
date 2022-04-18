@@ -230,7 +230,7 @@ var putColorBasedOnCompletion = function(currentDiv,newCompletionPercentage){
         currentDiv.style.background="#daffd9";
         /*currentDiv.style.boxShadow="rgb(168 218 179) -1px 2px 10px 5px"*//*"rgb(55 110 57 / 20%) 1px 4px 16px 5px"*/;
     } else if (newCompletionPercentage>=50){
-        currentDiv.style.border="1px solid rgb(255 240 120)"/*"#fffded"*/;
+        currentDiv.style.border="1px solid rgb(246 223 35)"/*"#fffded"*/;
         currentDiv.style.background="rgb(255 251 234)";
         currentDiv.style.order="70";
         /*currentDiv.style.boxShadow="rgb(198 198 197) -1px 2px 17px 0px"*//*"rgb(219 213 191) -1px 2px 17px 0px"*/;
@@ -275,8 +275,8 @@ var updateDailyProgress = function(){
             radialProgressParameters.progressColor = "rgb(167, 211, 162)";
             radialProgressParameters.emptyColor = "rgb(193 236 205)";
         } else if ( dailyPercentage >= 50 ){
-            radialProgressParameters.progressColor = "rgb(254, 238, 112)";
-            radialProgressParameters.emptyColor = "rgb(255 250 211)";
+            radialProgressParameters.progressColor = "rgb(238 230 168)";
+            radialProgressParameters.emptyColor = "rgb(228 228 228)";
         } else {
             radialProgressParameters.progressColor = "#b657af";
             radialProgressParameters.emptyColor = "rgb(255 217 235)";
@@ -779,7 +779,7 @@ var launchChart = function(fullData,habitObject){
         newCanvaWrapper.style.border="1px solid rgb(167 211 162)"
     } else if (numberOfMissesInWeek==1){
         newCanvaWrapper.style.background="rgb(255 252 238)"/*"#fffded"*/;
-        newCanvaWrapper.style.border="1px solid rgb(254 238 112)"
+        newCanvaWrapper.style.border="1px solid rgb(246 223 35)"
     } else if (numberOfMissesInWeek>1){
         newCanvaWrapper.style.background="white"/*"#fff6f9"*/;
     }

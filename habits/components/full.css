@@ -54,7 +54,7 @@ body{
     padding-left:10px;
 }
 .horizontal-menu li{
-    height: 29px;
+    height: 30px;
     width: 86px;
     border-radius: 10px 10px 0px 0px;
     float: left;
@@ -102,7 +102,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
     margin-bottom:65px;
 }
 .box{
-    padding: 16px;   
+    padding: 19px;   
     border-radius: 40px;
 }
 
@@ -204,6 +204,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
     box-shadow: rgb(233 206 206) -1px 2px 10px 0px;*/
     /*background-color: "white" ;
     box-shadow: "rgb(191 179 179) -1px 2px 10px 0px";*/
+
 }
 
 .main-title{
@@ -213,13 +214,16 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
     /*box-shadow: -5px 16px 20px 0px rgb(0 0 0 / 12%);*/
     /*margin-bottom: 15px;*/
 }
+.secondary-title{
+    padding: 14px 12px 18px 12px; 
+}
 .week-day-selection,.habits-container,.habits-definition-container,.filter-bar,.graph-container,.main-action-bar,#progress-title,#footer{
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
     align-items: flex-start;
 }
-.habits-container{
+.habits-container,.graph-container,.habits-definition-container{
     justify-content: space-evenly;
     background: rgb(250, 250, 250);
     
@@ -340,7 +344,7 @@ i{
     color: white;
     text-align: center;
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 29px;
     margin-top: 16px;
     cursor:pointer;
 }
@@ -373,7 +377,7 @@ i{
     margin-bottom: 10px;
 }
 .habit-setting{
-    background: #fcfcfc /*#fefff3*/;
+    background: white /*#fefff3*/;
 }
 
 .habit-title{
@@ -555,9 +559,10 @@ td{
 }
 .journal-container{
     padding: 35px;
-    border: 10px solid  #e9e9e9;
+    border: 1px solid  lightgray;
     border-radius: 25px;
     margin: 23px;
+    background: white;
 }
 
 #debug-section{
@@ -614,7 +619,7 @@ td{
     height: 25px;
     width: 25px;
     background-color: white;
-    border: 1px solid lightgray;
+    border: 1px solid #939393;
     border-radius: 5px;
   }
   
@@ -652,7 +657,7 @@ td{
 
 
 
-@media (max-width: 999px){
+@media (max-width: 649px){
 
     #progress-title{
         margin-bottom: 10px;
@@ -676,6 +681,7 @@ td{
     }
     #date-filter{
         margin: 10px 0px 0px 0px;
+
     }
     .positive-message .sub-title{
         margin:20px;
@@ -765,6 +771,7 @@ td{
 
     #new-description, .habit-description-definition {
         margin-top: 12px;
+        width: 272px;
     }
     
     .weekday{
@@ -790,6 +797,9 @@ td{
         position: relative;
         width:25px;
     }
+    .box.habit-update i.fa.fa-plus{
+        color: #b657af;
+    }
     .habit-description i{
         display: none;
     }
@@ -797,7 +807,7 @@ td{
         display: none;
     }
 }
-@media (min-width: 1000px){
+@media (min-width: 650px){
     .box{
     margin:20px;
     }
