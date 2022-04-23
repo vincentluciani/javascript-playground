@@ -1,4 +1,3 @@
-
 var loggedIn = false;
 var maxForNonLoggedIn = 2000;
 var updateQueue = [];
@@ -127,7 +126,7 @@ var getHabitProgressWhenNotLoggedIn = function(){
     ingestElements(progressArray,habitsArray,journalArray);
 };
 var hideJournalBox = function(){
-    document.getElementById("journal-container").innerHTML = "no entry yet";
+    document.getElementById("journal-container-wrapper").innerHTML = "no entry yet";
 }
 var hideProgressTab = function(){
     document.getElementById("progress-menu").style.display = "none";
@@ -737,12 +736,18 @@ var launchChart = function(fullData,habitObject){
     /*<canvas id="myChart"></canvas>*/
     var newCanva = document.createElement("canvas");
     var newCanvaWrapper = document.createElement("div");
+    var streaksWrapper = document.createElement("div");
     var brDiv = document.createElement("br");
     const grapTitle = document.createTextNode(habitObject.habitDescription);
     const grapTitleDiv = document.createElement("div");
+    const grapTitleStreaks = document.createTextNode(habitObject.habitDescription);
+    const grapTitleDivStreaks = document.createElement("div");
+
     const weekSummaryTable = document.createElement("div");
     var graphIcon = document.createElement("i");
-    graphIcon.setAttribute("class","fa fa-bar-chart");
+    graphIcon.setAttribute("class","fa fa-calendar");
+    var graphIconStreaks = document.createElement("i");
+    graphIconStreaks.setAttribute("class","fa fa-bar-chart");
 
     const streaksTitleDiv = document.createElement("div");
     streaksTitleDiv.innerHTML = "Number of streaks: "+ completionAccumulation.toString();
@@ -751,6 +756,10 @@ var launchChart = function(fullData,habitObject){
     grapTitleDiv.setAttribute("class","graph-title");
     grapTitleDiv.appendChild(graphIcon);
     grapTitleDiv.appendChild(grapTitle);
+
+    grapTitleDivStreaks.setAttribute("class","graph-title");
+    grapTitleDivStreaks.appendChild(graphIconStreaks);
+    grapTitleDivStreaks.appendChild(grapTitleStreaks);
 
     const weekSummaryTableTitle = document.createElement("div");
     weekSummaryTableTitle.innerHTML = "This week summary:";
@@ -765,14 +774,17 @@ var launchChart = function(fullData,habitObject){
 
     newCanva.setAttribute("id","graph-"+habitObject.habitId);
     newCanvaWrapper.appendChild(grapTitleDiv); 
-    newCanvaWrapper.appendChild(weekSummaryTableTitle);
+    streaksWrapper.appendChild(grapTitleDivStreaks);
+    streaksWrapper.setAttribute("id","streaks-"+habitObject.habitId);
+    /*newCanvaWrapper.appendChild(weekSummaryTableTitle);*/
     newCanvaWrapper.appendChild(weekSummaryTable);
     newCanvaWrapper.appendChild(brDiv); 
-    newCanvaWrapper.appendChild(streaksTitleDiv);
-    newCanvaWrapper.appendChild(graphTitle); 
-    newCanvaWrapper.append(newCanva);
+    streaksWrapper.appendChild(streaksTitleDiv);
+    streaksWrapper.appendChild(graphTitle); 
+    streaksWrapper.append(newCanva);
 
-    newCanvaWrapper.setAttribute("class","box canva-wrapper");
+    newCanvaWrapper.setAttribute("class","box canva-wrapper week-box");
+    streaksWrapper.setAttribute("class","box canva-wrapper streak-box");
 
     if (numberOfMissesInWeek==0){
         newCanvaWrapper.style.background="#daffd9"/*"#f7fff6"*/;
@@ -784,9 +796,20 @@ var launchChart = function(fullData,habitObject){
         newCanvaWrapper.style.background="white"/*"#fff6f9"*/;
     }
 
-    document.getElementById("no-graph").style.display = "none";
-    document.getElementById("graph-container").appendChild(newCanvaWrapper);
+    if (completionAccumulation >= 10){
+        streaksWrapper.style.background="#daffd9"/*"#f7fff6"*/;
+        streaksWrapper.style.border="1px solid rgb(167 211 162)"
+    } else if (completionAccumulation >=5 ) {
+        streaksWrapper.style.background="rgb(255 252 238)"/*"#fffded"*/;
+        streaksWrapper.style.border="1px solid rgb(246 223 35)"
+    } else {
+        streaksWrapper.style.background="white"/*"#fff6f9"*/;
+    }
 
+    document.getElementById("no-graph").style.display = "none";
+    document.getElementById("no-streak").style.display = "none";
+    document.getElementById("graph-container").appendChild(newCanvaWrapper);
+    document.getElementById("streaks-container").appendChild(streaksWrapper);
 
     var ctx = document.getElementById("graph-"+habitObject.habitId).getContext('2d');
 
@@ -819,8 +842,8 @@ var launchChart = function(fullData,habitObject){
         graphBackgroundColor = "rgb(255 249 202)";
         graphColor = "rgb(235 209 0)";
     } else {
-        graphBackgroundColor = "#f9dbdb";
-        graphColor = "#fd2121";
+        graphBackgroundColor = "rgb(224 224 224)";
+        graphColor = "rgb(174 174 174)";
     }
     let chartData = {
 
@@ -857,5 +880,46 @@ var getElementToPutOnTable = function (value) {
     } else {
         return " ";
     }
+
+}
+
+
+var subMenuGo = function( targetLink){
+
+    window.scrollTo(0, 0);
+
+    var journalLink = document.getElementById('journal-link');
+    var streaksLink = document.getElementById('streaks-link');
+    var weekLink = document.getElementById('week-link');
+    var graphContainer = document.getElementById('graph-container');
+    var streaksContainer = document.getElementById('streaks-container');
+    var journalContainer = document.getElementById('journal-container-wrapper');
+
+    switch (targetLink) {
+        case 'week-link':
+            weekLink.classList.add("selected-underline");
+            journalLink.classList.remove("selected-underline");
+            streaksLink.classList.remove("selected-underline");
+            graphContainer.style.display='flex';
+            streaksContainer.style.display='none';
+            journalContainer.style.display='none';
+          break;
+        case 'streaks-link':
+            weekLink.classList.remove("selected-underline");
+            journalLink.classList.remove("selected-underline");
+            streaksLink.classList.add("selected-underline");
+            graphContainer.style.display='none';
+            streaksContainer.style.display='flex';
+            journalContainer.style.display='none';
+          break;
+        case 'journal-link':
+            weekLink.classList.remove("selected-underline");
+            journalLink.classList.add("selected-underline");
+            streaksLink.classList.remove("selected-underline");
+            graphContainer.style.display='none';
+            streaksContainer.style.display='none';
+            journalContainer.style.display='flex';
+          break;
+      }
 
 }

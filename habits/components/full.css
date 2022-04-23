@@ -10,7 +10,7 @@ body{
     color:white;
 }
 .blue{
-    background:#f2dbff;
+    background:#f9efff;
     color:black;
 }
 .orange{
@@ -74,6 +74,31 @@ body{
     border-top: 1px solid lightgrey;
     border-left: 1px solid lightgrey;
     border-right: 1px solid lightgrey;
+}
+
+.main-title.fixed{
+    position: fixed;
+    width: 100%;
+    height: 27px
+}
+.horizontal-submenu{
+    list-style-type: none;
+    margin: 0px;
+    height: 27px; 
+    padding-left: 8px;
+}
+.horizontal-submenu li{
+    float: left;
+    margin-right: 24px;
+    height: 42px;
+    cursor: pointer;
+    font-size: 19px;
+    font-weight: bold;
+}
+.horizontal-submenu li.selected-underline{
+    float: left;
+    border-bottom: 4px solid #b657af;
+    height: 42px;
 }
 a, a:active, a:visited, a span {
     text-decoration: none;
@@ -139,6 +164,12 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
     height:360px; 
     /*box-shadow: 1px 12px 17px 5px rgb(159 159 159 / 20%);*/
     font-weight:bold;
+}
+.box.canva-wrapper.week-box{
+    height: 98px;
+}
+.box.canva-wrapper.streak-box{
+    height: 242px;
 }
 .box.habit-update,.box.big-action-button,.daily-summary{
     width:200px;
@@ -214,9 +245,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
     /*box-shadow: -5px 16px 20px 0px rgb(0 0 0 / 12%);*/
     /*margin-bottom: 15px;*/
 }
-.secondary-title{
-    padding: 14px 12px 18px 12px; 
-}
+
 .week-day-selection,.habits-container,.habits-definition-container,.filter-bar,.graph-container,.main-action-bar,#progress-title,#footer{
     display: flex;
     flex-wrap: wrap;
@@ -227,6 +256,14 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
     justify-content: space-evenly;
     background: rgb(250, 250, 250);
     
+}
+.graph-container{
+    padding-top: 76px;
+    display: flex;
+}
+#streaks-container{
+    padding-top: 76px;
+    display: none;
 }
 .main-action-bar, .myChart {
     width: 100%;
@@ -558,11 +595,15 @@ td{
     margin-bottom: 15px;
 }
 .journal-container{
-    padding: 35px;
+    padding: 40px 35px 35px 35px;
+    margin: 84px 10px 10px 10px;
     border: 1px solid  lightgray;
     border-radius: 25px;
-    margin: 23px;
     background: white;
+    display: block;
+}
+.journal-container-wrapper{
+    display:  none;
 }
 
 #debug-section{
@@ -655,7 +696,11 @@ td{
   }
 /* end checkbox custom */
 
-
+@media (min-width: 400px) and (max-width:649px){
+    .main-title-only{
+        width:100%;
+    }
+}
 
 @media (max-width: 649px){
 

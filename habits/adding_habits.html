@@ -57,7 +57,7 @@
 
         <div id="progress-section" class="main-section">
             <div id="progress-title" class="main-title" >
-                <div><h2>Update your progress</h2></div>
+                <div class="main-title-only"><h2>Update your progress</h2></div>
                 <div><input id="date-filter" type="date" class="action-input"></input></div>
                 <div id="habit-filters">
                     <label>Filter by habit title:</label>
@@ -95,11 +95,16 @@
         </div>
 
         <div id="graphs-section" class="main-section" >
-            <div class="main-title" ><h2>Check your progress:</h2></div>
+            <div class="main-title fixed" >
+                <ul class="horizontal-submenu">
+                <li id="week-link" onclick="subMenuGo('week-link');" class="sub-menu selected-underline"><i class="fa fa-calendar"></i>Week</li>
+                <li id="streaks-link" class="sub-menu" onclick="subMenuGo('streaks-link');"><i class="fa fa-bar-chart"></i>History</li>
+                <li id="journal-link" onclick="subMenuGo('journal-link');" class="sub-menu"><i class="fa fa-edit"></i>Journal</lid>
+                </ul>
+            </div>
             <div id="graph-container" class="graph-container" ><div id="no-graph">Graphs will be shown after adding at least one habit for more than one day.</div></div>
-            <br><br>
-            <div class="secondary-title" ><h2>Check your journal:</h2></div>
-            <div id="journal-container" class="journal-container" ></div>
+            <div id="streaks-container" class="graph-container" ><div id="no-streak">Graphs will be shown after adding at least one habit for more than one day.</div></div>
+            <div id="journal-container-wrapper" class="journal-container-wrapper" ><div id="journal-container" class="journal-container" ></div></div>
         </div>
 
         <div id="habits-section" class="main-section">
