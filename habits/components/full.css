@@ -62,8 +62,8 @@ body{
     margin-top: 0px;
     text-align:center;
     padding-top:8px;
-    background-color:#b657af;
-    border-bottom: 1px solid #b657af;
+    background-color:/*#b657af*/#c369bc;
+    border-bottom: 1px solid #c369bc;
     margin-bottom: -1px;
 }
 .horizontal-menu li.active{
@@ -90,15 +90,15 @@ body{
 .horizontal-submenu li{
     float: left;
     margin-right: 24px;
-    height: 42px;
+    height: 34px;
     cursor: pointer;
-    font-size: 19px;
+    font-size: 16px;
+    margin-top: 7px;
     font-weight: bold;
 }
 .horizontal-submenu li.selected-underline{
     float: left;
     border-bottom: 4px solid #b657af;
-    height: 42px;
 }
 a, a:active, a:visited, a span {
     text-decoration: none;
@@ -128,7 +128,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
 }
 .box{
     padding: 19px;   
-    border-radius: 40px;
+    border-radius: 12px;
 }
 
 
@@ -178,6 +178,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
 }
 .box.habit-update{
     background-color: #fcfbfb;
+    order: 70;
 }
 
 .box.big-action-button:hover{
@@ -613,9 +614,16 @@ td{
     order:90;
     display:none;
 }
-
+#daily-summary-comment{
+    margin-top: 25px;
+    padding-left: 14px;
+    width: 106px;
+    float: left;
+    font-weight: bold;  
+}
 #daily-summary{
     margin-top:10px;
+    float:left;
 }
 #no-graph{
     margin-top:10px;
@@ -704,11 +712,16 @@ td{
 
 @media (max-width: 649px){
 
+    #daily-summary-comment{
+        width: 106px;
+        font-size: 15px;
+    }
+
     #progress-title{
-        margin-bottom: 10px;
+        margin-bottom: 2px;
     }
     .box{
-        border-radius: 22px;
+        border-radius: 12px;
     }
     .habits-container,.habits-definition-container,.filter-bar,.graph-container,.main-action-bar,#footer{
         justify-content: space-around;
@@ -842,7 +855,7 @@ td{
         position: relative;
         width:25px;
     }
-    .box.habit-update i.fa.fa-plus{
+    .box.habit-update i.fa.fa-plus,.box.habit-update i.fa.fa-minus{
         color: #b657af;
     }
     .habit-description i{
@@ -853,6 +866,10 @@ td{
     }
 }
 @media (min-width: 650px){
+    #daily-summary-comment{
+        width: 106px;
+        font-size: 14px;
+    }
     .box{
     margin:20px;
     }

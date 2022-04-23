@@ -264,8 +264,9 @@ var updateDailyProgress = function(){
     var dailyPercentage = Math.round(fullScore / numberOfDivs);
     var dailySummaryDiv = document.getElementById("daily-summary");
     var dailySummaryBox = document.getElementById("daily-summary-container");
-    if (dailyPercentage && dailyPercentage>0){
+    var dailyCommentBox = document.getElementById("daily-summary-comment");
 
+    if (dailyPercentage && dailyPercentage>0){
 
         /*dailySummaryDiv.innerHTML = dailyPercentage.toString();*/
         /*dailySummaryDiv.innerHTML = "";*/
@@ -273,12 +274,15 @@ var updateDailyProgress = function(){
         if (dailyPercentage >= 100){
             radialProgressParameters.progressColor = "rgb(167, 211, 162)";
             radialProgressParameters.emptyColor = "rgb(193 236 205)";
+            dailyCommentBox.innerHTML="Awesome Achievement !"
         } else if ( dailyPercentage >= 50 ){
             radialProgressParameters.progressColor = "rgb(238 230 168)";
             radialProgressParameters.emptyColor = "rgb(228 228 228)";
+            dailyCommentBox.innerHTML="You are almost there !"
         } else {
             radialProgressParameters.progressColor = "#b657af";
             radialProgressParameters.emptyColor = "rgb(255 217 235)";
+            dailyCommentBox.innerHTML="Good Start<br>Keep it up !"
         }
 
         if ( dailyPercentage >= 100){
