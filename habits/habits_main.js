@@ -15,7 +15,8 @@ var radialProgressParameters = {
 
 
 var currentDateTime = new Date();
-var currentDate = currentDateTime.getFullYear().toString().padStart(2,'0')+'-'+(currentDateTime.getMonth()+1).toString().padStart(2,'0')+'-'+currentDateTime.getDate().toString().padStart(2,'0'); 
+/*var currentDate = currentDateTime.getFullYear().toString().padStart(2,'0')+'-'+(currentDateTime.getMonth()+1).toString().padStart(2,'0')+'-'+currentDateTime.getDate().toString().padStart(2,'0');*/
+var currentDate = formatDate(currentDateTime);
 
 var plusButtonInAddDiv = document.getElementById("plus-in-add-div");
 var minusButtonInAddDiv = document.getElementById("minus-in-add-div");
@@ -126,7 +127,7 @@ var getHabitProgressWhenNotLoggedIn = function(){
     ingestElements(progressArray,habitsArray,journalArray);
 };
 var hideJournalBox = function(){
-    document.getElementById("journal-container-wrapper").innerHTML = "no entry yet";
+    document.getElementById("journal-container").innerHTML = "no entry yet";
 }
 var hideProgressTab = function(){
     document.getElementById("progress-menu").style.display = "none";
@@ -623,8 +624,10 @@ var changeTabToGraphs = function(){
 
 
 var launchChart = function(fullData,habitObject){
+
     var dataToShow = [];
     var baseline = [];
+    var progressByDay = {};
 
     for ( var i=0; i< fullData.length;i++){
         if (fullData[i].habitId == habitObject.habitId){
@@ -634,14 +637,17 @@ var launchChart = function(fullData,habitObject){
             baseline.push({
                 x: new Date(fullData[i].progressDate),y:fullData[i].target
             })
+            progressByDay[fullData[i].progressDate]=fullData[i].numberOfCompletions-fullData[i].target;
         }
     }
+
+    var test = weekTable(progressByDay);
 
 		dataToShow.sort(function(a, b){
 		return (a.x - b.x)
 		});	
 
-        if ( dataToShow.length > 1){
+        if ( dataToShow.length >= 1){
             showGraphsTab();
         }
         baseline.sort(function(a, b){
@@ -676,7 +682,7 @@ var launchChart = function(fullData,habitObject){
     var numberOfMissesInWeek=0;
     var j = dataToShow.length-1;
 
-    if ( j < 1){
+    if ( j < 0){
         return false;
     };
     var isTargetOK;
@@ -735,6 +741,7 @@ var launchChart = function(fullData,habitObject){
     var tableCode = "<table><tr><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>";
     tableCode += "<tr><td>"+getElementToPutOnTable(tableData[1])+"</td>"+"<td>"+getElementToPutOnTable(tableData[2])+"</td>"+"<td>"+getElementToPutOnTable(tableData[3])+"</td>"+"<td>"+getElementToPutOnTable(tableData[4])+"</td>"+"<td>"+getElementToPutOnTable(tableData[5])+"</td>"+"<td>"+getElementToPutOnTable(tableData[6])+"</td>"+"<td>"+getElementToPutOnTable(tableData[0])+"</td></tr></table>";
 
+    tableCode = weekTable(progressByDay);
 
 
     /*<canvas id="myChart"></canvas>*/

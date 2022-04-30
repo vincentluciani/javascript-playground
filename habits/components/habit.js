@@ -103,7 +103,8 @@ var deleteProgressFromHabitToday = function(habitId){
         var progressHabitId = progressDivs[i].getAttribute("habitid");
         var progressDate = progressDivs[i].getAttribute("progressDate");
 
-        var currentDateString = currentDateTime.getFullYear().toString().padStart(2,'0')+'-'+(currentDateTime.getMonth()+1).toString().padStart(2,'0')+'-'+currentDateTime.getDate().toString().padStart(2,'0'); 
+        /*var currentDateString = currentDateTime.getFullYear().toString().padStart(2,'0')+'-'+(currentDateTime.getMonth()+1).toString().padStart(2,'0')+'-'+currentDateTime.getDate().toString().padStart(2,'0'); */
+        var currentDateString = formatDate(currentDateTime); 
 
         if ( (currentDateString == progressDate) && ( progressHabitId == habitId)) {
             var progressId = progressDivs[i].getAttribute("id");

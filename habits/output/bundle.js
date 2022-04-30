@@ -734,8 +734,8 @@ function getRandomNumber(min,max){
     }
 var translations = {};
 translations['en_US']  = {
-'amazing':['Amazing','Superb','Outstanding','Magnificient','Exceptional','Marvellous','Wonderful','Sublime','Supreme','Splendid','Fantastic','Awesome','Mind-blowing','Brilliant','Smashing'],
-'encouraging':['A little progress each day adds up to big results!','You are stronger than you know!','You are capable of amazing things!','Believe in yourself and you will be unstoppable!','You are doing exactly what you should be doing!','You are being so strong and patient!','I admire how strong you are!','I cannot wait to see what you do next!','You are doing a great job!','You are getting better every day!','I am so proud of you!','You are on the right track!','You made it look easy!']
+'amazing':['Amazing','Superb','Outstanding','Magnificient','Exceptional','Marvellous','Wonderful','Sublime','Supreme','Splendid','Fantastic','Awesome','Mind-blowing','Brilliant','Smashing','Spectacular','Spectaculous','Awesome'],
+'encouraging':['A little effort each day adds up to big results!','You are stronger than you know!','You are capable of amazing things!','Believe in yourself and you will be unstoppable!','You are doing exactly what you should be doing!','You are being so strong and patient!','I admire how strong you are!','I cannot wait to see what you do next!','You are doing a great job!','You are getting stronger every day!','I am so proud of you!','You are on the right track!','You made it look easy!','You have super powers!']
 }
 
 
@@ -884,7 +884,6 @@ var putInStorage = function(id,value){
     console.error(currentOutput);
   }
 }
-
 var loggedIn = false;
 var maxForNonLoggedIn = 2000;
 var updateQueue = [];
@@ -1151,8 +1150,9 @@ var updateDailyProgress = function(){
     var dailyPercentage = Math.round(fullScore / numberOfDivs);
     var dailySummaryDiv = document.getElementById("daily-summary");
     var dailySummaryBox = document.getElementById("daily-summary-container");
-    if (dailyPercentage && dailyPercentage>0){
+    var dailyCommentBox = document.getElementById("daily-summary-comment");
 
+    if (dailyPercentage && dailyPercentage>0){
 
         /*dailySummaryDiv.innerHTML = dailyPercentage.toString();*/
         /*dailySummaryDiv.innerHTML = "";*/
@@ -1160,12 +1160,15 @@ var updateDailyProgress = function(){
         if (dailyPercentage >= 100){
             radialProgressParameters.progressColor = "rgb(167, 211, 162)";
             radialProgressParameters.emptyColor = "rgb(193 236 205)";
+            dailyCommentBox.innerHTML="Awesome Achievement !"
         } else if ( dailyPercentage >= 50 ){
             radialProgressParameters.progressColor = "rgb(238 230 168)";
             radialProgressParameters.emptyColor = "rgb(228 228 228)";
+            dailyCommentBox.innerHTML="You are almost there !"
         } else {
             radialProgressParameters.progressColor = "#b657af";
             radialProgressParameters.emptyColor = "rgb(255 217 235)";
+            dailyCommentBox.innerHTML="Good Start<br>Keep it up !"
         }
 
         if ( dailyPercentage >= 100){
@@ -1524,7 +1527,7 @@ var launchChart = function(fullData,habitObject){
 		return (a.x - b.x)
 		});	
 
-        if ( dataToShow.length > 1){
+        if ( dataToShow.length >= 1){
             showGraphsTab();
         }
         baseline.sort(function(a, b){
@@ -1559,7 +1562,7 @@ var launchChart = function(fullData,habitObject){
     var numberOfMissesInWeek=0;
     var j = dataToShow.length-1;
 
-    if ( j < 1){
+    if ( j < 0){
         return false;
     };
     var isTargetOK;
@@ -1623,12 +1626,18 @@ var launchChart = function(fullData,habitObject){
     /*<canvas id="myChart"></canvas>*/
     var newCanva = document.createElement("canvas");
     var newCanvaWrapper = document.createElement("div");
+    var streaksWrapper = document.createElement("div");
     var brDiv = document.createElement("br");
     const grapTitle = document.createTextNode(habitObject.habitDescription);
     const grapTitleDiv = document.createElement("div");
+    const grapTitleStreaks = document.createTextNode(habitObject.habitDescription);
+    const grapTitleDivStreaks = document.createElement("div");
+
     const weekSummaryTable = document.createElement("div");
     var graphIcon = document.createElement("i");
-    graphIcon.setAttribute("class","fa fa-bar-chart");
+    graphIcon.setAttribute("class","fa fa-calendar");
+    var graphIconStreaks = document.createElement("i");
+    graphIconStreaks.setAttribute("class","fa fa-bar-chart");
 
     const streaksTitleDiv = document.createElement("div");
     streaksTitleDiv.innerHTML = "Number of streaks: "+ completionAccumulation.toString();
@@ -1637,6 +1646,10 @@ var launchChart = function(fullData,habitObject){
     grapTitleDiv.setAttribute("class","graph-title");
     grapTitleDiv.appendChild(graphIcon);
     grapTitleDiv.appendChild(grapTitle);
+
+    grapTitleDivStreaks.setAttribute("class","graph-title");
+    grapTitleDivStreaks.appendChild(graphIconStreaks);
+    grapTitleDivStreaks.appendChild(grapTitleStreaks);
 
     const weekSummaryTableTitle = document.createElement("div");
     weekSummaryTableTitle.innerHTML = "This week summary:";
@@ -1651,14 +1664,17 @@ var launchChart = function(fullData,habitObject){
 
     newCanva.setAttribute("id","graph-"+habitObject.habitId);
     newCanvaWrapper.appendChild(grapTitleDiv); 
-    newCanvaWrapper.appendChild(weekSummaryTableTitle);
+    streaksWrapper.appendChild(grapTitleDivStreaks);
+    streaksWrapper.setAttribute("id","streaks-"+habitObject.habitId);
+    /*newCanvaWrapper.appendChild(weekSummaryTableTitle);*/
     newCanvaWrapper.appendChild(weekSummaryTable);
     newCanvaWrapper.appendChild(brDiv); 
-    newCanvaWrapper.appendChild(streaksTitleDiv);
-    newCanvaWrapper.appendChild(graphTitle); 
-    newCanvaWrapper.append(newCanva);
+    streaksWrapper.appendChild(streaksTitleDiv);
+    streaksWrapper.appendChild(graphTitle); 
+    streaksWrapper.append(newCanva);
 
-    newCanvaWrapper.setAttribute("class","box canva-wrapper");
+    newCanvaWrapper.setAttribute("class","box canva-wrapper week-box");
+    streaksWrapper.setAttribute("class","box canva-wrapper streak-box");
 
     if (numberOfMissesInWeek==0){
         newCanvaWrapper.style.background="#daffd9"/*"#f7fff6"*/;
@@ -1670,9 +1686,20 @@ var launchChart = function(fullData,habitObject){
         newCanvaWrapper.style.background="white"/*"#fff6f9"*/;
     }
 
-    document.getElementById("no-graph").style.display = "none";
-    document.getElementById("graph-container").appendChild(newCanvaWrapper);
+    if (completionAccumulation >= 10){
+        streaksWrapper.style.background="#daffd9"/*"#f7fff6"*/;
+        streaksWrapper.style.border="1px solid rgb(167 211 162)"
+    } else if (completionAccumulation >=5 ) {
+        streaksWrapper.style.background="rgb(255 252 238)"/*"#fffded"*/;
+        streaksWrapper.style.border="1px solid rgb(246 223 35)"
+    } else {
+        streaksWrapper.style.background="white"/*"#fff6f9"*/;
+    }
 
+    document.getElementById("no-graph").style.display = "none";
+    document.getElementById("no-streak").style.display = "none";
+    document.getElementById("graph-container").appendChild(newCanvaWrapper);
+    document.getElementById("streaks-container").appendChild(streaksWrapper);
 
     var ctx = document.getElementById("graph-"+habitObject.habitId).getContext('2d');
 
@@ -1705,8 +1732,8 @@ var launchChart = function(fullData,habitObject){
         graphBackgroundColor = "rgb(255 249 202)";
         graphColor = "rgb(235 209 0)";
     } else {
-        graphBackgroundColor = "#f9dbdb";
-        graphColor = "#fd2121";
+        graphBackgroundColor = "rgb(224 224 224)";
+        graphColor = "rgb(174 174 174)";
     }
     let chartData = {
 
@@ -1743,5 +1770,46 @@ var getElementToPutOnTable = function (value) {
     } else {
         return " ";
     }
+
+}
+
+
+var subMenuGo = function( targetLink){
+
+    window.scrollTo(0, 0);
+
+    var journalLink = document.getElementById('journal-link');
+    var streaksLink = document.getElementById('streaks-link');
+    var weekLink = document.getElementById('week-link');
+    var graphContainer = document.getElementById('graph-container');
+    var streaksContainer = document.getElementById('streaks-container');
+    var journalContainer = document.getElementById('journal-container-wrapper');
+
+    switch (targetLink) {
+        case 'week-link':
+            weekLink.classList.add("selected-underline");
+            journalLink.classList.remove("selected-underline");
+            streaksLink.classList.remove("selected-underline");
+            graphContainer.style.display='flex';
+            streaksContainer.style.display='none';
+            journalContainer.style.display='none';
+          break;
+        case 'streaks-link':
+            weekLink.classList.remove("selected-underline");
+            journalLink.classList.remove("selected-underline");
+            streaksLink.classList.add("selected-underline");
+            graphContainer.style.display='none';
+            streaksContainer.style.display='flex';
+            journalContainer.style.display='none';
+          break;
+        case 'journal-link':
+            weekLink.classList.remove("selected-underline");
+            journalLink.classList.add("selected-underline");
+            streaksLink.classList.remove("selected-underline");
+            graphContainer.style.display='none';
+            streaksContainer.style.display='none';
+            journalContainer.style.display='flex';
+          break;
+      }
 
 }

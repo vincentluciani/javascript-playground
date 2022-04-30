@@ -3,6 +3,7 @@ body{
     margin: 0px;
     font-family: "Nunito","candara","arial";
     overflow-wrap: break-word;
+    background: #fafafa;
     /*background: linear-gradient(71deg, #b1a1e5, #ffb3b3);*/
 }
 .green{
@@ -90,7 +91,7 @@ body{
 .horizontal-submenu li{
     float: left;
     margin-right: 24px;
-    height: 34px;
+    height: 35px;
     cursor: pointer;
     font-size: 16px;
     margin-top: 7px;
@@ -259,11 +260,9 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
     
 }
 .graph-container{
-    padding-top: 76px;
     display: flex;
 }
 #streaks-container{
-    padding-top: 76px;
     display: none;
 }
 .main-action-bar, .myChart {
@@ -597,9 +596,9 @@ td{
 }
 .journal-container{
     padding: 40px 35px 35px 35px;
-    margin: 84px 10px 10px 10px;
+    margin: 84px 20px 20px 20px;
     border: 1px solid  lightgray;
-    border-radius: 25px;
+    border-radius: 12px;
     background: white;
     display: block;
 }
@@ -712,6 +711,9 @@ td{
 
 @media (max-width: 649px){
 
+    #streaks-container, #graph-container{
+        padding-top: 64px;
+    }
     #daily-summary-comment{
         width: 106px;
         font-size: 15px;
@@ -866,6 +868,11 @@ td{
     }
 }
 @media (min-width: 650px){
+
+    #streaks-container, #graph-container{
+        padding-top: 78px;
+    }
+
     #daily-summary-comment{
         width: 106px;
         font-size: 14px;
