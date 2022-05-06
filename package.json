@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/vincentluciani/javascript-playground#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "EventEmitter": "^1.0.0",
     "express": "^4.17.1",
     "fs": "0.0.1-security",

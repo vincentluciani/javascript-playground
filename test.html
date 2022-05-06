@@ -1,0 +1,40 @@
+<html>
+<body>
+<button id="openSelector">Open selector</button>
+<script>
+const tenantUrl = 'https://schneiderelectric-sb2.dam.aprimo.com'
+
+const selectorOptions = {
+title: 'Logo Selection Page by Vincent',
+description: 'Select the logo that will be used on the printed brochure',
+limitingSearchExpression: 'classification.id = 095ef7b9-ebc7-4a81-a3b5-ac9f00a674b5',
+accept: 'Use this logo',
+select: 'multiple'
+}
+const tenant = 'Vincent Luciani'
+const encodedOptions = window.btoa(JSON.stringify(selectorOptions))
+
+const aprimoContentSelectorUrl = tenantUrl + '/dam/selectcontent#options='+encodedOptions
+
+const handleMessageEvent = (event) => {
+// Ensure only messages from the Aprimo Content Selector are handled.
+if (event.origin !== tenantUrl) {
+return
+}
+if (event.data.result === 'cancel') {
+alert('You have canceled the selector')
+} else {
+const ids = event.data.selection.map((selection) => selection.id)
+alert("You have selected following ids:\n\n" + ids.join('\n'))
+}
+}
+const openSelector = () => {
+window.open(aprimoContentSelectorUrl, 'selector')
+}
+window.addEventListener("message", handleMessageEvent, false)
+const button = document.getElementById('openSelector')
+button.addEventListener('click', openSelector)
+</script>
+</body>
+
+</html>
