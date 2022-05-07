@@ -133,7 +133,8 @@ var deleteProgressFromHabitToday = function(habitId){
         var progressHabitId = progressDivs[i].getAttribute("habitid");
         var progressDate = progressDivs[i].getAttribute("progressDate");
 
-        var currentDateString = currentDateTime.getFullYear().toString().padStart(2,'0')+'-'+(currentDateTime.getMonth()+1).toString().padStart(2,'0')+'-'+currentDateTime.getDate().toString().padStart(2,'0'); 
+        /*var currentDateString = currentDateTime.getFullYear().toString().padStart(2,'0')+'-'+(currentDateTime.getMonth()+1).toString().padStart(2,'0')+'-'+currentDateTime.getDate().toString().padStart(2,'0'); */
+        var currentDateString = formatDate(currentDateTime); 
 
         if ( (currentDateString == progressDate) && ( progressHabitId == habitId)) {
             var progressId = progressDivs[i].getAttribute("id");
@@ -717,6 +718,63 @@ var resetWeekDaySelector = function(weekDaySelector) {
     }
 
 }
+var weekTable = function(progressByDay){
+
+    var listOfDays = buildListOfDays();
+
+    var tableCode = "<table><tr><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></tr>";
+    tableCode += "<tr>"
+   
+    var todaysDateDayNum = todaysDateDayNumber();
+
+    for ( var i=0; i<=6; i++){
+        var date = listOfDays[i];
+        var result = progressByDay[date];
+        var iconCode="";
+        if (result != null){
+            if (result>=0){
+                iconCode="<i class='fa fa-circle icon'></i>";
+            } else if (result<0){
+                if (i<todaysDateDayNum){
+                    iconCode="x";
+                } 
+            }
+        } else {
+            if (i<todaysDateDayNum){
+                iconCode="-";
+            } else {
+                iconCode="";
+            }
+        }
+        tableCode += "<td>"+iconCode+"</td>"
+    }
+    tableCode += "</tr></table>"
+
+    return tableCode;
+};
+
+var buildListOfDays = function(){
+
+    var listOfDays = {}
+
+    var dateTime = new Date();
+    var weekDay = dateTime.getDay();
+    var formattedDate = formatDate(dateTime); 
+    listOfDays[weekDay] = formattedDate;
+
+    if (weekDay == 0){
+        return listOfDays;
+    }
+
+    do{
+        dateTime.setDate(dateTime.getDate() - 1);
+        weekDay = dateTime.getDay();
+        listOfDays[weekDay] = formatDate(dateTime); 
+    } while ( weekDay != 0)
+
+    return listOfDays;
+
+};
 function getRandomNumber(min,max){
 
     var randomSeed = Math.random();
@@ -901,7 +959,8 @@ var radialProgressParameters = {
 
 
 var currentDateTime = new Date();
-var currentDate = currentDateTime.getFullYear().toString().padStart(2,'0')+'-'+(currentDateTime.getMonth()+1).toString().padStart(2,'0')+'-'+currentDateTime.getDate().toString().padStart(2,'0'); 
+/*var currentDate = currentDateTime.getFullYear().toString().padStart(2,'0')+'-'+(currentDateTime.getMonth()+1).toString().padStart(2,'0')+'-'+currentDateTime.getDate().toString().padStart(2,'0');*/
+var currentDate = formatDate(currentDateTime);
 
 var plusButtonInAddDiv = document.getElementById("plus-in-add-div");
 var minusButtonInAddDiv = document.getElementById("minus-in-add-div");
@@ -1509,8 +1568,10 @@ var changeTabToGraphs = function(){
 
 
 var launchChart = function(fullData,habitObject){
+
     var dataToShow = [];
     var baseline = [];
+    var progressByDay = {};
 
     for ( var i=0; i< fullData.length;i++){
         if (fullData[i].habitId == habitObject.habitId){
@@ -1520,8 +1581,11 @@ var launchChart = function(fullData,habitObject){
             baseline.push({
                 x: new Date(fullData[i].progressDate),y:fullData[i].target
             })
+            progressByDay[fullData[i].progressDate]=fullData[i].numberOfCompletions-fullData[i].target;
         }
     }
+
+    var test = weekTable(progressByDay);
 
 		dataToShow.sort(function(a, b){
 		return (a.x - b.x)
@@ -1621,6 +1685,7 @@ var launchChart = function(fullData,habitObject){
     var tableCode = "<table><tr><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>";
     tableCode += "<tr><td>"+getElementToPutOnTable(tableData[1])+"</td>"+"<td>"+getElementToPutOnTable(tableData[2])+"</td>"+"<td>"+getElementToPutOnTable(tableData[3])+"</td>"+"<td>"+getElementToPutOnTable(tableData[4])+"</td>"+"<td>"+getElementToPutOnTable(tableData[5])+"</td>"+"<td>"+getElementToPutOnTable(tableData[6])+"</td>"+"<td>"+getElementToPutOnTable(tableData[0])+"</td></tr></table>";
 
+    tableCode = weekTable(progressByDay);
 
 
     /*<canvas id="myChart"></canvas>*/

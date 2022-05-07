@@ -641,7 +641,7 @@ var launchChart = function(fullData,habitObject){
         }
     }
 
-    var test = weekTable(progressByDay);
+  /*  var test = weekTable(progressByDay);*/
 
 		dataToShow.sort(function(a, b){
 		return (a.x - b.x)
@@ -689,7 +689,7 @@ var launchChart = function(fullData,habitObject){
     if (j >= 0 && dataToShow[j] && dataToShow[j].x){
         debugWrite("Launching Chart");
         debugWrite(dataToShow[j].x.getDay());
-        var todayWeekDay = dataToShow[j].x.getDay();
+  /*      var todayWeekDay = dataToShow[j].x.getDay();
         if ( dataToShow[j].y >= baseline[j].y){
             isTargetOK = "<i class='fa fa-circle icon'></i>";
         } else {
@@ -703,8 +703,8 @@ var launchChart = function(fullData,habitObject){
                 numberOfMissesInWeek++;
             }
         }
-        tableData[todayWeekDay]= (isTargetOK != null)?isTargetOK:" ";
-
+        tableData[todayWeekDay]= (isTargetOK != null)?isTargetOK:" ";*/
+/*
         do  {
             j--;
 
@@ -733,16 +733,18 @@ var launchChart = function(fullData,habitObject){
                     tableData[currentWeekDay]= (isTargetOK != null)?isTargetOK:" ";
                 }
             }
-        } while (currentWeekDay > 1)
+        } while (currentWeekDay > 1)*/
     } else {
         return false;
     }
 
-    var tableCode = "<table><tr><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>";
+  /*  var tableCode = "<table><tr><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>"; 
     tableCode += "<tr><td>"+getElementToPutOnTable(tableData[1])+"</td>"+"<td>"+getElementToPutOnTable(tableData[2])+"</td>"+"<td>"+getElementToPutOnTable(tableData[3])+"</td>"+"<td>"+getElementToPutOnTable(tableData[4])+"</td>"+"<td>"+getElementToPutOnTable(tableData[5])+"</td>"+"<td>"+getElementToPutOnTable(tableData[6])+"</td>"+"<td>"+getElementToPutOnTable(tableData[0])+"</td></tr></table>";
-
-    tableCode = weekTable(progressByDay);
-
+*/
+    var weekTableObject = {};
+    weekTableObject = weekTable(progressByDay);
+    tableCode = weekTableObject.tableCode
+    numberOfMissesInWeek = weekTableObject.numberOfMissesInWeek
 
     /*<canvas id="myChart"></canvas>*/
     var newCanva = document.createElement("canvas");
@@ -885,14 +887,14 @@ var launchChart = function(fullData,habitObject){
 
 }
 
-var getElementToPutOnTable = function (value) {
+/*var getElementToPutOnTable = function (value) {
     if ( value ) {
         return value;
     } else {
         return " ";
     }
 
-}
+}*/
 
 
 var subMenuGo = function( targetLink){

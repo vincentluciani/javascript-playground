@@ -381,7 +381,7 @@ i{
     color: white;
     text-align: center;
     padding: 10px;
-    border-radius: 29px;
+    border-radius: 9px;
     margin-top: 16px;
     cursor:pointer;
 }
@@ -450,7 +450,7 @@ i{
 .message-in-overlay{
     width:60%;
     /*height:60%;*/
-    background-color:white;
+    background-color:#f5f5f5;
     opacity:1;
     padding: 20px;
     border-radius: 10px;
@@ -538,6 +538,9 @@ input, textarea{
 input[type="date"],textarea{
     border-radius: 5px;
 }
+textarea{
+    padding:5px;
+}
 #habits-section{
     display:none;
 }
@@ -576,6 +579,14 @@ th {
     font-weight:100;
     color: #545454;
 }
+th.today,.fa-circle-o.today{
+    color:#d330cb;
+    font-weight: bold;
+}
+th.past{
+    color:#919191;
+}
+
 td,th, td i{
     width:30px;
     text-align: center;
@@ -585,9 +596,10 @@ td i{
     color: #55d355;
     padding-top: 3px;
 }
-td{
+td,.red{
     color:red;
 }
+
 :nth-col(2n+1) {
     background-color: pink;
 }
