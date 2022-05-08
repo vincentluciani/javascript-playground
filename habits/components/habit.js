@@ -8,6 +8,7 @@ var addHabitElement = function(elementToAdd){
     newHabitDivision.setAttribute("habitId",elementToAdd.habitId);
     newHabitDivision.setAttribute("weekDay",elementToAdd.weekDay);
     newHabitDivision.setAttribute("isNegative",elementToAdd.isNegative);
+    newHabitDivision.setAttribute("isCritical",elementToAdd.isCritical);
 
     const titleText = document.createTextNode("Update habit:");
     var taskIcon = document.createElement("i");
@@ -46,6 +47,21 @@ var addHabitElement = function(elementToAdd){
 
     var weekDaySelector = dynamicWeekDaySelector(elementToAdd.weekDay);
     newHabitDivision.appendChild(weekDaySelector);
+
+    const isCriticalDivText = document.createElement("div");
+    isCriticalDivText.innerHTML="Critical:";
+    const isCritical = document.createElement("input");
+    isCritical.setAttribute("type","checkbox");
+    isCritical.setAttribute("class","simple-checkbox");
+    isCritical.setAttribute("id","is-critical");
+    if (elementToAdd.isCritical!=null && elementToAdd.isCritical == "true") {
+        isCritical.checked = true;  
+    } else {
+        isCritical.checked = false;
+    }
+    isCritical.value=isCritical.checked;
+    newHabitDivision.appendChild(isCriticalDivText);
+    newHabitDivision.appendChild(isCritical);
 
     const saveButton = document.createElement("div");
     var onClickSaveFunctionCall = "saveChangesInHabit(" + elementToAdd.habitId.toString()+ ")";

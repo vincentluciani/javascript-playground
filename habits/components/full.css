@@ -167,7 +167,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
     font-weight:bold;
 }
 .box.canva-wrapper.week-box{
-    height: 98px;
+    height: 120px;
 }
 .box.canva-wrapper.streak-box{
     height: 242px;
@@ -304,6 +304,10 @@ h2{
     float:left;
     text-align: center;
 }
+.simple-checkbox{
+    float: left;
+    margin-bottom: 12px;
+}
 /*.number-of-completion[type=checkbox]{
     width: 26px;
     height: 27px;
@@ -409,6 +413,7 @@ i{
 }
 .week-day-selection{
     margin-top: 13px;
+    margin-bottom: 10px;
 }
 .habit-description-definition{
     margin-bottom: 10px;
@@ -570,6 +575,12 @@ textarea{
     font-weight: 100;
 }
 
+.critical-link{
+    margin-top: 12px;
+    text-decoration: underline;
+    font-weight: normal;
+    color: #a750a1;
+}
 table {
     border-collapse: collapse;
 }
@@ -596,9 +607,10 @@ td i{
     color: #55d355;
     padding-top: 3px;
 }
-td,.red{
+td,.red,.fa-warning{
     color:red;
 }
+
 
 :nth-col(2n+1) {
     background-color: pink;

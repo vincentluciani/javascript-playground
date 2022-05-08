@@ -12,7 +12,7 @@ var addElement = function(elementToAdd){
     newProgressDivision.setAttribute("isNew",elementToAdd.isNew);
     newProgressDivision.setAttribute("habitId",elementToAdd.habitId);
     newProgressDivision.setAttribute("isNegative", elementToAdd.isNegative);
-
+    newProgressDivision.setAttribute("isCritical", elementToAdd.isCritical);
 
     const dateDiv = document.createElement("div");
 

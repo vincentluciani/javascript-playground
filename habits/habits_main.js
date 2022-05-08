@@ -224,6 +224,7 @@ var refreshProgress = function(currentDiv){
 }
 
 var putColorBasedOnCompletion = function(currentDiv,newCompletionPercentage){
+
     if (newCompletionPercentage>=100){
         currentDiv.style.border="1px solid rgb(167 211 162)"/*"#f7fff6"*/;
         currentDiv.style.order="95";
@@ -241,6 +242,12 @@ var putColorBasedOnCompletion = function(currentDiv,newCompletionPercentage){
     }
     if (currentDiv.id && currentDiv.id == "daily-summary-container"){
         currentDiv.style.order = "90";
+    }
+    if ( currentDiv.getAttribute("iscritical") !=null && currentDiv.getAttribute("iscritical") == "true"&& newCompletionPercentage <100 ){
+        currentDiv.style.border="1px solid red"/*"#f7fff6"*/; 
+        currentDiv.getElementsByClassName("fa fa-tasks")[0].classList.remove("fa-tasks");
+        currentDiv.getElementsByClassName("fa")[0].classList.add("fa-warning");
+        currentDiv.style.order = "60";
     }
 }
 
@@ -364,7 +371,9 @@ var addElementFromForm = function(){
     elementToAdd.progressDate = currentDate;
     elementToAdd.numberOfCompletions = 0;
     elementToAdd.isNew = true;
+    elementToAdd.isCritical = false;
     var weekDaySelector = document.getElementById('week-day-selection');
+    
     elementToAdd.weekDay = weekDaySelector.getAttribute('weekDay');
 
     if (elementToAdd.weekDay){
@@ -402,6 +411,13 @@ var saveChangesInHabit = function(habitId){
     pushHabitArrayToQueue(habitJSON);
 
 }
+var setHabitAsCritical = function(habitId){
+    var habitDiv = document.getElementById(habitId);
+    var habitJSON = readHabitElement(habitDiv);
+    habitJSON.isCritical=true;
+    pushHabitArrayToQueue(habitJSON);
+}
+
 
 var saveChangesInHabitFromObject = function(habitElement){
 
@@ -482,7 +498,7 @@ var readHabitElement = function(elementToRead){
     outputJson.habitDescription = elementToRead.getElementsByClassName('habit-description-definition')[0].value;
     outputJson.target = parseInt(elementToRead.getElementsByClassName('habit-target-definition')[0].value);
     outputJson.weekDay = elementToRead.getElementsByClassName("week-day-selection")[0].getAttribute("weekDay");
-
+    outputJson.isCritical = elementToRead.getElementsByClassName("simple-checkbox")[0].checked.toString();
     return outputJson;
 };
 
@@ -575,6 +591,7 @@ var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
                     target: habitsElements[i].getAttribute("target"),
                     progressDate: inputDate,
                     isNew: true,
+                    isCritical: habitsElements[i].getAttribute("isCritical"),
                     numberOfCompletions:0,
                 }
                 addElement(newProgressObject);
@@ -777,6 +794,10 @@ var launchChart = function(fullData,habitObject){
     const weekSummaryTableTitle = document.createElement("div");
     weekSummaryTableTitle.innerHTML = "This week summary:";
     weekSummaryTableTitle.setAttribute("class","subtitle");
+    const markAsCriticalDiv = document.createElement("div");
+    markAsCriticalDiv.innerHTML = "Mark as critical";
+    markAsCriticalDiv.setAttribute("class","critical-link");
+    markAsCriticalDiv.setAttribute("onclick","setHabitAsCritical("+ habitObject.habitId +");");
 
     weekSummaryTable.setAttribute("class","table-summary");
     weekSummaryTable.innerHTML = tableCode;
@@ -791,7 +812,8 @@ var launchChart = function(fullData,habitObject){
     streaksWrapper.setAttribute("id","streaks-"+habitObject.habitId);
     /*newCanvaWrapper.appendChild(weekSummaryTableTitle);*/
     newCanvaWrapper.appendChild(weekSummaryTable);
-    newCanvaWrapper.appendChild(brDiv); 
+    newCanvaWrapper.appendChild(markAsCriticalDiv);
+    newCanvaWrapper.appendChild(brDiv);
     streaksWrapper.appendChild(streaksTitleDiv);
     streaksWrapper.appendChild(graphTitle); 
     streaksWrapper.append(newCanva);
