@@ -38,6 +38,7 @@ var addHabitElement = function(elementToAdd){
     newHabitDivision.setAttribute("habitId",elementToAdd.habitId);
     newHabitDivision.setAttribute("weekDay",elementToAdd.weekDay);
     newHabitDivision.setAttribute("isNegative",elementToAdd.isNegative);
+    newHabitDivision.setAttribute("isCritical",elementToAdd.isCritical);
 
     const titleText = document.createTextNode("Update habit:");
     var taskIcon = document.createElement("i");
@@ -76,6 +77,21 @@ var addHabitElement = function(elementToAdd){
 
     var weekDaySelector = dynamicWeekDaySelector(elementToAdd.weekDay);
     newHabitDivision.appendChild(weekDaySelector);
+
+    const isCriticalDivText = document.createElement("div");
+    isCriticalDivText.innerHTML="Critical:";
+    const isCritical = document.createElement("input");
+    isCritical.setAttribute("type","checkbox");
+    isCritical.setAttribute("class","simple-checkbox");
+    isCritical.setAttribute("id","is-critical");
+    if (elementToAdd.isCritical!=null && elementToAdd.isCritical == "true") {
+        isCritical.checked = true;  
+    } else {
+        isCritical.checked = false;
+    }
+    isCritical.value=isCritical.checked;
+    newHabitDivision.appendChild(isCriticalDivText);
+    newHabitDivision.appendChild(isCritical);
 
     const saveButton = document.createElement("div");
     var onClickSaveFunctionCall = "saveChangesInHabit(" + elementToAdd.habitId.toString()+ ")";
@@ -233,7 +249,7 @@ var addElement = function(elementToAdd){
     newProgressDivision.setAttribute("isNew",elementToAdd.isNew);
     newProgressDivision.setAttribute("habitId",elementToAdd.habitId);
     newProgressDivision.setAttribute("isNegative", elementToAdd.isNegative);
-
+    newProgressDivision.setAttribute("isCritical", elementToAdd.isCritical);
 
     const dateDiv = document.createElement("div");
 
@@ -719,14 +735,15 @@ var resetWeekDaySelector = function(weekDaySelector) {
 
 }
 var weekTable = function(progressByDay){
-
+    var weekTableObject={};
+    var numberOfMissesInWeek=0;
     var listOfDays = buildListOfDays();
 
-    var tableCode = "<table><tr><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></tr>";
-    tableCode += "<tr>"
-   
     var todaysDateDayNum = todaysDateDayNumber();
 
+    var tableCode = weekTableHeader(todaysDateDayNum);
+    tableCode += "<tr>"
+   
     for ( var i=0; i<=6; i++){
         var date = listOfDays[i];
         var result = progressByDay[date];
@@ -736,13 +753,17 @@ var weekTable = function(progressByDay){
                 iconCode="<i class='fa fa-circle icon'></i>";
             } else if (result<0){
                 if (i<todaysDateDayNum){
-                    iconCode="x";
-                } 
+                    iconCode="<i class='fa fa-circle icon red'></i>";
+                    numberOfMissesInWeek++;
+                } else if (i==todaysDateDayNum){
+                    iconCode="<i class='fa fa-circle-o icon today'></i>";
+                }
             }
         } else {
-            if (i<todaysDateDayNum){
-                iconCode="-";
-            } else {
+            if (i<=todaysDateDayNum){
+                iconCode="<i class='fa fa-minus icon'></i>";
+            } 
+            else {
                 iconCode="";
             }
         }
@@ -750,7 +771,9 @@ var weekTable = function(progressByDay){
     }
     tableCode += "</tr></table>"
 
-    return tableCode;
+    weekTableObject.tableCode = tableCode;
+    weekTableObject.numberOfMissesInWeek = numberOfMissesInWeek;
+    return weekTableObject;
 };
 
 var buildListOfDays = function(){
@@ -775,6 +798,39 @@ var buildListOfDays = function(){
     return listOfDays;
 
 };
+
+var weekTableHeader = function(currentDayNumber){
+    var headerString="<table><tr>";
+
+    switch(currentDayNumber){
+
+        case 0:
+            headerString+="<th class='today'>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>"
+            break;
+        case 1:
+            headerString+="<th class='past'>S</th><th class='today'>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>"
+            break;
+        case 2:
+            headerString+="<th class='past'>S</th><th class='past'>M</th><th class='today'>T</th><th>W</th><th>T</th><th>F</th><th>S</th>"
+            break;
+        case 3:
+            headerString+="<th class='past'>S</th><th class='past'>M</th><th class='past'>T</th><th class='today'>W</th><th>T</th><th>F</th><th>S</th>"
+            break;
+        case 4:
+            headerString+="<th class='past'>S</th><th class='past'>M</th><th class='past'>T</th><th class='past'>W</th><th class='today'>T</th><th>F</th><th>S</th>"
+            break;   
+        case 5:
+            headerString+="<th class='past'>S</th><th class='past'>M</th><th class='past'>T</th><th class='past'>W</th><th class='past'>T</th><th class='today'>F</th><th>S</th>"
+            break;
+        case 6:
+            headerString+="<th class='past'>S</th><th class='past'>M</th><th class='past'>T</th><th class='past'>W</th><th class='past'>T</th><th class='past'>F</th><th class='today'>S</th>"
+            break; 
+        }
+
+    headerString += "</tr>";
+
+    return headerString;
+}
 function getRandomNumber(min,max){
 
     var randomSeed = Math.random();
@@ -1168,6 +1224,7 @@ var refreshProgress = function(currentDiv){
 }
 
 var putColorBasedOnCompletion = function(currentDiv,newCompletionPercentage){
+
     if (newCompletionPercentage>=100){
         currentDiv.style.border="1px solid rgb(167 211 162)"/*"#f7fff6"*/;
         currentDiv.style.order="95";
@@ -1185,6 +1242,17 @@ var putColorBasedOnCompletion = function(currentDiv,newCompletionPercentage){
     }
     if (currentDiv.id && currentDiv.id == "daily-summary-container"){
         currentDiv.style.order = "90";
+    }
+    if ( currentDiv.getAttribute("iscritical") !=null && currentDiv.getAttribute("iscritical") == "true"&& newCompletionPercentage <100 ){
+        currentDiv.style.border="3px solid red"/*"#f7fff6"*/; 
+        var taskIconDiv = currentDiv.getElementsByClassName("fa fa-tasks")[0];
+        if (taskIconDiv){
+            currentDiv.getElementsByClassName("fa fa-tasks")[0].classList.remove("fa-tasks");
+            currentDiv.getElementsByClassName("fa")[0].classList.add("fa-warning");
+            currentDiv.getElementsByClassName("habit-description")[0].classList.add("red");
+            currentDiv.style.order = "60";
+        }
+
     }
 }
 
@@ -1308,7 +1376,9 @@ var addElementFromForm = function(){
     elementToAdd.progressDate = currentDate;
     elementToAdd.numberOfCompletions = 0;
     elementToAdd.isNew = true;
+    elementToAdd.isCritical = false;
     var weekDaySelector = document.getElementById('week-day-selection');
+    
     elementToAdd.weekDay = weekDaySelector.getAttribute('weekDay');
 
     if (elementToAdd.weekDay){
@@ -1346,6 +1416,13 @@ var saveChangesInHabit = function(habitId){
     pushHabitArrayToQueue(habitJSON);
 
 }
+var setHabitAsCritical = function(habitId){
+    var habitDiv = document.getElementById(habitId);
+    var habitJSON = readHabitElement(habitDiv);
+    habitJSON.isCritical=true;
+    pushHabitArrayToQueue(habitJSON);
+}
+
 
 var saveChangesInHabitFromObject = function(habitElement){
 
@@ -1426,7 +1503,7 @@ var readHabitElement = function(elementToRead){
     outputJson.habitDescription = elementToRead.getElementsByClassName('habit-description-definition')[0].value;
     outputJson.target = parseInt(elementToRead.getElementsByClassName('habit-target-definition')[0].value);
     outputJson.weekDay = elementToRead.getElementsByClassName("week-day-selection")[0].getAttribute("weekDay");
-
+    outputJson.isCritical = elementToRead.getElementsByClassName("simple-checkbox")[0].checked.toString();
     return outputJson;
 };
 
@@ -1519,6 +1596,7 @@ var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
                     target: habitsElements[i].getAttribute("target"),
                     progressDate: inputDate,
                     isNew: true,
+                    isCritical: habitsElements[i].getAttribute("isCritical"),
                     numberOfCompletions:0,
                 }
                 addElement(newProgressObject);
@@ -1572,9 +1650,12 @@ var launchChart = function(fullData,habitObject){
     var dataToShow = [];
     var baseline = [];
     var progressByDay = {};
+    var unitAccumulation=0;
+    var unitPerMonth=0;
 
     for ( var i=0; i< fullData.length;i++){
         if (fullData[i].habitId == habitObject.habitId){
+            unitAccumulation+=fullData[i].numberOfCompletions;
             dataToShow.push({
                 x: new Date(fullData[i].progressDate),y:fullData[i].numberOfCompletions
             })
@@ -1585,7 +1666,8 @@ var launchChart = function(fullData,habitObject){
         }
     }
 
-    var test = weekTable(progressByDay);
+
+  /*  var test = weekTable(progressByDay);*/
 
 		dataToShow.sort(function(a, b){
 		return (a.x - b.x)
@@ -1598,8 +1680,10 @@ var launchChart = function(fullData,habitObject){
             return (a.x - b.x)
             });	
 
+
     /* Analysis */
     var completionAccumulation=0;
+
     for (var i =  dataToShow.length - 1 ; i>=0; i--){
         var dataDate = dataToShow[i].x;
         if (
@@ -1626,6 +1710,12 @@ var launchChart = function(fullData,habitObject){
     var numberOfMissesInWeek=0;
     var j = dataToShow.length-1;
 
+    var numberOfDays = (dataToShow[j].x - dataToShow[0].x)/1000/60/60/24;
+    if (numberOfDays>0){
+        unitPerMonth=Math.round(unitAccumulation*30/numberOfDays);
+    }
+
+
     if ( j < 0){
         return false;
     };
@@ -1633,7 +1723,7 @@ var launchChart = function(fullData,habitObject){
     if (j >= 0 && dataToShow[j] && dataToShow[j].x){
         debugWrite("Launching Chart");
         debugWrite(dataToShow[j].x.getDay());
-        var todayWeekDay = dataToShow[j].x.getDay();
+  /*      var todayWeekDay = dataToShow[j].x.getDay();
         if ( dataToShow[j].y >= baseline[j].y){
             isTargetOK = "<i class='fa fa-circle icon'></i>";
         } else {
@@ -1647,8 +1737,8 @@ var launchChart = function(fullData,habitObject){
                 numberOfMissesInWeek++;
             }
         }
-        tableData[todayWeekDay]= (isTargetOK != null)?isTargetOK:" ";
-
+        tableData[todayWeekDay]= (isTargetOK != null)?isTargetOK:" ";*/
+/*
         do  {
             j--;
 
@@ -1677,16 +1767,18 @@ var launchChart = function(fullData,habitObject){
                     tableData[currentWeekDay]= (isTargetOK != null)?isTargetOK:" ";
                 }
             }
-        } while (currentWeekDay > 1)
+        } while (currentWeekDay > 1)*/
     } else {
         return false;
     }
 
-    var tableCode = "<table><tr><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>";
+  /*  var tableCode = "<table><tr><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>"; 
     tableCode += "<tr><td>"+getElementToPutOnTable(tableData[1])+"</td>"+"<td>"+getElementToPutOnTable(tableData[2])+"</td>"+"<td>"+getElementToPutOnTable(tableData[3])+"</td>"+"<td>"+getElementToPutOnTable(tableData[4])+"</td>"+"<td>"+getElementToPutOnTable(tableData[5])+"</td>"+"<td>"+getElementToPutOnTable(tableData[6])+"</td>"+"<td>"+getElementToPutOnTable(tableData[0])+"</td></tr></table>";
-
-    tableCode = weekTable(progressByDay);
-
+*/
+    var weekTableObject = {};
+    weekTableObject = weekTable(progressByDay);
+    tableCode = weekTableObject.tableCode
+    numberOfMissesInWeek = weekTableObject.numberOfMissesInWeek
 
     /*<canvas id="myChart"></canvas>*/
     var newCanva = document.createElement("canvas");
@@ -1708,6 +1800,10 @@ var launchChart = function(fullData,habitObject){
     streaksTitleDiv.innerHTML = "Number of streaks: "+ completionAccumulation.toString();
     streaksTitleDiv.setAttribute("class","subtitle");
 
+    const accumulationTitleDiv = document.createElement("div");
+    accumulationTitleDiv.innerHTML = "Number of units: "+ unitAccumulation.toString()+" ("+unitPerMonth+" per month)";
+    accumulationTitleDiv.setAttribute("class","subtitle");
+
     grapTitleDiv.setAttribute("class","graph-title");
     grapTitleDiv.appendChild(graphIcon);
     grapTitleDiv.appendChild(grapTitle);
@@ -1719,6 +1815,10 @@ var launchChart = function(fullData,habitObject){
     const weekSummaryTableTitle = document.createElement("div");
     weekSummaryTableTitle.innerHTML = "This week summary:";
     weekSummaryTableTitle.setAttribute("class","subtitle");
+    const markAsCriticalDiv = document.createElement("div");
+    markAsCriticalDiv.innerHTML = "Mark as critical";
+    markAsCriticalDiv.setAttribute("class","critical-link");
+    markAsCriticalDiv.setAttribute("onclick","setHabitAsCritical("+ habitObject.habitId +");");
 
     weekSummaryTable.setAttribute("class","table-summary");
     weekSummaryTable.innerHTML = tableCode;
@@ -1733,8 +1833,10 @@ var launchChart = function(fullData,habitObject){
     streaksWrapper.setAttribute("id","streaks-"+habitObject.habitId);
     /*newCanvaWrapper.appendChild(weekSummaryTableTitle);*/
     newCanvaWrapper.appendChild(weekSummaryTable);
-    newCanvaWrapper.appendChild(brDiv); 
+    newCanvaWrapper.appendChild(markAsCriticalDiv);
+    newCanvaWrapper.appendChild(brDiv);
     streaksWrapper.appendChild(streaksTitleDiv);
+    streaksWrapper.appendChild(accumulationTitleDiv);
     streaksWrapper.appendChild(graphTitle); 
     streaksWrapper.append(newCanva);
 
@@ -1829,14 +1931,14 @@ var launchChart = function(fullData,habitObject){
 
 }
 
-var getElementToPutOnTable = function (value) {
+/*var getElementToPutOnTable = function (value) {
     if ( value ) {
         return value;
     } else {
         return " ";
     }
 
-}
+}*/
 
 
 var subMenuGo = function( targetLink){

@@ -244,10 +244,15 @@ var putColorBasedOnCompletion = function(currentDiv,newCompletionPercentage){
         currentDiv.style.order = "90";
     }
     if ( currentDiv.getAttribute("iscritical") !=null && currentDiv.getAttribute("iscritical") == "true"&& newCompletionPercentage <100 ){
-        currentDiv.style.border="1px solid red"/*"#f7fff6"*/; 
-        currentDiv.getElementsByClassName("fa fa-tasks")[0].classList.remove("fa-tasks");
-        currentDiv.getElementsByClassName("fa")[0].classList.add("fa-warning");
-        currentDiv.style.order = "60";
+        currentDiv.style.border="3px solid red"/*"#f7fff6"*/; 
+        var taskIconDiv = currentDiv.getElementsByClassName("fa fa-tasks")[0];
+        if (taskIconDiv){
+            currentDiv.getElementsByClassName("fa fa-tasks")[0].classList.remove("fa-tasks");
+            currentDiv.getElementsByClassName("fa")[0].classList.add("fa-warning");
+            currentDiv.getElementsByClassName("habit-description")[0].classList.add("red");
+            currentDiv.style.order = "60";
+        }
+
     }
 }
 
@@ -645,9 +650,12 @@ var launchChart = function(fullData,habitObject){
     var dataToShow = [];
     var baseline = [];
     var progressByDay = {};
+    var unitAccumulation=0;
+    var unitPerMonth=0;
 
     for ( var i=0; i< fullData.length;i++){
         if (fullData[i].habitId == habitObject.habitId){
+            unitAccumulation+=fullData[i].numberOfCompletions;
             dataToShow.push({
                 x: new Date(fullData[i].progressDate),y:fullData[i].numberOfCompletions
             })
@@ -657,6 +665,7 @@ var launchChart = function(fullData,habitObject){
             progressByDay[fullData[i].progressDate]=fullData[i].numberOfCompletions-fullData[i].target;
         }
     }
+
 
   /*  var test = weekTable(progressByDay);*/
 
@@ -671,8 +680,10 @@ var launchChart = function(fullData,habitObject){
             return (a.x - b.x)
             });	
 
+
     /* Analysis */
     var completionAccumulation=0;
+
     for (var i =  dataToShow.length - 1 ; i>=0; i--){
         var dataDate = dataToShow[i].x;
         if (
@@ -698,6 +709,12 @@ var launchChart = function(fullData,habitObject){
     var tableData = {};
     var numberOfMissesInWeek=0;
     var j = dataToShow.length-1;
+
+    var numberOfDays = (dataToShow[j].x - dataToShow[0].x)/1000/60/60/24;
+    if (numberOfDays>0){
+        unitPerMonth=Math.round(unitAccumulation*30/numberOfDays);
+    }
+
 
     if ( j < 0){
         return false;
@@ -783,6 +800,10 @@ var launchChart = function(fullData,habitObject){
     streaksTitleDiv.innerHTML = "Number of streaks: "+ completionAccumulation.toString();
     streaksTitleDiv.setAttribute("class","subtitle");
 
+    const accumulationTitleDiv = document.createElement("div");
+    accumulationTitleDiv.innerHTML = "Number of units: "+ unitAccumulation.toString()+" ("+unitPerMonth+" per month)";
+    accumulationTitleDiv.setAttribute("class","subtitle");
+
     grapTitleDiv.setAttribute("class","graph-title");
     grapTitleDiv.appendChild(graphIcon);
     grapTitleDiv.appendChild(grapTitle);
@@ -815,6 +836,7 @@ var launchChart = function(fullData,habitObject){
     newCanvaWrapper.appendChild(markAsCriticalDiv);
     newCanvaWrapper.appendChild(brDiv);
     streaksWrapper.appendChild(streaksTitleDiv);
+    streaksWrapper.appendChild(accumulationTitleDiv);
     streaksWrapper.appendChild(graphTitle); 
     streaksWrapper.append(newCanva);
 
