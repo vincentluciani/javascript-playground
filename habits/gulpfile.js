@@ -10,7 +10,7 @@ var fs = require('fs');
 var newValue = '<script type="text/javascript" src="output/bundle-min.js"></script> '
 
 gulp.task('pack-js', function () {    
-    return gulp.src(['components/*.js', 'libraries/random.js', 'language/general.js','language/english.js', 'synchronization/*.js','habits_main.js'])
+    return gulp.src(['components/*.js', 'libraries/random.js', 'libraries/date.js','language/general.js','language/english.js', 'synchronization/*.js','habits_main.js'])
         .pipe(concat('bundle.js'))
         .pipe(minify())
         .pipe(gulp.dest('output'));
@@ -43,7 +43,7 @@ gulp.task('process-html', function () {
         .pipe(replace('<script type="text/javascript" src="components/habit.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/journal.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/progress.js"></script>',''))
-        .pipe(replace('<script type="text/javascript" src="<script type="text/javascript" src="components/radialprogress.js"></script>"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/radialprogress.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/encourage.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="synchronization/pushProgressToQueue.js"></script>','')) 
         .pipe(replace('<script type="text/javascript" src="synchronization/debugTools.js"></script>',''))
