@@ -4,7 +4,7 @@ var app = express()
 const https = require('https')
 const getAprimoToken = require('./getAprimoToken.js');
 const getRecordDetails = require('./getRecordDetails.js');
-
+const waitingFunction = require('./helpers/asyncFunctions/waitingFunction.js')
 var corsOptions = {
     origin: 'https://schneiderelectric-sb2.dam.aprimo.com',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
@@ -17,6 +17,16 @@ app.get('/api', function (req, res, next) {
 })
 
 
+app.get('/waitforasync', function (req, res, next) {
+
+    waitingFunction.giveTextAfterWaiting("hello world").then(value => {
+        res.json({ msg: value }); 
+      }, reason => {
+        res.json({ msg: reason }); 
+      })
+
+})
+
 app.post('/api', function (req, res, next) {
     res.json({ msg: 'this is a test - GET' })
 })
@@ -24,6 +34,9 @@ app.post('/api', function (req, res, next) {
 
 
 app.get('/', function (req, res, next) {
+
+
+
     res.json({ msg: 'this is a test - GET' })
 })
 
