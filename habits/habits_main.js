@@ -243,16 +243,34 @@ var putColorBasedOnCompletion = function(currentDiv,newCompletionPercentage){
     if (currentDiv.id && currentDiv.id == "daily-summary-container"){
         currentDiv.style.order = "90";
     }
-    if ( currentDiv.getAttribute("iscritical") !=null && currentDiv.getAttribute("iscritical") == "true"&& newCompletionPercentage <100 ){
-        currentDiv.style.border="3px solid red"/*"#f7fff6"*/; 
-        var taskIconDiv = currentDiv.getElementsByClassName("fa fa-tasks")[0];
-        if (taskIconDiv){
-            currentDiv.getElementsByClassName("fa fa-tasks")[0].classList.remove("fa-tasks");
-            currentDiv.getElementsByClassName("fa")[0].classList.add("fa-warning");
-            currentDiv.getElementsByClassName("habit-description")[0].classList.add("red");
-            currentDiv.style.order = "60";
-        }
 
+    if ( currentDiv.getAttribute("iscritical") !=null && currentDiv.getAttribute("iscritical") == "true"){
+
+        var plusMinusDiv = currentDiv.getElementsByClassName("plus-minus")[0];
+
+        if (newCompletionPercentage <100 ){
+            currentDiv.style.order = "60";
+            currentDiv.style.border="3px solid red"/*"#f7fff6"*/; 
+
+            var taskIconDiv = currentDiv.getElementsByClassName("fa fa-tasks")[0];
+            if (taskIconDiv && plusMinusDiv){
+                taskIconDiv.classList.remove("fa-tasks");
+                currentDiv.getElementsByClassName("fa")[0].classList.add("fa-warning");
+                currentDiv.getElementsByClassName("habit-description")[0].classList.add("red");
+                plusMinusDiv.style.color="red";
+            }
+
+        } else if (newCompletionPercentage >=100){
+            currentDiv.style.border="1px solid lightgrey"/*"#f7fff6"*/; 
+            var taskIconDiv = currentDiv.getElementsByClassName("fa fa-warning")[0];
+            if (taskIconDiv && plusMinusDiv){
+                taskIconDiv.classList.remove("fa-warning");
+                currentDiv.getElementsByClassName("fa")[0].classList.add("fa-tasks");
+                currentDiv.getElementsByClassName("habit-description")[0].classList.remove("red");
+                plusMinusDiv.style.color="#b657af";
+            }    
+
+        }
     }
 }
 
@@ -419,10 +437,15 @@ var saveChangesInHabit = function(habitId){
 var setHabitAsCritical = function(habitId){
     var habitDiv = document.getElementById(habitId);
     var habitJSON = readHabitElement(habitDiv);
-    habitJSON.isCritical=true;
+    habitJSON.isCritical="true";
     pushHabitArrayToQueue(habitJSON);
 }
-
+var unsetHabitAsCritical = function(habitId){
+    var habitDiv = document.getElementById(habitId);
+    var habitJSON = readHabitElement(habitDiv);
+    habitJSON.isCritical="false";
+    pushHabitArrayToQueue(habitJSON);
+}
 
 var saveChangesInHabitFromObject = function(habitElement){
 
@@ -517,6 +540,7 @@ var readElement = function(elementToRead){
     outputJson.progressDate = elementToRead.getAttribute("progressDate");
     outputJson.isNew = elementToRead.getAttribute("isNew");
     outputJson.isNegative = elementToRead.getAttribute("isNegative");
+    outputJson.isCritical = elementToRead.getAttribute("isCritical");
     outputJson.numberOfCompletions = parseInt(elementToRead.getElementsByClassName("number-of-completion")[0].value);
 
     return outputJson;
@@ -583,6 +607,8 @@ var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
                 debugWrite(inputDateTime);
                 debugWrite("Habit week day:");
                 debugWrite(habitsElements[i].getAttribute("weekDay"));
+                debugWrite("Is critical?:");
+                debugWrite(habitsElements[i].getAttribute("iscritical"));
                 
                 var isDayOK = isDayOfWeekInHabitWeeks(inputDateTime, habitsElements[i].getAttribute("weekDay"));
             } else {
@@ -596,7 +622,7 @@ var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
                     target: habitsElements[i].getAttribute("target"),
                     progressDate: inputDate,
                     isNew: true,
-                    isCritical: habitsElements[i].getAttribute("isCritical"),
+                    isCritical: habitsElements[i].getAttribute("iscritical"),
                     numberOfCompletions:0,
                 }
                 addElement(newProgressObject);
@@ -816,10 +842,15 @@ var launchChart = function(fullData,habitObject){
     weekSummaryTableTitle.innerHTML = "This week summary:";
     weekSummaryTableTitle.setAttribute("class","subtitle");
     const markAsCriticalDiv = document.createElement("div");
-    markAsCriticalDiv.innerHTML = "Mark as critical";
-    markAsCriticalDiv.setAttribute("class","critical-link");
-    markAsCriticalDiv.setAttribute("onclick","setHabitAsCritical("+ habitObject.habitId +");");
 
+    markAsCriticalDiv.setAttribute("class","critical-link");
+    if (habitObject.isCritical && habitObject.isCritical=="true"){
+        markAsCriticalDiv.innerHTML = "Unmark as critical";
+        markAsCriticalDiv.setAttribute("onclick","unsetHabitAsCritical("+ habitObject.habitId +");");
+    } else {
+        markAsCriticalDiv.innerHTML = "Mark as critical";
+        markAsCriticalDiv.setAttribute("onclick","setHabitAsCritical("+ habitObject.habitId +");");
+    }
     weekSummaryTable.setAttribute("class","table-summary");
     weekSummaryTable.innerHTML = tableCode;
 

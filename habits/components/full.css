@@ -241,7 +241,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
 }
 
 .main-title{
-    padding: 14px 12px 18px 12px;
+    padding: 14px 12px 13px 12px;
     border-bottom: 1px solid lightgray  ;
     background: white;
     /*box-shadow: -5px 16px 20px 0px rgb(0 0 0 / 12%);*/
@@ -433,7 +433,7 @@ i{
     display: none;
 }
 
-.overlay-for-message,.positive-message{
+.overlay-for-message,.positive-message,.super-positive-message{
     width: 100%;
     height: 100%;
     
@@ -467,13 +467,18 @@ i{
     z-index: 102;
     color: white;
 }  
+.super-positive-message{
+    background-color: #0ae809;
+    z-index: 102;
+    color: white;
+}
 
-#positive-message i{
+#positive-message i,#super-positive-message i{
     animation-duration: 0.25s;
     animation-name: arriveFromLeft;
 }
 
-#positive-message-title
+#positive-message-title,#super-positive-message-title
 {
     opacity: 0;
     animation-duration: 0.25s;
@@ -481,7 +486,7 @@ i{
     animation-delay: 0.25s;
     animation-fill-mode: forwards;
 }
-#positive-message-subtitle
+#positive-message-subtitle,#super-positive-message-subtitle
 {
     opacity: 0;
     animation-duration: 0.5s;
@@ -511,9 +516,8 @@ i{
     }
   }
 
-.positive-message-button{
+.positive-message-button,.super-positive-message-button{
     background-color: white;
-    color: #b657af;
     width: 200px;
     font-size: 18px;
     padding: 15px;
@@ -521,7 +525,14 @@ i{
     cursor:pointer;
     text-align: center;
 }
-.positive-message .icon{
+.positive-message-button{
+    color: #b657af;
+}
+.super-positive-message-button{
+    color: #0ae809;
+}
+
+.positive-message .icon,.super-positive-message .icon{
     font-size:88px;
 }
 #daily-journal{
@@ -770,14 +781,14 @@ td,.red,.fa-warning{
         margin: 10px 0px 0px 0px;
 
     }
-    .positive-message .sub-title{
+    .positive-message .sub-title,.super-positive-message .sub-title{
         margin:20px;
     }
-    .positive-message .title{
+    .positive-message .title,.super-positive-message .title{
         font-size:47px;
         text-align: center;
     }
-    .positive-message .sub-title{
+    .positive-message .sub-title,.super-positive-message .sub-title{
         font-size: 34px;
         text-align: center;
     }
@@ -884,8 +895,11 @@ td,.red,.fa-warning{
         position: relative;
         width:25px;
     }
-    .box.habit-update i.fa.fa-plus,.box.habit-update i.fa.fa-minus{
+    /*.box.habit-update i.fa.fa-plus,.box.habit-update i.fa.fa-minus{
         color: #b657af;
+    }*/
+    .plus-minus{
+        color:#b657af;
     }
     .habit-description i{
         display: none;
@@ -896,6 +910,9 @@ td,.red,.fa-warning{
 }
 @media (min-width: 650px){
 
+    #text-filter{
+        margin-top: 3px;
+    }
     #streaks-container, #graph-container{
         padding-top: 78px;
     }
@@ -912,10 +929,10 @@ td,.red,.fa-warning{
         margin-right: 16px;
         margin-top: 5px;
     }
-    .positive-message .title{
+    .positive-message .title,.super-positive-message .title{
     font-size:69px;
     }
-    .positive-message .sub-title{
+    .positive-message .sub-title,.super-positive-message .sub-title{
         font-size:45px;
     }
     .box.habit-update i.fa.fa-plus,.box.habit-update i.fa.fa-minus{

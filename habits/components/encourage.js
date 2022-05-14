@@ -1,16 +1,23 @@
 
 
-var encourageIfPassedTarget = function(result, target){
+var encourageIfPassedTarget = function(result, target, isCritical){
 
-        if ( result == target){
+        if ( result == target && isCritical && isCritical == "true"){
+            document.getElementById("super-positive-message").style.display="flex";
+            document.getElementById("super-positive-message-title").innerHTML = "Special kudos to you :)";
+            document.getElementById("super-positive-message-subtitle").innerHTML = "You manage to complete a critical habit !" ;
+    
+        } else if (result == target){
             document.getElementById("positive-message").style.display="flex";
             document.getElementById("positive-message-title").innerHTML = buildCongratulationTitle('en_US')+" :)";
-            document.getElementById("positive-message-subtitle").innerHTML = buildCongratulationSubTitle('en_US') ;
+            document.getElementById("positive-message-subtitle").innerHTML = buildCongratulationSubTitle('en_US');
         }
+
 }
 
-var closeMessage = function(){
+ var closeMessage = function(){
     document.getElementById("positive-message").style.display="none";
+    document.getElementById("super-positive-message").style.display="none";
 }
 
 var buildCongratulationTitle = function (locale){

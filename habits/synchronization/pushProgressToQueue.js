@@ -2,7 +2,7 @@ var pushProgressToQueue = function(divToAnalyze) {
 
     var progressArray = readElement(divToAnalyze);
 
-    encourageIfPassedTarget(progressArray.numberOfCompletions, progressArray.target);
+    encourageIfPassedTarget(progressArray.numberOfCompletions, progressArray.target, progressArray.isCritical);
 
     var elementToAdd = {
         'id': 'progress-'+progressArray.id,

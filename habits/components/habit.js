@@ -56,7 +56,7 @@ var addHabitElement = function(elementToAdd){
     isCritical.setAttribute("id","is-critical");
     if (elementToAdd.isCritical!=null && elementToAdd.isCritical == "true") {
         isCritical.checked = true;  
-    } else {
+    } else if (elementToAdd.isCritical == "false"){
         isCritical.checked = false;
     }
     isCritical.value=isCritical.checked;

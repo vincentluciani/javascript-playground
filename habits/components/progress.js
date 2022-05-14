@@ -50,15 +50,19 @@ var addElement = function(elementToAdd){
 
     var habitDescriptionContainer = document.createElement("div");
     habitDescriptionContainer.setAttribute("class","habit-description");
+    var expandButtonWrapper = document.createElement("span");
+    expandButtonWrapper.setAttribute("class","plus-minus");
+
     var expandButtonContainer = document.createElement("i");
     expandButtonContainer.setAttribute("class","fa fa-plus");
+    expandButtonWrapper.appendChild(expandButtonContainer);
 
     var taskIcon = document.createElement("i");
     taskIcon.setAttribute("class","fa fa-tasks");
     habitDescriptionContainer.appendChild(taskIcon);
     habitDescriptionContainer.appendChild(habitDescriptionText);
     newProgressDivision.appendChild(habitDescriptionContainer);
-    newProgressDivision.appendChild(expandButtonContainer);
+    newProgressDivision.appendChild(expandButtonWrapper);
 
     var detailsArea = document.createElement("div");
     detailsArea.setAttribute("class","progress-details");
@@ -172,6 +176,9 @@ var addElement = function(elementToAdd){
             toggleExpandCollapse(expandButtonContainer,detailsArea);
         }
      }(expandButtonContainer,detailsArea));
+
+     refreshProgress(newProgressDivision);
+
 
 };
 
