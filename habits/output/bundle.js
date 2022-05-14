@@ -1,16 +1,26 @@
 
 
-var encourageIfPassedTarget = function(result, target){
-
-        if ( result == target){
-            document.getElementById("positive-message").style.display="flex";
-            document.getElementById("positive-message-title").innerHTML = buildCongratulationTitle('en_US')+" :)";
-            document.getElementById("positive-message-subtitle").innerHTML = buildCongratulationSubTitle('en_US') ;
-        }
+var giveSuperKudos = function(title,description){
+        document.getElementById("super-positive-message").style.display="flex";
+        document.getElementById("super-positive-message-title").innerHTML = title;
+        document.getElementById("super-positive-message-subtitle").innerHTML = description ;
 }
 
-var closeMessage = function(){
+var encourageIfPassedTarget = function(result, target, isCritical){
+
+        if ( result == target && isCritical && isCritical == "true"){
+            giveSuperKudos("Special kudos to you :)","You mastered a critical habit today!");
+        } else if (result == target){
+            document.getElementById("positive-message").style.display="flex";
+            document.getElementById("positive-message-title").innerHTML = buildCongratulationTitle('en_US')+" :)";
+            document.getElementById("positive-message-subtitle").innerHTML = buildCongratulationSubTitle('en_US');
+        }
+
+}
+
+ var closeMessage = function(){
     document.getElementById("positive-message").style.display="none";
+    document.getElementById("super-positive-message").style.display="none";
 }
 
 var buildCongratulationTitle = function (locale){
@@ -86,7 +96,7 @@ var addHabitElement = function(elementToAdd){
     isCritical.setAttribute("id","is-critical");
     if (elementToAdd.isCritical!=null && elementToAdd.isCritical == "true") {
         isCritical.checked = true;  
-    } else {
+    } else if (elementToAdd.isCritical == "false"){
         isCritical.checked = false;
     }
     isCritical.value=isCritical.checked;
@@ -287,15 +297,19 @@ var addElement = function(elementToAdd){
 
     var habitDescriptionContainer = document.createElement("div");
     habitDescriptionContainer.setAttribute("class","habit-description");
+    var expandButtonWrapper = document.createElement("span");
+    expandButtonWrapper.setAttribute("class","plus-minus");
+
     var expandButtonContainer = document.createElement("i");
     expandButtonContainer.setAttribute("class","fa fa-plus");
+    expandButtonWrapper.appendChild(expandButtonContainer);
 
     var taskIcon = document.createElement("i");
     taskIcon.setAttribute("class","fa fa-tasks");
     habitDescriptionContainer.appendChild(taskIcon);
     habitDescriptionContainer.appendChild(habitDescriptionText);
     newProgressDivision.appendChild(habitDescriptionContainer);
-    newProgressDivision.appendChild(expandButtonContainer);
+    newProgressDivision.appendChild(expandButtonWrapper);
 
     var detailsArea = document.createElement("div");
     detailsArea.setAttribute("class","progress-details");
@@ -409,6 +423,9 @@ var addElement = function(elementToAdd){
             toggleExpandCollapse(expandButtonContainer,detailsArea);
         }
      }(expandButtonContainer,detailsArea));
+
+     refreshProgress(newProgressDivision);
+
 
 };
 
@@ -927,7 +944,7 @@ var pushProgressToQueue = function(divToAnalyze) {
 
     var progressArray = readElement(divToAnalyze);
 
-    encourageIfPassedTarget(progressArray.numberOfCompletions, progressArray.target);
+    encourageIfPassedTarget(progressArray.numberOfCompletions, progressArray.target, progressArray.isCritical);
 
     var elementToAdd = {
         'id': 'progress-'+progressArray.id,
@@ -1253,16 +1270,34 @@ var putColorBasedOnCompletion = function(currentDiv,newCompletionPercentage){
     if (currentDiv.id && currentDiv.id == "daily-summary-container"){
         currentDiv.style.order = "90";
     }
-    if ( currentDiv.getAttribute("iscritical") !=null && currentDiv.getAttribute("iscritical") == "true"&& newCompletionPercentage <100 ){
-        currentDiv.style.border="3px solid red"/*"#f7fff6"*/; 
-        var taskIconDiv = currentDiv.getElementsByClassName("fa fa-tasks")[0];
-        if (taskIconDiv){
-            currentDiv.getElementsByClassName("fa fa-tasks")[0].classList.remove("fa-tasks");
-            currentDiv.getElementsByClassName("fa")[0].classList.add("fa-warning");
-            currentDiv.getElementsByClassName("habit-description")[0].classList.add("red");
-            currentDiv.style.order = "60";
-        }
 
+    if ( currentDiv.getAttribute("iscritical") !=null && currentDiv.getAttribute("iscritical") == "true"){
+
+        var plusMinusDiv = currentDiv.getElementsByClassName("plus-minus")[0];
+
+        if (newCompletionPercentage <100 ){
+            currentDiv.style.order = "60";
+            currentDiv.style.border="3px solid red"/*"#f7fff6"*/; 
+
+            var taskIconDiv = currentDiv.getElementsByClassName("fa fa-tasks")[0];
+            if (taskIconDiv && plusMinusDiv){
+                taskIconDiv.classList.remove("fa-tasks");
+                currentDiv.getElementsByClassName("fa")[0].classList.add("fa-warning");
+                currentDiv.getElementsByClassName("habit-description")[0].classList.add("red");
+                plusMinusDiv.style.color="red";
+            }
+
+        } else if (newCompletionPercentage >=100){
+            currentDiv.style.border="1px solid lightgrey"/*"#f7fff6"*/; 
+            var taskIconDiv = currentDiv.getElementsByClassName("fa fa-warning")[0];
+            if (taskIconDiv && plusMinusDiv){
+                taskIconDiv.classList.remove("fa-warning");
+                currentDiv.getElementsByClassName("fa")[0].classList.add("fa-tasks");
+                currentDiv.getElementsByClassName("habit-description")[0].classList.remove("red");
+                plusMinusDiv.style.color="#b657af";
+            }    
+
+        }
     }
 }
 
@@ -1390,6 +1425,9 @@ var addElementFromForm = function(){
     var weekDaySelector = document.getElementById('week-day-selection');
     
     elementToAdd.weekDay = weekDaySelector.getAttribute('weekDay');
+    if ( elementToAdd.weekDay == ""){
+        elementToAdd.weekDay ='monday tuesday wednesday thursday friday saturday sunday';
+    }
 
     if (elementToAdd.weekDay){
         var isDayOK = isDayOfWeekInHabitWeeks(currentDateTime, elementToAdd.weekDay);
@@ -1429,10 +1467,15 @@ var saveChangesInHabit = function(habitId){
 var setHabitAsCritical = function(habitId){
     var habitDiv = document.getElementById(habitId);
     var habitJSON = readHabitElement(habitDiv);
-    habitJSON.isCritical=true;
+    habitJSON.isCritical="true";
     pushHabitArrayToQueue(habitJSON);
 }
-
+var unsetHabitAsCritical = function(habitId){
+    var habitDiv = document.getElementById(habitId);
+    var habitJSON = readHabitElement(habitDiv);
+    habitJSON.isCritical="false";
+    pushHabitArrayToQueue(habitJSON);
+}
 
 var saveChangesInHabitFromObject = function(habitElement){
 
@@ -1527,6 +1570,7 @@ var readElement = function(elementToRead){
     outputJson.progressDate = elementToRead.getAttribute("progressDate");
     outputJson.isNew = elementToRead.getAttribute("isNew");
     outputJson.isNegative = elementToRead.getAttribute("isNegative");
+    outputJson.isCritical = elementToRead.getAttribute("isCritical");
     outputJson.numberOfCompletions = parseInt(elementToRead.getElementsByClassName("number-of-completion")[0].value);
 
     return outputJson;
@@ -1593,6 +1637,8 @@ var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
                 debugWrite(inputDateTime);
                 debugWrite("Habit week day:");
                 debugWrite(habitsElements[i].getAttribute("weekDay"));
+                debugWrite("Is critical?:");
+                debugWrite(habitsElements[i].getAttribute("iscritical"));
                 
                 var isDayOK = isDayOfWeekInHabitWeeks(inputDateTime, habitsElements[i].getAttribute("weekDay"));
             } else {
@@ -1606,7 +1652,7 @@ var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
                     target: habitsElements[i].getAttribute("target"),
                     progressDate: inputDate,
                     isNew: true,
-                    isCritical: habitsElements[i].getAttribute("isCritical"),
+                    isCritical: habitsElements[i].getAttribute("iscritical"),
                     numberOfCompletions:0,
                 }
                 addElement(newProgressObject);
@@ -1826,10 +1872,15 @@ var launchChart = function(fullData,habitObject){
     weekSummaryTableTitle.innerHTML = "This week summary:";
     weekSummaryTableTitle.setAttribute("class","subtitle");
     const markAsCriticalDiv = document.createElement("div");
-    markAsCriticalDiv.innerHTML = "Mark as critical";
-    markAsCriticalDiv.setAttribute("class","critical-link");
-    markAsCriticalDiv.setAttribute("onclick","setHabitAsCritical("+ habitObject.habitId +");");
 
+    markAsCriticalDiv.setAttribute("class","critical-link");
+    if (habitObject.isCritical && habitObject.isCritical=="true"){
+        markAsCriticalDiv.innerHTML = "Unmark as critical";
+        markAsCriticalDiv.setAttribute("onclick","unsetHabitAsCritical("+ habitObject.habitId +");");
+    } else {
+        markAsCriticalDiv.innerHTML = "Mark as critical";
+        markAsCriticalDiv.setAttribute("onclick","setHabitAsCritical("+ habitObject.habitId +");");
+    }
     weekSummaryTable.setAttribute("class","table-summary");
     weekSummaryTable.innerHTML = tableCode;
 
