@@ -1,12 +1,15 @@
 
 
+var giveSuperKudos = function(title,description){
+        document.getElementById("super-positive-message").style.display="flex";
+        document.getElementById("super-positive-message-title").innerHTML = title;
+        document.getElementById("super-positive-message-subtitle").innerHTML = description ;
+}
+
 var encourageIfPassedTarget = function(result, target, isCritical){
 
         if ( result == target && isCritical && isCritical == "true"){
-            document.getElementById("super-positive-message").style.display="flex";
-            document.getElementById("super-positive-message-title").innerHTML = "Special kudos to you :)";
-            document.getElementById("super-positive-message-subtitle").innerHTML = "You manage to complete a critical habit !" ;
-    
+            giveSuperKudos("Special kudos to you :)","You mastered a critical habit today!");
         } else if (result == target){
             document.getElementById("positive-message").style.display="flex";
             document.getElementById("positive-message-title").innerHTML = buildCongratulationTitle('en_US')+" :)";

@@ -398,6 +398,9 @@ var addElementFromForm = function(){
     var weekDaySelector = document.getElementById('week-day-selection');
     
     elementToAdd.weekDay = weekDaySelector.getAttribute('weekDay');
+    if ( elementToAdd.weekDay == ""){
+        elementToAdd.weekDay ='monday tuesday wednesday thursday friday saturday sunday';
+    }
 
     if (elementToAdd.weekDay){
         var isDayOK = isDayOfWeekInHabitWeeks(currentDateTime, elementToAdd.weekDay);
