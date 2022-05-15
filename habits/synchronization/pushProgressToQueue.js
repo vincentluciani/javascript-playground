@@ -51,7 +51,6 @@ var executePushToQueue = function(newObject){
         console.log(lastElement);
     }
 
-    /*var intervalID = setInterval(pushItemInQueue, 50, newObject);*/
     updateQueue.push(newObject);
     
     console.log(updateQueue);
