@@ -16,8 +16,8 @@ var resetElement = function(elementType){
 var resetProgress = function(){
     var progressElements = document.getElementsByClassName("habit-update");
 
-    for ( var i=0; i<progressElements.length; i++){
-        progressElements[i].parentNode. removeChild(progressElements[i]);
+    for ( var progressElement of progressElements){
+        progressElement.parentNode.removeChild(progressElement);
     }
 
     resetElement("progress");
@@ -27,8 +27,8 @@ var resetProgress = function(){
 var resetHabits = function(){
     var progressElements = document.getElementsByClassName("habit-setting");
 
-    for ( var i=0; i<progressElements.length; i++){
-        progressElements[i].parentNode. removeChild(progressElements[i]);
+    for ( var progressElement of progressElements){
+        progressElement.parentNode.removeChild(progressElement);
     }
 
     resetElement("habit");

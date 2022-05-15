@@ -564,7 +564,7 @@ var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
         if ( !isHabitProgressExisting){
             var isDayOK;
             if (habitsElements[i].getAttribute("weekDay")){
-                debugWrite("Comparing currrent date time with habit week day");
+                debugWrite("Comparing current date time with habit week day");
                 debugWrite("Current date time:");
                 debugWrite(inputDateTime);
                 debugWrite("Habit week day:");
@@ -655,18 +655,16 @@ var launchChart = function(fullData,habitObject){
     }
 
 
-  /*  var test = weekTable(progressByDay);*/
+    dataToShow.sort(function(a, b){
+    return (a.x - b.x)
+    });	
 
-		dataToShow.sort(function(a, b){
-		return (a.x - b.x)
-		});	
-
-        if ( dataToShow.length >= 1){
-            showGraphsTab();
-        }
-        baseline.sort(function(a, b){
-            return (a.x - b.x)
-            });	
+    if ( dataToShow.length >= 1){
+        showGraphsTab();
+    };
+    baseline.sort(function(a, b){
+        return (a.x - b.x)
+    });	
 
 
     /* Analysis */
@@ -845,8 +843,6 @@ var launchChart = function(fullData,habitObject){
         graphColor = "rgb(174 174 174)";
     }
     let chartData = {
-
-
     datasets: [
         {
             label: 'Your daily score',

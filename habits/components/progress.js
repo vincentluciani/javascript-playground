@@ -14,8 +14,6 @@ var addProgressElement = function(elementToAdd){
     newProgressDivision.setAttribute("isNegative", elementToAdd.isNegative);
     newProgressDivision.setAttribute("isCritical", elementToAdd.isCritical);
 
-    const dateDiv = document.createElement("div");
-
     const habitDescriptionText = document.createTextNode(elementToAdd.habitDescription);
     const targetValue = document.createElement("input");
     const currentProgressText = document.createTextNode("Number of times completed:");
@@ -40,9 +38,6 @@ var addProgressElement = function(elementToAdd){
  
 
     progressInput.setAttribute("class","number-of-completion");
-
-    
-
 
     percentageCompletionInput.setAttribute("class","percentage-completion");
     percentageCompletionInput.setAttribute("progressDate",elementToAdd.progressDate);
@@ -71,8 +66,6 @@ var addProgressElement = function(elementToAdd){
     currentProgressContainer.setAttribute("class","progress-container");
 
     if (elementToAdd.target > 1){
-    /*if (1==1){*/
-
         progressInput.setAttribute("type","number");
         progressInput.setAttribute("value",elementToAdd.numberOfCompletions);
         currentProgressContainer.appendChild(currentProgressText);

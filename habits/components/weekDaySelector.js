@@ -107,11 +107,8 @@ var isDayOfWeekInHabitWeeks = function(currentDate, stringOfWeekDays){
     debugWrite(arrayOfWeekDays.toString());
     
     const index = arrayOfWeekDays.indexOf(currentDayOfWeekString);
-    if (index > -1) {
-        return true;
-    }
-
-    return false;
+    
+    return (index > -1);
 }
 
 var dynamicWeekDaySelector = function(weekDay){
