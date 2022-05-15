@@ -246,7 +246,7 @@ var readJournal = function(journalArray){
 
 
 
-var addElement = function(elementToAdd){
+var addProgressElement = function(elementToAdd){
 
     const newProgressDivision = document.createElement("div");
 
@@ -490,7 +490,7 @@ var updateProgressOnRadial = function( percentageValue, parameters){
 }
 
 
-var createProgressElements = function(parameters){
+var createRadialProgressBar = function(parameters){
 
     var circleRadius = ( parameters.containerHeight / 2 ) - parameters.strokeWidth;
 
@@ -1070,8 +1070,8 @@ onload = function(){
 
     document.getElementById("date-filter").value=currentDate;
     /*ingestElements();*/
-    createProgressElements(radialProgressParameters);
-    getHabitProgress();
+    createRadialProgressBar(radialProgressParameters);
+    getHabitProgressJournal();
     addEmptyProgressOnNewDay(currentDate, currentDateTime);
 
     saveLoop();
@@ -1097,27 +1097,27 @@ minusButtonInAddDiv.addEventListener('click', function(newTargetDiv) {
         }(newTargetDiv));
 
 
-var getHabitProgress = function(){
+var getHabitProgressJournal = function(){
 
     if (loggedIn){
-        getHabitProgressWhenLoggedIn();
+        getHabitProgressJournalWhenLoggedIn();
     } else {
-        getHabitProgressWhenNotLoggedIn();
+        getHabitProgressJournalWhenNotLoggedIn();
     }
 };
 
-var getHabitProgressWhenLoggedIn = function(){
+var getHabitProgressJournalWhenLoggedIn = function(){
     var APIcallParameters = {
         method: "GET",
         url: "http://localhost:5000/get-habit-progress"
     };
-    var apiCaller = new APICaller(APIcallParameters,ingestElements,getHabitProgressWhenNotLoggedIn);
+    var apiCaller = new APICaller(APIcallParameters,createAllElementsBasedOnData,getHabitProgressJournalWhenNotLoggedIn);
 
     apiCaller.executeCall(APIcallParameters.url, {});
 
 };
 
-var getHabitProgressWhenNotLoggedIn = function(){
+var getHabitProgressJournalWhenNotLoggedIn = function(){
     var progressArray=[];
     var habitsArray=[];
     var journalArray = [];
@@ -1151,7 +1151,7 @@ var getHabitProgressWhenNotLoggedIn = function(){
         hideJournalBox();
     }
 
-    ingestElements(progressArray,habitsArray,journalArray);
+    createAllElementsBasedOnData(progressArray,habitsArray,journalArray);
 };
 var hideJournalBox = function(){
     document.getElementById("journal-container").innerHTML = "no entry yet";
@@ -1180,10 +1180,10 @@ var hideStartProgressButtonOnHabits = function(){
 var showStartProgressButtonOnHabits = function(){
     document.getElementById("go-to-progress-button").style.display = "flex";
 }
-var ingestElements = function(inputData,habitsArray,journalArray,urlDetails){
+var createAllElementsBasedOnData = function(inputData,habitsArray,journalArray,urlDetails){
    /* var inputData = getHabitProgress();*/
     for ( var i=0; i < inputData.length;i++){
-        addElement(inputData[i]);
+        addProgressElement(inputData[i]);
     }
     for ( var i=0; i < habitsArray.length;i++){
         addHabitElement(habitsArray[i]);
@@ -1204,7 +1204,7 @@ var filterDivs = function(testElements, filterType, filterValue, exactMatch){
         }
     }
 };
-var resetElements = function(){
+var resetElementsOnNewHabitForm = function(){
     var testElements = document.getElementsByClassName('habit-update');
     for (var i=0; i< testElements.length; i++){
         testElements[i].style.display =  'block';
@@ -1244,13 +1244,13 @@ var refreshProgress = function(currentDiv){
     currentDiv.getElementsByClassName("percentage-completion")[0].innerHTML = newCompletionPercentage;
 
     
-    putColorBasedOnCompletion(currentDiv,newCompletionPercentage);
+    setDivAppearanceBasedOnCompletion(currentDiv,newCompletionPercentage);
 
     updateDailyProgress();
 
 }
 
-var putColorBasedOnCompletion = function(currentDiv,newCompletionPercentage){
+var setDivAppearanceBasedOnCompletion = function(currentDiv,newCompletionPercentage){
 
     if (newCompletionPercentage>=100){
         currentDiv.style.border="1px solid rgb(167 211 162)"/*"#f7fff6"*/;
@@ -1359,12 +1359,12 @@ var updateDailyProgress = function(){
         var dailyPercentage = 0;
         dailySummaryBox.style.display = "none";
     }
-    putColorBasedOnCompletion(dailySummaryDiv.parentNode,dailyPercentage);
+    setDivAppearanceBasedOnCompletion(dailySummaryDiv.parentNode,dailyPercentage);
 
 }
 
 var applyFilters = function(){
-    var testElements = resetElements();
+    var testElements = resetElementsOnNewHabitForm();
     var filterTitle = document.getElementById("text-filter").value;
     var filterDate = document.getElementById("date-filter").value;
 
@@ -1410,7 +1410,7 @@ var addOneToProgress = function(divElement){
 /* Get information from the form to add new habits and add a PROGRESS (dom+memory for both)*/
 /* CAREFUL elementToAdd has data to build A PROGRESS */ 
 /* both habit and progress are added with this function */
-var addElementFromForm = function(){
+var addNewHabitFromForm = function(){
 
     var elementToAdd={};
     elementToAdd.id = Date.now();
@@ -1437,7 +1437,7 @@ var addElementFromForm = function(){
     if (isDayOK != null && isDayOK == true)
     {
         /* add progress */
-        addElement(elementToAdd);
+        addProgressElement(elementToAdd);
     }
     addHabitElement(elementToAdd);
     
@@ -1655,7 +1655,7 @@ var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
                     isCritical: habitsElements[i].getAttribute("iscritical"),
                     numberOfCompletions:0,
                 }
-                addElement(newProgressObject);
+                addProgressElement(newProgressObject);
                 console.log("added progress");
                 console.log(newProgressObject);
                 pushProgressArrayToQueue(newProgressObject);

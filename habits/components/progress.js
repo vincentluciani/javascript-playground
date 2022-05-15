@@ -1,5 +1,5 @@
 
-var addElement = function(elementToAdd){
+var addProgressElement = function(elementToAdd){
 
     const newProgressDivision = document.createElement("div");
 

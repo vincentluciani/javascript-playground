@@ -77,11 +77,7 @@ var addHabitElement = function(elementToAdd){
     deleteButton.innerHTML = '<i class="fa fa-trash"></i> Delete';
     newHabitDivision.appendChild(deleteButton);
 
-
-
     document.getElementById('habits-definition-container').appendChild(newHabitDivision);
-
-
 }
 
 var closeDeleteMessage = function(){
@@ -119,7 +115,6 @@ var deleteProgressFromHabitToday = function(habitId){
         var progressHabitId = progressDivs[i].getAttribute("habitid");
         var progressDate = progressDivs[i].getAttribute("progressDate");
 
-        /*var currentDateString = currentDateTime.getFullYear().toString().padStart(2,'0')+'-'+(currentDateTime.getMonth()+1).toString().padStart(2,'0')+'-'+currentDateTime.getDate().toString().padStart(2,'0'); */
         var currentDateString = formatDate(currentDateTime); 
 
         if ( (currentDateString == progressDate) && ( progressHabitId == habitId)) {
@@ -129,8 +124,5 @@ var deleteProgressFromHabitToday = function(habitId){
             window.localStorage.removeItem(progressKey);
         }
     }
-
-
-
 
 }

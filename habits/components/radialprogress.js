@@ -46,7 +46,7 @@ var updateProgressOnRadial = function( percentageValue, parameters){
 }
 
 
-var createProgressElements = function(parameters){
+var createRadialProgressBar = function(parameters){
 
     var circleRadius = ( parameters.containerHeight / 2 ) - parameters.strokeWidth;
 
