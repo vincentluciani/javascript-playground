@@ -1,3 +1,4 @@
+var dataArrays = {}
 var loggedIn = false;
 var maxForNonLoggedIn = 2000;
 var updateQueue = [];
@@ -38,6 +39,38 @@ onload = function(){
     document.getElementById("date-filter").value=currentDate;
     createRadialProgressBar(radialProgressParameters);
     getHabitProgressJournal(); /* todo: this function should only extract and not also create divs */
+    var habitsArray = dataArrays.habitsArray;
+    var journalArray = dataArrays.journalArray;
+    var inputData =  dataArrays.progressArray;
+ 
+    if (habitsArray.length > 1){
+        changeTabToProgress();
+    }
+    else if (habitsArray.length > 0){
+        changeTabToProgress();
+        hideGraphsTab();
+    } else {
+        changeTabToHabits();
+        hideProgressTab();
+        hideGraphsTab();
+        hideSaveButtonOnHabits();
+        hideStartProgressButtonOnHabits();
+    }
+
+    if (journalArray.length < 1){
+        hideJournalBox();
+    }
+
+    for (const progressElement of inputData){
+        addProgressElement(progressElement);
+    }
+    for (const habitsElement of habitsArray){
+        addHabitElement(habitsElement);
+    }
+    applyFilters();
+    launchCharts(inputData,habitsArray);
+    readJournal(journalArray);
+    
     addEmptyProgressOnNewDay(currentDate, currentDateTime);
     saveLoop();
 
@@ -69,22 +102,28 @@ minusButtonInAddDiv.addEventListener('click', function(targetDiv) {
 
 
 var getHabitProgressJournal = function(){
+
     if (loggedIn){
-        getHabitProgressJournalWhenLoggedIn();
+        dataArrays=getHabitProgressJournalWhenLoggedIn();
     } else {
-        getHabitProgressJournalWhenNotLoggedIn();
+        dataArrays=getHabitProgressJournalWhenNotLoggedIn();
     }
+
 };
 
 var getHabitProgressJournalWhenLoggedIn = function(){
+    var progressArray,habitsArray,journalArray = {};
+
     var APIcallParameters = {
         method: "GET",
         url: "http://localhost:5000/get-habit-progress"
     };
-    var apiCaller = new APICaller(APIcallParameters,createAllElementsBasedOnData,getHabitProgressJournalWhenNotLoggedIn);
+    /*
+    var apiCaller = new APICaller(APIcallParameters,todoCallback1,todoCallback2);
 
     apiCaller.executeCall(APIcallParameters.url, {});
-
+*/
+    return {progressArray,habitsArray,journalArray};
 };
 
 var getHabitProgressJournalWhenNotLoggedIn = function(){
@@ -105,25 +144,8 @@ var getHabitProgressJournalWhenNotLoggedIn = function(){
         }
     }
 
-    if (habitsArray.length > 1){
-        changeTabToProgress();
-    }
-    else if (habitsArray.length > 0){
-        changeTabToProgress();
-        hideGraphsTab();
-    } else {
-        changeTabToHabits();
-        hideProgressTab();
-        hideGraphsTab();
-        hideSaveButtonOnHabits();
-        hideStartProgressButtonOnHabits();
-    }
+    return {progressArray,habitsArray,journalArray};
 
-    if (journalArray.length < 1){
-        hideJournalBox();
-    }
-
-    createAllElementsBasedOnData(progressArray,habitsArray,journalArray);
 };
 var hideJournalBox = function(){
     document.getElementById("journal-container").innerHTML = "no entry yet";
@@ -146,18 +168,6 @@ var hideStartProgressButtonOnHabits = function(){
 }
 var showStartProgressButtonOnHabits = function(){
     document.getElementById("go-to-progress-button").style.display = "flex";
-}
-var createAllElementsBasedOnData = function(inputData,habitsArray,journalArray){
-
-    for (const progressElement of inputData){
-        addProgressElement(progressElement);
-    }
-    for (const habitsElement of habitsArray){
-        addHabitElement(habitsElement);
-    }
-    applyFilters();
-    launchCharts(inputData,habitsArray);
-    readJournal(journalArray);
 }
 
 
@@ -599,7 +609,7 @@ var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
 
 var launchCharts = function(fullData,habitsArray){
     for ( let habit of habitsArray){
-        launchChart(fullData,habit)
+        launchHabitSummaries(fullData,habit)
     }
 
 }
@@ -633,41 +643,82 @@ var changeTabToGraphs = function(){
 }
 
 
-var launchChart = function(fullData,habitObject){
+var launchHabitSummaries = function(fullData,habitObject){
 
-    var dataToShow = [];
-    var baseline = [];
-    var progressByDay = {};
-    var unitAccumulation=0;
-    var unitPerMonth=0;
+    var dataForGraphs = prepareDataForHabitSummaries(fullData,habitObject);
+    var dataToShow = dataForGraphs.dataToShow;
+    var unitAccumulation= dataForGraphs.unitAccumulation;
+    var baseline = dataForGraphs.baseline;
+    var progressByDay = dataForGraphs.progressByDay;
 
-    for ( var i=0; i< fullData.length;i++){
-        if (fullData[i].habitId == habitObject.habitId){
-            unitAccumulation+=fullData[i].numberOfCompletions;
-            dataToShow.push({
-                x: new Date(fullData[i].progressDate),y:fullData[i].numberOfCompletions
-            })
-            baseline.push({
-                x: new Date(fullData[i].progressDate),y:fullData[i].target
-            })
-            progressByDay[fullData[i].progressDate]=fullData[i].numberOfCompletions-fullData[i].target;
-        }
+    if ( dataToShow.length >= 1){
+        showGraphsTab();
     }
 
+    var unitPerMonth=0;
+
+    /* Analysis */
+    var completionAccumulation = getNumberOfStreaks(dataToShow,baseline);
+
+    var j = dataToShow.length-1;
+
+    var numberOfDays = (dataToShow[j].x - dataToShow[0].x)/1000/60/60/24;
+    if (numberOfDays>0){
+        unitPerMonth=Math.round(unitAccumulation*30/numberOfDays);
+    }
+
+    if ( j < 0){
+        return false;
+    }
+
+    if (j >= 0 && dataToShow[j] && dataToShow[j].x){
+        debugWrite("Launching Chart");
+        debugWrite(dataToShow[j].x.getDay());
+    } else {
+        return false;
+    }
+
+    var weekTableObject = {};
+    weekTableObject = weekTable(progressByDay);
+
+    buildWeekTable(weekTableObject,habitObject);
+
+    /* Graph */
+    buildGraph(unitPerMonth,unitAccumulation,completionAccumulation,habitObject,dataToShow);
+
+}
+
+var prepareDataForHabitSummaries = function(fullData,habitObject){
+    var dataToShow = [];
+    var progressByDay = [];
+    var baseline = [];
+
+    var unitAccumulation = 0;
+
+    for ( var dataItem of fullData){
+        if (dataItem.habitId == habitObject.habitId){
+            unitAccumulation+=dataItem.numberOfCompletions;
+            dataToShow.push({
+                x: new Date(dataItem.progressDate),y:dataItem.numberOfCompletions
+            });
+            baseline.push({
+                x: new Date(dataItem.progressDate),y:dataItem.target
+            })
+            progressByDay[dataItem.progressDate]=dataItem.numberOfCompletions-dataItem.target;
+        }
+    }
 
     dataToShow.sort(function(a, b){
     return (a.x - b.x)
     });	
-
-    if ( dataToShow.length >= 1){
-        showGraphsTab();
-    };
     baseline.sort(function(a, b){
         return (a.x - b.x)
     });	
 
+    return {dataToShow,baseline,progressByDay,unitAccumulation};
+}
 
-    /* Analysis */
+var getNumberOfStreaks = function(dataToShow,baseline){
     var completionAccumulation=0;
 
     for (var i =  dataToShow.length - 1 ; i>=0; i--){
@@ -691,43 +742,66 @@ var launchChart = function(fullData,habitObject){
         }
 
     }
+    return completionAccumulation;
+}
 
-    var numberOfMissesInWeek=0;
-    var j = dataToShow.length-1;
+var buildWeekTable = function(weekTableObject,habitObject){
+        /* week table */
+        var tableCode = weekTableObject.tableCode
+        var numberOfMissesInWeek = weekTableObject.numberOfMissesInWeek
+        const weekSummaryTable = document.createElement("div");
+        var graphIcon = document.createElement("i");
+        graphIcon.setAttribute("class","fa fa-calendar");
+        const grapTitle = document.createTextNode(habitObject.habitDescription);
+        const grapTitleDiv = document.createElement("div");
+        grapTitleDiv.setAttribute("class","graph-title");
+        grapTitleDiv.appendChild(graphIcon);
+        grapTitleDiv.appendChild(grapTitle);
+        const weekSummaryTableTitle = document.createElement("div");
+        weekSummaryTableTitle.innerHTML = "This week summary:";
+        weekSummaryTableTitle.setAttribute("class","subtitle");
+        const markAsCriticalDiv = document.createElement("div");
+    
+        markAsCriticalDiv.setAttribute("class","critical-link");
+        if (habitObject.isCritical && habitObject.isCritical=="true"){
+            markAsCriticalDiv.innerHTML = "Unmark as critical";
+            markAsCriticalDiv.setAttribute("onclick","unsetHabitAsCritical("+ habitObject.habitId +");");
+        } else {
+            markAsCriticalDiv.innerHTML = "Mark as critical";
+            markAsCriticalDiv.setAttribute("onclick","setHabitAsCritical("+ habitObject.habitId +");");
+        }
+        weekSummaryTable.setAttribute("class","table-summary");
+        weekSummaryTable.innerHTML = tableCode;
+  
+        var newCanvaWrapper = document.createElement("div");
+    
+        newCanvaWrapper.appendChild(grapTitleDiv); 
+        newCanvaWrapper.appendChild(weekSummaryTable);
+        newCanvaWrapper.appendChild(markAsCriticalDiv);
+        var brDiv = document.createElement("br");
+        newCanvaWrapper.appendChild(brDiv);
+        newCanvaWrapper.setAttribute("class","box canva-wrapper week-box");
+        if (numberOfMissesInWeek==0){
+            newCanvaWrapper.style.background="#daffd9";
+            newCanvaWrapper.style.border="1px solid rgb(167 211 162)"
+        } else if (numberOfMissesInWeek==1){
+            newCanvaWrapper.style.background="rgb(255 252 238)";
+            newCanvaWrapper.style.border="1px solid rgb(246 223 35)"
+        } else if (numberOfMissesInWeek>1){
+            newCanvaWrapper.style.background="white";
+        }
+        document.getElementById("no-graph").style.display = "none";
+        document.getElementById("graph-container").appendChild(newCanvaWrapper);
+    
+}
 
-    var numberOfDays = (dataToShow[j].x - dataToShow[0].x)/1000/60/60/24;
-    if (numberOfDays>0){
-        unitPerMonth=Math.round(unitAccumulation*30/numberOfDays);
-    }
+var buildGraph = function(unitPerMonth,unitAccumulation,completionAccumulation,habitObject,dataToShow){
 
-    if ( j < 0){
-        return false;
-    }
-
-    if (j >= 0 && dataToShow[j] && dataToShow[j].x){
-        debugWrite("Launching Chart");
-        debugWrite(dataToShow[j].x.getDay());
-    } else {
-        return false;
-    }
-
-    var weekTableObject = {};
-    weekTableObject = weekTable(progressByDay);
-    var tableCode = weekTableObject.tableCode
-    numberOfMissesInWeek = weekTableObject.numberOfMissesInWeek
-
-    var newCanva = document.createElement("canvas");
-    var newCanvaWrapper = document.createElement("div");
     var streaksWrapper = document.createElement("div");
-    var brDiv = document.createElement("br");
-    const grapTitle = document.createTextNode(habitObject.habitDescription);
-    const grapTitleDiv = document.createElement("div");
+
     const grapTitleStreaks = document.createTextNode(habitObject.habitDescription);
     const grapTitleDivStreaks = document.createElement("div");
 
-    const weekSummaryTable = document.createElement("div");
-    var graphIcon = document.createElement("i");
-    graphIcon.setAttribute("class","fa fa-calendar");
     var graphIconStreaks = document.createElement("i");
     graphIconStreaks.setAttribute("class","fa fa-bar-chart");
 
@@ -739,58 +813,27 @@ var launchChart = function(fullData,habitObject){
     accumulationTitleDiv.innerHTML = "Number of units: "+ unitAccumulation.toString()+" ("+unitPerMonth+" per month)";
     accumulationTitleDiv.setAttribute("class","subtitle");
 
-    grapTitleDiv.setAttribute("class","graph-title");
-    grapTitleDiv.appendChild(graphIcon);
-    grapTitleDiv.appendChild(grapTitle);
-
     grapTitleDivStreaks.setAttribute("class","graph-title");
     grapTitleDivStreaks.appendChild(graphIconStreaks);
     grapTitleDivStreaks.appendChild(grapTitleStreaks);
-
-    const weekSummaryTableTitle = document.createElement("div");
-    weekSummaryTableTitle.innerHTML = "This week summary:";
-    weekSummaryTableTitle.setAttribute("class","subtitle");
-    const markAsCriticalDiv = document.createElement("div");
-
-    markAsCriticalDiv.setAttribute("class","critical-link");
-    if (habitObject.isCritical && habitObject.isCritical=="true"){
-        markAsCriticalDiv.innerHTML = "Unmark as critical";
-        markAsCriticalDiv.setAttribute("onclick","unsetHabitAsCritical("+ habitObject.habitId +");");
-    } else {
-        markAsCriticalDiv.innerHTML = "Mark as critical";
-        markAsCriticalDiv.setAttribute("onclick","setHabitAsCritical("+ habitObject.habitId +");");
-    }
-    weekSummaryTable.setAttribute("class","table-summary");
-    weekSummaryTable.innerHTML = tableCode;
 
     const graphTitle = document.createElement("div");
     graphTitle.innerHTML = "Graph:";
     graphTitle.setAttribute("class","subtitle");
 
-    newCanva.setAttribute("id","graph-"+habitObject.habitId);
-    newCanvaWrapper.appendChild(grapTitleDiv); 
     streaksWrapper.appendChild(grapTitleDivStreaks);
     streaksWrapper.setAttribute("id","streaks-"+habitObject.habitId);
-    newCanvaWrapper.appendChild(weekSummaryTable);
-    newCanvaWrapper.appendChild(markAsCriticalDiv);
-    newCanvaWrapper.appendChild(brDiv);
     streaksWrapper.appendChild(streaksTitleDiv);
     streaksWrapper.appendChild(accumulationTitleDiv);
     streaksWrapper.appendChild(graphTitle); 
+
+    var newCanva = document.createElement("canvas");
+    newCanva.setAttribute("id","graph-"+habitObject.habitId);
+
     streaksWrapper.append(newCanva);
 
-    newCanvaWrapper.setAttribute("class","box canva-wrapper week-box");
     streaksWrapper.setAttribute("class","box canva-wrapper streak-box");
 
-    if (numberOfMissesInWeek==0){
-        newCanvaWrapper.style.background="#daffd9";
-        newCanvaWrapper.style.border="1px solid rgb(167 211 162)"
-    } else if (numberOfMissesInWeek==1){
-        newCanvaWrapper.style.background="rgb(255 252 238)";
-        newCanvaWrapper.style.border="1px solid rgb(246 223 35)"
-    } else if (numberOfMissesInWeek>1){
-        newCanvaWrapper.style.background="white";
-    }
 
     if (completionAccumulation >= 10){
         streaksWrapper.style.background="#daffd9";
@@ -802,9 +845,9 @@ var launchChart = function(fullData,habitObject){
         streaksWrapper.style.background="white";
     }
 
-    document.getElementById("no-graph").style.display = "none";
+
     document.getElementById("no-streak").style.display = "none";
-    document.getElementById("graph-container").appendChild(newCanvaWrapper);
+
     document.getElementById("streaks-container").appendChild(streaksWrapper);
 
     var ctx = document.getElementById("graph-"+habitObject.habitId).getContext('2d');
@@ -860,9 +903,7 @@ var launchChart = function(fullData,habitObject){
     options: options,
     type:'line',
     });
-
 }
-
 
 var subMenuGo = function( targetLink){
 

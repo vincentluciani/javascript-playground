@@ -1667,7 +1667,7 @@ var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
 
 var launchCharts = function(fullData,habitsArray){
     for ( var i=0;i<habitsArray.length;i++){
-        launchChart(fullData,habitsArray[i])
+        launchHabitSummaries(fullData,habitsArray[i])
     }
 
 }
@@ -1701,7 +1701,7 @@ var changeTabToGraphs = function(){
 }
 
 
-var launchChart = function(fullData,habitObject){
+var launchHabitSummaries = function(fullData,habitObject){
 
     var dataToShow = [];
     var baseline = [];
