@@ -130,13 +130,19 @@ var getHabitProgressJournalWhenNotLoggedIn = function(){
     var progressArray=[];
     var habitsArray=[];
     var journalArray = [];
+    var todaysProgressArray=[];
+    var pastProgressArray=[];
     var localStorageLength = localStorage.length;
 
     /* todo separate progress today from progress in the past */
     for (var i = 0; i < localStorageLength && i < maxForNonLoggedIn; i++){
         var currentKey = localStorage.key(i);
         if ( currentKey.indexOf("progress-") >= 0){
-            progressArray.push(JSON.parse(localStorage.getItem(currentKey)));
+            var progressValue = JSON.parse(localStorage.getItem(currentKey));
+            if ( progressValue.progressDate == formattedTodaysDate()){
+                todaysProgressArray.push(progressValue);
+            }
+            progressArray.push(progressValue);
         } else if ( currentKey.indexOf("habit-") >= 0){
             habitsArray.push(JSON.parse(localStorage.getItem(currentKey)));
         } else if ( currentKey.indexOf("journal-") >= 0){

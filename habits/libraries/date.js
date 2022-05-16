@@ -8,3 +8,8 @@ var todaysDateDayNumber = function(){
     return todaysDateTime.getDay();
 
 };
+
+var formattedTodaysDate = function(){
+    var todaysDateTime = new Date();
+    return formatDate(todaysDateTime);
+}
