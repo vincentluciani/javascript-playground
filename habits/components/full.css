@@ -5,6 +5,10 @@ body{
     overflow-wrap: break-word;
     background: #fafafa;
 }
+
+#graphs-menu{
+    display: none;
+}
 .green{
     background:#17bc25;
     color:white;

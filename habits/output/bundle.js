@@ -1027,9 +1027,15 @@ console.log("starting javascript:"+currentDateTime.toString());
 
 var currentDate = formatDate(currentDateTime);
                    
+runApp = function(){
 
+}
 
+/*document.addEventListener("DOMContentLoaded", function(event) { 
+    runAppRendering();
+  });*/
 onload = function(){
+/*var runAppRendering = function(){*/
     "use strict";
 /*
     if ("serviceWorker" in navigator) {
@@ -1048,7 +1054,6 @@ onload = function(){
         document.getElementById("debug-section").style.display = "block";
     }
 
-    hideGraphsTab();
     hideStartProgressButtonOnHabits();
 
     document.getElementById("date-filter").value=currentDate;
@@ -1092,21 +1097,22 @@ onload = function(){
     /* TODO : should be based on arrays and not on DOM */
     addEmptyProgressOnNewDay(currentDate, currentDateTime);
 
+    loadFontAwesome();
+
     for (const habitsElement of pastProgressArray){
         addProgressElement(habitsElement);
     }
 
     applyFilters();
-    loadScriptForGraphs();
-    launchCharts(progressArray,habitsArray);
+
     readJournal(journalArray);
-    
+    loadScriptForGraphs();
+
     dateTime = new Date();
     console.log("end adding habit+pastelements+charts+journal:"+dateTime.toString());
 
     if (habitsArray.length > 1){
         showGraphsTab();
-        showProgressButtonOnHabits();
     }
 
     saveLoop();
@@ -1199,6 +1205,9 @@ var loadScriptForGraphs = function(){
     loadScript("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js");
 }
 
+var loadFontAwesome = function(){
+    loadScript("https://use.fontawesome.com/372afdc18b.js");
+}
 var loadScript = function(scriptUrl){
     let myScript = document.createElement("script");
     myScript.setAttribute("src", scriptUrl);
@@ -1691,6 +1700,7 @@ var changeTabToHabits = function(){
 }
 
 var changeTabToGraphs = function(){
+    launchCharts(dataArrays.progressArray,dataArrays.habitsArray);
     document.getElementById("habits-section").style.display = "none";
     document.getElementById("progress-section").style.display = "none";
     document.getElementById("graphs-section").style.display = "block";
@@ -2001,3 +2011,5 @@ var subMenuGo = function( targetLink){
       }
 
 }
+
+runApp();

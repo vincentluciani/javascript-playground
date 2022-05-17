@@ -23,8 +23,11 @@ runApp = function(){
 
 }
 
+/*document.addEventListener("DOMContentLoaded", function(event) { 
+    runAppRendering();
+  });*/
 onload = function(){
-
+/*var runAppRendering = function(){*/
     "use strict";
 /*
     if ("serviceWorker" in navigator) {
@@ -37,23 +40,25 @@ onload = function(){
 */
 
     var dateTime = new Date();
-    console.log("start onload:"+dateTime.toString());
+    var timestamp = dateTime.getTime();
+    console.log("start onload:"+dateTime.toString()+"|"+timestamp.toString());
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('debug') == "true"){
         document.getElementById("debug-section").style.display = "block";
     }
 
-    hideGraphsTab();
     hideStartProgressButtonOnHabits();
 
     document.getElementById("date-filter").value=currentDate;
     createRadialProgressBar(radialProgressParameters);
 
     dateTime = new Date();
-    console.log("start getting data:"+dateTime.toString());
+    var timestamp2 = dateTime.getTime();
+    console.log("start getting data:"+dateTime.toString()+"|"+(timestamp2-timestamp).toString());
     getHabitProgressJournal(); /* todo: this function should only extract and not also create divs */
     dateTime = new Date();
-    console.log("end getting data:"+dateTime.toString());
+    var timestamp3 = dateTime.getTime();
+    console.log("end getting data:"+dateTime.toString()+"|"+(timestamp3-timestamp2).toString());
 
     var habitsArray = dataArrays.habitsArray;
     var journalArray = dataArrays.journalArray;
@@ -74,12 +79,14 @@ onload = function(){
     }
 
     dateTime = new Date();
-    console.log("start rendering today:"+dateTime.toString());
+    var timestamp4 = dateTime.getTime();
+    console.log("start rendering today:"+dateTime.toString()+"|"+(timestamp4-timestamp3).toString());
     for (const progressElement of todaysProgressArray){
         addProgressElement(progressElement);
     }
     dateTime = new Date();
-    console.log("end rendering today:"+dateTime.toString());
+    var timestamp5 = dateTime.getTime();
+    console.log("end rendering today:"+dateTime.toString()+"|"+(timestamp5-timestamp4).toString());
 
     for (const habitsElement of habitsArray){
         addHabitElement(habitsElement);
@@ -87,17 +94,20 @@ onload = function(){
     /* TODO : should be based on arrays and not on DOM */
     addEmptyProgressOnNewDay(currentDate, currentDateTime);
 
+    loadFontAwesome();
+
     for (const habitsElement of pastProgressArray){
         addProgressElement(habitsElement);
     }
 
     applyFilters();
-    loadScriptForGraphs();
-    launchCharts(progressArray,habitsArray);
+
     readJournal(journalArray);
-    
+    loadScriptForGraphs();
+
     dateTime = new Date();
-    console.log("end adding habit+pastelements+charts+journal:"+dateTime.toString());
+    var timestamp6 = dateTime.getTime();
+    console.log("end adding habit+pastelements+charts+journal:"+dateTime.toString()+"|"+(timestamp6-timestamp5).toString());
 
     if (habitsArray.length > 1){
         showGraphsTab();
@@ -193,6 +203,9 @@ var loadScriptForGraphs = function(){
     loadScript("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js");
 }
 
+var loadFontAwesome = function(){
+    loadScript("https://use.fontawesome.com/372afdc18b.js");
+}
 var loadScript = function(scriptUrl){
     let myScript = document.createElement("script");
     myScript.setAttribute("src", scriptUrl);
@@ -685,6 +698,7 @@ var changeTabToHabits = function(){
 }
 
 var changeTabToGraphs = function(){
+    launchCharts(dataArrays.progressArray,dataArrays.habitsArray);
     document.getElementById("habits-section").style.display = "none";
     document.getElementById("progress-section").style.display = "none";
     document.getElementById("graphs-section").style.display = "block";
