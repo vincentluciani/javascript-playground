@@ -15,11 +15,16 @@ var radialProgressParameters = {
 }
 
 var currentDateTime = new Date();
+console.log("starting javascript:"+currentDateTime.toString());
+
 var currentDate = formatDate(currentDateTime);
                    
+runApp = function(){
 
+}
 
 onload = function(){
+
     "use strict";
 /*
     if ("serviceWorker" in navigator) {
@@ -31,47 +36,73 @@ onload = function(){
       }
 */
 
+    var dateTime = new Date();
+    console.log("start onload:"+dateTime.toString());
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('debug') == "true"){
         document.getElementById("debug-section").style.display = "block";
     }
 
+    hideGraphsTab();
+    hideStartProgressButtonOnHabits();
+
     document.getElementById("date-filter").value=currentDate;
     createRadialProgressBar(radialProgressParameters);
+
+    dateTime = new Date();
+    console.log("start getting data:"+dateTime.toString());
     getHabitProgressJournal(); /* todo: this function should only extract and not also create divs */
+    dateTime = new Date();
+    console.log("end getting data:"+dateTime.toString());
+
     var habitsArray = dataArrays.habitsArray;
     var journalArray = dataArrays.journalArray;
-    var inputData =  dataArrays.progressArray;
- 
-    if (habitsArray.length > 1){
-        changeTabToProgress();
-    }
-    else if (habitsArray.length > 0){
-        changeTabToProgress();
-        hideGraphsTab();
-    } else {
-        changeTabToHabits();
-        hideProgressTab();
-        hideGraphsTab();
-        hideSaveButtonOnHabits();
-        hideStartProgressButtonOnHabits();
-    }
+    var progressArray =  dataArrays.progressArray;
+    var todaysProgressArray = dataArrays.todaysProgressArray;
+    var pastProgressArray = dataArrays.pastProgressArray;
 
+    if (pastProgressArray.length > 1){
+        changeTabToProgress();
+        showProgressTab();
+    }
+    else {
+        hideProgressTab();
+        changeTabToHabits();
+    }
     if (journalArray.length < 1){
         hideJournalBox();
     }
 
-    for (const progressElement of inputData){
+    dateTime = new Date();
+    console.log("start rendering today:"+dateTime.toString());
+    for (const progressElement of todaysProgressArray){
         addProgressElement(progressElement);
     }
+    dateTime = new Date();
+    console.log("end rendering today:"+dateTime.toString());
+
     for (const habitsElement of habitsArray){
         addHabitElement(habitsElement);
     }
+    /* TODO : should be based on arrays and not on DOM */
+    addEmptyProgressOnNewDay(currentDate, currentDateTime);
+
+    for (const habitsElement of pastProgressArray){
+        addProgressElement(habitsElement);
+    }
+
     applyFilters();
-    launchCharts(inputData,habitsArray);
+    loadScriptForGraphs();
+    launchCharts(progressArray,habitsArray);
     readJournal(journalArray);
     
-    addEmptyProgressOnNewDay(currentDate, currentDateTime);
+    dateTime = new Date();
+    console.log("end adding habit+pastelements+charts+journal:"+dateTime.toString());
+
+    if (habitsArray.length > 1){
+        showGraphsTab();
+    }
+
     saveLoop();
 
 };
@@ -113,17 +144,17 @@ var getHabitProgressJournal = function(){
 
 var getHabitProgressJournalWhenLoggedIn = function(){
     var progressArray,habitsArray,journalArray = {};
-
+    /*
     var APIcallParameters = {
         method: "GET",
         url: "http://localhost:5000/get-habit-progress"
     };
-    /*
+
     var apiCaller = new APICaller(APIcallParameters,todoCallback1,todoCallback2);
 
     apiCaller.executeCall(APIcallParameters.url, {});
 */
-    return {progressArray,habitsArray,journalArray};
+    return {progressArray,habitsArray,journalArray,todaysProgressArray,pastProgressArray};
 };
 
 var getHabitProgressJournalWhenNotLoggedIn = function(){
@@ -141,6 +172,8 @@ var getHabitProgressJournalWhenNotLoggedIn = function(){
             var progressValue = JSON.parse(localStorage.getItem(currentKey));
             if ( progressValue.progressDate == formattedTodaysDate()){
                 todaysProgressArray.push(progressValue);
+            } else {
+                pastProgressArray.push(progressValue);
             }
             progressArray.push(progressValue);
         } else if ( currentKey.indexOf("habit-") >= 0){
@@ -150,9 +183,21 @@ var getHabitProgressJournalWhenNotLoggedIn = function(){
         }
     }
 
-    return {progressArray,habitsArray,journalArray};
+    return {progressArray,habitsArray,journalArray,todaysProgressArray,pastProgressArray};
 
 };
+
+var loadScriptForGraphs = function(){
+
+    loadScript("https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js");
+    loadScript("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js");
+}
+
+var loadScript = function(scriptUrl){
+    let myScript = document.createElement("script");
+    myScript.setAttribute("src", scriptUrl);
+    document.body.appendChild(myScript);
+}
 var hideJournalBox = function(){
     document.getElementById("journal-container").innerHTML = "no entry yet";
 }
@@ -550,7 +595,7 @@ function APICaller(parameters,callback,callbackOnFailure){
 		xhttp.send();
 	};
 	
-};
+}
 
 var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
 
@@ -592,7 +637,7 @@ var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
             } else {
                 isDayOK = true;
             }
-            if (isDayOK != null && isDayOK == true) {
+            if (isDayOK != null && isDayOK) {
                 let newProgressObject = {
                     id: Date.now()*100+i,
                     habitId: habitsElements[i].getAttribute("habitId"),
@@ -950,3 +995,5 @@ var subMenuGo = function( targetLink){
       }
 
 }
+
+runApp();

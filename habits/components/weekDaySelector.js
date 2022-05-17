@@ -182,10 +182,7 @@ var isDayInListOfDaysString = function(dayToCheck, weekDayString){
     var arrayOfWeekDays = weekDayString.split(" ");
 
     const index = arrayOfWeekDays.indexOf(dayToCheck);
-    if (index > -1) {
-        return true;
-    }
-    return false;
+    return (index > -1);
 }
 
 var resetWeekDaySelector = function(weekDaySelector) {
@@ -193,8 +190,8 @@ var resetWeekDaySelector = function(weekDaySelector) {
     weekDaySelector.setAttribute("weekday","");
     var weekDays = weekDaySelector.getElementsByClassName("weekday");
 
-    for ( var i = 0; i < weekDays.length; i++){
-        weekDays[i].classList.remove("selected");
+    for ( var weekDay of weekDays){
+        weekDay.classList.remove("selected");
     }
 
 }

@@ -117,11 +117,7 @@ var addHabitElement = function(elementToAdd){
     deleteButton.innerHTML = '<i class="fa fa-trash"></i> Delete';
     newHabitDivision.appendChild(deleteButton);
 
-
-
     document.getElementById('habits-definition-container').appendChild(newHabitDivision);
-
-
 }
 
 var closeDeleteMessage = function(){
@@ -159,7 +155,6 @@ var deleteProgressFromHabitToday = function(habitId){
         var progressHabitId = progressDivs[i].getAttribute("habitid");
         var progressDate = progressDivs[i].getAttribute("progressDate");
 
-        /*var currentDateString = currentDateTime.getFullYear().toString().padStart(2,'0')+'-'+(currentDateTime.getMonth()+1).toString().padStart(2,'0')+'-'+currentDateTime.getDate().toString().padStart(2,'0'); */
         var currentDateString = formatDate(currentDateTime); 
 
         if ( (currentDateString == progressDate) && ( progressHabitId == habitId)) {
@@ -169,9 +164,6 @@ var deleteProgressFromHabitToday = function(habitId){
             window.localStorage.removeItem(progressKey);
         }
     }
-
-
-
 
 }
 var displayJournalEditBox = function(){
@@ -224,13 +216,13 @@ var readJournal = function(journalArray){
 		return ( convertJournalKeyToDateInt(b.key) - convertJournalKeyToDateInt(a.key))
 		});	
 
-    for ( var i=0; i< journalArray.length; i++){
-        var journalText = journalArray[i].text;
+    for ( var journalEntry of journalArray){
+        var journalText = journalEntry.text;
         if ( journalText.length > 0){
             var brDiv = document.createElement("br");
             var journalDiv = document.createElement("div");
             var dateDiv = document.createElement("div");
-            dateDiv.innerHTML = journalArray[i].key.substr(8);
+            dateDiv.innerHTML = journalEntry.key.substr(8);
             dateDiv.setAttribute("class","date-label");
             var textDiv = document.createElement("div");
             textDiv.innerHTML = journalText;
@@ -261,8 +253,6 @@ var addProgressElement = function(elementToAdd){
     newProgressDivision.setAttribute("isNegative", elementToAdd.isNegative);
     newProgressDivision.setAttribute("isCritical", elementToAdd.isCritical);
 
-    const dateDiv = document.createElement("div");
-
     const habitDescriptionText = document.createTextNode(elementToAdd.habitDescription);
     const targetValue = document.createElement("input");
     const currentProgressText = document.createTextNode("Number of times completed:");
@@ -287,9 +277,6 @@ var addProgressElement = function(elementToAdd){
  
 
     progressInput.setAttribute("class","number-of-completion");
-
-    
-
 
     percentageCompletionInput.setAttribute("class","percentage-completion");
     percentageCompletionInput.setAttribute("progressDate",elementToAdd.progressDate);
@@ -318,8 +305,6 @@ var addProgressElement = function(elementToAdd){
     currentProgressContainer.setAttribute("class","progress-container");
 
     if (elementToAdd.target > 1){
-    /*if (1==1){*/
-
         progressInput.setAttribute("type","number");
         progressInput.setAttribute("value",elementToAdd.numberOfCompletions);
         currentProgressContainer.appendChild(currentProgressText);
@@ -444,14 +429,12 @@ var toggleExpandCollapse = function(toggleButton,divToTransform){
 
 var updateProgressOnRadial = function( percentageValue, parameters){
 
-    circleRadius = ( parameters.containerHeight / 2 ) - parameters.strokeWidth;
+    var circleRadius = ( parameters.containerHeight / 2 ) - parameters.strokeWidth;
 
     var circleDiv = document.getElementById(parameters.suffixForIds+'_background-circle');
     var progressDiv = document.getElementById(parameters.suffixForIds+'_progress-circle');
     var percentageValueDiv = document.getElementById(parameters.suffixForIds+'_percentage-value');
     
-    var percentageCircleContainer = document.getElementById(parameters.suffixForIds+'_percentage-circle-container');
-
     if (percentageValueDiv){
         percentageValueDiv.innerHTML = percentageValue + " %";
     } else {
@@ -464,10 +447,8 @@ var updateProgressOnRadial = function( percentageValue, parameters){
     circleDiv.style.stroke  = parameters.emptyColor;
 
   
-    if (isNaN(percentageValue)) {
-        percentageValue = 100; 
-    }
-    else{
+    if (!isNaN(percentageValue)) {
+
         circleDiv.setAttribute('r',circleRadius);
         progressDiv.setAttribute('r',circleRadius);
         var circonference = Math.PI*circleRadius*2;
@@ -529,8 +510,7 @@ var createRadialProgressBar = function(parameters){
 
     var textMarginTop = (-1)*(parameters.containerHeight - parameters.strokeWidth - circleRadius + parameters.fontSize/1.9 + parameters.textTopAdjustment);
     var textMarginLeft = (parameters.strokeWidth + circleRadius)/1.5 + parameters.textLeftAdjustment;
-  /*  var roundedMarginTop = Math.round(textMarginTop/100)*100;
-    var roundedMarginLeft = Math.round(textMarginLeft/100)*100*/
+
     percentageValue.style.marginTop = textMarginTop.toString()+"px";
     percentageValue.style.marginLeft = textMarginLeft.toString()+"px";
     percentageValue.style.fontSize = parameters.fontSize.toString()+"px";
@@ -657,11 +637,8 @@ var isDayOfWeekInHabitWeeks = function(currentDate, stringOfWeekDays){
     debugWrite(arrayOfWeekDays.toString());
     
     const index = arrayOfWeekDays.indexOf(currentDayOfWeekString);
-    if (index > -1) {
-        return true;
-    }
-
-    return false;
+    
+    return (index > -1);
 }
 
 var dynamicWeekDaySelector = function(weekDay){
@@ -735,10 +712,7 @@ var isDayInListOfDaysString = function(dayToCheck, weekDayString){
     var arrayOfWeekDays = weekDayString.split(" ");
 
     const index = arrayOfWeekDays.indexOf(dayToCheck);
-    if (index > -1) {
-        return true;
-    }
-    return false;
+    return (index > -1);
 }
 
 var resetWeekDaySelector = function(weekDaySelector) {
@@ -746,8 +720,8 @@ var resetWeekDaySelector = function(weekDaySelector) {
     weekDaySelector.setAttribute("weekday","");
     var weekDays = weekDaySelector.getElementsByClassName("weekday");
 
-    for ( var i = 0; i < weekDays.length; i++){
-        weekDays[i].classList.remove("selected");
+    for ( var weekDay of weekDays){
+        weekDay.classList.remove("selected");
     }
 
 }
@@ -851,14 +825,15 @@ var weekTableHeader = function(currentDayNumber){
 function getRandomNumber(min,max){
 
     var randomSeed = Math.random();
-    
+    var randomNumber;
+
     if ( (Math.floor( 1000 * randomSeed )  % 2) == 0)
     {
-     randomNumber= Math.floor( (max - min) * randomSeed + min );
+        randomNumber= Math.floor( (max - min) * randomSeed + min );
     }
     else
     {
-    randomNumber= Math.ceil( (max - min) * randomSeed + min );
+        randomNumber= Math.ceil( (max - min) * randomSeed + min );
     }
     return randomNumber;
     
@@ -873,6 +848,11 @@ var todaysDateDayNumber = function(){
     return todaysDateTime.getDay();
 
 };
+
+var formattedTodaysDate = function(){
+    var todaysDateTime = new Date();
+    return formatDate(todaysDateTime);
+}
 var translations = {};
 translations['en_US']  = {
 'amazing':['Amazing','Superb','Outstanding','Magnificient','Exceptional','Marvellous','Wonderful','Sublime','Supreme','Splendid','Fantastic','Awesome','Mind-blowing','Brilliant','Smashing','Spectacular','Spectaculous','Awesome'],
@@ -898,8 +878,8 @@ var resetElement = function(elementType){
 var resetProgress = function(){
     var progressElements = document.getElementsByClassName("habit-update");
 
-    for ( var i=0; i<progressElements.length; i++){
-        progressElements[i].parentNode. removeChild(progressElements[i]);
+    for ( var progressElement of progressElements){
+        progressElement.parentNode.removeChild(progressElement);
     }
 
     resetElement("progress");
@@ -909,8 +889,8 @@ var resetProgress = function(){
 var resetHabits = function(){
     var progressElements = document.getElementsByClassName("habit-setting");
 
-    for ( var i=0; i<progressElements.length; i++){
-        progressElements[i].parentNode. removeChild(progressElements[i]);
+    for ( var progressElement of progressElements){
+        progressElement.parentNode.removeChild(progressElement);
     }
 
     resetElement("habit");
@@ -993,7 +973,6 @@ var executePushToQueue = function(newObject){
         console.log(lastElement);
     }
 
-    /*var intervalID = setInterval(pushItemInQueue, 50, newObject);*/
     updateQueue.push(newObject);
     
     console.log(updateQueue);
@@ -1010,11 +989,13 @@ var readQueueProgress = function() {
         console.log("reading from queue");
         console.log(elementToProcess);
         putInStorage(elementToProcess.id, elementToProcess.value); 
+        /* todo send the element to the backend using an API call */ 
         var currentDate = new Date();
         document.getElementById('last-saved-information').innerHTML = "Last saved: "+currentDate.toLocaleTimeString();
         document.getElementById('last-saved-information-habits').innerHTML = "Last saved: "+currentDate.toLocaleTimeString();   
     }
 }
+
 
 var putInStorage = function(id,value){
   try {
@@ -1025,6 +1006,7 @@ var putInStorage = function(id,value){
     console.error(currentOutput);
   }
 }
+var dataArrays = {}
 var loggedIn = false;
 var maxForNonLoggedIn = 2000;
 var updateQueue = [];
@@ -1040,15 +1022,12 @@ var radialProgressParameters = {
     suffixForIds: "12345"
 }
 
-
 var currentDateTime = new Date();
-/*var currentDate = currentDateTime.getFullYear().toString().padStart(2,'0')+'-'+(currentDateTime.getMonth()+1).toString().padStart(2,'0')+'-'+currentDateTime.getDate().toString().padStart(2,'0');*/
-var currentDate = formatDate(currentDateTime);
+console.log("starting javascript:"+currentDateTime.toString());
 
-var plusButtonInAddDiv = document.getElementById("plus-in-add-div");
-var minusButtonInAddDiv = document.getElementById("minus-in-add-div");
-                     
-var newTargetDiv = document.getElementById("new-target");
+var currentDate = formatDate(currentDateTime);
+                   
+
 
 onload = function(){
     "use strict";
@@ -1061,18 +1040,74 @@ onload = function(){
             });
       }
 */
-    var queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const isDebug = urlParams.get('debug');
-    if (isDebug == "true"){
+
+    var dateTime = new Date();
+    console.log("start onload:"+dateTime.toString());
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('debug') == "true"){
         document.getElementById("debug-section").style.display = "block";
     }
 
+    hideGraphsTab();
+    hideStartProgressButtonOnHabits();
+
     document.getElementById("date-filter").value=currentDate;
-    /*ingestElements();*/
     createRadialProgressBar(radialProgressParameters);
-    getHabitProgressJournal();
+
+    dateTime = new Date();
+    console.log("start getting data:"+dateTime.toString());
+    getHabitProgressJournal(); /* todo: this function should only extract and not also create divs */
+    dateTime = new Date();
+    console.log("end getting data:"+dateTime.toString());
+
+    var habitsArray = dataArrays.habitsArray;
+    var journalArray = dataArrays.journalArray;
+    var progressArray =  dataArrays.progressArray;
+    var todaysProgressArray = dataArrays.todaysProgressArray;
+    var pastProgressArray = dataArrays.pastProgressArray;
+
+    if (pastProgressArray.length > 1){
+        changeTabToProgress();
+        showProgressTab();
+    }
+    else {
+        hideProgressTab();
+        changeTabToHabits();
+    }
+    if (journalArray.length < 1){
+        hideJournalBox();
+    }
+
+    dateTime = new Date();
+    console.log("start rendering today:"+dateTime.toString());
+    for (const progressElement of todaysProgressArray){
+        addProgressElement(progressElement);
+    }
+    dateTime = new Date();
+    console.log("end rendering today:"+dateTime.toString());
+
+    for (const habitsElement of habitsArray){
+        addHabitElement(habitsElement);
+    }
+    /* TODO : should be based on arrays and not on DOM */
     addEmptyProgressOnNewDay(currentDate, currentDateTime);
+
+    for (const habitsElement of pastProgressArray){
+        addProgressElement(habitsElement);
+    }
+
+    applyFilters();
+    loadScriptForGraphs();
+    launchCharts(progressArray,habitsArray);
+    readJournal(journalArray);
+    
+    dateTime = new Date();
+    console.log("end adding habit+pastelements+charts+journal:"+dateTime.toString());
+
+    if (habitsArray.length > 1){
+        showGraphsTab();
+        showProgressButtonOnHabits();
+    }
 
     saveLoop();
 
@@ -1080,52 +1115,73 @@ onload = function(){
 
 var saveLoop = function(){
 
-    setInterval(extractElementsForUpdate, 1000);
+    setInterval(readQueueProgress, 1000);
 
 }
 
-plusButtonInAddDiv.addEventListener('click', function(newTargetDiv) {
-    return function(){
-        addOneToProgress(newTargetDiv);
-    }
-    }(newTargetDiv));
+/* part of the form to add a new habit */
+var plusButtonInAddDiv = document.getElementById("plus-in-add-div");
+var minusButtonInAddDiv = document.getElementById("minus-in-add-div");
+var newTargetDiv = document.getElementById("new-target");
 
-minusButtonInAddDiv.addEventListener('click', function(newTargetDiv) {
-        return function(){
-            minusOneToProgress(newTargetDiv);
-        }
-        }(newTargetDiv));
+plusButtonInAddDiv.addEventListener('click', function(targetDiv) {
+    return function(){
+        addOneToProgress(targetDiv);
+    }
+}(newTargetDiv));
+
+minusButtonInAddDiv.addEventListener('click', function(targetDiv) {
+    return function(){
+        minusOneToProgress(targetDiv);
+    }
+}(newTargetDiv));
+/* -- */
 
 
 var getHabitProgressJournal = function(){
 
     if (loggedIn){
-        getHabitProgressJournalWhenLoggedIn();
+        dataArrays=getHabitProgressJournalWhenLoggedIn();
     } else {
-        getHabitProgressJournalWhenNotLoggedIn();
+        dataArrays=getHabitProgressJournalWhenNotLoggedIn();
     }
+
 };
 
 var getHabitProgressJournalWhenLoggedIn = function(){
+    var progressArray,habitsArray,journalArray = {};
+    /*
     var APIcallParameters = {
         method: "GET",
         url: "http://localhost:5000/get-habit-progress"
     };
-    var apiCaller = new APICaller(APIcallParameters,createAllElementsBasedOnData,getHabitProgressJournalWhenNotLoggedIn);
+
+    var apiCaller = new APICaller(APIcallParameters,todoCallback1,todoCallback2);
 
     apiCaller.executeCall(APIcallParameters.url, {});
-
+*/
+    return {progressArray,habitsArray,journalArray,todaysProgressArray,pastProgressArray};
 };
 
 var getHabitProgressJournalWhenNotLoggedIn = function(){
     var progressArray=[];
     var habitsArray=[];
     var journalArray = [];
+    var todaysProgressArray=[];
+    var pastProgressArray=[];
+    var localStorageLength = localStorage.length;
 
-    for (var i = 0; i < localStorage.length && i < maxForNonLoggedIn; i++){
+    /* todo separate progress today from progress in the past */
+    for (var i = 0; i < localStorageLength && i < maxForNonLoggedIn; i++){
         var currentKey = localStorage.key(i);
         if ( currentKey.indexOf("progress-") >= 0){
-            progressArray.push(JSON.parse(localStorage.getItem(currentKey)));
+            var progressValue = JSON.parse(localStorage.getItem(currentKey));
+            if ( progressValue.progressDate == formattedTodaysDate()){
+                todaysProgressArray.push(progressValue);
+            } else {
+                pastProgressArray.push(progressValue);
+            }
+            progressArray.push(progressValue);
         } else if ( currentKey.indexOf("habit-") >= 0){
             habitsArray.push(JSON.parse(localStorage.getItem(currentKey)));
         } else if ( currentKey.indexOf("journal-") >= 0){
@@ -1133,26 +1189,21 @@ var getHabitProgressJournalWhenNotLoggedIn = function(){
         }
     }
 
-    if (habitsArray.length > 1){
-        changeTabToProgress();
-    }
-    else if (habitsArray.length > 0){
-        changeTabToProgress();
-        hideGraphsTab();
-    } else {
-        changeTabToHabits();
-        hideProgressTab();
-        hideGraphsTab();
-        hideSaveButtonOnHabits();
-        hideStartProgressButtonOnHabits();
-    }
+    return {progressArray,habitsArray,journalArray,todaysProgressArray,pastProgressArray};
 
-    if (journalArray.length < 1){
-        hideJournalBox();
-    }
-
-    createAllElementsBasedOnData(progressArray,habitsArray,journalArray);
 };
+
+var loadScriptForGraphs = function(){
+
+    loadScript("https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js");
+    loadScript("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js");
+}
+
+var loadScript = function(scriptUrl){
+    let myScript = document.createElement("script");
+    myScript.setAttribute("src", scriptUrl);
+    document.body.appendChild(myScript);
+}
 var hideJournalBox = function(){
     document.getElementById("journal-container").innerHTML = "no entry yet";
 }
@@ -1168,62 +1219,43 @@ var hideGraphsTab = function(){
 var showGraphsTab = function(){
     document.getElementById("graphs-menu").style.display = "block"; 
 }
-var hideSaveButtonOnHabits = function(){
- /*document.getElementById("save-button-in-habits").style.display = "none";*/
-}
-var showSaveButtonOnHabits = function(){
-   /* document.getElementById("save-button-in-habits").style.display = "flex";*/
-}
+
 var hideStartProgressButtonOnHabits = function(){
     document.getElementById("go-to-progress-button").style.display = "none";
 }
 var showStartProgressButtonOnHabits = function(){
     document.getElementById("go-to-progress-button").style.display = "flex";
 }
-var createAllElementsBasedOnData = function(inputData,habitsArray,journalArray,urlDetails){
-   /* var inputData = getHabitProgress();*/
-    for ( var i=0; i < inputData.length;i++){
-        addProgressElement(inputData[i]);
-    }
-    for ( var i=0; i < habitsArray.length;i++){
-        addHabitElement(habitsArray[i]);
-    }
-    applyFilters();
-    launchCharts(inputData,habitsArray);
-    readJournal(journalArray);
-}
 
 
 var filterDivs = function(testElements, filterType, filterValue, exactMatch){
     if (filterValue != null && filterValue != '' ){
-        for (var i=0; i<testElements.length; i++){
-            var valueOfElementToTest = testElements[i].getAttribute(filterType);
+        for (const testElement of testElements){
+            var valueOfElementToTest = testElement.getAttribute(filterType);
             if (!( (valueOfElementToTest == filterValue && exactMatch) || (valueOfElementToTest.indexOf(filterValue) >= 0 && !exactMatch)) ){
-                testElements[i].style.display =  'none'; 
+                testElement.style.display =  'none'; 
             }
         }
     }
 };
 var resetElementsOnNewHabitForm = function(){
     var testElements = document.getElementsByClassName('habit-update');
-    for (var i=0; i< testElements.length; i++){
-        testElements[i].style.display =  'block';
-        var currentDiv = testElements[i];
+    for (const testElement of testElements){
+        var currentDiv = testElement;
+        currentDiv.style.display = 'block';
+        /*target number of completion on new habit form */
         var progressClasses = currentDiv.getElementsByClassName("number-of-completion");
         var progressDiv = progressClasses[0];
 
         if (progressDiv != null){
             refreshProgress(currentDiv);
-            progressDiv.addEventListener('change', function(currentDiv) {
+            progressDiv.addEventListener('change', function(inputDiv) {
                 return function(){
-                    refreshProgress(currentDiv);
+                    refreshProgress(inputDiv);
                     
                 }
              }(currentDiv));
-        }
-        
-        /* javascript feature known as closure */
-        
+        }    
     }
     return testElements;
 };
@@ -1243,7 +1275,6 @@ var refreshProgress = function(currentDiv){
 
     currentDiv.getElementsByClassName("percentage-completion")[0].innerHTML = newCompletionPercentage;
 
-    
     setDivAppearanceBasedOnCompletion(currentDiv,newCompletionPercentage);
 
     updateDailyProgress();
@@ -1252,83 +1283,72 @@ var refreshProgress = function(currentDiv){
 
 var setDivAppearanceBasedOnCompletion = function(currentDiv,newCompletionPercentage){
 
+    putBorderBackgroundOrderBasedOnCompletion(currentDiv,newCompletionPercentage);
+
+    if ( currentDiv.getAttribute("iscritical") !=null && currentDiv.getAttribute("iscritical") == "true"){
+        setDivAppearanceForCritical(currentDiv,newCompletionPercentage);
+    }
+}
+
+var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletionPercentage){
+
     if (newCompletionPercentage>=100){
-        currentDiv.style.border="1px solid rgb(167 211 162)"/*"#f7fff6"*/;
+        currentDiv.style.border="1px solid rgb(167 211 162)";
         currentDiv.style.order="95";
         currentDiv.style.background="#daffd9";
-        /*currentDiv.style.boxShadow="rgb(168 218 179) -1px 2px 10px 5px"*//*"rgb(55 110 57 / 20%) 1px 4px 16px 5px"*/;
     } else if (newCompletionPercentage>=50){
-        currentDiv.style.border="1px solid rgb(246 223 35)"/*"#fffded"*/;
+        currentDiv.style.border="1px solid rgb(246 223 35)";
         currentDiv.style.background="rgb(255 251 234)";
         currentDiv.style.order="70";
-        /*currentDiv.style.boxShadow="rgb(198 198 197) -1px 2px 17px 0px"*//*"rgb(219 213 191) -1px 2px 17px 0px"*/;
     } else if (newCompletionPercentage<50){
-        currentDiv.style.border="1px solid lightgrey"/*"#fffded"*/;
-        currentDiv.style.background="white"/*"#fff6f9"*/;
+        currentDiv.style.border="1px solid lightgrey";
+        currentDiv.style.background="white";
         currentDiv.style.order="70";
     }
     if (currentDiv.id && currentDiv.id == "daily-summary-container"){
         currentDiv.style.order = "90";
     }
 
-    if ( currentDiv.getAttribute("iscritical") !=null && currentDiv.getAttribute("iscritical") == "true"){
+}
 
-        var plusMinusDiv = currentDiv.getElementsByClassName("plus-minus")[0];
+var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
+    var plusMinusDiv = currentDiv.getElementsByClassName("plus-minus")[0];
+    var taskIconDiv;
 
-        if (newCompletionPercentage <100 ){
-            currentDiv.style.order = "60";
-            currentDiv.style.border="3px solid red"/*"#f7fff6"*/; 
+    if (newCompletionPercentage <100 ){
+        currentDiv.style.order = "60";
+        currentDiv.style.border="3px solid red"; 
 
-            var taskIconDiv = currentDiv.getElementsByClassName("fa fa-tasks")[0];
-            if (taskIconDiv && plusMinusDiv){
-                taskIconDiv.classList.remove("fa-tasks");
-                currentDiv.getElementsByClassName("fa")[0].classList.add("fa-warning");
-                currentDiv.getElementsByClassName("habit-description")[0].classList.add("red");
-                plusMinusDiv.style.color="red";
-            }
-
-        } else if (newCompletionPercentage >=100){
-            currentDiv.style.border="1px solid lightgrey"/*"#f7fff6"*/; 
-            var taskIconDiv = currentDiv.getElementsByClassName("fa fa-warning")[0];
-            if (taskIconDiv && plusMinusDiv){
-                taskIconDiv.classList.remove("fa-warning");
-                currentDiv.getElementsByClassName("fa")[0].classList.add("fa-tasks");
-                currentDiv.getElementsByClassName("habit-description")[0].classList.remove("red");
-                plusMinusDiv.style.color="#b657af";
-            }    
-
+        taskIconDiv = currentDiv.getElementsByClassName("fa fa-tasks")[0];
+        if (taskIconDiv && plusMinusDiv){
+            taskIconDiv.classList.remove("fa-tasks");
+            currentDiv.getElementsByClassName("fa")[0].classList.add("fa-warning");
+            currentDiv.getElementsByClassName("habit-description")[0].classList.add("red");
+            plusMinusDiv.style.color="red";
         }
+
+    } else if (newCompletionPercentage >=100){
+        currentDiv.style.border="1px solid lightgrey"; 
+        taskIconDiv = currentDiv.getElementsByClassName("fa fa-warning")[0];
+        if (taskIconDiv && plusMinusDiv){
+            taskIconDiv.classList.remove("fa-warning");
+            currentDiv.getElementsByClassName("fa")[0].classList.add("fa-tasks");
+            currentDiv.getElementsByClassName("habit-description")[0].classList.remove("red");
+            plusMinusDiv.style.color="#b657af";
+        }    
     }
 }
 
 var updateDailyProgress = function(){
-    
-    var progressDivs = document.getElementsByClassName("percentage-completion");
-    var currentDate = document.getElementById("date-filter").value;
 
+    var dailyProgress = getDailyProgress(); 
 
-    var fullScore = 0;
-    var numberOfDivs = 0;
-    for ( var i=0; i< progressDivs.length; i++){
-        var progressDate = progressDivs[i].getAttribute("progressDate");
-        if (progressDate==currentDate){
-            var currentScore = parseInt(progressDivs[i].innerHTML);
-            currentScore = (currentScore > 100) ? 100 : currentScore;
-            fullScore += currentScore;
-            numberOfDivs++;
-        }
-    }
-
-    var dailyPercentage = Math.round(fullScore / numberOfDivs);
+    var dailyPercentage = Math.round(dailyProgress.fullScore / dailyProgress.numberOfDivs);
     var dailySummaryDiv = document.getElementById("daily-summary");
     var dailySummaryBox = document.getElementById("daily-summary-container");
     var dailyCommentBox = document.getElementById("daily-summary-comment");
 
     if (dailyPercentage && dailyPercentage>0){
-
-        /*dailySummaryDiv.innerHTML = dailyPercentage.toString();*/
-        /*dailySummaryDiv.innerHTML = "";*/
-
         if (dailyPercentage >= 100){
             radialProgressParameters.progressColor = "rgb(167, 211, 162)";
             radialProgressParameters.emptyColor = "rgb(193 236 205)";
@@ -1356,11 +1376,30 @@ var updateDailyProgress = function(){
 
         dailySummaryBox.style.display = "block";
     } else {
-        var dailyPercentage = 0;
+        dailyPercentage = 0;
         dailySummaryBox.style.display = "none";
     }
     setDivAppearanceBasedOnCompletion(dailySummaryDiv.parentNode,dailyPercentage);
 
+}
+
+var getDailyProgress=function(){
+    var progressDivs = document.getElementsByClassName("percentage-completion");
+    currentDate = document.getElementById("date-filter").value;
+
+    var fullScore = 0;
+    var numberOfDivs = 0;
+    for (const progressDiv of progressDivs){
+        var progressDate = progressDiv.getAttribute("progressDate");
+        if (progressDate==currentDate){
+            var currentScore = parseInt(progressDiv.innerHTML);
+            currentScore = (currentScore > 100) ? 100 : currentScore;
+            fullScore += currentScore;
+            numberOfDivs++;
+        }
+    }
+
+    return {fullScore,numberOfDivs};
 }
 
 var applyFilters = function(){
@@ -1374,13 +1413,13 @@ var applyFilters = function(){
 
 
 var dateFilter = document.getElementById('date-filter');
-dateFilter.addEventListener('input', function (evt) {
+dateFilter.addEventListener('input', function () {
     applyFilters();
     createMissingElementsForDate(this.value);
 });
 
 var textFilter = document.getElementById('text-filter')
-textFilter.addEventListener('input', function (evt) {
+textFilter.addEventListener('input', function () {
     applyFilters();
 });
 
@@ -1388,9 +1427,7 @@ var createMissingElementsForDate = function(inputDate){
     var dateElements = inputDate.split("-");
     var inputDateTime = new Date(dateElements[0], (parseInt(dateElements[1])-1).toString(), dateElements[2], 0, 0, 0, 0);
     debugWrite("Creating missing progress elements for date:"+inputDate.toString()+ " time:"+inputDateTime.toString());
-    addEmptyProgressOnNewDay(inputDate,inputDateTime);
-
-    
+    addEmptyProgressOnNewDay(inputDate,inputDateTime);    
 }
 
 var minusOneToProgress = function(divElement){
@@ -1429,14 +1466,14 @@ var addNewHabitFromForm = function(){
         elementToAdd.weekDay ='monday tuesday wednesday thursday friday saturday sunday';
     }
 
+    var isDayOK;
     if (elementToAdd.weekDay){
-        var isDayOK = isDayOfWeekInHabitWeeks(currentDateTime, elementToAdd.weekDay);
+        isDayOK = isDayOfWeekInHabitWeeks(currentDateTime, elementToAdd.weekDay);
     } else {
-        var isDayOK = true;
+        isDayOK = true;
     }
-    if (isDayOK != null && isDayOK == true)
+    if (isDayOK != null && isDayOK)
     {
-        /* add progress */
         addProgressElement(elementToAdd);
     }
     addHabitElement(elementToAdd);
@@ -1469,13 +1506,13 @@ var setHabitAsCritical = function(habitId){
     var habitJSON = readHabitElement(habitDiv);
     habitJSON.isCritical="true";
     pushHabitArrayToQueue(habitJSON);
-}
+};
 var unsetHabitAsCritical = function(habitId){
     var habitDiv = document.getElementById(habitId);
     var habitJSON = readHabitElement(habitDiv);
     habitJSON.isCritical="false";
     pushHabitArrayToQueue(habitJSON);
-}
+};
 
 var saveChangesInHabitFromObject = function(habitElement){
 
@@ -1488,12 +1525,12 @@ var saveChangesInHabitFromObject = function(habitElement){
 
     pushHabitArrayToQueue(habitJSON);
     
-}
+};
 
 
 var closeAdditionConfirmation = function(){
     document.getElementById("addition-message").style.display="none";
-}
+};
 
 var confirmAddition = function(habitId){
     document.getElementById("addition-message").style.display="flex";
@@ -1503,32 +1540,12 @@ var confirmAddition = function(habitId){
     var onClickString = "closeAdditionConfirmation();document.getElementById(" + habitId + ").scrollIntoView();"
     checkHabitButton.setAttribute('onclick',onClickString);
 
-}
-var displayAllElements = function(elementList){
-    for (var i=0; i< elementList.length; i++) {
-        const newDivision = document.createElement("div");
-        document.body.appendChild(newDivision);
-    }
 };
 
-/* get information from all progress and habits boxes (calls functions to do it)*/
-var extractElementsForUpdate = function(){
-
-    console.log("saving");
-    var progressElements = document.getElementsByClassName('habit-update');
-    var habitsElements = document.getElementsByClassName('habit-setting');
-    if (loggedIn){
-        extractElementsForUpdateLoggedIn(progressElements, habitsElements);
-    } else {
-        extractElementsForUpdateNoneLoggedIn(progressElements, habitsElements);
-    }
-};
-
-
-var extractElementsForUpdateLoggedIn = function(progressElements, habitsElements){
+var extractElementsForUpdateLoggedIn = function(progressElements){
     var outputElements = [];
-
-    for (var i=0; i< progressElements.length  && i < maxForNonLoggedIn; i++){
+    var progressElementsLength = progressElements.length;
+    for (var i=0; i<progressElementsLength   && i < maxForNonLoggedIn; i++){
         var currentOutput = readElement(progressElements[i]);
         outputElements.push(currentOutput);
     }
@@ -1536,19 +1553,6 @@ var extractElementsForUpdateLoggedIn = function(progressElements, habitsElements
     console.log(outputElements);
 };
 
-
-
-
-var extractElementsForUpdateNoneLoggedIn = function(progressElements, habitsElements){
-
-    readQueueProgress();
-
-   /* for ( var j=0; j< habitsElements.length;j++){
-        var currentOutput = readHabitElement(habitsElements[j]);
-        window.localStorage.setItem('habit-'+currentOutput.habitId,JSON.stringify(currentOutput));
-    }*/
-
-};
 var readHabitElement = function(elementToRead){
     var outputJson = {};
     outputJson.habitId = elementToRead.getAttribute("habitId");
@@ -1597,10 +1601,7 @@ function APICaller(parameters,callback,callbackOnFailure){
 		xhttp.send();
 	};
 	
-};
-
-
-
+}
 
 var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
 
@@ -1616,23 +1617,21 @@ var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
     var progressElements = document.getElementsByClassName('habit-update');
     var habitsElements = document.getElementsByClassName('habit-setting');
 
-    /*var dailySummaryDiv = document.getElementById("daily-summary");
-    dailySummaryDiv.innerHTML = ""*/
-
-    for (var i=0; i< habitsElements.length;i++){
+    var habitsElementsLength = habitsElements.length;
+    for (var i=0; i<habitsElementsLength ;i++){
 
         var isHabitProgressExisting = false;
 
-        for (var j=0; j< progressElements.length;j++){
-            if ( habitsElements[i].getAttribute("habitId") == progressElements[j].getAttribute("habitId") && progressElements[j].getAttribute("progressdate") == inputDate){
+        for (var progressElement of progressElements){
+            if ( habitsElements[i].getAttribute("habitId") == progressElement.getAttribute("habitId") && progressElement.getAttribute("progressdate") == inputDate){
                 isHabitProgressExisting = true;
             }
         }
 
-        if ( isHabitProgressExisting == false){
-
+        if ( !isHabitProgressExisting){
+            var isDayOK;
             if (habitsElements[i].getAttribute("weekDay")){
-                debugWrite("Comparing currrent date time with habit week day");
+                debugWrite("Comparing current date time with habit week day");
                 debugWrite("Current date time:");
                 debugWrite(inputDateTime);
                 debugWrite("Habit week day:");
@@ -1640,12 +1639,12 @@ var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
                 debugWrite("Is critical?:");
                 debugWrite(habitsElements[i].getAttribute("iscritical"));
                 
-                var isDayOK = isDayOfWeekInHabitWeeks(inputDateTime, habitsElements[i].getAttribute("weekDay"));
+                isDayOK = isDayOfWeekInHabitWeeks(inputDateTime, habitsElements[i].getAttribute("weekDay"));
             } else {
-                var isDayOK = true;
+                isDayOK = true;
             }
-            if (isDayOK != null && isDayOK == true) {
-                newProgressObject = {
+            if (isDayOK != null && isDayOK) {
+                let newProgressObject = {
                     id: Date.now()*100+i,
                     habitId: habitsElements[i].getAttribute("habitId"),
                     habitDescription: habitsElements[i].getAttribute("habitDescription"),
@@ -1666,8 +1665,8 @@ var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
 }
 
 var launchCharts = function(fullData,habitsArray){
-    for ( var i=0;i<habitsArray.length;i++){
-        launchHabitSummaries(fullData,habitsArray[i])
+    for ( let habit of habitsArray){
+        launchHabitSummaries(fullData,habit)
     }
 
 }
@@ -1703,41 +1702,80 @@ var changeTabToGraphs = function(){
 
 var launchHabitSummaries = function(fullData,habitObject){
 
-    var dataToShow = [];
-    var baseline = [];
-    var progressByDay = {};
-    var unitAccumulation=0;
+    var dataForGraphs = prepareDataForHabitSummaries(fullData,habitObject);
+    var dataToShow = dataForGraphs.dataToShow;
+    var unitAccumulation= dataForGraphs.unitAccumulation;
+    var baseline = dataForGraphs.baseline;
+    var progressByDay = dataForGraphs.progressByDay;
+
+    if ( dataToShow.length >= 1){
+        showGraphsTab();
+    }
+
     var unitPerMonth=0;
 
-    for ( var i=0; i< fullData.length;i++){
-        if (fullData[i].habitId == habitObject.habitId){
-            unitAccumulation+=fullData[i].numberOfCompletions;
+    /* Analysis */
+    var completionAccumulation = getNumberOfStreaks(dataToShow,baseline);
+
+    var j = dataToShow.length-1;
+
+    var numberOfDays = (dataToShow[j].x - dataToShow[0].x)/1000/60/60/24;
+    if (numberOfDays>0){
+        unitPerMonth=Math.round(unitAccumulation*30/numberOfDays);
+    }
+
+    if ( j < 0){
+        return false;
+    }
+
+    if (j >= 0 && dataToShow[j] && dataToShow[j].x){
+        debugWrite("Launching Chart");
+        debugWrite(dataToShow[j].x.getDay());
+    } else {
+        return false;
+    }
+
+    var weekTableObject = {};
+    weekTableObject = weekTable(progressByDay);
+
+    buildWeekTable(weekTableObject,habitObject);
+
+    /* Graph */
+    buildGraph(unitPerMonth,unitAccumulation,completionAccumulation,habitObject,dataToShow);
+
+}
+
+var prepareDataForHabitSummaries = function(fullData,habitObject){
+    var dataToShow = [];
+    var progressByDay = [];
+    var baseline = [];
+
+    var unitAccumulation = 0;
+
+    for ( var dataItem of fullData){
+        if (dataItem.habitId == habitObject.habitId){
+            unitAccumulation+=dataItem.numberOfCompletions;
             dataToShow.push({
-                x: new Date(fullData[i].progressDate),y:fullData[i].numberOfCompletions
-            })
+                x: new Date(dataItem.progressDate),y:dataItem.numberOfCompletions
+            });
             baseline.push({
-                x: new Date(fullData[i].progressDate),y:fullData[i].target
+                x: new Date(dataItem.progressDate),y:dataItem.target
             })
-            progressByDay[fullData[i].progressDate]=fullData[i].numberOfCompletions-fullData[i].target;
+            progressByDay[dataItem.progressDate]=dataItem.numberOfCompletions-dataItem.target;
         }
     }
 
+    dataToShow.sort(function(a, b){
+    return (a.x - b.x)
+    });	
+    baseline.sort(function(a, b){
+        return (a.x - b.x)
+    });	
 
-  /*  var test = weekTable(progressByDay);*/
+    return {dataToShow,baseline,progressByDay,unitAccumulation};
+}
 
-		dataToShow.sort(function(a, b){
-		return (a.x - b.x)
-		});	
-
-        if ( dataToShow.length >= 1){
-            showGraphsTab();
-        }
-        baseline.sort(function(a, b){
-            return (a.x - b.x)
-            });	
-
-
-    /* Analysis */
+var getNumberOfStreaks = function(dataToShow,baseline){
     var completionAccumulation=0;
 
     for (var i =  dataToShow.length - 1 ; i>=0; i--){
@@ -1761,94 +1799,66 @@ var launchHabitSummaries = function(fullData,habitObject){
         }
 
     }
+    return completionAccumulation;
+}
 
-    var tableData = {};
-    var numberOfMissesInWeek=0;
-    var j = dataToShow.length-1;
-
-    var numberOfDays = (dataToShow[j].x - dataToShow[0].x)/1000/60/60/24;
-    if (numberOfDays>0){
-        unitPerMonth=Math.round(unitAccumulation*30/numberOfDays);
-    }
-
-
-    if ( j < 0){
-        return false;
-    };
-    var isTargetOK;
-    if (j >= 0 && dataToShow[j] && dataToShow[j].x){
-        debugWrite("Launching Chart");
-        debugWrite(dataToShow[j].x.getDay());
-  /*      var todayWeekDay = dataToShow[j].x.getDay();
-        if ( dataToShow[j].y >= baseline[j].y){
-            isTargetOK = "<i class='fa fa-circle icon'></i>";
+var buildWeekTable = function(weekTableObject,habitObject){
+        /* week table */
+        var tableCode = weekTableObject.tableCode
+        var numberOfMissesInWeek = weekTableObject.numberOfMissesInWeek
+        const weekSummaryTable = document.createElement("div");
+        var graphIcon = document.createElement("i");
+        graphIcon.setAttribute("class","fa fa-calendar");
+        const grapTitle = document.createTextNode(habitObject.habitDescription);
+        const grapTitleDiv = document.createElement("div");
+        grapTitleDiv.setAttribute("class","graph-title");
+        grapTitleDiv.appendChild(graphIcon);
+        grapTitleDiv.appendChild(grapTitle);
+        const weekSummaryTableTitle = document.createElement("div");
+        weekSummaryTableTitle.innerHTML = "This week summary:";
+        weekSummaryTableTitle.setAttribute("class","subtitle");
+        const markAsCriticalDiv = document.createElement("div");
+    
+        markAsCriticalDiv.setAttribute("class","critical-link");
+        if (habitObject.isCritical && habitObject.isCritical=="true"){
+            markAsCriticalDiv.innerHTML = "Unmark as critical";
+            markAsCriticalDiv.setAttribute("onclick","unsetHabitAsCritical("+ habitObject.habitId +");");
         } else {
-            dataDate = dataToShow[j].x;
-            if (
-                dataDate.getFullYear() != currentDateTime.getFullYear() ||
-                dataDate.getMonth() != currentDateTime.getMonth() ||
-                dataDate.getDate() != currentDateTime.getDate()
-            ) {
-                isTargetOK = "x";
-                numberOfMissesInWeek++;
-            }
+            markAsCriticalDiv.innerHTML = "Mark as critical";
+            markAsCriticalDiv.setAttribute("onclick","setHabitAsCritical("+ habitObject.habitId +");");
         }
-        tableData[todayWeekDay]= (isTargetOK != null)?isTargetOK:" ";*/
-/*
-        do  {
-            j--;
+        weekSummaryTable.setAttribute("class","table-summary");
+        weekSummaryTable.innerHTML = tableCode;
+  
+        var newCanvaWrapper = document.createElement("div");
+    
+        newCanvaWrapper.appendChild(grapTitleDiv); 
+        newCanvaWrapper.appendChild(weekSummaryTable);
+        newCanvaWrapper.appendChild(markAsCriticalDiv);
+        var brDiv = document.createElement("br");
+        newCanvaWrapper.appendChild(brDiv);
+        newCanvaWrapper.setAttribute("class","box canva-wrapper week-box");
+        if (numberOfMissesInWeek==0){
+            newCanvaWrapper.style.background="#daffd9";
+            newCanvaWrapper.style.border="1px solid rgb(167 211 162)"
+        } else if (numberOfMissesInWeek==1){
+            newCanvaWrapper.style.background="rgb(255 252 238)";
+            newCanvaWrapper.style.border="1px solid rgb(246 223 35)"
+        } else if (numberOfMissesInWeek>1){
+            newCanvaWrapper.style.background="white";
+        }
+        document.getElementById("no-graph").style.display = "none";
+        document.getElementById("graph-container").appendChild(newCanvaWrapper);
+    
+}
 
-            if (j < 0){
-                break;
-            }
-            if (j >= 0 && dataToShow[j] && dataToShow[j].x){
-                var currentWeekDay = dataToShow[j].x.getDay();
+var buildGraph = function(unitPerMonth,unitAccumulation,completionAccumulation,habitObject,dataToShow){
 
-                if ( todayWeekDay != 0){
-                    if ( currentWeekDay > todayWeekDay || currentWeekDay == 0){
-                        break;
-                    }
-                } else {
-                    if ( currentWeekDay == 0){
-                        break;
-                    }
-                }
-                if ( dataToShow[j].y >= baseline[j].y){
-                    isTargetOK = "<i class='fa fa-circle icon'></i>";
-                } else {
-                    isTargetOK = "x";
-                    numberOfMissesInWeek++;
-                }
-                if (tableData[currentWeekDay]==null){
-                    tableData[currentWeekDay]= (isTargetOK != null)?isTargetOK:" ";
-                }
-            }
-        } while (currentWeekDay > 1)*/
-    } else {
-        return false;
-    }
-
-  /*  var tableCode = "<table><tr><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th><th>S</th></tr>"; 
-    tableCode += "<tr><td>"+getElementToPutOnTable(tableData[1])+"</td>"+"<td>"+getElementToPutOnTable(tableData[2])+"</td>"+"<td>"+getElementToPutOnTable(tableData[3])+"</td>"+"<td>"+getElementToPutOnTable(tableData[4])+"</td>"+"<td>"+getElementToPutOnTable(tableData[5])+"</td>"+"<td>"+getElementToPutOnTable(tableData[6])+"</td>"+"<td>"+getElementToPutOnTable(tableData[0])+"</td></tr></table>";
-*/
-    var weekTableObject = {};
-    weekTableObject = weekTable(progressByDay);
-    tableCode = weekTableObject.tableCode
-    numberOfMissesInWeek = weekTableObject.numberOfMissesInWeek
-
-    /*<canvas id="myChart"></canvas>*/
-    var newCanva = document.createElement("canvas");
-    var newCanvaWrapper = document.createElement("div");
     var streaksWrapper = document.createElement("div");
-    var brDiv = document.createElement("br");
-    const grapTitle = document.createTextNode(habitObject.habitDescription);
-    const grapTitleDiv = document.createElement("div");
+
     const grapTitleStreaks = document.createTextNode(habitObject.habitDescription);
     const grapTitleDivStreaks = document.createElement("div");
 
-    const weekSummaryTable = document.createElement("div");
-    var graphIcon = document.createElement("i");
-    graphIcon.setAttribute("class","fa fa-calendar");
     var graphIconStreaks = document.createElement("i");
     graphIconStreaks.setAttribute("class","fa fa-bar-chart");
 
@@ -1860,73 +1870,41 @@ var launchHabitSummaries = function(fullData,habitObject){
     accumulationTitleDiv.innerHTML = "Number of units: "+ unitAccumulation.toString()+" ("+unitPerMonth+" per month)";
     accumulationTitleDiv.setAttribute("class","subtitle");
 
-    grapTitleDiv.setAttribute("class","graph-title");
-    grapTitleDiv.appendChild(graphIcon);
-    grapTitleDiv.appendChild(grapTitle);
-
     grapTitleDivStreaks.setAttribute("class","graph-title");
     grapTitleDivStreaks.appendChild(graphIconStreaks);
     grapTitleDivStreaks.appendChild(grapTitleStreaks);
-
-    const weekSummaryTableTitle = document.createElement("div");
-    weekSummaryTableTitle.innerHTML = "This week summary:";
-    weekSummaryTableTitle.setAttribute("class","subtitle");
-    const markAsCriticalDiv = document.createElement("div");
-
-    markAsCriticalDiv.setAttribute("class","critical-link");
-    if (habitObject.isCritical && habitObject.isCritical=="true"){
-        markAsCriticalDiv.innerHTML = "Unmark as critical";
-        markAsCriticalDiv.setAttribute("onclick","unsetHabitAsCritical("+ habitObject.habitId +");");
-    } else {
-        markAsCriticalDiv.innerHTML = "Mark as critical";
-        markAsCriticalDiv.setAttribute("onclick","setHabitAsCritical("+ habitObject.habitId +");");
-    }
-    weekSummaryTable.setAttribute("class","table-summary");
-    weekSummaryTable.innerHTML = tableCode;
 
     const graphTitle = document.createElement("div");
     graphTitle.innerHTML = "Graph:";
     graphTitle.setAttribute("class","subtitle");
 
-    newCanva.setAttribute("id","graph-"+habitObject.habitId);
-    newCanvaWrapper.appendChild(grapTitleDiv); 
     streaksWrapper.appendChild(grapTitleDivStreaks);
     streaksWrapper.setAttribute("id","streaks-"+habitObject.habitId);
-    /*newCanvaWrapper.appendChild(weekSummaryTableTitle);*/
-    newCanvaWrapper.appendChild(weekSummaryTable);
-    newCanvaWrapper.appendChild(markAsCriticalDiv);
-    newCanvaWrapper.appendChild(brDiv);
     streaksWrapper.appendChild(streaksTitleDiv);
     streaksWrapper.appendChild(accumulationTitleDiv);
     streaksWrapper.appendChild(graphTitle); 
+
+    var newCanva = document.createElement("canvas");
+    newCanva.setAttribute("id","graph-"+habitObject.habitId);
+
     streaksWrapper.append(newCanva);
 
-    newCanvaWrapper.setAttribute("class","box canva-wrapper week-box");
     streaksWrapper.setAttribute("class","box canva-wrapper streak-box");
 
-    if (numberOfMissesInWeek==0){
-        newCanvaWrapper.style.background="#daffd9"/*"#f7fff6"*/;
-        newCanvaWrapper.style.border="1px solid rgb(167 211 162)"
-    } else if (numberOfMissesInWeek==1){
-        newCanvaWrapper.style.background="rgb(255 252 238)"/*"#fffded"*/;
-        newCanvaWrapper.style.border="1px solid rgb(246 223 35)"
-    } else if (numberOfMissesInWeek>1){
-        newCanvaWrapper.style.background="white"/*"#fff6f9"*/;
-    }
 
     if (completionAccumulation >= 10){
-        streaksWrapper.style.background="#daffd9"/*"#f7fff6"*/;
+        streaksWrapper.style.background="#daffd9";
         streaksWrapper.style.border="1px solid rgb(167 211 162)"
     } else if (completionAccumulation >=5 ) {
-        streaksWrapper.style.background="rgb(255 252 238)"/*"#fffded"*/;
+        streaksWrapper.style.background="rgb(255 252 238)";
         streaksWrapper.style.border="1px solid rgb(246 223 35)"
     } else {
-        streaksWrapper.style.background="white"/*"#fff6f9"*/;
+        streaksWrapper.style.background="white";
     }
 
-    document.getElementById("no-graph").style.display = "none";
+
     document.getElementById("no-streak").style.display = "none";
-    document.getElementById("graph-container").appendChild(newCanvaWrapper);
+
     document.getElementById("streaks-container").appendChild(streaksWrapper);
 
     var ctx = document.getElementById("graph-"+habitObject.habitId).getContext('2d');
@@ -1952,7 +1930,8 @@ var launchHabitSummaries = function(fullData,habitObject){
     },
     };
 
-    
+    var graphBackgroundColor,graphColor;
+
     if (completionAccumulation >= 10){
         graphBackgroundColor = "#b5f7b1";
         graphColor = "#3ce132";
@@ -1964,23 +1943,15 @@ var launchHabitSummaries = function(fullData,habitObject){
         graphColor = "rgb(174 174 174)";
     }
     let chartData = {
-
-
     datasets: [
-                  /*  {
-                        label: 'Your target',
-                        data: baseline,
-                        fill: false,
-                        order: 2
-                    }, */
-                    {
-                        label: 'Your daily score',
-                        data: dataToShow,
-                        backgroundColor: graphBackgroundColor,
-                        borderColor: graphColor,
-                        color:'blue',
-                        order: 1
-                    }
+        {
+            label: 'Your daily score',
+            data: dataToShow,
+            backgroundColor: graphBackgroundColor,
+            borderColor: graphColor,
+            color:'blue',
+            order: 1
+        }
     ]
     };
 
@@ -1989,18 +1960,7 @@ var launchHabitSummaries = function(fullData,habitObject){
     options: options,
     type:'line',
     });
-
 }
-
-/*var getElementToPutOnTable = function (value) {
-    if ( value ) {
-        return value;
-    } else {
-        return " ";
-    }
-
-}*/
-
 
 var subMenuGo = function( targetLink){
 
