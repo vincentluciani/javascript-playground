@@ -922,7 +922,7 @@ var getMemoryDetails = function(){
 }
 var pushProgressToQueue = function(divToAnalyze) {
 
-    var progressArray = readElement(divToAnalyze);
+    var progressArray = progressDOMToJson(divToAnalyze);
 
     encourageIfPassedTarget(progressArray.numberOfCompletions, progressArray.target, progressArray.isCritical);
 
@@ -1048,7 +1048,8 @@ onload = function(){
 */
 
     var dateTime = new Date();
-    console.log("start onload:"+dateTime.toString());
+    var timestamp = dateTime.getTime();
+    console.log("start onload:"+dateTime.toString()+"|"+timestamp.toString());
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('debug') == "true"){
         document.getElementById("debug-section").style.display = "block";
@@ -1060,10 +1061,12 @@ onload = function(){
     createRadialProgressBar(radialProgressParameters);
 
     dateTime = new Date();
-    console.log("start getting data:"+dateTime.toString());
+    var timestamp2 = dateTime.getTime();
+    console.log("start getting data:"+dateTime.toString()+"|"+(timestamp2-timestamp).toString());
     getHabitProgressJournal(); /* todo: this function should only extract and not also create divs */
     dateTime = new Date();
-    console.log("end getting data:"+dateTime.toString());
+    var timestamp3 = dateTime.getTime();
+    console.log("end getting data:"+dateTime.toString()+"|"+(timestamp3-timestamp2).toString());
 
     var habitsArray = dataArrays.habitsArray;
     var journalArray = dataArrays.journalArray;
@@ -1071,7 +1074,7 @@ onload = function(){
     var todaysProgressArray = dataArrays.todaysProgressArray;
     var pastProgressArray = dataArrays.pastProgressArray;
 
-    if (pastProgressArray.length > 1){
+    if (progressArray.length >= 1){
         changeTabToProgress();
         showProgressTab();
     }
@@ -1084,12 +1087,14 @@ onload = function(){
     }
 
     dateTime = new Date();
-    console.log("start rendering today:"+dateTime.toString());
+    var timestamp4 = dateTime.getTime();
+    console.log("start rendering today:"+dateTime.toString()+"|"+(timestamp4-timestamp3).toString());
     for (const progressElement of todaysProgressArray){
         addProgressElement(progressElement);
     }
     dateTime = new Date();
-    console.log("end rendering today:"+dateTime.toString());
+    var timestamp5 = dateTime.getTime();
+    console.log("end rendering today:"+dateTime.toString()+"|"+(timestamp5-timestamp4).toString());
 
     for (const habitsElement of habitsArray){
         addHabitElement(habitsElement);
@@ -1109,7 +1114,8 @@ onload = function(){
     loadScriptForGraphs();
 
     dateTime = new Date();
-    console.log("end adding habit+pastelements+charts+journal:"+dateTime.toString());
+    var timestamp6 = dateTime.getTime();
+    console.log("end adding habit+pastelements+charts+journal:"+dateTime.toString()+"|"+(timestamp6-timestamp5).toString());
 
     if (habitsArray.length > 1){
         showGraphsTab();
@@ -1496,7 +1502,6 @@ var addNewHabitFromForm = function(){
 
     showProgressTab();
 
-    showSaveButtonOnHabits();
     showStartProgressButtonOnHabits();
 
     saveChangesInHabitFromObject(elementToAdd);
@@ -1555,7 +1560,7 @@ var extractElementsForUpdateLoggedIn = function(progressElements){
     var outputElements = [];
     var progressElementsLength = progressElements.length;
     for (var i=0; i<progressElementsLength   && i < maxForNonLoggedIn; i++){
-        var currentOutput = readElement(progressElements[i]);
+        var currentOutput = progressDOMToJson(progressElements[i]);
         outputElements.push(currentOutput);
     }
 
@@ -1574,7 +1579,7 @@ var readHabitElement = function(elementToRead){
 };
 
 /* Read progress from the dom and put it in json ( then it can be saved ) */
-var readElement = function(elementToRead){
+var progressDOMToJson = function(elementToRead){
     var outputJson = {};
     outputJson.id = elementToRead.getAttribute("id");
     outputJson.habitId = elementToRead.getAttribute("habitId");
@@ -1858,7 +1863,7 @@ var buildWeekTable = function(weekTableObject,habitObject){
             newCanvaWrapper.style.background="white";
         }
         document.getElementById("no-graph").style.display = "none";
-        document.getElementById("graph-container").appendChild(newCanvaWrapper);
+        document.getElementById("week-summary-container").appendChild(newCanvaWrapper);
     
 }
 
@@ -1979,7 +1984,7 @@ var subMenuGo = function( targetLink){
     var journalLink = document.getElementById('journal-link');
     var streaksLink = document.getElementById('streaks-link');
     var weekLink = document.getElementById('week-link');
-    var graphContainer = document.getElementById('graph-container');
+    var graphContainer = document.getElementById('week-summary-container');
     var streaksContainer = document.getElementById('streaks-container');
     var journalContainer = document.getElementById('journal-container-wrapper');
 

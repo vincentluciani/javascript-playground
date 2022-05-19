@@ -66,7 +66,7 @@ onload = function(){
     var todaysProgressArray = dataArrays.todaysProgressArray;
     var pastProgressArray = dataArrays.pastProgressArray;
 
-    if (pastProgressArray.length > 1){
+    if (progressArray.length >= 1){
         changeTabToProgress();
         showProgressTab();
     }
@@ -494,7 +494,6 @@ var addNewHabitFromForm = function(){
 
     showProgressTab();
 
-    showSaveButtonOnHabits();
     showStartProgressButtonOnHabits();
 
     saveChangesInHabitFromObject(elementToAdd);
@@ -553,7 +552,7 @@ var extractElementsForUpdateLoggedIn = function(progressElements){
     var outputElements = [];
     var progressElementsLength = progressElements.length;
     for (var i=0; i<progressElementsLength   && i < maxForNonLoggedIn; i++){
-        var currentOutput = readElement(progressElements[i]);
+        var currentOutput = progressDOMToJson(progressElements[i]);
         outputElements.push(currentOutput);
     }
 
@@ -572,7 +571,7 @@ var readHabitElement = function(elementToRead){
 };
 
 /* Read progress from the dom and put it in json ( then it can be saved ) */
-var readElement = function(elementToRead){
+var progressDOMToJson = function(elementToRead){
     var outputJson = {};
     outputJson.id = elementToRead.getAttribute("id");
     outputJson.habitId = elementToRead.getAttribute("habitId");
@@ -672,6 +671,10 @@ var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
 }
 
 var launchCharts = function(fullData,habitsArray){
+    document.getElementById("streaks-container").innerHTML='<div id="no-streak">Graphs will be shown after adding at least one habit.</div>';
+    document.getElementById("no-streak").style.display = "none";
+    document.getElementById("week-summary-container").innerHTML='<div id="no-week-summary">Week summary will be shown after adding at least one habit.</div>';
+    document.getElementById("no-week-summary").style.display = "none";
     for ( let habit of habitsArray){
         launchHabitSummaries(fullData,habit)
     }
@@ -855,8 +858,8 @@ var buildWeekTable = function(weekTableObject,habitObject){
         } else if (numberOfMissesInWeek>1){
             newCanvaWrapper.style.background="white";
         }
-        document.getElementById("no-graph").style.display = "none";
-        document.getElementById("graph-container").appendChild(newCanvaWrapper);
+        document.getElementById("no-week-summary").style.display = "none";
+        document.getElementById("week-summary-container").appendChild(newCanvaWrapper);
     
 }
 
@@ -909,9 +912,6 @@ var buildGraph = function(unitPerMonth,unitAccumulation,completionAccumulation,h
     } else {
         streaksWrapper.style.background="white";
     }
-
-
-    document.getElementById("no-streak").style.display = "none";
 
     document.getElementById("streaks-container").appendChild(streaksWrapper);
 
@@ -977,7 +977,7 @@ var subMenuGo = function( targetLink){
     var journalLink = document.getElementById('journal-link');
     var streaksLink = document.getElementById('streaks-link');
     var weekLink = document.getElementById('week-link');
-    var graphContainer = document.getElementById('graph-container');
+    var graphContainer = document.getElementById('week-summary-container');
     var streaksContainer = document.getElementById('streaks-container');
     var journalContainer = document.getElementById('journal-container-wrapper');
 
