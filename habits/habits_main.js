@@ -300,11 +300,11 @@ var setDivAppearanceBasedOnCompletion = function(currentDiv,newCompletionPercent
 var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletionPercentage){
 
     if (newCompletionPercentage>=100){
-        currentDiv.style.border="1px solid rgb(167 211 162)";
+        currentDiv.style.border="3px solid rgb(167 211 162)";
         currentDiv.style.order="95";
         currentDiv.style.background="#daffd9";
     } else if (newCompletionPercentage>=50){
-        currentDiv.style.border="1px solid rgb(246 223 35)";
+        currentDiv.style.border="3px solid rgb(246 223 35)";
         currentDiv.style.background="rgb(255 251 234)";
         currentDiv.style.order="70";
     } else if (newCompletionPercentage<50){
@@ -325,6 +325,7 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
     if (newCompletionPercentage <100 ){
         currentDiv.style.order = "60";
         currentDiv.style.border="3px solid red"; 
+        currentDiv.style.background="#fff1f1";
 
         taskIconDiv = currentDiv.getElementsByClassName("fa fa-tasks")[0];
         if (taskIconDiv && plusMinusDiv){
@@ -335,7 +336,7 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
         }
 
     } else if (newCompletionPercentage >=100){
-        currentDiv.style.border="1px solid lightgrey"; 
+        currentDiv.style.border="3px solid lightgrey"; 
         taskIconDiv = currentDiv.getElementsByClassName("fa fa-warning")[0];
         if (taskIconDiv && plusMinusDiv){
             taskIconDiv.classList.remove("fa-warning");
