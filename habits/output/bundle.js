@@ -1117,7 +1117,7 @@ onload = function(){
     var timestamp6 = dateTime.getTime();
     console.log("end adding habit+pastelements+charts+journal:"+dateTime.toString()+"|"+(timestamp6-timestamp5).toString());
 
-    if (habitsArray.length > 1){
+    if (habitsArray.length >= 1){
         showGraphsTab();
     }
 
@@ -1230,9 +1230,11 @@ var showProgressTab = function(){
 }
 var hideGraphsTab = function(){
     document.getElementById("graphs-menu").style.display = "none"; 
+    document.getElementById("go-to-graph-button").style.display = "none";
 }
 var showGraphsTab = function(){
     document.getElementById("graphs-menu").style.display = "block"; 
+    document.getElementById("go-to-graph-button").style.display = "flex";
 }
 
 var hideStartProgressButtonOnHabits = function(){
@@ -1308,11 +1310,11 @@ var setDivAppearanceBasedOnCompletion = function(currentDiv,newCompletionPercent
 var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletionPercentage){
 
     if (newCompletionPercentage>=100){
-        currentDiv.style.border="1px solid rgb(167 211 162)";
+        currentDiv.style.border="3px solid rgb(167 211 162)";
         currentDiv.style.order="95";
         currentDiv.style.background="#daffd9";
     } else if (newCompletionPercentage>=50){
-        currentDiv.style.border="1px solid rgb(246 223 35)";
+        currentDiv.style.border="3px solid rgb(246 223 35)";
         currentDiv.style.background="rgb(255 251 234)";
         currentDiv.style.order="70";
     } else if (newCompletionPercentage<50){
@@ -1333,6 +1335,7 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
     if (newCompletionPercentage <100 ){
         currentDiv.style.order = "60";
         currentDiv.style.border="3px solid red"; 
+        currentDiv.style.background="#fff1f1";
 
         taskIconDiv = currentDiv.getElementsByClassName("fa fa-tasks")[0];
         if (taskIconDiv && plusMinusDiv){
@@ -1343,7 +1346,7 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
         }
 
     } else if (newCompletionPercentage >=100){
-        currentDiv.style.border="1px solid lightgrey"; 
+        currentDiv.style.border="3px solid lightgrey"; 
         taskIconDiv = currentDiv.getElementsByClassName("fa fa-warning")[0];
         if (taskIconDiv && plusMinusDiv){
             taskIconDiv.classList.remove("fa-warning");
@@ -1465,15 +1468,16 @@ var addOneToProgress = function(divElement){
 var addNewHabitFromForm = function(){
 
     var elementToAdd={};
-    elementToAdd.id = Date.now();
-    elementToAdd.habitId = elementToAdd.id * 10;
+    var newId = Date.now();
+    elementToAdd.id = newId.toString();
+    elementToAdd.habitId = newId * 10;
     elementToAdd.habitDescription = document.getElementById('new-description').value;
     elementToAdd.target = parseInt(document.getElementById('new-target').value);
     elementToAdd.isNegative = document.getElementById('new-is-negative-flag').checked;
     elementToAdd.progressDate = currentDate;
     elementToAdd.numberOfCompletions = 0;
     elementToAdd.isNew = true;
-    elementToAdd.isCritical = false;
+    elementToAdd.isCritical = "false";
     var weekDaySelector = document.getElementById('week-day-selection');
     
     elementToAdd.weekDay = weekDaySelector.getAttribute('weekDay');
@@ -1679,6 +1683,10 @@ var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
 }
 
 var launchCharts = function(fullData,habitsArray){
+    document.getElementById("streaks-container").innerHTML='<div id="no-streak">Graphs will be shown after adding at least one habit.</div>';
+    document.getElementById("no-streak").style.display = "none";
+    document.getElementById("week-summary-container").innerHTML='<div id="no-week-summary">Week summary will be shown after adding at least one habit.</div>';
+    document.getElementById("no-week-summary").style.display = "none";
     for ( let habit of habitsArray){
         launchHabitSummaries(fullData,habit)
     }
@@ -1862,7 +1870,7 @@ var buildWeekTable = function(weekTableObject,habitObject){
         } else if (numberOfMissesInWeek>1){
             newCanvaWrapper.style.background="white";
         }
-        document.getElementById("no-graph").style.display = "none";
+        document.getElementById("no-week-summary").style.display = "none";
         document.getElementById("week-summary-container").appendChild(newCanvaWrapper);
     
 }
@@ -1916,9 +1924,6 @@ var buildGraph = function(unitPerMonth,unitAccumulation,completionAccumulation,h
     } else {
         streaksWrapper.style.background="white";
     }
-
-
-    document.getElementById("no-streak").style.display = "none";
 
     document.getElementById("streaks-container").appendChild(streaksWrapper);
 

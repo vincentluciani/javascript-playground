@@ -52,9 +52,12 @@ var addProgressElement = function(elementToAdd){
     expandButtonContainer.setAttribute("class","fa fa-plus");
     expandButtonWrapper.appendChild(expandButtonContainer);
 
+    var taskIconContainer = document.createElement("div");
+    taskIconContainer.setAttribute("class","task-icon-container");
     var taskIcon = document.createElement("i");
     taskIcon.setAttribute("class","fa fa-tasks");
-    habitDescriptionContainer.appendChild(taskIcon);
+    taskIconContainer.appendChild(taskIcon);
+    habitDescriptionContainer.appendChild(taskIconContainer);
     habitDescriptionContainer.appendChild(habitDescriptionText);
     newProgressDivision.appendChild(habitDescriptionContainer);
     newProgressDivision.appendChild(expandButtonWrapper);

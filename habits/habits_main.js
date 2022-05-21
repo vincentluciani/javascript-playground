@@ -60,13 +60,7 @@ onload = function(){
     var timestamp3 = dateTime.getTime();
     console.log("end getting data:"+dateTime.toString()+"|"+(timestamp3-timestamp2).toString());
 
-    var habitsArray = dataArrays.habitsArray;
-    var journalArray = dataArrays.journalArray;
-    var progressArray =  dataArrays.progressArray;
-    var todaysProgressArray = dataArrays.todaysProgressArray;
-    var pastProgressArray = dataArrays.pastProgressArray;
-
-    if (progressArray.length >= 1){
+    if (dataArrays.progressArray.length >= 1){
         changeTabToProgress();
         showProgressTab();
     }
@@ -74,49 +68,54 @@ onload = function(){
         hideProgressTab();
         changeTabToHabits();
     }
-    if (journalArray.length < 1){
+    if (dataArrays.journalArray.length < 1){
         hideJournalBox();
     }
 
     dateTime = new Date();
     var timestamp4 = dateTime.getTime();
     console.log("start rendering today:"+dateTime.toString()+"|"+(timestamp4-timestamp3).toString());
-    for (const progressElement of todaysProgressArray){
+    for (const progressElement of dataArrays.todaysProgressArray){
         addProgressElement(progressElement);
     }
     dateTime = new Date();
     var timestamp5 = dateTime.getTime();
     console.log("end rendering today:"+dateTime.toString()+"|"+(timestamp5-timestamp4).toString());
 
-    for (const habitsElement of habitsArray){
+    for (const habitsElement of dataArrays.habitsArray){
         addHabitElement(habitsElement);
     }
     /* TODO : should be based on arrays and not on DOM */
     addEmptyProgressOnNewDay(currentDate, currentDateTime);
 
-    loadFontAwesome();
+    setTimeout(loadFontAwesome,5);
+    setTimeout(renderHistory,400);
+    setTimeout(renderSummaries,800);
+};
 
-    for (const habitsElement of pastProgressArray){
+function renderHistory(){
+    for (const habitsElement of dataArrays.pastProgressArray){
         addProgressElement(habitsElement);
     }
 
     applyFilters();
+    saveLoop();
+}
+function renderSummaries(){
 
-    readJournal(journalArray);
-    loadScriptForGraphs();
+    readJournal(dataArrays.journalArray);
+    loadScriptForGraphs(showGraphsTabIfGoodLength);
 
     dateTime = new Date();
     var timestamp6 = dateTime.getTime();
     console.log("end adding habit+pastelements+charts+journal:"+dateTime.toString()+"|"+(timestamp6-timestamp5).toString());
 
-    if (habitsArray.length > 1){
+}
+function showGraphsTabIfGoodLength(){
+    if (dataArrays.habitsArray.length >= 1){
         showGraphsTab();
     }
-
-    saveLoop();
-
-};
-
+}
 var saveLoop = function(){
 
     setInterval(readQueueProgress, 1000);
@@ -197,18 +196,19 @@ var getHabitProgressJournalWhenNotLoggedIn = function(){
 
 };
 
-var loadScriptForGraphs = function(){
+var loadScriptForGraphs = function(callback){
 
-    loadScript("https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js");
-    loadScript("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js");
+    var chartMinLoad = loadScript("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js",callback);
+    loadScript("https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js",chartMinLoad);
 }
 
 var loadFontAwesome = function(){
     loadScript("https://use.fontawesome.com/372afdc18b.js");
 }
-var loadScript = function(scriptUrl){
+var loadScript = function(scriptUrl,callback){
     let myScript = document.createElement("script");
     myScript.setAttribute("src", scriptUrl);
+    myScript.addEventListener('load',callback);
     document.body.appendChild(myScript);
 }
 var hideJournalBox = function(){
@@ -222,9 +222,11 @@ var showProgressTab = function(){
 }
 var hideGraphsTab = function(){
     document.getElementById("graphs-menu").style.display = "none"; 
+    document.getElementById("go-to-graph-button").style.display = "none";
 }
 var showGraphsTab = function(){
     document.getElementById("graphs-menu").style.display = "block"; 
+    document.getElementById("go-to-graph-button").style.display = "flex";
 }
 
 var hideStartProgressButtonOnHabits = function(){
@@ -458,15 +460,16 @@ var addOneToProgress = function(divElement){
 var addNewHabitFromForm = function(){
 
     var elementToAdd={};
-    elementToAdd.id = Date.now();
-    elementToAdd.habitId = elementToAdd.id * 10;
+    var newId = Date.now();
+    elementToAdd.id = newId.toString();
+    elementToAdd.habitId = (newId * 10).toString();
     elementToAdd.habitDescription = document.getElementById('new-description').value;
     elementToAdd.target = parseInt(document.getElementById('new-target').value);
     elementToAdd.isNegative = document.getElementById('new-is-negative-flag').checked;
     elementToAdd.progressDate = currentDate;
     elementToAdd.numberOfCompletions = 0;
     elementToAdd.isNew = true;
-    elementToAdd.isCritical = false;
+    elementToAdd.isCritical = "false";
     var weekDaySelector = document.getElementById('week-day-selection');
     
     elementToAdd.weekDay = weekDaySelector.getAttribute('weekDay');
@@ -483,11 +486,10 @@ var addNewHabitFromForm = function(){
     if (isDayOK != null && isDayOK)
     {
         addProgressElement(elementToAdd);
+        pushProgressArrayToQueue(elementToAdd);
     }
     addHabitElement(elementToAdd);
     
-    pushProgressArrayToQueue(elementToAdd);
-
     document.getElementById('new-description').value = null;
     document.getElementById('new-target').value = 1;
     document.getElementById('new-is-negative-flag').checked = false;

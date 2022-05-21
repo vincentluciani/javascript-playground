@@ -6,7 +6,7 @@ body{
     background: #fafafa;
 }
 
-#graphs-menu{
+#graphs-menu,#go-to-graph-button{
     display: none;
 }
 .green{
@@ -146,7 +146,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
     border: 1px solid  lightgray;
 }
 .box.new-habit{
-    border: 3px solid #c79bf0;
+    border: 5px solid #c369bc;
 }
 
 .box.canva-wrapper{
@@ -584,7 +584,11 @@ td,.red,.fa-warning{
     color:red;
 }
 
-
+.task-icon-container{
+    width: 16px;
+    float:left;
+    margin-right:7px;
+}
 :nth-col(2n+1) {
     background-color: pink;
 }

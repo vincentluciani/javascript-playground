@@ -57,7 +57,10 @@ sundayButtonInAddDiv.addEventListener('click', function(weekSelectionDiv,sundayB
 var setDayOfWeek = function(containerDiv, dayOfWeek,dayOfWeekDiv){
 
     var weekArrayString = containerDiv.getAttribute("weekday");
-    var weekArray = weekArrayString.split(" ");
+    var weekArray=[];
+    if (weekArrayString!=""){
+        weekArray = weekArrayString.split(" ");
+    }
 
     if (dayOfWeekDiv.classList.contains("selected")){
         dayOfWeekDiv.classList.remove("selected");
