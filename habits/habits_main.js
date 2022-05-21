@@ -39,9 +39,7 @@ onload = function(){
       }
 */
 
-    var dateTime = new Date();
-    var timestamp = dateTime.getTime();
-    console.log("start onload:"+dateTime.toString()+"|"+timestamp.toString());
+
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('debug') == "true"){
         document.getElementById("debug-section").style.display = "block";
@@ -52,14 +50,8 @@ onload = function(){
     document.getElementById("date-filter").value=currentDate;
     createRadialProgressBar(radialProgressParameters);
 
-    dateTime = new Date();
-    var timestamp2 = dateTime.getTime();
-    console.log("start getting data:"+dateTime.toString()+"|"+(timestamp2-timestamp).toString());
     getHabitProgressJournal(); /* todo: this function should only extract and not also create divs */
-    dateTime = new Date();
-    var timestamp3 = dateTime.getTime();
-    console.log("end getting data:"+dateTime.toString()+"|"+(timestamp3-timestamp2).toString());
-
+ 
     if (dataArrays.progressArray.length >= 1){
         changeTabToProgress();
         showProgressTab();
@@ -72,16 +64,10 @@ onload = function(){
         hideJournalBox();
     }
 
-    dateTime = new Date();
-    var timestamp4 = dateTime.getTime();
-    console.log("start rendering today:"+dateTime.toString()+"|"+(timestamp4-timestamp3).toString());
     for (const progressElement of dataArrays.todaysProgressArray){
         addProgressElement(progressElement);
     }
-    dateTime = new Date();
-    var timestamp5 = dateTime.getTime();
-    console.log("end rendering today:"+dateTime.toString()+"|"+(timestamp5-timestamp4).toString());
-
+ 
     for (const habitsElement of dataArrays.habitsArray){
         addHabitElement(habitsElement);
     }
@@ -105,11 +91,6 @@ function renderSummaries(){
 
     readJournal(dataArrays.journalArray);
     loadScriptForGraphs(showGraphsTabIfGoodLength);
-
-    dateTime = new Date();
-    var timestamp6 = dateTime.getTime();
-    console.log("end adding habit+pastelements+charts+journal:"+dateTime.toString()+"|"+(timestamp6-timestamp5).toString());
-
 }
 function showGraphsTabIfGoodLength(){
     if (dataArrays.habitsArray.length >= 1){
@@ -198,18 +179,39 @@ var getHabitProgressJournalWhenNotLoggedIn = function(){
 
 var loadScriptForGraphs = function(callback){
 
-    var chartMinLoad = loadScript("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js",callback);
-    loadScript("https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js",chartMinLoad);
+   /* var chartMinLoad = loadScript("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js",callback);
+    loadScript("https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js",chartMinLoad);*/
+
+  /*  loadScript("https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js").then(value => {
+        console.log(value);
+        loadScript("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js");
+      }, reason => {
+        console.log(reason );
+      }).then(value => {
+        console.log(value);
+        callback();
+      }, reason => {
+        console.log(reason );
+      });*/
+      loadScript("https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js")
+      .then(loadScript("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"))
+      .then(callback());
 }
 
 var loadFontAwesome = function(){
     loadScript("https://use.fontawesome.com/372afdc18b.js");
 }
-var loadScript = function(scriptUrl,callback){
-    let myScript = document.createElement("script");
-    myScript.setAttribute("src", scriptUrl);
-    myScript.addEventListener('load',callback);
-    document.body.appendChild(myScript);
+var loadScript = async function(scriptUrl){
+    return new Promise(
+        function (resolve, reject) {
+            let myScript = document.createElement("script");
+            myScript.setAttribute("src", scriptUrl);
+            myScript.addEventListener('load',function(){resolve('success');});
+            document.body.appendChild(myScript);
+        }
+    );
+
+
 }
 var hideJournalBox = function(){
     document.getElementById("journal-container").innerHTML = "no entry yet";
