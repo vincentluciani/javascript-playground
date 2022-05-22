@@ -199,6 +199,17 @@ var loadScriptForGraphs = function(callback){
 }
 
 var loadFontAwesome = function(){
+
+    document.getElementById('daily-journal-icon').innerHTML = writeIcon;
+    var trophyIconDivs = document.getElementsByClassName('trophy-icon');
+    for ( var iconDiv of trophyIconDivs){
+        iconDiv.innerHTML = trophyIcon;
+    }
+    document.getElementById('bar-chart-icon').innerHTML = graphIcon;
+    document.getElementById('plus-icon-button').innerHTML = plusIconBig;
+    
+    
+
     loadScript("https://use.fontawesome.com/372afdc18b.js");
 }
 var loadScript = async function(scriptUrl){

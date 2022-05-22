@@ -14,13 +14,13 @@
     </head>
     <body>
         <div id="positive-message" class="positive-message">
-            <i class="fa fa-trophy icon"></i>
+            <i class="trophy-icon icon"></i>
             <div class="title" id="positive-message-title"></div>
             <div class="sub-title" id="positive-message-subtitle"></div>
             <div class="positive-message-button" onclick="closeMessage();">OK</div>
         </div>
         <div id="super-positive-message" class="super-positive-message">
-            <i class="fa fa-trophy icon"></i>
+            <i class="trophy-icon icon"></i>
             <div class="title" id="super-positive-message-title"></div>
             <div class="sub-title" id="super-positive-message-subtitle"></div>
             <div class="super-positive-message-button" onclick="closeMessage();">OK</div>
@@ -32,7 +32,7 @@
             <div class="positive-message-button" onclick="closeDeleteMessage();">No</div>
         </div>
         <div id="addition-message" class="positive-message">
-            <i class="fa fa-trophy icon"></i>
+            <i class="trophy-icon icon"></i>
             <div class="title" id="positive-message-title">Habit Successfully Added !</div>
             <div class="sub-title" id="positive-message-subtitle">What do you want to do next ?</div>
             <div class="positive-message-button" onclick="changeTabToHabits();window.scrollTo(0, 0);closeAdditionConfirmation();">Add Another Habit</div>
@@ -40,7 +40,7 @@
             <div class="positive-message-button" onclick="changeTabToProgress();window.scrollTo(0, 0);;closeAdditionConfirmation();">Start My Day</div>
         </div>
         <div id="positive-message" class="positive-message">
-            <i class="fa fa-trophy icon"></i>
+            <i class="trophy-icon icon"></i>
             <div class="title" id="positive-message-title">Awesome :)</div>
             <div class="sub-title" id="positive-message-subtitle">Congratulations, you have completed your target ! Stay strong !</div>
             <div class="positive-message-button" onclick="closeMessage();">OK</div>
@@ -73,28 +73,28 @@
             
             <div id="habits-container" class="habits-container">
                 <div id="daily-summary-container" class="box first daily-summary">
-                    <div class="habit-description"><i class="fa fa-trophy icon"></i>Daily Summary</div>
+                    <div class="habit-description"><div class="task-icon-container trophy-icon icon"></div>Daily Summary</div>
                     <div class="progress-container">Daily Completion Percentage:</div>
                     <div id="daily-summary"></div>
                     <div id="daily-summary-comment"></div>
                 </div>
                 <div class="box big-action-button" onclick="displayJournalEditBox();window.scrollTo(0, 0);">
                     <div>Daily Journal</div>
-                    <div class="action-icon-container">
-                        <i class="fa fa-edit"></i>
+                    <div class="action-icon-container" id="daily-journal-icon">
+                      <!--  <i class="fa fa-edit"></i> -->
                     </div>
                 </div>
                 <div class="box big-action-button" onclick="changeTabToHabits();window.scrollTo(0, 0);">
                     <div>New Habit</div>
-                    <div class="action-icon-container">
-                        <i class="fa fa-plus"></i>
+                    <div class="action-icon-container" id="plus-icon-button">
+                       <!-- <i class="fa fa-plus"></i>-->
                     </div>
 
                 </div>
                 <div id="go-to-graph-button" class="box big-action-button" onclick="changeTabToGraphs();window.scrollTo(0, 0);">
                     <div>Graphs</div>
-                    <div class="action-icon-container">
-                        <i class="fa fa-bar-chart"></i>
+                    <div class="action-icon-container" id="bar-chart-icon">
+                       <!--<i class="fa fa-bar-chart"></i> -->
                     </div>
                 </div>
             </div>
@@ -183,6 +183,7 @@
         <script type="text/javascript" src="language/english.js"></script>
         <script type="text/javascript" src="libraries/random.js"></script>
         <script type="text/javascript" src="libraries/date.js"></script>
+        <script type="text/javascript" src="components/icons.js"></script>
         <script type="text/javascript" src="synchronization/debugTools.js"></script> 
         <script type="text/javascript" src="habits_main.js"></script>
         <script type="text/javascript" src="components/weekDaySelector.js"></script>

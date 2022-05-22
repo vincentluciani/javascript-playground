@@ -54,9 +54,12 @@ var addProgressElement = function(elementToAdd){
 
     var taskIconContainer = document.createElement("div");
     taskIconContainer.setAttribute("class","task-icon-container");
-    var taskIcon = document.createElement("i");
+    /*var taskIcon = document.createElement("i");
     taskIcon.setAttribute("class","fa fa-tasks");
-    taskIconContainer.appendChild(taskIcon);
+        taskIconContainer.appendChild(taskIcon);*/
+    var taskIconSvg= taskIcon;
+    taskIconContainer.innerHTML = taskIconSvg;
+
     habitDescriptionContainer.appendChild(taskIconContainer);
     habitDescriptionContainer.appendChild(habitDescriptionText);
     newProgressDivision.appendChild(habitDescriptionContainer);
