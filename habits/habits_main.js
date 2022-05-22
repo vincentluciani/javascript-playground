@@ -205,6 +205,10 @@ var loadFontAwesome = function(){
     for ( var iconDiv of trophyIconDivs){
         iconDiv.innerHTML = trophyIcon;
     }
+    var trophyIconBigDivs = document.getElementsByClassName('trophy-icon-big');
+    for ( var iconBigDiv of trophyIconBigDivs){
+        iconBigDiv.innerHTML = trophyIconBig;
+    }
     document.getElementById('bar-chart-icon').innerHTML = graphIcon;
     document.getElementById('plus-icon-button').innerHTML = plusIconBig;
     
@@ -342,23 +346,34 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
         currentDiv.style.border="3px solid red"; 
         currentDiv.style.background="#fff1f1";
 
-        taskIconDiv = currentDiv.getElementsByClassName("fa fa-tasks")[0];
+        taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
         if (taskIconDiv && plusMinusDiv){
-            taskIconDiv.classList.remove("fa-tasks");
-            currentDiv.getElementsByClassName("fa")[0].classList.add("fa-warning");
+            taskIconDiv.innerHTML=warningIcon;
+            /*taskIconDiv.setAttribute("stroke","red");
+            taskIconDiv.setAttribute("fill","red");      */     
+            /*currentDiv.getElementsByClassName("fa")[0].classList.add("fa-warning");*/
             currentDiv.getElementsByClassName("habit-description")[0].classList.add("red");
-            plusMinusDiv.style.color="red";
+            /*plusMinusDiv.style.color="red";*/
+     
         }
+        plusMinusDiv.firstChild.setAttribute("stroke","red");
+        plusMinusDiv.firstChild.setAttribute("fill","red");
 
     } else if (newCompletionPercentage >=100){
         currentDiv.style.border="3px solid lightgrey"; 
-        taskIconDiv = currentDiv.getElementsByClassName("fa fa-warning")[0];
+        taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
         if (taskIconDiv && plusMinusDiv){
-            taskIconDiv.classList.remove("fa-warning");
-            currentDiv.getElementsByClassName("fa")[0].classList.add("fa-tasks");
+            /*taskIconDiv.classList.remove("fa-warning");
+            currentDiv.getElementsByClassName("fa")[0].classList.add("fa-tasks");*/
+            taskIconDiv.innerHTML=taskIcon;
+           /* taskIconDiv.setAttribute("stroke","black");
+            taskIconDiv.setAttribute("fill","black");  */
             currentDiv.getElementsByClassName("habit-description")[0].classList.remove("red");
-            plusMinusDiv.style.color="#b657af";
+            /*plusMinusDiv.style.color="#b657af";*/
+            
         }    
+        plusMinusDiv.firstChild.setAttribute("stroke","#b657af");
+        plusMinusDiv.firstChild.setAttribute("fill","#b657af");
     }
 }
 
