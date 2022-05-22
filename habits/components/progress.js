@@ -48,17 +48,18 @@ var addProgressElement = function(elementToAdd){
     var expandButtonWrapper = document.createElement("span");
     expandButtonWrapper.setAttribute("class","plus-minus");
 
-    var expandButtonContainer = document.createElement("i");
+   /* var expandButtonContainer = document.createElement("i");
     expandButtonContainer.setAttribute("class","fa fa-plus");
-    expandButtonWrapper.appendChild(expandButtonContainer);
+    expandButtonWrapper.appendChild(expandButtonContainer);*/
+    expandButtonWrapper.innerHTML = expandIcon;
 
     var taskIconContainer = document.createElement("div");
-    taskIconContainer.setAttribute("class","task-icon-container");
-    /*var taskIcon = document.createElement("i");
+    taskIconContainer.setAttribute("class","task-icon-container");/*
+    var taskIcon = document.createElement("i");
     taskIcon.setAttribute("class","fa fa-tasks");
         taskIconContainer.appendChild(taskIcon);*/
-    var taskIconSvg= taskIcon;
-    taskIconContainer.innerHTML = taskIconSvg;
+
+    taskIconContainer.innerHTML = taskIcon;
 
     habitDescriptionContainer.appendChild(taskIconContainer);
     habitDescriptionContainer.appendChild(habitDescriptionText);
@@ -170,11 +171,11 @@ var addProgressElement = function(elementToAdd){
             pushProgressToQueue(newProgressDivision);}
      }(newProgressDivision));
 
-     expandButtonContainer.addEventListener('click', function(expandButtonContainer,detailsArea) {
+     expandButtonWrapper.addEventListener('click', function(expandButtonWrapper,detailsArea) {
         return function(){
-            toggleExpandCollapse(expandButtonContainer,detailsArea);
+            toggleExpandCollapse(expandButtonWrapper,detailsArea);
         }
-     }(expandButtonContainer,detailsArea));
+     }(expandButtonWrapper,detailsArea));
 
      refreshProgress(newProgressDivision);
 
@@ -182,14 +183,23 @@ var addProgressElement = function(elementToAdd){
 };
 
 var toggleExpandCollapse = function(toggleButton,divToTransform){
-
+/*
     const targetIsPlus = toggleButton.classList.toggle("fa-plus");
     const targetIsMinus = toggleButton.classList.toggle("fa-minus");
 
     if (targetIsPlus && !targetIsMinus){
         divToTransform.style.display = 'none';
+        toggleButton.innerHTML = expandIcon;
     } else {
         divToTransform.style.display = 'block';
+        toggleButton.innerHTML = collapseIcon;
     }
-
+*/
+if (divToTransform.style.display=='block'){
+    divToTransform.style.display = 'none';
+    toggleButton.innerHTML = expandIcon;
+} else {
+    divToTransform.style.display = 'block';
+    toggleButton.innerHTML = collapseIcon;
+}
 }

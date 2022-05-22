@@ -11,11 +11,16 @@ var addHabitElement = function(elementToAdd){
     newHabitDivision.setAttribute("isCritical",elementToAdd.isCritical);
 
     const titleText = document.createTextNode("Update habit:");
-    var taskIcon = document.createElement("i");
+    var taskIconContainer = document.createElement("div");
+    taskIconContainer.setAttribute("class","task-icon-container");/*
+    /*var taskIcon = document.createElement("i");
     taskIcon.setAttribute("class","fa fa-tasks");
+    var taskIconSvg= taskIcon;
+    */
+    taskIconContainer.innerHTML = taskIcon;
 
     const titleTextDiv = document.createElement("div");
-    titleTextDiv.appendChild(taskIcon);
+    titleTextDiv.appendChild(taskIconContainer);
     titleTextDiv.appendChild(titleText);
 
     titleTextDiv.setAttribute("class", "habit-title");

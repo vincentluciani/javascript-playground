@@ -162,7 +162,7 @@ var getHabitProgressJournalWhenNotLoggedIn = function(){
             var progressValue = JSON.parse(localStorage.getItem(currentKey));
             if ( progressValue.progressDate == formattedTodaysDate()){
                 todaysProgressArray.push(progressValue);
-            } else {
+            } else if (daysSinceToday(progressValue.progressDate)<=30) {
                 pastProgressArray.push(progressValue);
             }
             progressArray.push(progressValue);

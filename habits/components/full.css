@@ -851,7 +851,7 @@ td,.red,.fa-warning{
         margin-top: 13px;
         margin-left: 10px;
     }
-    .box.habit-update i.fa.fa-plus,.box.habit-update i.fa.fa-minus{
+    .box.habit-update i.fa.fa-plus,.box.habit-update i.fa.fa-minus,.plus-minus{
         float: right;
         margin-top: 5px;
         font-size: 24px;
@@ -861,7 +861,7 @@ td,.red,.fa-warning{
     .plus-minus{
         color:#b657af;
     }
-    .habit-description i{
+    .habit-description i,.task-icon-container{
         display: none;
     }
     .progress-details{
@@ -895,7 +895,7 @@ td,.red,.fa-warning{
     .positive-message .sub-title,.super-positive-message .sub-title{
         font-size:45px;
     }
-    .box.habit-update i.fa.fa-plus,.box.habit-update i.fa.fa-minus{
+    .box.habit-update i.fa.fa-plus,.box.habit-update i.fa.fa-minus,.plus-minus{
         display: none;
     }
     .habit-description{
