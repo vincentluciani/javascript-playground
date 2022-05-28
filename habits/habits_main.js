@@ -99,26 +99,6 @@ var saveLoop = function(){
 
 }
 
-/* part of the form to add a new habit */
-var plusButtonInAddDiv = document.getElementById("plus-in-add-div");
-var minusButtonInAddDiv = document.getElementById("minus-in-add-div");
-var newTargetDiv = document.getElementById("new-target");
-
-plusButtonInAddDiv.addEventListener('click', function(targetDiv) {
-    return function(){
-        addOneToProgress(targetDiv);
-    }
-}(newTargetDiv));
-
-minusButtonInAddDiv.addEventListener('click', function(targetDiv) {
-    return function(){
-        minusOneToProgress(targetDiv);
-    }
-}(newTargetDiv));
-/* -- */
-
-
-
 
 var placeSVGIcons = function(){
 
@@ -208,67 +188,6 @@ var setDivAppearanceBasedOnCompletion = function(currentDiv,newCompletionPercent
 
     if ( currentDiv.getAttribute("iscritical") !=null && currentDiv.getAttribute("iscritical") == "true"){
         setDivAppearanceForCritical(currentDiv,newCompletionPercentage);
-    }
-}
-
-var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletionPercentage){
-
-    if (newCompletionPercentage>=100){
-        currentDiv.style.border="3px solid rgb(167 211 162)";
-        currentDiv.style.order="95";
-        currentDiv.style.background="#daffd9";
-    } else if (newCompletionPercentage>=50){
-        currentDiv.style.border="3px solid rgb(246 223 35)";
-        currentDiv.style.background="rgb(255 251 234)";
-        currentDiv.style.order="70";
-    } else if (newCompletionPercentage<50){
-        currentDiv.style.border="1px solid lightgrey";
-        currentDiv.style.background="white";
-        currentDiv.style.order="70";
-    }
-    if (currentDiv.id && currentDiv.id == "daily-summary-container"){
-        currentDiv.style.order = "90";
-    }
-
-}
-
-var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
-    var plusMinusDiv = currentDiv.getElementsByClassName("plus-minus")[0];
-    var taskIconDiv;
-
-    if (newCompletionPercentage <100 ){
-        currentDiv.style.order = "60";
-        currentDiv.style.border="3px solid red"; 
-        currentDiv.style.background="#fff1f1";
-
-        taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
-        if (taskIconDiv && plusMinusDiv){
-            taskIconDiv.innerHTML=warningIcon;
-            /*taskIconDiv.setAttribute("stroke","red");
-            taskIconDiv.setAttribute("fill","red");      */     
-            /*currentDiv.getElementsByClassName("fa")[0].classList.add("fa-warning");*/
-            currentDiv.getElementsByClassName("habit-description")[0].classList.add("red");
-            /*plusMinusDiv.style.color="red";*/
-     
-        }
-        plusMinusDiv.firstChild.setAttribute("stroke","red");
-        plusMinusDiv.firstChild.setAttribute("fill","red");
-
-    } else if (newCompletionPercentage >=100){
-        currentDiv.style.border="3px solid lightgrey"; 
-        taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
-        if (taskIconDiv && plusMinusDiv){
-            /*taskIconDiv.classList.remove("fa-warning");
-            currentDiv.getElementsByClassName("fa")[0].classList.add("fa-tasks");*/
-            taskIconDiv.innerHTML=taskIcon;
-           /* taskIconDiv.setAttribute("stroke","black");
-            taskIconDiv.setAttribute("fill","black");  */
-            currentDiv.getElementsByClassName("habit-description")[0].classList.remove("red");
-            /*plusMinusDiv.style.color="#b657af";*/
-            
-        }    
-        plusMinusDiv.firstChild.setAttribute("stroke","#b657af");
-        plusMinusDiv.firstChild.setAttribute("fill","#b657af");
     }
 }
 

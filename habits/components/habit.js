@@ -85,6 +85,24 @@ var addHabitElement = function(elementToAdd){
     document.getElementById('habits-definition-container').appendChild(newHabitDivision);
 }
 
+/* part of the form to add a new habit */
+var plusButtonInAddDiv = document.getElementById("plus-in-add-div");
+var minusButtonInAddDiv = document.getElementById("minus-in-add-div");
+var newTargetDiv = document.getElementById("new-target");
+
+plusButtonInAddDiv.addEventListener('click', function(targetDiv) {
+    return function(){
+        addOneToProgress(targetDiv);
+    }
+}(newTargetDiv));
+
+minusButtonInAddDiv.addEventListener('click', function(targetDiv) {
+    return function(){
+        minusOneToProgress(targetDiv);
+    }
+}(newTargetDiv));
+/* -- */
+
 var closeDeleteMessage = function(){
     document.getElementById("delete-message").style.display="none";
 }
