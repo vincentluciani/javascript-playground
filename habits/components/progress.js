@@ -208,3 +208,37 @@ if (divToTransform.style.display=='block'){
 toggleButton.firstChild.setAttribute("fill",currentFill);
 toggleButton.firstChild.setAttribute("stroke",currentStroke);
 }
+
+
+function renderPastProgressBoxes(){
+    for (const habitsElement of dataArrays.pastProgressArray){
+        addProgressElement(habitsElement);
+    }
+
+    applyFilters();
+    saveLoop();
+}
+
+
+var refreshProgress = function(currentDiv){
+    var newCompletion = currentDiv.getElementsByClassName("number-of-completion")[0];
+    var newCompletionPercentage = 0;
+
+    var isNegative = currentDiv.getAttribute("isNegative"); 
+    if (isNegative != null && isNegative == "true"){
+        if ( newCompletion.value <= parseInt(currentDiv.getAttribute("target")) ){
+            newCompletionPercentage = 100;
+        } 
+    } else {
+        newCompletionPercentage = Math.round(newCompletion.value * 100 / parseInt(currentDiv.getAttribute("target")));
+    }
+
+    currentDiv.getElementsByClassName("percentage-completion")[0].innerHTML = newCompletionPercentage;
+
+    setDivAppearanceBasedOnCompletion(currentDiv,newCompletionPercentage);
+
+    updateDailyProgress();
+
+}
+
+

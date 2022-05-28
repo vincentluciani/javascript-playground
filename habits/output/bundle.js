@@ -1100,7 +1100,7 @@ onload = function(){
         addHabitElement(habitsElement);
     }
     /* TODO : should be based on arrays and not on DOM */
-    addEmptyProgressOnNewDay(currentDate, currentDateTime);
+    addEmptyProgressBoxesOnNewDay(currentDate, currentDateTime);
 
     placeSVGIcons();
 
@@ -1445,7 +1445,7 @@ var createMissingElementsForDate = function(inputDate){
     var dateElements = inputDate.split("-");
     var inputDateTime = new Date(dateElements[0], (parseInt(dateElements[1])-1).toString(), dateElements[2], 0, 0, 0, 0);
     debugWrite("Creating missing progress elements for date:"+inputDate.toString()+ " time:"+inputDateTime.toString());
-    addEmptyProgressOnNewDay(inputDate,inputDateTime);    
+    addEmptyProgressBoxesOnNewDay(inputDate,inputDateTime);    
 }
 
 var minusOneToProgress = function(divElement){
@@ -1621,7 +1621,7 @@ function APICaller(parameters,callback,callbackOnFailure){
 	
 }
 
-var addEmptyProgressOnNewDay = function(inputDate, inputDateTime){
+var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
 
     var newCurrentDateTime = new Date();
 
@@ -1761,7 +1761,7 @@ var launchHabitSummaries = function(fullData,habitObject){
     var weekTableObject = {};
     weekTableObject = weekTable(progressByDay);
 
-    buildWeekTable(weekTableObject,habitObject);
+    buildWeekTableBox(weekTableObject,habitObject);
 
     /* Graph */
     buildGraph(unitPerMonth,unitAccumulation,completionAccumulation,habitObject,dataToShow);
@@ -1825,7 +1825,7 @@ var getNumberOfStreaks = function(dataToShow,baseline){
     return completionAccumulation;
 }
 
-var buildWeekTable = function(weekTableObject,habitObject){
+var buildWeekTableBox = function(weekTableObject,habitObject){
         /* week table */
         var tableCode = weekTableObject.tableCode
         var numberOfMissesInWeek = weekTableObject.numberOfMissesInWeek
