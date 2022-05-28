@@ -104,9 +104,9 @@
         <div id="graphs-section" class="main-section" >
             <div class="main-title fixed" >
                 <ul class="horizontal-submenu">
-                <li id="week-link" onclick="subMenuGo('week-link');" class="sub-menu selected-underline"><i class="fa fa-calendar"></i>Week</li>
-                <li id="streaks-link" class="sub-menu" onclick="subMenuGo('streaks-link');"><i class="fa fa-bar-chart"></i>History</li>
-                <li id="journal-link" onclick="subMenuGo('journal-link');" class="sub-menu"><i class="fa fa-edit"></i>Journal</lid>
+                <li id="week-link" onclick="subMenuGo('week-link');" class="sub-menu selected-underline"><span id="week-link-icon" class="submenu-icon"></span>Week</li>
+                <li id="streaks-link" class="sub-menu" onclick="subMenuGo('streaks-link');"><span id="small-graph-icon" class="submenu-icon"></span>History</li>
+                <li id="journal-link" onclick="subMenuGo('journal-link');" class="sub-menu"><span id="small-graph-journal" class="submenu-icon"></span>Journal</lid>
                 </ul>
             </div>
             <div id="week-summary-container" class="week-summary-container" ></div>
@@ -121,7 +121,7 @@
             </div>
             <div id="habits-definition-container" class="habits-definition-container">
                 <div class="box new-habit blue">
-                    <div class="bold"><i class="fa fa-tasks"></i>New Habit</div><br>
+                    <div class="bold"><span id="small-task-icon" class="submenu-icon"></span>New Habit</div><br>
                     <label class="label">Description:</label>
                     <textarea  rows=3 type="text" id="new-description" class="large"></textarea>
                     <label class="label hidden">Check here if it is something you should NOT do:</label>
@@ -142,7 +142,7 @@
                         <div class="weekday saturday">S</div>
                         <div class="weekday sunday">S</div>
                     </div>
-                    <div onClick='addNewHabitFromForm();' id="add-button" class="add-button"><i class="fa fa-save"></i>  Save</div>
+                    <div onClick='addNewHabitFromForm();' id="add-button" class="add-button"><div class="action-icon-container save-icon" id="save-icon"></div>Save</div>
                 </div>
                 
                <!-- <div class="box big-action-button" id="save-button-in-habits" onclick="extractElementsForUpdate();">
@@ -151,7 +151,7 @@
                 </div> -->
                     <div onclick="changeTabToProgress();window.scrollTo(0, 0);" id="go-to-progress-button" class="box big-action-button">
                         <div>START</div>
-                         <i class="fa fa-play"></i>
+                        <div class="action-icon-container" id="start-icon"></div>
                     </div>
 
             </div>
@@ -160,7 +160,7 @@
 
         <div class="overlay-for-message" id="journal-edit-box">
             <div class="message-in-overlay">
-                <div class="bold"><i class="fa fa-edit"></i>What do you think about your day ?</div><br>
+                <div class="bold"><div class="task-icon-container" id="daily-journal-icon-small"></div>What do you think about your day ?</div><br>
                 <textarea rows="10" type="text" id="daily-journal" class="large"></textarea>
                 <div onClick='closeJournal();' id="close-journal-button" class="add-button">OK</div>
             </div>     

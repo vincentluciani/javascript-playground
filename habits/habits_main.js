@@ -74,9 +74,9 @@ onload = function(){
     /* TODO : should be based on arrays and not on DOM */
     addEmptyProgressOnNewDay(currentDate, currentDateTime);
 
-    setTimeout(loadFontAwesome,5);
-    setTimeout(renderHistory,400);
-    setTimeout(renderSummaries,800);
+    setTimeout(placeSVGIcons,5);
+    setTimeout(renderHistory,10);
+    setTimeout(renderSummaries,200);
 };
 
 function renderHistory(){
@@ -198,9 +198,18 @@ var loadScriptForGraphs = function(callback){
       .then(callback());
 }
 
-var loadFontAwesome = function(){
+var placeSVGIcons = function(){
 
     document.getElementById('daily-journal-icon').innerHTML = writeIcon;
+    document.getElementById('daily-journal-icon-small').innerHTML = writeIconSmall;
+    document.getElementById('week-link-icon').innerHTML=calendarIcon;
+    document.getElementById('small-graph-icon').innerHTML=graphIconSmall;
+    document.getElementById('small-graph-journal').innerHTML=writeIconSmall;
+    document.getElementById('small-task-icon').innerHTML=taskIcon;
+    document.getElementById('save-icon').innerHTML=saveIcon;
+    document.getElementById('start-icon').innerHTML=startIcon;
+    
+    
     var trophyIconDivs = document.getElementsByClassName('trophy-icon');
     for ( var iconDiv of trophyIconDivs){
         iconDiv.innerHTML = trophyIcon;
@@ -214,7 +223,7 @@ var loadFontAwesome = function(){
     
     
 
-    loadScript("https://use.fontawesome.com/372afdc18b.js");
+    /*loadScript("https://use.fontawesome.com/372afdc18b.js");*/
 }
 var loadScript = async function(scriptUrl){
     return new Promise(
@@ -849,8 +858,9 @@ var buildWeekTable = function(weekTableObject,habitObject){
         var tableCode = weekTableObject.tableCode
         var numberOfMissesInWeek = weekTableObject.numberOfMissesInWeek
         const weekSummaryTable = document.createElement("div");
-        var graphIcon = document.createElement("i");
-        graphIcon.setAttribute("class","fa fa-calendar");
+        var graphIcon = document.createElement("div");
+        graphIcon.setAttribute("class","task-icon-container");
+        graphIcon.innerHTML = calendarIcon;
         const grapTitle = document.createTextNode(habitObject.habitDescription);
         const grapTitleDiv = document.createElement("div");
         grapTitleDiv.setAttribute("class","graph-title");
@@ -901,8 +911,12 @@ var buildGraph = function(unitPerMonth,unitAccumulation,completionAccumulation,h
     const grapTitleStreaks = document.createTextNode(habitObject.habitDescription);
     const grapTitleDivStreaks = document.createElement("div");
 
-    var graphIconStreaks = document.createElement("i");
-    graphIconStreaks.setAttribute("class","fa fa-bar-chart");
+    var graphIconStreaks = document.createElement("div");
+    graphIconStreaks.setAttribute("class","task-icon-container");
+    graphIconStreaks.innerHTML = graphIconSmall;
+
+    /*var graphIconStreaks = document.createElement("i");
+    graphIconStreaks.setAttribute("class","fa fa-bar-chart");*/
 
     const streaksTitleDiv = document.createElement("div");
     streaksTitleDiv.innerHTML = "Number of streaks: "+ completionAccumulation.toString();

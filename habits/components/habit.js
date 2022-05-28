@@ -72,14 +72,14 @@ var addHabitElement = function(elementToAdd){
     var onClickSaveFunctionCall = "saveChangesInHabit(" + elementToAdd.habitId.toString()+ ")";
     saveButton.setAttribute("onClick",onClickSaveFunctionCall);
     saveButton.setAttribute("class","add-button");
-    saveButton.innerHTML = '<i class="fa fa-save"></i> Save';
+    saveButton.innerHTML = '<div class="action-icon-container save-icon">'+saveIcon+'</div>Save';
     newHabitDivision.appendChild(saveButton);
 
     const deleteButton = document.createElement("div");
     var onClickFunctionCall = "requestHabitDeletion(" + elementToAdd.habitId.toString()+ ")";
     deleteButton.setAttribute("onClick",onClickFunctionCall);
     deleteButton.setAttribute("class","add-button");
-    deleteButton.innerHTML = '<i class="fa fa-trash"></i> Delete';
+    deleteButton.innerHTML = '<div class="action-icon-container delete-icon">'+deleteIcon+'</div>Delete';
     newHabitDivision.appendChild(deleteButton);
 
     document.getElementById('habits-definition-container').appendChild(newHabitDivision);

@@ -14,18 +14,18 @@ var weekTable = function(progressByDay){
         var iconCode="";
         if (result != null){
             if (result>=0){
-                iconCode="<i class='fa fa-circle icon'></i>";
+                iconCode=fullCirclePast;
             } else if (result<0){
                 if (i<todaysDateDayNum){
-                    iconCode="<i class='fa fa-circle icon red'></i>";
+                    iconCode=fullCircleRed;
                     numberOfMissesInWeek++;
                 } else if (i==todaysDateDayNum){
-                    iconCode="<i class='fa fa-circle-o icon today'></i>";
+                    iconCode=emptyCircleToday;
                 }
             }
         } else {
             if (i<=todaysDateDayNum){
-                iconCode="<i class='fa fa-minus icon'></i>";
+                iconCode=minusIconGreen;
             } 
             else {
                 iconCode="";

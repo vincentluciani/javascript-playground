@@ -195,6 +195,9 @@ var toggleExpandCollapse = function(toggleButton,divToTransform){
         toggleButton.innerHTML = collapseIcon;
     }
 */
+var currentFill = toggleButton.firstChild.getAttribute("fill");
+var currentStroke = toggleButton.firstChild.getAttribute("stroke");
+
 if (divToTransform.style.display=='block'){
     divToTransform.style.display = 'none';
     toggleButton.innerHTML = expandIcon;
@@ -202,4 +205,6 @@ if (divToTransform.style.display=='block'){
     divToTransform.style.display = 'block';
     toggleButton.innerHTML = collapseIcon;
 }
+toggleButton.firstChild.setAttribute("fill",currentFill);
+toggleButton.firstChild.setAttribute("stroke",currentStroke);
 }

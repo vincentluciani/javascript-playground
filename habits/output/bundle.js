@@ -1102,7 +1102,7 @@ onload = function(){
     /* TODO : should be based on arrays and not on DOM */
     addEmptyProgressOnNewDay(currentDate, currentDateTime);
 
-    loadFontAwesome();
+    placeSVGIcons();
 
     for (const habitsElement of pastProgressArray){
         addProgressElement(habitsElement);
@@ -1211,7 +1211,7 @@ var loadScriptForGraphs = function(){
     loadScript("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js");
 }
 
-var loadFontAwesome = function(){
+var placeSVGIcons = function(){
     loadScript("https://use.fontawesome.com/372afdc18b.js");
 }
 var loadScript = function(scriptUrl){
@@ -1830,8 +1830,9 @@ var buildWeekTable = function(weekTableObject,habitObject){
         var tableCode = weekTableObject.tableCode
         var numberOfMissesInWeek = weekTableObject.numberOfMissesInWeek
         const weekSummaryTable = document.createElement("div");
-        var graphIcon = document.createElement("i");
-        graphIcon.setAttribute("class","fa fa-calendar");
+        var graphIcon = document.createElement("div");
+        graphIcon.setAttribute("class","task-icon-container");
+        graphIcon.innerHTML = calendarIcon;
         const grapTitle = document.createTextNode(habitObject.habitDescription);
         const grapTitleDiv = document.createElement("div");
         grapTitleDiv.setAttribute("class","graph-title");
