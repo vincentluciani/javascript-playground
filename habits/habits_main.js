@@ -75,11 +75,11 @@ onload = function(){
     addEmptyProgressOnNewDay(currentDate, currentDateTime);
 
     setTimeout(placeSVGIcons,5);
-    setTimeout(renderHistory,10);
+    setTimeout(renderPastProgressBoxes,10);
     setTimeout(renderSummaries,200);
 };
 
-function renderHistory(){
+function renderPastProgressBoxes(){
     for (const habitsElement of dataArrays.pastProgressArray){
         addProgressElement(habitsElement);
     }
@@ -90,6 +90,7 @@ function renderHistory(){
 function renderSummaries(){
 
     readJournal(dataArrays.journalArray);
+    /*todo refactor with promise*/
     loadScriptForGraphs(showGraphsTabIfGoodLength);
 }
 function showGraphsTabIfGoodLength(){
@@ -195,7 +196,13 @@ var loadScriptForGraphs = function(callback){
       });*/
       loadScript("https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js")
       .then(loadScript("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"))
-      .then(callback());
+      .catch((error) => {
+        console.error(error);
+      })
+      .then(callback())
+      .catch((error) => {
+        console.error(error);
+      });
 }
 
 var placeSVGIcons = function(){
@@ -229,9 +236,12 @@ var loadScript = async function(scriptUrl){
     return new Promise(
         function (resolve, reject) {
             let myScript = document.createElement("script");
+            let head = document.head || document.getElementsByTagName('head')[0];
             myScript.setAttribute("src", scriptUrl);
+            myScript.setAttribute("async", false);
             myScript.addEventListener('load',function(){resolve('success');});
-            document.body.appendChild(myScript);
+            myScript.addEventListener('error', function(event){reject(event.error);});
+            head.insertBefore(myScript, head.firstChild);
         }
     );
 
