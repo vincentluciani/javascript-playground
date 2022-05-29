@@ -238,7 +238,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
 .week-summary-container{
     display: flex;
 }
-#streaks-container{
+#streaks-container,#streaks-link{
     display: none;
 }
 .main-action-bar, .myChart {

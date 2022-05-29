@@ -101,7 +101,7 @@ var buildCongratulationSubTitle = function (locale){
 
     return listOfEncouragements[randomNumber];
 }
-var buildGraph = function(unitPerMonth,unitAccumulation,completionAccumulation,habitObject,dataToShow){
+var buildGraphBox = function(unitPerMonth,unitAccumulation,completionAccumulation,habitObject,dataToShow){
 
     var streaksWrapper = document.createElement("div");
 
@@ -243,13 +243,37 @@ var loadScriptForGraphs = function(callback){
        .catch((error) => {
         console.error(error);
       })
+      .then(waitForChartLoaded())
+      .catch((error) => {
+        console.error(error);
+      })
       .then(callback())
       .catch((error) => {
         console.error(error);
       });
  }
 
- 
+var waitForChartLoaded = async function(){
+  return new Promise(
+    function (resolve, reject) {
+      checkIfChartLoaded(resolve, reject,0);
+    }
+  );
+}
+
+var checkIfChartLoaded = function(resolve, reject,totalWaitingTime){
+  var timeIncrement = 50;
+  if(typeof Chart !== "undefined"){
+    resolve('loaded');
+  } else if (totalWaitingTime > 3000){
+    reject('timeout waiting for Chart');
+  }
+  else{
+      totalWaitingTime+=timeIncrement;
+      setTimeout(checkIfChartLoaded, 50,resolve,reject,totalWaitingTime);
+  }
+}
+
 
 var addHabitElement = function(elementToAdd){
     const newHabitDivision = document.createElement("div");
@@ -337,6 +361,24 @@ var addHabitElement = function(elementToAdd){
 
     document.getElementById('habits-definition-container').appendChild(newHabitDivision);
 }
+
+/* part of the form to add a new habit */
+var plusButtonInAddDiv = document.getElementById("plus-in-add-div");
+var minusButtonInAddDiv = document.getElementById("minus-in-add-div");
+var newTargetDiv = document.getElementById("new-target");
+
+plusButtonInAddDiv.addEventListener('click', function(targetDiv) {
+    return function(){
+        addOneToProgress(targetDiv);
+    }
+}(newTargetDiv));
+
+minusButtonInAddDiv.addEventListener('click', function(targetDiv) {
+    return function(){
+        minusOneToProgress(targetDiv);
+    }
+}(newTargetDiv));
+/* -- */
 
 var closeDeleteMessage = function(){
     document.getElementById("delete-message").style.display="none";
@@ -492,9 +534,12 @@ var trophyIconBig = '<svg xmlns="http://www.w3.org/2000/svg" stroke="white" fill
 
 var warningIcon = '<svg xmlns="http://www.w3.org/2000/svg"  width="15px" height="15px" fill="red" stroke="red"  xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 491.537 491.537" style="enable-background:new 0 0 491.537 491.537;" xml:space="preserve"><g><g>	<path d="M488.117,459.466l-223.1-447.2c-10.4-17.4-32-13.1-37.5,0l-225.2,449.3c-8,15.6,6.3,29.2,18.8,29.2h449.6c0,0,0.3,0,0.8,0    C487.517,490.766,497.017,472.466,488.117,459.466z M54.417,450.066l191.8-383.6l190.8,383.7h-382.6V450.066z"/><path d="M225.417,206.166v104.3c0,11.5,9.4,20.9,20.9,20.9c11.5,0,19.8-8.3,20.9-19.8v-105.4c0-11.5-9.4-20.9-20.9-20.9    C234.817,185.266,225.417,194.666,225.417,206.166z"/>		<circle cx="246.217" cy="388.066" r="20.5"/></g></g></svg>';
 
-var calendarIcon2 = '<svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 470 470" style="enable-background:new 0 0 470 470;" xml:space="preserve"><g><path d="M462.5,425H7.5c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h455c4.143,0,7.5-3.358,7.5-7.5S466.643,425,462.5,425z"/><path d="M462.5,455H7.5c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h455c4.143,0,7.5-3.358,7.5-7.5S466.643,455,462.5,455z"/><path d="M462.5,30h-25v-7.5C437.5,10.093,427.406,0,415,0s-22.5,10.093-22.5,22.5V30h-75v-7.5C317.5,10.093,307.406,0,295,0   s-22.5,10.093-22.5,22.5V30h-75v-7.5C197.5,10.093,187.407,0,175,0s-22.5,10.093-22.5,22.5V30h-75v-7.5C77.5,10.093,67.407,0,55,0   S32.5,10.093,32.5,22.5V30h-25C3.358,30,0,33.358,0,37.5v365c0,4.142,3.358,7.5,7.5,7.5h455c4.143,0,7.5-3.358,7.5-7.5v-365   C470,33.358,466.643,30,462.5,30z M407.5,22.5c0-4.136,3.364-7.5,7.5-7.5s7.5,3.364,7.5,7.5v30c0,4.136-3.364,7.5-7.5,7.5   s-7.5-3.364-7.5-7.5V22.5z M287.5,22.5c0-4.136,3.364-7.5,7.5-7.5s7.5,3.364,7.5,7.5v30c0,4.136-3.364,7.5-7.5,7.5   s-7.5-3.364-7.5-7.5V22.5z M167.5,22.5c0-4.136,3.364-7.5,7.5-7.5s7.5,3.364,7.5,7.5v30c0,4.136-3.364,7.5-7.5,7.5   s-7.5-3.364-7.5-7.5V22.5z M47.5,22.5c0-4.136,3.364-7.5,7.5-7.5s7.5,3.364,7.5,7.5v30c0,4.136-3.364,7.5-7.5,7.5   s-7.5-3.364-7.5-7.5V22.5z M32.5,45v7.5C32.5,64.907,42.593,75,55,75s22.5-10.093,22.5-22.5V45h75v7.5   c0,12.407,10.093,22.5,22.5,22.5s22.5-10.093,22.5-22.5V45h75v7.5c0,12.407,10.094,22.5,22.5,22.5s22.5-10.093,22.5-22.5V45h75v7.5   c0,12.407,10.094,22.5,22.5,22.5s22.5-10.093,22.5-22.5V45H455v77.3H15V45H32.5z M15,395V137.3h440V395H15z"/><path d="M412,226.8h-30c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S416.143,226.8,412,226.8z"/><path d="M331,226.8h-30c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S335.143,226.8,331,226.8z"/><path d="M250,226.8h-30c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S254.143,226.8,250,226.8z"/><path d="M169,226.8h-30c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.142,0,7.5-3.358,7.5-7.5S173.142,226.8,169,226.8z"/><path d="M88,226.8H58c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.142,0,7.5-3.358,7.5-7.5S92.142,226.8,88,226.8z"/><path d="M331,280.8h-30c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S335.143,280.8,331,280.8z"/><path d="M250,280.8h-30c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S254.143,280.8,250,280.8z"/><path d="M169,280.8h-30c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.142,0,7.5-3.358,7.5-7.5S173.142,280.8,169,280.8z"/><path d="M88,280.8H58c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.142,0,7.5-3.358,7.5-7.5S92.142,280.8,88,280.8z"/><path d="M331,334.8h-30c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S335.143,334.8,331,334.8z"/><path d="M412,280.8h-30c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S416.143,280.8,412,280.8z"/><path d="M412,334.8h-30c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S416.143,334.8,412,334.8z"/><path d="M250,334.8h-30c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S254.143,334.8,250,334.8z"/><path d="M169,334.8h-30c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.142,0,7.5-3.358,7.5-7.5S173.142,334.8,169,334.8z"/><path d="M88,334.8H58c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.142,0,7.5-3.358,7.5-7.5S92.142,334.8,88,334.8z"/><path d="M412,172.8h-30c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S416.143,172.8,412,172.8z"/><path d="M331,172.8h-30c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S335.143,172.8,331,172.8z"/><path d="M250,172.8h-30c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S254.143,172.8,250,172.8z"/><path d="M169,172.8h-30c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.142,0,7.5-3.358,7.5-7.5S173.142,172.8,169,172.8z"/><path d="M88,172.8H58c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.142,0,7.5-3.358,7.5-7.5S92.142,172.8,88,172.8z"/></g></svg>';
-
+/*var calendarIcon2 = '<svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 470 470" style="enable-background:new 0 0 470 470;" xml:space="preserve"><g><path d="M462.5,425H7.5c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h455c4.143,0,7.5-3.358,7.5-7.5S466.643,425,462.5,425z"/><path d="M462.5,455H7.5c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h455c4.143,0,7.5-3.358,7.5-7.5S466.643,455,462.5,455z"/><path d="M462.5,30h-25v-7.5C437.5,10.093,427.406,0,415,0s-22.5,10.093-22.5,22.5V30h-75v-7.5C317.5,10.093,307.406,0,295,0   s-22.5,10.093-22.5,22.5V30h-75v-7.5C197.5,10.093,187.407,0,175,0s-22.5,10.093-22.5,22.5V30h-75v-7.5C77.5,10.093,67.407,0,55,0   S32.5,10.093,32.5,22.5V30h-25C3.358,30,0,33.358,0,37.5v365c0,4.142,3.358,7.5,7.5,7.5h455c4.143,0,7.5-3.358,7.5-7.5v-365   C470,33.358,466.643,30,462.5,30z M407.5,22.5c0-4.136,3.364-7.5,7.5-7.5s7.5,3.364,7.5,7.5v30c0,4.136-3.364,7.5-7.5,7.5   s-7.5-3.364-7.5-7.5V22.5z M287.5,22.5c0-4.136,3.364-7.5,7.5-7.5s7.5,3.364,7.5,7.5v30c0,4.136-3.364,7.5-7.5,7.5   s-7.5-3.364-7.5-7.5V22.5z M167.5,22.5c0-4.136,3.364-7.5,7.5-7.5s7.5,3.364,7.5,7.5v30c0,4.136-3.364,7.5-7.5,7.5   s-7.5-3.364-7.5-7.5V22.5z M47.5,22.5c0-4.136,3.364-7.5,7.5-7.5s7.5,3.364,7.5,7.5v30c0,4.136-3.364,7.5-7.5,7.5   s-7.5-3.364-7.5-7.5V22.5z M32.5,45v7.5C32.5,64.907,42.593,75,55,75s22.5-10.093,22.5-22.5V45h75v7.5   c0,12.407,10.093,22.5,22.5,22.5s22.5-10.093,22.5-22.5V45h75v7.5c0,12.407,10.094,22.5,22.5,22.5s22.5-10.093,22.5-22.5V45h75v7.5   c0,12.407,10.094,22.5,22.5,22.5s22.5-10.093,22.5-22.5V45H455v77.3H15V45H32.5z M15,395V137.3h440V395H15z"/><path d="M412,226.8h-30c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S416.143,226.8,412,226.8z"/><path d="M331,226.8h-30c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S335.143,226.8,331,226.8z"/><path d="M250,226.8h-30c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S254.143,226.8,250,226.8z"/><path d="M169,226.8h-30c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.142,0,7.5-3.358,7.5-7.5S173.142,226.8,169,226.8z"/><path d="M88,226.8H58c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.142,0,7.5-3.358,7.5-7.5S92.142,226.8,88,226.8z"/><path d="M331,280.8h-30c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S335.143,280.8,331,280.8z"/><path d="M250,280.8h-30c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S254.143,280.8,250,280.8z"/><path d="M169,280.8h-30c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.142,0,7.5-3.358,7.5-7.5S173.142,280.8,169,280.8z"/><path d="M88,280.8H58c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.142,0,7.5-3.358,7.5-7.5S92.142,280.8,88,280.8z"/><path d="M331,334.8h-30c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S335.143,334.8,331,334.8z"/><path d="M412,280.8h-30c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S416.143,280.8,412,280.8z"/><path d="M412,334.8h-30c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S416.143,334.8,412,334.8z"/><path d="M250,334.8h-30c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S254.143,334.8,250,334.8z"/><path d="M169,334.8h-30c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.142,0,7.5-3.358,7.5-7.5S173.142,334.8,169,334.8z"/><path d="M88,334.8H58c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.142,0,7.5-3.358,7.5-7.5S92.142,334.8,88,334.8z"/><path d="M412,172.8h-30c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S416.143,172.8,412,172.8z"/><path d="M331,172.8h-30c-4.143,0-7.5,3.358-7.5,7.5s3.357,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S335.143,172.8,331,172.8z"/><path d="M250,172.8h-30c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.143,0,7.5-3.358,7.5-7.5S254.143,172.8,250,172.8z"/><path d="M169,172.8h-30c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.142,0,7.5-3.358,7.5-7.5S173.142,172.8,169,172.8z"/><path d="M88,172.8H58c-4.142,0-7.5,3.358-7.5,7.5s3.358,7.5,7.5,7.5h30c4.142,0,7.5-3.358,7.5-7.5S92.142,172.8,88,172.8z"/></g></svg>';
+*/
 var calendarIcon = '<svg xmlns="http://www.w3.org/2000/svg"  width="15px" height="15px" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 489.2 489.2" style="enable-background:new 0 0 489.2 489.2;" xml:space="preserve"><g><path d="M177.8,238.1c0,4.5-3.6,8.1-8.1,8.1h-30.4c-4.5,0-8.1-3.6-8.1-8.1v-30.4c0-4.5,3.6-8.1,8.1-8.1h30.4    c4.5,0,8.1,3.6,8.1,8.1V238.1z M241.3,207.8c0-4.5-3.6-8.1-8.1-8.1h-30.4c-4.5,0-8.1,3.6-8.1,8.1v30.4c0,4.5,3.6,8.1,8.1,8.1h30.4    c4.5,0,8.1-3.6,8.1-8.1V207.8z M304.8,207.8c0-4.5-3.6-8.1-8.1-8.1h-30.4c-4.5,0-8.1,3.6-8.1,8.1v30.4c0,4.5,3.6,8.1,8.1,8.1h30.4    c4.5,0,8.1-3.6,8.1-8.1V207.8z M177.8,269.6c0-4.5-3.6-8.1-8.1-8.1h-30.4c-4.5,0-8.1,3.6-8.1,8.1V300c0,4.5,3.6,8.1,8.1,8.1h30.4    c4.5,0,8.1-3.6,8.1-8.1V269.6z M241.3,269.6c0-4.5-3.6-8.1-8.1-8.1h-30.4c-4.5,0-8.1,3.6-8.1,8.1V300c0,4.5,3.6,8.1,8.1,8.1h30.4    c4.5,0,8.1-3.6,8.1-8.1V269.6z M296.7,261.5h-30.4c-4.5,0-8.1,3.6-8.1,8.1V300c0,4.5,3.6,8.1,8.1,8.1h30.4c4.5,0,8.1-3.6,8.1-8.1    v-30.4C304.8,265.1,301.2,261.5,296.7,261.5z M106.1,323.3H75.8c-4.5,0-8.1,3.6-8.1,8.1v30.4c0,4.5,3.6,8.1,8.1,8.1h30.4    c4.5,0,8.1-3.6,8.1-8.1v-30.4C114.3,326.9,110.6,323.3,106.1,323.3z M114.3,269.6c0-4.5-3.6-8.1-8.1-8.1H75.8    c-4.5,0-8.1,3.6-8.1,8.1V300c0,4.5,3.6,8.1,8.1,8.1h30.4c4.5,0,8.1-3.6,8.1-8.1V269.6z M233.2,323.3h-30.4c-4.5,0-8.1,3.6-8.1,8.1    v30.4c0,4.5,3.6,8.1,8.1,8.1h30.4c4.5,0,8.1-3.6,8.1-8.1v-30.4C241.3,326.9,237.7,323.3,233.2,323.3z M169.7,323.3h-30.4    c-4.5,0-8.1,3.6-8.1,8.1v30.4c0,4.5,3.6,8.1,8.1,8.1h30.4c4.5,0,8.1-3.6,8.1-8.1v-30.4C177.8,326.9,174.2,323.3,169.7,323.3z     M360.2,246.3c4.5,0,8.1-3.6,8.1-8.1v-30.4c0-4.5-3.6-8.1-8.1-8.1h-30.4c-4.5,0-8.1,3.6-8.1,8.1v30.4c0,4.5,3.6,8.1,8.1,8.1H360.2    z M47.7,435.9h230.7c-3.7-11.6-5.8-24-5.9-36.8H47.7c-6,0-10.8-4.9-10.8-10.8V171h361.7v101.1c12.8,0.1,25.2,2,36.8,5.7V94.9    c0-26.3-21.4-47.7-47.7-47.7h-53.4V17.8c0-9.6-7.8-17.4-17.4-17.4h-27.1c-9.6,0-17.4,7.8-17.4,17.4v29.5H163V17.8    c0-9.6-7.8-17.4-17.4-17.4h-27.1c-9.6,0-17.4,7.8-17.4,17.4v29.5H47.7C21.4,47.3,0,68.7,0,95v293.3C0,414.5,21.4,435.9,47.7,435.9    z M489.2,397.7c0,50.3-40.8,91.1-91.1,91.1S307,448,307,397.7s40.8-91.1,91.1-91.1S489.2,347.4,489.2,397.7z M444.1,374.1    c0-2.9-1.1-5.7-3.2-7.7c-4.3-4.3-11.2-4.3-15.5,0L385.8,406l-15.2-15.2c-4.3-4.3-11.2-4.3-15.5,0c-2.1,2.1-3.2,4.8-3.2,7.7    c0,2.9,1.1,5.7,3.2,7.7l22.9,22.9c4.3,4.3,11.2,4.3,15.5,0l47.3-47.3C443,379.8,444.1,377,444.1,374.1z"/>	</g></svg>';
+
+var calendarIconBig = '<svg xmlns="http://www.w3.org/2000/svg"  width="100px" height="100px" fill="#ffffff" stroke="#ffffff" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 489.2 489.2" style="enable-background:new 0 0 489.2 489.2;" xml:space="preserve"><g><path d="M177.8,238.1c0,4.5-3.6,8.1-8.1,8.1h-30.4c-4.5,0-8.1-3.6-8.1-8.1v-30.4c0-4.5,3.6-8.1,8.1-8.1h30.4    c4.5,0,8.1,3.6,8.1,8.1V238.1z M241.3,207.8c0-4.5-3.6-8.1-8.1-8.1h-30.4c-4.5,0-8.1,3.6-8.1,8.1v30.4c0,4.5,3.6,8.1,8.1,8.1h30.4    c4.5,0,8.1-3.6,8.1-8.1V207.8z M304.8,207.8c0-4.5-3.6-8.1-8.1-8.1h-30.4c-4.5,0-8.1,3.6-8.1,8.1v30.4c0,4.5,3.6,8.1,8.1,8.1h30.4    c4.5,0,8.1-3.6,8.1-8.1V207.8z M177.8,269.6c0-4.5-3.6-8.1-8.1-8.1h-30.4c-4.5,0-8.1,3.6-8.1,8.1V300c0,4.5,3.6,8.1,8.1,8.1h30.4    c4.5,0,8.1-3.6,8.1-8.1V269.6z M241.3,269.6c0-4.5-3.6-8.1-8.1-8.1h-30.4c-4.5,0-8.1,3.6-8.1,8.1V300c0,4.5,3.6,8.1,8.1,8.1h30.4    c4.5,0,8.1-3.6,8.1-8.1V269.6z M296.7,261.5h-30.4c-4.5,0-8.1,3.6-8.1,8.1V300c0,4.5,3.6,8.1,8.1,8.1h30.4c4.5,0,8.1-3.6,8.1-8.1    v-30.4C304.8,265.1,301.2,261.5,296.7,261.5z M106.1,323.3H75.8c-4.5,0-8.1,3.6-8.1,8.1v30.4c0,4.5,3.6,8.1,8.1,8.1h30.4    c4.5,0,8.1-3.6,8.1-8.1v-30.4C114.3,326.9,110.6,323.3,106.1,323.3z M114.3,269.6c0-4.5-3.6-8.1-8.1-8.1H75.8    c-4.5,0-8.1,3.6-8.1,8.1V300c0,4.5,3.6,8.1,8.1,8.1h30.4c4.5,0,8.1-3.6,8.1-8.1V269.6z M233.2,323.3h-30.4c-4.5,0-8.1,3.6-8.1,8.1    v30.4c0,4.5,3.6,8.1,8.1,8.1h30.4c4.5,0,8.1-3.6,8.1-8.1v-30.4C241.3,326.9,237.7,323.3,233.2,323.3z M169.7,323.3h-30.4    c-4.5,0-8.1,3.6-8.1,8.1v30.4c0,4.5,3.6,8.1,8.1,8.1h30.4c4.5,0,8.1-3.6,8.1-8.1v-30.4C177.8,326.9,174.2,323.3,169.7,323.3z     M360.2,246.3c4.5,0,8.1-3.6,8.1-8.1v-30.4c0-4.5-3.6-8.1-8.1-8.1h-30.4c-4.5,0-8.1,3.6-8.1,8.1v30.4c0,4.5,3.6,8.1,8.1,8.1H360.2    z M47.7,435.9h230.7c-3.7-11.6-5.8-24-5.9-36.8H47.7c-6,0-10.8-4.9-10.8-10.8V171h361.7v101.1c12.8,0.1,25.2,2,36.8,5.7V94.9    c0-26.3-21.4-47.7-47.7-47.7h-53.4V17.8c0-9.6-7.8-17.4-17.4-17.4h-27.1c-9.6,0-17.4,7.8-17.4,17.4v29.5H163V17.8    c0-9.6-7.8-17.4-17.4-17.4h-27.1c-9.6,0-17.4,7.8-17.4,17.4v29.5H47.7C21.4,47.3,0,68.7,0,95v293.3C0,414.5,21.4,435.9,47.7,435.9    z M489.2,397.7c0,50.3-40.8,91.1-91.1,91.1S307,448,307,397.7s40.8-91.1,91.1-91.1S489.2,347.4,489.2,397.7z M444.1,374.1    c0-2.9-1.1-5.7-3.2-7.7c-4.3-4.3-11.2-4.3-15.5,0L385.8,406l-15.2-15.2c-4.3-4.3-11.2-4.3-15.5,0c-2.1,2.1-3.2,4.8-3.2,7.7    c0,2.9,1.1,5.7,3.2,7.7l22.9,22.9c4.3,4.3,11.2,4.3,15.5,0l47.3-47.3C443,379.8,444.1,377,444.1,374.1z"/>	</g></svg>';
+
 var saveIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="#ffffff" stroke="#ffffff" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve"><g><path d="M493.254,77.255l-58.508-58.51C422.742,6.742,406.465,0,389.49,0H352v112c0,8.836-7.164,16-16,16H80   c-8.836,0-16-7.164-16-16V0H32C14.328,0,0,14.326,0,32v448c0,17.673,14.328,32,32,32h448c17.672,0,32-14.327,32-32V122.51   C512,105.535,505.258,89.257,493.254,77.255z M448,448H64V256h384V448z"/>	<rect x="224" width="64" height="96"/></g></svg>'
 
 var deleteIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" fill="#ffffff" stroke="#ffffff" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 284.011 284.011" style="enable-background:new 0 0 284.011 284.011;" xml:space="preserve"><g><g><path d="M235.732,66.214l-28.006-13.301l1.452-3.057c6.354-13.379,0.639-29.434-12.74-35.789L172.316,2.611    c-6.48-3.079-13.771-3.447-20.532-1.042c-6.76,2.406-12.178,7.301-15.256,13.782l-1.452,3.057L107.07,5.106    c-14.653-6.958-32.239-0.698-39.2,13.955L60.7,34.155c-1.138,2.396-1.277,5.146-0.388,7.644c0.89,2.499,2.735,4.542,5.131,5.68    l74.218,35.25h-98.18c-2.797,0-5.465,1.171-7.358,3.229c-1.894,2.059-2.839,4.815-2.607,7.602l13.143,157.706    c1.53,18.362,17.162,32.745,35.588,32.745h73.54c18.425,0,34.057-14.383,35.587-32.745l11.618-139.408l28.205,13.396    c1.385,0.658,2.845,0.969,4.283,0.969c3.74,0,7.328-2.108,9.04-5.712l7.169-15.093C256.646,90.761,250.386,73.175,235.732,66.214z     M154.594,23.931c0.786-1.655,2.17-2.905,3.896-3.521c1.729-0.614,3.59-0.521,5.245,0.267l24.121,11.455    c3.418,1.624,4.878,5.726,3.255,9.144l-1.452,3.057l-36.518-17.344L154.594,23.931z M169.441,249.604    c-0.673,8.077-7.55,14.405-15.655,14.405h-73.54c-8.106,0-14.983-6.328-15.656-14.405L52.35,102.728h129.332L169.441,249.604z     M231.62,96.835l-2.878,6.06L83.057,33.701l2.879-6.061c2.229-4.695,7.863-6.698,12.554-4.469l128.661,61.108    C231.845,86.509,233.85,92.142,231.62,96.835z"/></g></g></svg>'
@@ -823,6 +868,66 @@ var refreshProgress = function(currentDiv){
 
 }
 
+var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletionPercentage){
+
+    if (newCompletionPercentage>=100){
+        currentDiv.style.border="3px solid rgb(167 211 162)";
+        currentDiv.style.order="95";
+        currentDiv.style.background="#daffd9";
+    } else if (newCompletionPercentage>=50){
+        currentDiv.style.border="3px solid rgb(246 223 35)";
+        currentDiv.style.background="rgb(255 251 234)";
+        currentDiv.style.order="70";
+    } else if (newCompletionPercentage<50){
+        currentDiv.style.border="1px solid lightgrey";
+        currentDiv.style.background="white";
+        currentDiv.style.order="70";
+    }
+    if (currentDiv.id && currentDiv.id == "daily-summary-container"){
+        currentDiv.style.order = "90";
+    }
+
+}
+
+var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
+    var plusMinusDiv = currentDiv.getElementsByClassName("plus-minus")[0];
+    var taskIconDiv;
+
+    if (newCompletionPercentage <100 ){
+        currentDiv.style.order = "60";
+        currentDiv.style.border="3px solid red"; 
+        currentDiv.style.background="#fff1f1";
+
+        taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
+        if (taskIconDiv && plusMinusDiv){
+            taskIconDiv.innerHTML=warningIcon;
+            /*taskIconDiv.setAttribute("stroke","red");
+            taskIconDiv.setAttribute("fill","red");      */     
+            /*currentDiv.getElementsByClassName("fa")[0].classList.add("fa-warning");*/
+            currentDiv.getElementsByClassName("habit-description")[0].classList.add("red");
+            /*plusMinusDiv.style.color="red";*/
+     
+        }
+        plusMinusDiv.firstChild.setAttribute("stroke","red");
+        plusMinusDiv.firstChild.setAttribute("fill","red");
+
+    } else if (newCompletionPercentage >=100){
+        currentDiv.style.border="3px solid lightgrey"; 
+        taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
+        if (taskIconDiv && plusMinusDiv){
+            /*taskIconDiv.classList.remove("fa-warning");
+            currentDiv.getElementsByClassName("fa")[0].classList.add("fa-tasks");*/
+            taskIconDiv.innerHTML=taskIcon;
+           /* taskIconDiv.setAttribute("stroke","black");
+            taskIconDiv.setAttribute("fill","black");  */
+            currentDiv.getElementsByClassName("habit-description")[0].classList.remove("red");
+            /*plusMinusDiv.style.color="#b657af";*/
+            
+        }    
+        plusMinusDiv.firstChild.setAttribute("stroke","#b657af");
+        plusMinusDiv.firstChild.setAttribute("fill","#b657af");
+    }
+}
 
 
 
@@ -1604,20 +1709,22 @@ onload = function(){
     addEmptyProgressBoxesOnNewDay(currentDate, currentDateTime);
 
     setTimeout(placeSVGIcons,5);
-    setTimeout(renderPastProgressBoxes,10);
-    setTimeout(renderSummaries,200);
+    setTimeout(renderPastProgressBoxes,10); 
+    setTimeout(showSummariesTab,15); 
+    setTimeout(prepareSummaries,20);
 };
 
 
-function renderSummaries(){
+function prepareSummaries(){
 
     readJournal(dataArrays.journalArray);
+
     /*todo refactor with promise*/
     loadScriptForGraphs(showGraphsTabIfGoodLength);
 }
 function showGraphsTabIfGoodLength(){
     if (dataArrays.habitsArray.length >= 1){
-        showGraphsTab();
+        showGraphTab();
     }
 }
 var saveLoop = function(){
@@ -1625,26 +1732,6 @@ var saveLoop = function(){
     setInterval(readQueueProgress, 1000);
 
 }
-
-/* part of the form to add a new habit */
-var plusButtonInAddDiv = document.getElementById("plus-in-add-div");
-var minusButtonInAddDiv = document.getElementById("minus-in-add-div");
-var newTargetDiv = document.getElementById("new-target");
-
-plusButtonInAddDiv.addEventListener('click', function(targetDiv) {
-    return function(){
-        addOneToProgress(targetDiv);
-    }
-}(newTargetDiv));
-
-minusButtonInAddDiv.addEventListener('click', function(targetDiv) {
-    return function(){
-        minusOneToProgress(targetDiv);
-    }
-}(newTargetDiv));
-/* -- */
-
-
 
 
 var placeSVGIcons = function(){
@@ -1667,7 +1754,7 @@ var placeSVGIcons = function(){
     for ( var iconBigDiv of trophyIconBigDivs){
         iconBigDiv.innerHTML = trophyIconBig;
     }
-    document.getElementById('bar-chart-icon').innerHTML = graphIcon;
+    document.getElementById('week-table-icon').innerHTML = calendarIconBig;
     document.getElementById('plus-icon-button').innerHTML = plusIconBig;
     
     
@@ -1698,13 +1785,20 @@ var hideProgressTab = function(){
 var showProgressTab = function(){
     document.getElementById("progress-menu").style.display = "block";
 }
-var hideGraphsTab = function(){
+var hideSummariesTab = function(){
     document.getElementById("graphs-menu").style.display = "none"; 
-    document.getElementById("go-to-graph-button").style.display = "none";
+    document.getElementById("go-to-summaries-button").style.display = "none";
 }
-var showGraphsTab = function(){
+var showSummariesTab = function(){
     document.getElementById("graphs-menu").style.display = "block"; 
-    document.getElementById("go-to-graph-button").style.display = "flex";
+    document.getElementById("go-to-summaries-button").style.display = "flex";
+}
+
+var showGraphTab = function(){
+    document.getElementById("streaks-link").style.display = "block"; 
+}
+var hideGraphTab = function(){
+    document.getElementById("streaks-link").style.display = "block"; 
 }
 
 var hideStartProgressButtonOnHabits = function(){
@@ -1735,67 +1829,6 @@ var setDivAppearanceBasedOnCompletion = function(currentDiv,newCompletionPercent
 
     if ( currentDiv.getAttribute("iscritical") !=null && currentDiv.getAttribute("iscritical") == "true"){
         setDivAppearanceForCritical(currentDiv,newCompletionPercentage);
-    }
-}
-
-var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletionPercentage){
-
-    if (newCompletionPercentage>=100){
-        currentDiv.style.border="3px solid rgb(167 211 162)";
-        currentDiv.style.order="95";
-        currentDiv.style.background="#daffd9";
-    } else if (newCompletionPercentage>=50){
-        currentDiv.style.border="3px solid rgb(246 223 35)";
-        currentDiv.style.background="rgb(255 251 234)";
-        currentDiv.style.order="70";
-    } else if (newCompletionPercentage<50){
-        currentDiv.style.border="1px solid lightgrey";
-        currentDiv.style.background="white";
-        currentDiv.style.order="70";
-    }
-    if (currentDiv.id && currentDiv.id == "daily-summary-container"){
-        currentDiv.style.order = "90";
-    }
-
-}
-
-var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
-    var plusMinusDiv = currentDiv.getElementsByClassName("plus-minus")[0];
-    var taskIconDiv;
-
-    if (newCompletionPercentage <100 ){
-        currentDiv.style.order = "60";
-        currentDiv.style.border="3px solid red"; 
-        currentDiv.style.background="#fff1f1";
-
-        taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
-        if (taskIconDiv && plusMinusDiv){
-            taskIconDiv.innerHTML=warningIcon;
-            /*taskIconDiv.setAttribute("stroke","red");
-            taskIconDiv.setAttribute("fill","red");      */     
-            /*currentDiv.getElementsByClassName("fa")[0].classList.add("fa-warning");*/
-            currentDiv.getElementsByClassName("habit-description")[0].classList.add("red");
-            /*plusMinusDiv.style.color="red";*/
-     
-        }
-        plusMinusDiv.firstChild.setAttribute("stroke","red");
-        plusMinusDiv.firstChild.setAttribute("fill","red");
-
-    } else if (newCompletionPercentage >=100){
-        currentDiv.style.border="3px solid lightgrey"; 
-        taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
-        if (taskIconDiv && plusMinusDiv){
-            /*taskIconDiv.classList.remove("fa-warning");
-            currentDiv.getElementsByClassName("fa")[0].classList.add("fa-tasks");*/
-            taskIconDiv.innerHTML=taskIcon;
-           /* taskIconDiv.setAttribute("stroke","black");
-            taskIconDiv.setAttribute("fill","black");  */
-            currentDiv.getElementsByClassName("habit-description")[0].classList.remove("red");
-            /*plusMinusDiv.style.color="#b657af";*/
-            
-        }    
-        plusMinusDiv.firstChild.setAttribute("stroke","#b657af");
-        plusMinusDiv.firstChild.setAttribute("fill","#b657af");
     }
 }
 
@@ -2002,13 +2035,23 @@ function APICaller(parameters,callback,callbackOnFailure){
 
 
 
-var launchCharts = function(fullData,habitsArray){
+var launchAllWeekTables = function(fullData,habitsArray){
     document.getElementById("streaks-container").innerHTML='<div id="no-streak">Graphs will be shown after adding at least one habit.</div>';
     document.getElementById("no-streak").style.display = "none";
     document.getElementById("week-summary-container").innerHTML='<div id="no-week-summary">Week summary will be shown after adding at least one habit.</div>';
     document.getElementById("no-week-summary").style.display = "none";
     for ( let habit of habitsArray){
-        launchHabitSummaries(fullData,habit)
+        launchHabitWeekTable(fullData,habit)
+    }
+
+}
+
+var launchAllCharts = function(fullData,habitsArray){
+    document.getElementById("streaks-container").innerHTML='<div id="no-streak">Graphs will be shown after adding at least one habit.</div>';
+    document.getElementById("no-streak").style.display = "none";
+
+    for ( let habit of habitsArray){
+        launchHabitChart(fullData,habit)
     }
 
 }
@@ -2032,27 +2075,41 @@ var changeTabToHabits = function(){
     document.getElementById('new-description').focus();
 }
 
-var changeTabToGraphs = function(){
-    launchCharts(dataArrays.progressArray,dataArrays.habitsArray);
+var changeTabToSummaries = function(){
+    launchAllWeekTables(dataArrays.progressArray,dataArrays.habitsArray);
     document.getElementById("habits-section").style.display = "none";
     document.getElementById("progress-section").style.display = "none";
     document.getElementById("graphs-section").style.display = "block";
     document.getElementById("progress-menu").classList.remove("active");
     document.getElementById("habits-menu").classList.remove("active");
     document.getElementById("graphs-menu").classList.add("active");
+    subMenuGo('week-link');
 }
 
+var changeTabToGraph = function(){
+    changeTabToSummaries();
+    subMenuGo('streak-links');
+}
 
-var launchHabitSummaries = function(fullData,habitObject){
+var launchHabitWeekTable = function(fullData,habitObject){
 
-    var dataForGraphs = prepareDataForHabitSummaries(fullData,habitObject);
+    var progressByDay = prepareDataForHabitWeekTable(fullData,habitObject);
+    var weekTableObject = {};
+    weekTableObject = weekTable(progressByDay);
+
+    buildWeekTableBox(weekTableObject,habitObject);
+
+}
+
+var launchHabitChart = function(fullData,habitObject){
+
+    var dataForGraphs = prepareDataForHabitGraph(fullData,habitObject);
     var dataToShow = dataForGraphs.dataToShow;
     var unitAccumulation= dataForGraphs.unitAccumulation;
     var baseline = dataForGraphs.baseline;
-    var progressByDay = dataForGraphs.progressByDay;
 
     if ( dataToShow.length >= 1){
-        showGraphsTab();
+        showGraphTab();
     }
 
     var unitPerMonth=0;
@@ -2078,19 +2135,13 @@ var launchHabitSummaries = function(fullData,habitObject){
         return false;
     }
 
-    var weekTableObject = {};
-    weekTableObject = weekTable(progressByDay);
-
-    buildWeekTableBox(weekTableObject,habitObject);
-
     /* Graph */
-    buildGraph(unitPerMonth,unitAccumulation,completionAccumulation,habitObject,dataToShow);
+    buildGraphBox(unitPerMonth,unitAccumulation,completionAccumulation,habitObject,dataToShow);
 
 }
 
-var prepareDataForHabitSummaries = function(fullData,habitObject){
+var prepareDataForHabitGraph = function(fullData,habitObject){
     var dataToShow = [];
-    var progressByDay = [];
     var baseline = [];
 
     var unitAccumulation = 0;
@@ -2104,7 +2155,6 @@ var prepareDataForHabitSummaries = function(fullData,habitObject){
             baseline.push({
                 x: new Date(dataItem.progressDate),y:dataItem.target
             })
-            progressByDay[dataItem.progressDate]=dataItem.numberOfCompletions-dataItem.target;
         }
     }
 
@@ -2115,8 +2165,21 @@ var prepareDataForHabitSummaries = function(fullData,habitObject){
         return (a.x - b.x)
     });	
 
-    return {dataToShow,baseline,progressByDay,unitAccumulation};
+    return {dataToShow,baseline,unitAccumulation};
 }
+
+var prepareDataForHabitWeekTable = function(fullData,habitObject){
+    var progressByDay = [];
+
+    for ( var dataItem of fullData){
+        if (dataItem.habitId == habitObject.habitId){
+            progressByDay[dataItem.progressDate]=dataItem.numberOfCompletions-dataItem.target;
+        }
+    }
+
+    return progressByDay;
+}
+
 
 var getNumberOfStreaks = function(dataToShow,baseline){
     var completionAccumulation=0;
@@ -2167,6 +2230,7 @@ var subMenuGo = function( targetLink){
             journalContainer.style.display='none';
           break;
         case 'streaks-link':
+            launchAllCharts(dataArrays.progressArray,dataArrays.habitsArray);
             weekLink.classList.remove("selected-underline");
             journalLink.classList.remove("selected-underline");
             streaksLink.classList.add("selected-underline");

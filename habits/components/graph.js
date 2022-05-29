@@ -1,4 +1,4 @@
-var buildGraph = function(unitPerMonth,unitAccumulation,completionAccumulation,habitObject,dataToShow){
+var buildGraphBox = function(unitPerMonth,unitAccumulation,completionAccumulation,habitObject,dataToShow){
 
     var streaksWrapper = document.createElement("div");
 
@@ -140,10 +140,34 @@ var loadScriptForGraphs = function(callback){
        .catch((error) => {
         console.error(error);
       })
+      .then(waitForChartLoaded())
+      .catch((error) => {
+        console.error(error);
+      })
       .then(callback())
       .catch((error) => {
         console.error(error);
       });
  }
 
- 
+var waitForChartLoaded = async function(){
+  return new Promise(
+    function (resolve, reject) {
+      checkIfChartLoaded(resolve, reject,0);
+    }
+  );
+}
+
+var checkIfChartLoaded = function(resolve, reject,totalWaitingTime){
+  var timeIncrement = 50;
+  if(typeof Chart !== "undefined"){
+    resolve('loaded');
+  } else if (totalWaitingTime > 3000){
+    reject('timeout waiting for Chart');
+  }
+  else{
+      totalWaitingTime+=timeIncrement;
+      setTimeout(checkIfChartLoaded, 50,resolve,reject,totalWaitingTime);
+  }
+}
+
