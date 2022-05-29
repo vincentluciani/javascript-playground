@@ -106,6 +106,9 @@ minusButtonInAddDiv.addEventListener('click', function(targetDiv) {
 var closeDeleteMessage = function(){
     document.getElementById("delete-message").style.display="none";
 }
+var closeSaveMessage = function(){
+    document.getElementById("save-message").style.display="none";
+}
 var requestHabitDeletion = function(habitId){
 
     document.getElementById("delete-message").style.display="flex";

@@ -112,7 +112,9 @@ var placeSVGIcons = function(){
     document.getElementById('small-task-icon').innerHTML=taskIcon;
     document.getElementById('save-icon').innerHTML=saveIcon;
     document.getElementById('start-icon').innerHTML=startIcon;
-    
+    document.getElementById('trophy-icon-positive').innerHTML=trophyIconBig;
+    document.getElementById('trophy-icon-super-positive').innerHTML=trophyIconBig;
+    document.getElementById('start-icon').innerHTML=startIcon; 
     
     var trophyIconDivs = document.getElementsByClassName('trophy-icon');
     for ( var iconDiv of trophyIconDivs){
@@ -297,6 +299,7 @@ var saveChangesInHabit = function(habitId){
     var habitDiv = document.getElementById(habitId);
     var habitJSON = readHabitElement(habitDiv);
     pushHabitArrayToQueue(habitJSON);
+    confirmSave();
 
 }
 var setHabitAsCritical = function(habitId){
@@ -339,6 +342,11 @@ var confirmAddition = function(habitId){
     checkHabitButton.setAttribute('onclick',onClickString);
 
 };
+
+var confirmSave = function(){
+    document.getElementById("save-message").style.display="flex";
+};
+
 
 var extractElementsForUpdateLoggedIn = function(progressElements){
     var outputElements = [];

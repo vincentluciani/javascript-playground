@@ -14,36 +14,34 @@
     </head>
     <body>
         <div id="positive-message" class="positive-message">
-            <i class="trophy-icon-big icon"></i>
+            <div class="action-icon-container" id="trophy-icon-positive"></div>
             <div class="title" id="positive-message-title"></div>
             <div class="sub-title" id="positive-message-subtitle"></div>
             <div class="positive-message-button" onclick="closeMessage();">OK</div>
         </div>
         <div id="super-positive-message" class="super-positive-message">
-            <i class="trophy-icon-big icon"></i>
+            <div class="action-icon-container" id="trophy-icon-super-positive"></div>
             <div class="title" id="super-positive-message-title"></div>
             <div class="sub-title" id="super-positive-message-subtitle"></div>
             <div class="super-positive-message-button" onclick="closeMessage();">OK</div>
         </div>
         <div id="delete-message" class="positive-message">
-            <div class="title" id="positive-message-title"><i class="fa fa-trash"></i> Item Deletion</div>
+            <div class="title" id="positive-message-title">Item Deletion</div>
             <div class="sub-title" id="positive-message-subtitle">Are you sure you want to delete this habit?</div>
             <div class="positive-message-button" id="confirm-deletion-button">Yes</div>
             <div class="positive-message-button" onclick="closeDeleteMessage();">No</div>
         </div>
         <div id="addition-message" class="positive-message">
-            <i class="trophy-icon-big icon"></i>
-            <div class="title" id="positive-message-title">Habit Successfully Added !</div>
-            <div class="sub-title" id="positive-message-subtitle">What do you want to do next ?</div>
+            <div class="title" id="addition-message-title">Habit Successfully Added !</div>
+            <div class="sub-title" id="addition-message-subtitle">What do you want to do next ?</div>
             <div class="positive-message-button" onclick="changeTabToHabits();window.scrollTo(0, 0);closeAdditionConfirmation();">Add Another Habit</div>
             <div class="positive-message-button" id="check-habit-button">Check My Habit</div>
             <div class="positive-message-button" onclick="changeTabToProgress();window.scrollTo(0, 0);;closeAdditionConfirmation();">Start My Day</div>
         </div>
-        <div id="positive-message" class="positive-message">
-            <i class="trophy-icon-big icon"></i>
-            <div class="title" id="positive-message-title">Awesome :)</div>
-            <div class="sub-title" id="positive-message-subtitle">Congratulations, you have completed your target ! Stay strong !</div>
-            <div class="positive-message-button" onclick="closeMessage();">OK</div>
+        <div id="save-message" class="positive-message">
+            <div class="title" id="positive-message-title">Saving Habit</div>
+            <div class="sub-title" id="positive-message-subtitle">You habit was saved successfully</div>
+            <div class="positive-message-button" onclick="closeSaveMessage();">OK</div>
         </div>
         <div id="header">
             <div id="nav-container">
