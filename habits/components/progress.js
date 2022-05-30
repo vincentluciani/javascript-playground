@@ -252,7 +252,7 @@ var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletio
         currentDiv.style.background="rgb(255 251 234)";
         currentDiv.style.order="70";
     } else if (newCompletionPercentage<50){
-        currentDiv.style.border="1px solid lightgrey";
+        currentDiv.style.border="3px solid lightgrey";
         currentDiv.style.background="white";
         currentDiv.style.order="70";
     }

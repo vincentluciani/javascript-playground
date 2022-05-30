@@ -26,9 +26,6 @@ var weekTable = function(progressByDay){
         } else {
             if (i<=todaysDateDayNum){
                 iconCode=minusIconGreen;
-            } 
-            else {
-                iconCode="";
             }
         }
         tableCode += "<td>"+iconCode+"</td>"
@@ -42,17 +39,17 @@ var weekTable = function(progressByDay){
 
 var buildListOfDays = function(){
 
-    var listOfDays = {}
+    var listOfDays = {};
 
-    var dateTime = new Date();
-    var weekDay = dateTime.getDay();
-    var formattedDate = formatDate(dateTime); 
-    listOfDays[weekDay] = formattedDate;
+    var currentDateTime = new Date();
+    var currentWeekDay = currentDateTime.getDay();
+    listOfDays[currentWeekDay] = formatDate(currentDateTime);
 
-    if (weekDay == 0){
+    if (currentWeekDay == 0){
         return listOfDays;
     }
 
+    var weekDay, dateTime=currentDateTime;
     do{
         dateTime.setDate(dateTime.getDate() - 1);
         weekDay = dateTime.getDay();
