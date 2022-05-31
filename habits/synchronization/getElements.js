@@ -31,7 +31,6 @@ var getHabitProgressJournalWhenNotLoggedIn = function(){
     var pastProgressArray=[];
     var localStorageLength = localStorage.length;
 
-    /* todo separate progress today from progress in the past */
     for (var i = 0; i < localStorageLength && i < maxForNonLoggedIn; i++){
         var currentKey = localStorage.key(i);
         if ( currentKey.indexOf("progress-") >= 0){
