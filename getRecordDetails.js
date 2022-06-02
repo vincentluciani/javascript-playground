@@ -15,7 +15,6 @@ exports.getRecordDetails = (res,authorizationToken) => {
                     'Content-Type': 'application/json',
                     'Accept':'application/json',
                     'User-Agent':'POC_sso_aprimo',
-
                 }
               }
               

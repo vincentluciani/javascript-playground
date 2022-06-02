@@ -24,7 +24,13 @@ app.get('/waitforasync', function (req, res, next) {
       }, reason => {
         res.json({ msg: reason }); 
       })
+    });
 
+app.get('/aprimo-poc', function (req, res, next) {
+
+    res.writeHead(301, {
+        Location: `https://schneiderelectric-sb2.aprimo.com/login/connect/authorize?response_type=code&state=12345&client_id=A505EGPN-A505&redirect_uri=http://localhost:5000/aprimo-sso&scope=api`
+      }).end();
 })
 
 app.post('/api', function (req, res, next) {
@@ -54,59 +60,7 @@ app.get('/aprimo-sso', function (req, res, next) {
 
 })
 
-app.get('/get-habits', function (req, res, next) {
 
-    userId = req.query.user
-
-    testOutput = [
-        {
-            "id": 1,
-            "title": "learn a language",
-            "progress": 50,
-            "schedule": {
-                "monday": "1"
-            },
-            "dailyOccurence": 4,
-            "userId": userId
-        },
-        {
-            "id": 2,
-            "title": "drink water",
-            "progress": 12,
-            "schedule": {
-                "thursday": "1",
-                "saturday": "2"
-            },
-            "dailyOccurence": 2,
-            "userId": userId
-        }]
-
-
-    res.json(testOutput);
-
-
-})
-
-app.get('/get-habit-progress', function (req, res, next) {
-
-    userId = req.query.user
-
-    testOutput = [
-        {id:1,habitId:1,habitDescription:"test1",target:20,progressDate:"2022-01-05",numberOfCompletions:2},
-        {id:2,habitId:2,habitDescription:"test2",target:20,progressDate:"2022-01-05",numberOfCompletions:20},
-        {id:3,habitId:3,habitDescription:"test3",target:25,progressDate:"2022-01-05",numberOfCompletions:20},
-        {id:4,habitId:1,habitDescription:"test1",target:20,progressDate:"2022-01-06",numberOfCompletions:20},
-        {id:5,habitId:2,habitDescription:"test2",target:20,progressDate:"2022-01-06",numberOfCompletions:4},
-        {id:6,habitId:3,habitDescription:"test3",target:25,progressDate:"2022-01-06",numberOfCompletions:20},
-        {id:4,habitId:1,habitDescription:"test4",target:20,progressDate:"2022-01-07",numberOfCompletions:20},
-        {id:5,habitId:2,habitDescription:"test5",target:20,progressDate:"2022-01-07",numberOfCompletions:4},
-        {id:6,habitId:3,habitDescription:"test6",target:25,progressDate:"2022-01-07",numberOfCompletions:20}
-    ]
-
-    res.json(testOutput);
-
-
-})
 
 app.get('/authorize', function (req, res, next) {
 
@@ -153,18 +107,22 @@ app.get('/authorize', function (req, res, next) {
 app.post('/', function (req, res, next) {
 
     let data = '';
-    
+/* get the payload from the post request */
     req.on('data', chunk => {
         data += chunk;
     })
     
     req.on('end', () => {
 
+        /* send an url with the authorization code given by the payload */
     console.log(data);
         let authorizationCode = data.replace(/.*auth-code=(.*?)&.*/g, '$1'); 
         let recordIds = data.replace(/.*recordIds=(.*?)&.*/g, '$1'); 
-        res.json({ "url": "http://localhost:5000/authorize?authorization_code="+authorizationCode+"&records="+recordIds })
 
+        // option with url authorization:
+        //res.json({ "url": "http://localhost:5000/authorize?authorization_code="+authorizationCode+"&records="+recordIds })
+        // option with simple message
+        res.json({ "msg": "we received your request for " + recordIds });
       
     }) 
 
