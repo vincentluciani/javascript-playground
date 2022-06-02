@@ -12,7 +12,6 @@ var readQueueProgress = function() {
     }
 }
 
-
 var putInStorage = function(id,value){
   try {
     window.localStorage.setItem(id, value);

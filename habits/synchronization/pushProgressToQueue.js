@@ -60,3 +60,4 @@ var executePushToQueue = function(newObject){
 var pushItemInQueue = function(newItem){
     updateQueue.push(newItem);
 }
+
