@@ -1,11 +1,12 @@
 var express = require('express')
+var cors = require('cors')
 var app = express()
 var url = require("url");
 var path = require("path");
 
 fs = require('fs')
 
-
+app.use(cors())
 
 app.get('/', function (req, res, next) {
   /*var pathname = url.parse(req.url).pathname;
@@ -25,6 +26,22 @@ app.get('/', function (req, res, next) {
       });
 
     
+})
+
+
+app.get('/get-habit-progress-journal', function (req, res, next) {
+
+    fs.readFile('test/habits.json', 'utf8', function (err,data) {
+        if (err) {
+          return console.log(err);
+        }
+        res.writeHead(200, {'Content-Type': 'text/json'});
+        res.write(data);
+        //res.json(data);
+        res.end();
+      });
+      
+      
 })
 
 app.get('/index.html', function (req, res, next) {
@@ -151,61 +168,8 @@ app.get('/poc_pwa.html', function (req, res, next) {
 })
 
 
-app.get('/get-habits', function (req, res, next) {
-
-  userId = req.query.user
-
-  testOutput = [
-      {
-          "id": 1,
-          "title": "learn a language",
-          "progress": 50,
-          "schedule": {
-              "monday": "1"
-          },
-          "dailyOccurence": 4,
-          "userId": userId
-      },
-      {
-          "id": 2,
-          "title": "drink water",
-          "progress": 12,
-          "schedule": {
-              "thursday": "1",
-              "saturday": "2"
-          },
-          "dailyOccurence": 2,
-          "userId": userId
-      }]
-
-
-  res.json(testOutput);
-
-
-})
-
-app.get('/get-habit-progress', function (req, res, next) {
-
-  userId = req.query.user
-
-  testOutput = [
-      {id:1,habitId:1,habitDescription:"test1",target:20,progressDate:"2022-01-05",numberOfCompletions:2},
-      {id:2,habitId:2,habitDescription:"test2",target:20,progressDate:"2022-01-05",numberOfCompletions:20},
-      {id:3,habitId:3,habitDescription:"test3",target:25,progressDate:"2022-01-05",numberOfCompletions:20},
-      {id:4,habitId:1,habitDescription:"test1",target:20,progressDate:"2022-01-06",numberOfCompletions:20},
-      {id:5,habitId:2,habitDescription:"test2",target:20,progressDate:"2022-01-06",numberOfCompletions:4},
-      {id:6,habitId:3,habitDescription:"test3",target:25,progressDate:"2022-01-06",numberOfCompletions:20},
-      {id:4,habitId:1,habitDescription:"test4",target:20,progressDate:"2022-01-07",numberOfCompletions:20},
-      {id:5,habitId:2,habitDescription:"test5",target:20,progressDate:"2022-01-07",numberOfCompletions:4},
-      {id:6,habitId:3,habitDescription:"test6",target:25,progressDate:"2022-01-07",numberOfCompletions:20}
-  ]
-
-  res.json(testOutput);
-
-
-})
-
 app.listen(5000, function () {
-    console.log('Web server listening on port 5000')
+  console.log('CORS-enabled web server listening on port 5000')
 })
+
 

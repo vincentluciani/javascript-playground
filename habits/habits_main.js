@@ -386,29 +386,6 @@ var progressDOMToJson = function(elementToRead){
     return outputJson;
 };
 
-function APICaller(parameters,callback,callbackOnFailure){
-	
-	this.parameters = parameters;
-	this.callback = callback;
-	
-	this.executeCall = function(url,urlDetails)
-	{
-		var xhttp = new XMLHttpRequest();
-		xhttp.onreadystatechange = function()
-		{
-			if (this.readyState == 4 && this.status == 200)
-			{
-				callback(JSON.parse(this.responseText),urlDetails);
-			} else {
-                callbackOnFailure();
-            }
-		};
-		xhttp.open(parameters.method, url, true);
-		xhttp.send();
-	};
-	
-}
-
 
 
 var launchAllWeekTables = function(fullData,habitsArray){

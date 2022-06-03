@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+
+    </head>
+    <body>
+        <div id="note">
+
+        </div>
+
+        <script>// In the following line, you should include the prefixes of implementations you want to test.
+            //window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB ;
+            // DON'T use "var indexedDB = ..." if you're not in a function.
+            // Moreover, you may need references to some window.IDB* objects:
+            window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.msIDBTransaction || {READ_WRITE: "readwrite"}; // This line should only be needed if it is needed to support the object's constants for older browsers
+            window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
+            // (Mozilla has never prefixed these objects, so we don't need window.mozIDB*)
+            
+            if (!indexedDB) {
+                console.log("Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available.");
+            }
+            var DBOpenRequest = window.indexedDB.open("todolist", 4);
+            var note = document.getElementById('note');
+            var db;
+            
+            DBOpenRequest.onsuccess = function(event) {
+              note.innerHTML += '<li>Database initialized.</li>';
+            
+              // store the result of opening the database in the db variable.
+              // This is used a lot below
+              /*db = DBOpenRequest.result;*/
+              db = event.target.result;
+              console.log(db.objectStoreNames);
+              // Run the addData() function to add the data to the database
+              /*addData();*/
+            };
+            
+            DBOpenRequest.onerror = event => {
+                // Generic error handler for all errors targeted at this database's
+                // requests!
+                console.error("Database error: " + event.target.errorCode);
+              };
+            
+            
+            function addData() {
+              // Create a new object ready to insert into the IDB
+              var newItem = [ { taskTitle: "Walk dog", hours: 19, minutes: 30, day: 24, month: "December", year: 2013, notified: "no" } ];
+            
+              // open a read/write db transaction, ready for adding the data
+              var transaction = db.transaction(["todolist"], "readwrite");
+            
+              // report on the success of the transaction completing, when everything is done
+              transaction.oncomplete = function(event) {
+                note.innerHTML += '<li>Transaction completed.</li>';
+              };
+            
+              transaction.onerror = function(event) {
+              note.innerHTML += '<li>Transaction not opened due to error. Duplicate items not allowed.</li>';
+              };
+            
+              // create an object store on the transaction
+              var objectStore = transaction.objectStore("toDoList");
+            
+              // Make a request to add our newItem object to the object store
+              var objectStoreRequest = objectStore.add(newItem[0]);
+            
+              objectStoreRequest.onsuccess = function(event) {
+                // report the success of our request
+                note.innerHTML += '<li>Request successful.</li>';
+              };
+            };
+            
+            </script>
+        <script type="text/javascript" src="libraries/date.js"></script>
+        <script type="text/javascript" src="libraries/http.js"></script>
+        <script type="text/javascript" src="synchronization/storage.js"></script> 
+
+ </body>
+</html>
