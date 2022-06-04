@@ -93,7 +93,7 @@ var setItem = async function(keyName, value) {
 
     var APIcallParameters = {
         method: "GET",
-        url: `http://localhost:5000/getItemByKey?keyName=${keyName}&value=${value}`
+        url: `http://localhost:5000/setItemValue?keyName=${keyName}&value=${value}`
     };
 
     var response;
@@ -112,8 +112,14 @@ var updateParameterInItemValue = async function(keyName, parameterName, value){
     var objectValue;
 
     var response = await getItemByKey(keyName);
-    jsonValue = JSON.parse(response);
+
+    if (typeof response === 'string' || response instanceof String){
+        jsonValue = JSON.parse(response);
+    } else {
+        jsonValue = response;
+    }
     jsonValue[parameterName]=value;
+
     objectValue = JSON.stringify(jsonValue);
     console.log("object got from memory before update");
     console.log(objectValue);
@@ -147,7 +153,7 @@ var asyncTestRunner = async function(){
     console.log(response);
     var response2 = await getItemByKey('progress-164655054444102');
     console.log('test: content of progress-164655054444102');
-    /*console.log(response2); 
+    console.log(response2); 
     var response3 = await setItem('test-1','{"param1":"test11","param2":"test12"}');
     var response4 = await setItem('test-2','{"param1":"test21","param2":"test22"}');
     var response5 = await getItemByKey('test-1');
@@ -163,10 +169,11 @@ var asyncTestRunner = async function(){
     var response9 = await getItemByKey('test-2');
     console.log('test:test-2 after deletion');
     console.log(response9); 
+    
     var response9b = await updateParameterInItemValue("test-1", "param2", "abc");
     var response10 = await getItemByKey('test-1');
     console.log('test:test-1 after update');
-    console.log(response10); */
+    console.log(response10); 
 
 }
 

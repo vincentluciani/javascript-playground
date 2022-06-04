@@ -8,7 +8,12 @@ var APICall = async function(parameters){
             {
                 if (xhttp.readyState == 4 && xhttp.status == 200)
                 {
-                    resolve(JSON.parse(xhttp.responseText));
+                    if (typeof xhttp.responseText === 'string' || xhttp.responseText instanceof String){
+                        resolve(JSON.parse(xhttp.responseText));
+                    }
+                    else {
+                        resolve(xhttp.responseText);
+                    }
                 } else if (xhttp.readyState == 4 && xhttp.status != 200){
                     reject(xhttp.statusText);
                 }

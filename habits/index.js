@@ -75,6 +75,40 @@ app.get('/manifest.json', function (req, res, next) {
   
 })
 
+app.get('/getItemByKey', function (req, res, next) {
+  var data = '{"id":"164655054444102","habitId":"16422714834470","habitDescription":"real push ups ","target":20,"progressDate":"2022-03-06","isNew":"true","isNegative":"undefined","numberOfCompletions":25}';
+  res.writeHead(200, {'Content-Type': 'text/html'});
+  res.write(data);
+  res.end();
+ 
+})
+
+app.get('/removeItemByKey', function (req, res, next) {
+  var data = '{"msg":"success"}';
+  res.writeHead(200, {'Content-Type': 'text/html'});
+  res.write(data);
+  res.end();
+ 
+})
+
+app.get('/setItemValue', function (req, res, next) {
+  var data = '{"msg":"success"}';
+  res.writeHead(200, {'Content-Type': 'text/html'});
+  res.write(data);
+  res.end();
+ 
+})
+
+app.get('/updateParamInItem', function (req, res, next) {
+  var data = '{"msg":"success"}';
+  res.writeHead(200, {'Content-Type': 'text/html'});
+  res.write(data);
+  res.end();
+ 
+})
+
+
+
 app.get('/components/full.css', function (req, res, next) {
 
   fs.readFile('components/full.css', 'utf8', function (err,data) {
