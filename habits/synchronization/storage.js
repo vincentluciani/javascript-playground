@@ -1,5 +1,7 @@
 "use strict";
 
+
+/* TODO PUT FAILED UPDATES THROUGH APIS IN A QUEUE ON LOCAL STORAGE OR COOKIES */
 var getHabitProgressJournal = async function() {
 
     if (loggedIn){
@@ -11,40 +13,47 @@ var getHabitProgressJournal = async function() {
         try {
             response = await APICall(APIcallParameters);
         } catch (e) {
+            console.log('could not connect to the server');
             console.log(e);
+            return getHabitProgressJournalFromStorage();
         } 
 
         return response
 
     } else {
 
-        var progressArray=[];
-        var habitsArray=[];
-        var journalArray = [];
-        var todaysProgressArray=[];
-        var pastProgressArray=[];
-        var localStorageLength = localStorage.length;
-    
-        for (var i = 0; i < localStorageLength; i++){
-            var currentKey = localStorage.key(i);
-            if ( currentKey.indexOf("progress-") >= 0){
-                var progressValue = JSON.parse(localStorage.getItem(currentKey));
-                if ( progressValue.progressDate == formattedTodaysDate()){
-                    todaysProgressArray.push(progressValue);
-                } else if (daysSinceToday(progressValue.progressDate)<=30) {
-                    pastProgressArray.push(progressValue);
-                }
-                progressArray.push(progressValue);
-            } else if ( currentKey.indexOf("habit-") >= 0){
-                habitsArray.push(JSON.parse(localStorage.getItem(currentKey)));
-            } else if ( currentKey.indexOf("journal-") >= 0){
-                journalArray.push({'key':currentKey,'text':JSON.parse(localStorage.getItem(currentKey))});
-            }
-        }
-        return {progressArray,habitsArray,journalArray,todaysProgressArray,pastProgressArray};
+        return getHabitProgressJournalFromStorage();
     }
     
 }
+
+var getHabitProgressJournalFromStorage = function(){
+    var progressArray=[];
+    var habitsArray=[];
+    var journalArray = [];
+    var todaysProgressArray=[];
+    var pastProgressArray=[];
+    var localStorageLength = localStorage.length;
+
+    for (var i = 0; i < localStorageLength; i++){
+        var currentKey = localStorage.key(i);
+        if ( currentKey.indexOf("progress-") >= 0){
+            var progressValue = JSON.parse(localStorage.getItem(currentKey));
+            if ( progressValue.progressDate == formattedTodaysDate()){
+                todaysProgressArray.push(progressValue);
+            } else if (daysSinceToday(progressValue.progressDate)<=30) {
+                pastProgressArray.push(progressValue);
+            }
+            progressArray.push(progressValue);
+        } else if ( currentKey.indexOf("habit-") >= 0){
+            habitsArray.push(JSON.parse(localStorage.getItem(currentKey)));
+        } else if ( currentKey.indexOf("journal-") >= 0){
+            journalArray.push({'key':currentKey,'text':JSON.parse(localStorage.getItem(currentKey))});
+        }
+    }
+    return {progressArray,habitsArray,journalArray,todaysProgressArray,pastProgressArray};
+}
+
 var removeItemByKey = async function(keyName) {
 
         window.localStorage.removeItem(keyName);
@@ -77,6 +86,7 @@ var getItemByKey = async function(keyName) {
             response = await APICall(APIcallParameters);
         } catch (e) {
             console.log(e);
+            return window.localStorage.getItem(keyName);
         } 
         return response
 
@@ -140,7 +150,6 @@ var updateParameterInItemValue = async function(keyName, parameterName, value){
      } 
      console.log('item set:'+keyName+":"+value);
      return response
-
 
 }
 
