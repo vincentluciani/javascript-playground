@@ -7,7 +7,7 @@ var getHabitProgressJournal = async function() {
     if (loggedIn){
         var APIcallParameters = {
             method: "GET",
-            url: "http://localhost:5000/get-habit-progress-journal"
+            url: `http://localhost:5000/get-habit-progress-journal?user="${apiUser}"`
         };
         var response;
         try {
@@ -60,7 +60,7 @@ var removeItemByKey = async function(keyName) {
 
         var APIcallParameters = {
             method: "GET",
-            url: `http://localhost:5000/removeItemByKey?keyName=${keyName}`
+            url: `http://localhost:5000/removeItemByKey?keyName=${keyName}&user="${apiUser}"`
         };
 
         var response;
@@ -78,7 +78,7 @@ var getItemByKey = async function(keyName) {
     if (loggedIn){
         var APIcallParameters = {
             method: "GET",
-            url: `http://localhost:5000/getItemByKey?keyName=${keyName}`
+            url: `http://localhost:5000/getItemByKey?keyName=${keyName}&user="${apiUser}"`
         };
 
         var response;
@@ -102,7 +102,7 @@ var setItem = async function(keyName, value) {
 
     var APIcallParameters = {
         method: "GET",
-        url: `http://localhost:5000/setItemValue?keyName=${keyName}&value=${value}`
+        url: `http://localhost:5000/setItemValue?keyName=${keyName}&value=${value}&user="${apiUser}"`
     };
 
     var response;
@@ -139,7 +139,7 @@ var updateParameterInItemValue = async function(keyName, parameterName, value){
     /* CAREFULL TO REMOVE THE RESOLVE CALL ABOVE */
     var APIcallParameters = {
     method: "GET",
-    url: `http://localhost:5000/updateParamInItem?keyName=${keyName}&parameterName=${parameterName}&value=${value}`
+    url: `http://localhost:5000/updateParamInItem?keyName=${keyName}&parameterName=${parameterName}&value=${value}&user="${apiUser}"`
      };
 
      response='';

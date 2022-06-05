@@ -2,6 +2,7 @@ var dataArrays = {}
 var loggedIn = false;
 var maxForNonLoggedIn = 2000;
 var updateQueue = [];
+var apiUser;
 var radialProgressParameters = {    
     strokeWidth : 6,
     containerHeight : 80,
@@ -41,10 +42,14 @@ onload = function(){
       }
 */
 
-
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('debug') == "true"){
         document.getElementById("debug-section").style.display = "block";
+    }
+    apiUser = urlParams.get('user');
+    console.log('user:'+apiUser);
+    if (urlParams.get('user') && urlParams.get('user').length > 1){
+        loggedIn=true;
     }
 
     hideStartProgressButtonOnHabits();
@@ -52,7 +57,21 @@ onload = function(){
     document.getElementById("date-filter").value=currentDate;
     createRadialProgressBar(radialProgressParameters);
 
-    getHabitProgressJournal(); /* todo: this function should only extract and not also create divs */
+    renderApplication()
+    .then(value => {
+        setTimeout(placeSVGIcons,5);
+        setTimeout(renderPastProgressBoxes,10); 
+        setTimeout(showSummariesTab,15); 
+        setTimeout(prepareSummaries,20);
+      }, reason => {
+        console.log(reason );
+      })
+
+    
+};
+
+var renderApplication = async function(){
+    dataArrays=await getHabitProgressJournal(); /* todo: this function should only extract and not also create divs */
  
     if (dataArrays.progressArray.length >= 1){
         changeTabToProgress();
@@ -75,13 +94,7 @@ onload = function(){
     }
     /* TODO : should be based on arrays and not on DOM */
     addEmptyProgressBoxesOnNewDay(currentDate, currentDateTime);
-
-    setTimeout(placeSVGIcons,5);
-    setTimeout(renderPastProgressBoxes,10); 
-    setTimeout(showSummariesTab,15); 
-    setTimeout(prepareSummaries,20);
-};
-
+}
 
 function prepareSummaries(){
 

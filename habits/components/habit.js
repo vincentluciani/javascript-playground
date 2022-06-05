@@ -130,7 +130,7 @@ var deleteHabit = function(habitId){
     var habitKey = "habit-"+habitId.toString();
     var element = document.getElementById(habitId.toString());
     element.parentNode.removeChild(element);
-    window.localStorage.removeItem(habitKey);
+    removeItemByKey(habitKey);
 }
 
 var deleteProgressFromHabitToday = function(habitId){
@@ -147,7 +147,7 @@ var deleteProgressFromHabitToday = function(habitId){
             var progressId = progressDivs[i].getAttribute("id");
             progressDivs[i].parentNode.removeChild(progressDivs[i]);
             var progressKey = "progress-"+progressId.toString();
-            window.localStorage.removeItem(progressKey);
+            removeItemByKey(progressKey);
         }
     }
 

@@ -1,9 +1,9 @@
-var displayJournalEditBox = function(){
+var displayJournalEditBoxAsync = async function(){
     var progressDate = document.getElementById("date-filter").value;
     var editBox = document.getElementById("journal-edit-box");
     var editBoxTextBox = document.getElementById("daily-journal");
 
-    var currentText = getCurrentDateJournal(progressDate);
+    var currentText = await getCurrentDateJournal(progressDate);
     editBoxTextBox.value = "";
     if (currentText && currentText.length>0){
         editBoxTextBox.value = JSON.parse(currentText);
@@ -14,10 +14,18 @@ var displayJournalEditBox = function(){
     editBox.style.display="flex";
 };
 
-var getCurrentDateJournal = function(journalDate){
+var displayJournalEditBox = function(){
+    displayJournalEditBoxAsync().then(() => {
+        console.log('successfully displayed the journal');
+      }, reason => {
+        console.log(reason );
+      })
+}
 
-    return window.localStorage.getItem("journal-"+journalDate);
+var getCurrentDateJournal = async function(journalDate){
 
+    var journal = await getItemByKey("journal-"+journalDate);
+    return journal;
 }
 var closeJournal = function(){
     var editBox = document.getElementById("journal-edit-box");

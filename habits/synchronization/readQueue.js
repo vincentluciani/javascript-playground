@@ -14,7 +14,7 @@ var readQueueProgress = function() {
 
 var putInStorage = function(id,value){
   try {
-    window.localStorage.setItem(id, value);
+    setItem(id, value);
   } catch (error) {
     console.error(error);
     console.error("Problem writing progress:"+elementToProcess.id.toString());
