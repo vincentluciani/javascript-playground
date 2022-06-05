@@ -600,7 +600,7 @@ var convertJournalKeyToDateInt = function(journalKey){
 }
 var readJournal = function(journalArray){
 
-    if (journalArray.length == 0){
+    if (!journalArray || journalArray.length == 0){
         return 0;
     }
     journalArray.sort(function(a, b){
@@ -841,8 +841,10 @@ toggleButton.firstChild.setAttribute("stroke",currentStroke);
 
 
 function renderPastProgressBoxes(){
-    for (const habitsElement of dataArrays.pastProgressArray){
-        addProgressElement(habitsElement);
+    if (dataArrays.pastProgressArray){
+        for (const habitsElement of dataArrays.pastProgressArray){
+            addProgressElement(habitsElement);
+        }
     }
 
     applyFilters();
@@ -882,7 +884,7 @@ var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletio
         currentDiv.style.background="rgb(255 251 234)";
         currentDiv.style.order="70";
     } else if (newCompletionPercentage<50){
-        currentDiv.style.border="1px solid lightgrey";
+        currentDiv.style.border="3px solid #c369bc";
         currentDiv.style.background="white";
         currentDiv.style.order="70";
     }
@@ -915,7 +917,7 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
         plusMinusDiv.firstChild.setAttribute("fill","red");
 
     } else if (newCompletionPercentage >=100){
-        currentDiv.style.border="3px solid lightgrey"; 
+        currentDiv.style.border="3px solid rgb(167 211 162)"; 
         taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
         if (taskIconDiv && plusMinusDiv){
             /*taskIconDiv.classList.remove("fa-warning");
@@ -1263,9 +1265,6 @@ var weekTable = function(progressByDay){
         } else {
             if (i<=todaysDateDayNum){
                 iconCode=minusIconGreen;
-            } 
-            else {
-                iconCode="";
             }
         }
         tableCode += "<td>"+iconCode+"</td>"
@@ -1279,17 +1278,17 @@ var weekTable = function(progressByDay){
 
 var buildListOfDays = function(){
 
-    var listOfDays = {}
+    var listOfDays = {};
 
-    var dateTime = new Date();
-    var weekDay = dateTime.getDay();
-    var formattedDate = formatDate(dateTime); 
-    listOfDays[weekDay] = formattedDate;
+    var currentDateTime = new Date();
+    var currentWeekDay = currentDateTime.getDay();
+    listOfDays[currentWeekDay] = formatDate(currentDateTime);
 
-    if (weekDay == 0){
+    if (currentWeekDay == 0){
         return listOfDays;
     }
 
+    var weekDay, dateTime=currentDateTime;
     do{
         dateTime.setDate(dateTime.getDate() - 1);
         weekDay = dateTime.getDay();
@@ -1428,7 +1427,7 @@ var formattedTodaysDate = function(){
 var translations = {};
 translations['en_US']  = {
 'amazing':['Amazing','Superb','Outstanding','Magnificient','Exceptional','Marvellous','Wonderful','Sublime','Supreme','Splendid','Fantastic','Awesome','Mind-blowing','Brilliant','Smashing','Spectacular','Spectaculous','Awesome','Fabulous'],
-'encouraging':['A little effort each day adds up to big results!','You are stronger than you know!','You are capable of amazing things!','Believe in yourself and you will be unstoppable!','You are doing exactly what you should be doing!','You are being so strong and patient!','I admire how strong you are!','I cannot wait to see what you do next!','You are doing a great job!','You are getting stronger every day!','I am so proud of you!','You are on the right track!','You made it look easy!','You have super powers!']
+'encouraging':['A little effort each day adds up to big results!','You are stronger than you know!','You are capable of amazing things!','Believe in yourself and you will be unstoppable!','You are doing exactly what you should be doing!','You are being so strong and patient!','I admire how strong you are!','I cannot wait to see what you do next!','You are doing a great job!','You are getting stronger every day!','I am so proud of you!','You are on the right track!','You made it look easy!','You have super powers!','You are irresistible!']
 }
 
 
@@ -1495,27 +1494,14 @@ var getMemoryDetails = function(){
 var getHabitProgressJournal = function(){
 
     if (loggedIn){
-        dataArrays=getHabitProgressJournalWhenLoggedIn();
+       /* dataArrays=getHabitProgressJournalWhenLoggedIn();*/
     } else {
-        dataArrays=getHabitProgressJournalWhenNotLoggedIn();
+       dataArrays=getHabitProgressJournalWhenNotLoggedIn();
     }
 
 };
 
-var getHabitProgressJournalWhenLoggedIn = function(){
-    var progressArray,habitsArray,journalArray = {};
-    /*
-    var APIcallParameters = {
-        method: "GET",
-        url: "http://localhost:5000/get-habit-progress"
-    };
 
-    var apiCaller = new APICaller(APIcallParameters,todoCallback1,todoCallback2);
-
-    apiCaller.executeCall(APIcallParameters.url, {});
-*/
-    return {progressArray,habitsArray,journalArray,todaysProgressArray,pastProgressArray};
-};
 
 var getHabitProgressJournalWhenNotLoggedIn = function(){
     var progressArray=[];
@@ -1525,7 +1511,6 @@ var getHabitProgressJournalWhenNotLoggedIn = function(){
     var pastProgressArray=[];
     var localStorageLength = localStorage.length;
 
-    /* todo separate progress today from progress in the past */
     for (var i = 0; i < localStorageLength && i < maxForNonLoggedIn; i++){
         var currentKey = localStorage.key(i);
         if ( currentKey.indexOf("progress-") >= 0){
@@ -1609,6 +1594,8 @@ var executePushToQueue = function(newObject){
 var pushItemInQueue = function(newItem){
     updateQueue.push(newItem);
 }
+
+
 var readQueueProgress = function() {
 
     while (updateQueue.length > 0) {
@@ -1623,7 +1610,6 @@ var readQueueProgress = function() {
     }
 }
 
-
 var putInStorage = function(id,value){
   try {
     window.localStorage.setItem(id, value);
@@ -1633,6 +1619,209 @@ var putInStorage = function(id,value){
     console.error(currentOutput);
   }
 }
+
+"use strict";
+
+
+/* TODO PUT FAILED UPDATES THROUGH APIS IN A QUEUE ON LOCAL STORAGE OR COOKIES */
+
+/*
+var getHabitProgressJournal = async function() {
+
+    if (loggedIn){
+        var APIcallParameters = {
+            method: "GET",
+            url: "http://localhost:5000/get-habit-progress-journal"
+        };
+        var response;
+        try {
+            response = await APICall(APIcallParameters);
+        } catch (e) {
+            console.log('could not connect to the server');
+            console.log(e);
+            return getHabitProgressJournalFromStorage();
+        } 
+
+        return response
+
+    } else {
+
+        return getHabitProgressJournalFromStorage();
+    }
+    
+}
+
+var getHabitProgressJournalFromStorage = function(){
+    var progressArray=[];
+    var habitsArray=[];
+    var journalArray = [];
+    var todaysProgressArray=[];
+    var pastProgressArray=[];
+    var localStorageLength = localStorage.length;
+
+    for (var i = 0; i < localStorageLength; i++){
+        var currentKey = localStorage.key(i);
+        if ( currentKey.indexOf("progress-") >= 0){
+            var progressValue = JSON.parse(localStorage.getItem(currentKey));
+            if ( progressValue.progressDate == formattedTodaysDate()){
+                todaysProgressArray.push(progressValue);
+            } else if (daysSinceToday(progressValue.progressDate)<=30) {
+                pastProgressArray.push(progressValue);
+            }
+            progressArray.push(progressValue);
+        } else if ( currentKey.indexOf("habit-") >= 0){
+            habitsArray.push(JSON.parse(localStorage.getItem(currentKey)));
+        } else if ( currentKey.indexOf("journal-") >= 0){
+            journalArray.push({'key':currentKey,'text':JSON.parse(localStorage.getItem(currentKey))});
+        }
+    }
+    return {progressArray,habitsArray,journalArray,todaysProgressArray,pastProgressArray};
+}
+
+var removeItemByKey = async function(keyName) {
+
+        window.localStorage.removeItem(keyName);
+
+        var APIcallParameters = {
+            method: "GET",
+            url: `http://localhost:5000/removeItemByKey?keyName=${keyName}`
+        };
+
+        var response;
+        try {
+            response = await APICall(APIcallParameters);
+        } catch (e) {
+            console.log(e);
+        } 
+        console.log('item removed');
+        return response
+
+}
+var getItemByKey = async function(keyName) {
+
+    if (loggedIn){
+        var APIcallParameters = {
+            method: "GET",
+            url: `http://localhost:5000/getItemByKey?keyName=${keyName}`
+        };
+
+        var response;
+        try {
+            response = await APICall(APIcallParameters);
+        } catch (e) {
+            console.log(e);
+            return window.localStorage.getItem(keyName);
+        } 
+        return response
+
+    } else {
+        var itemValue = window.localStorage.getItem(keyName);
+        console.log('item got from memory:'+itemValue);
+        return itemValue;
+    }
+
+}
+var setItem = async function(keyName, value) {
+    window.localStorage.setItem(keyName, value)
+
+    var APIcallParameters = {
+        method: "GET",
+        url: `http://localhost:5000/setItemValue?keyName=${keyName}&value=${value}`
+    };
+
+    var response;
+    try {
+        response = await APICall(APIcallParameters);
+    } catch (e) {
+        console.log(e);
+    } 
+    console.log('item set:'+keyName+":"+value);
+    return response
+
+}
+var updateParameterInItemValue = async function(keyName, parameterName, value){
+
+    var jsonValue;
+    var objectValue;
+
+    var response = await getItemByKey(keyName);
+
+    if (typeof response === 'string' || response instanceof String){
+        jsonValue = JSON.parse(response);
+    } else {
+        jsonValue = response;
+    }
+    jsonValue[parameterName]=value;
+
+    objectValue = JSON.stringify(jsonValue);
+    console.log("object got from memory before update");
+    console.log(objectValue);
+    var status = await setItem(keyName,objectValue);
+    console.log("update executed");
+       
+    var APIcallParameters = {
+    method: "GET",
+    url: `http://localhost:5000/updateParamInItem?keyName=${keyName}&parameterName=${parameterName}&value=${value}`
+     };
+
+     response='';
+     try {
+         response = await APICall(APIcallParameters);
+     } catch (e) {
+         console.log(e);
+     } 
+     console.log('item set:'+keyName+":"+value);
+     return response
+
+}
+
+
+*/
+var loggedIn = true;
+
+var asyncTestRunner = async function(){
+    var response = await getHabitProgressJournal();
+    console.log('test: response from getHabitProgressJournal');
+    console.log(response);
+    var response2 = await getItemByKey('progress-164655054444102');
+    console.log('test: content of progress-164655054444102');
+    console.log(response2); 
+    var response3 = await setItem('test-1','{"param1":"test11","param2":"test12"}');
+    var response4 = await setItem('test-2','{"param1":"test21","param2":"test22"}');
+    var response5 = await getItemByKey('test-1');
+    console.log('test:test-1 after insertion');
+    console.log(response5); 
+    var response6 = await getItemByKey('test-2');
+    console.log('test:test-2 after insertion');
+    console.log(response6); 
+    var response7 = await removeItemByKey('test-2');
+    var response8 = await getItemByKey('test-1');
+    console.log('test:test-1 after deletion of test-2');
+    console.log(response8); 
+    var response9 = await getItemByKey('test-2');
+    console.log('test:test-2 after deletion');
+    console.log(response9); 
+    
+    var response9b = await updateParameterInItemValue("test-1", "param2", "abc");
+    var response10 = await getItemByKey('test-1');
+    console.log('test:test-1 after update');
+    console.log(response10); 
+
+}
+
+var test = function(){
+    asyncTestRunner()            
+    .then(function(response){
+        console.log("test completed");
+    }    )    
+    .catch(function(error) {
+        console.log(error);
+    })
+}
+test();
+
+
+
 var dataArrays = {}
 var loggedIn = false;
 var maxForNonLoggedIn = 2000;
@@ -1687,9 +1876,9 @@ onload = function(){
     document.getElementById("date-filter").value=currentDate;
     createRadialProgressBar(radialProgressParameters);
 
-    getHabitProgressJournal(); /* todo: this function should only extract and not also create divs */
+    getHabitProgressJournal();
  
-    if (dataArrays.progressArray.length >= 1){
+    if (dataArrays.progressArray && dataArrays.progressArray.length >= 1){
         changeTabToProgress();
         showProgressTab();
     }
@@ -1697,16 +1886,20 @@ onload = function(){
         hideProgressTab();
         changeTabToHabits();
     }
-    if (dataArrays.journalArray.length < 1){
+    if (dataArrays.journalArray && dataArrays.journalArray.length < 1){
         hideJournalBox();
     }
 
-    for (const progressElement of dataArrays.todaysProgressArray){
-        addProgressElement(progressElement);
+    if (dataArrays.todaysProgressArray){
+        for (const progressElement of dataArrays.todaysProgressArray){
+            addProgressElement(progressElement);
+        }
     }
  
-    for (const habitsElement of dataArrays.habitsArray){
-        addHabitElement(habitsElement);
+    if (dataArrays.habitsArray){
+        for (const habitsElement of dataArrays.habitsArray){
+            addHabitElement(habitsElement);
+        }
     }
     /* TODO : should be based on arrays and not on DOM */
     addEmptyProgressBoxesOnNewDay(currentDate, currentDateTime);
@@ -1726,7 +1919,7 @@ function prepareSummaries(){
     loadScriptForGraphs(showGraphsTabIfGoodLength);
 }
 function showGraphsTabIfGoodLength(){
-    if (dataArrays.habitsArray.length >= 1){
+    if (dataArrays.habitsArray && dataArrays.habitsArray.length >= 1){
         showGraphTab();
     }
 }
@@ -2020,29 +2213,6 @@ var progressDOMToJson = function(elementToRead){
 
     return outputJson;
 };
-
-function APICaller(parameters,callback,callbackOnFailure){
-	
-	this.parameters = parameters;
-	this.callback = callback;
-	
-	this.executeCall = function(url,urlDetails)
-	{
-		var xhttp = new XMLHttpRequest();
-		xhttp.onreadystatechange = function()
-		{
-			if (this.readyState == 4 && this.status == 200)
-			{
-				callback(JSON.parse(this.responseText),urlDetails);
-			} else {
-                callbackOnFailure();
-            }
-		};
-		xhttp.open(parameters.method, url, true);
-		xhttp.send();
-	};
-	
-}
 
 
 

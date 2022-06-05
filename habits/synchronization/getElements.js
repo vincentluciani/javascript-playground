@@ -1,27 +1,14 @@
 var getHabitProgressJournal = function(){
 
     if (loggedIn){
-        dataArrays=getHabitProgressJournalWhenLoggedIn();
+       /* dataArrays=getHabitProgressJournalWhenLoggedIn();*/
     } else {
-        dataArrays=getHabitProgressJournalWhenNotLoggedIn();
+       dataArrays=getHabitProgressJournalWhenNotLoggedIn();
     }
 
 };
 
-var getHabitProgressJournalWhenLoggedIn = function(){
-    var progressArray,habitsArray,journalArray = {};
-    /*
-    var APIcallParameters = {
-        method: "GET",
-        url: "http://localhost:5000/get-habit-progress"
-    };
 
-    var apiCaller = new APICaller(APIcallParameters,todoCallback1,todoCallback2);
-
-    apiCaller.executeCall(APIcallParameters.url, {});
-*/
-    return {progressArray,habitsArray,journalArray,todaysProgressArray,pastProgressArray};
-};
 
 var getHabitProgressJournalWhenNotLoggedIn = function(){
     var progressArray=[];

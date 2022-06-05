@@ -211,8 +211,10 @@ toggleButton.firstChild.setAttribute("stroke",currentStroke);
 
 
 function renderPastProgressBoxes(){
-    for (const habitsElement of dataArrays.pastProgressArray){
-        addProgressElement(habitsElement);
+    if (dataArrays.pastProgressArray){
+        for (const habitsElement of dataArrays.pastProgressArray){
+            addProgressElement(habitsElement);
+        }
     }
 
     applyFilters();
