@@ -37,7 +37,6 @@ app.get('/get-habit-progress-journal', function (req, res, next) {
         }
         res.writeHead(200, {'Content-Type': 'text/json'});
         res.write(data);
-        //res.json(data);
         res.end();
       });
       

@@ -1,8 +1,8 @@
  
 body{
     margin: 0px;
-   /* font-family: "Nunito","candara","arial";*/
-    font-family:"Brush Script MT", cursive;
+   /* font-family: "Brush Script MT", "Nunito","candara","arial";*/
+    font-family: "Nunito","candara","arial";
     overflow-wrap: break-word;
     background: #fafafa;
 }

@@ -49,7 +49,7 @@ var convertJournalKeyToDateInt = function(journalKey){
 }
 var readJournal = function(journalArray){
 
-    if (journalArray.length == 0){
+    if (!journalArray || journalArray.length == 0){
         return 0;
     }
     journalArray.sort(function(a, b){

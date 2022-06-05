@@ -73,7 +73,7 @@ onload = function(){
 var renderApplication = async function(){
     dataArrays=await getHabitProgressJournal(); /* todo: this function should only extract and not also create divs */
  
-    if (dataArrays.progressArray.length >= 1){
+    if (dataArrays.progressArray && dataArrays.progressArray.length >= 1){
         changeTabToProgress();
         showProgressTab();
     }
@@ -81,16 +81,20 @@ var renderApplication = async function(){
         hideProgressTab();
         changeTabToHabits();
     }
-    if (dataArrays.journalArray.length < 1){
+    if (dataArrays.journalArray && dataArrays.journalArray.length < 1){
         hideJournalBox();
     }
 
-    for (const progressElement of dataArrays.todaysProgressArray){
-        addProgressElement(progressElement);
+    if (dataArrays.todaysProgressArray){
+        for (const progressElement of dataArrays.todaysProgressArray){
+            addProgressElement(progressElement);
+        }
     }
  
-    for (const habitsElement of dataArrays.habitsArray){
-        addHabitElement(habitsElement);
+    if (dataArrays.habitsArray){
+        for (const habitsElement of dataArrays.habitsArray){
+            addHabitElement(habitsElement);
+        }
     }
     /* TODO : should be based on arrays and not on DOM */
     addEmptyProgressBoxesOnNewDay(currentDate, currentDateTime);
@@ -104,7 +108,7 @@ function prepareSummaries(){
     loadScriptForGraphs(showGraphsTabIfGoodLength);
 }
 function showGraphsTabIfGoodLength(){
-    if (dataArrays.habitsArray.length >= 1){
+    if (dataArrays.habitsArray && dataArrays.habitsArray.length >= 1){
         showGraphTab();
     }
 }

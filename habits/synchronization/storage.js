@@ -2,6 +2,8 @@
 
 
 /* TODO PUT FAILED UPDATES THROUGH APIS IN A QUEUE ON LOCAL STORAGE OR COOKIES */
+
+/*
 var getHabitProgressJournal = async function() {
 
     if (loggedIn){
@@ -135,8 +137,6 @@ var updateParameterInItemValue = async function(keyName, parameterName, value){
     var status = await setItem(keyName,objectValue);
     console.log("update executed");
        
-
-    /* CAREFULL TO REMOVE THE RESOLVE CALL ABOVE */
     var APIcallParameters = {
     method: "GET",
     url: `http://localhost:5000/updateParamInItem?keyName=${keyName}&parameterName=${parameterName}&value=${value}&user="${apiUser}"`
@@ -154,3 +154,4 @@ var updateParameterInItemValue = async function(keyName, parameterName, value){
 }
 
 
+*/
