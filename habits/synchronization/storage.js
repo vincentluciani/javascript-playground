@@ -3,7 +3,7 @@
 
 /* TODO PUT FAILED UPDATES THROUGH APIS IN A QUEUE ON LOCAL STORAGE OR COOKIES */
 
-/*
+
 var getHabitProgressJournal = async function() {
 
     if (loggedIn){
@@ -154,4 +154,3 @@ var updateParameterInItemValue = async function(keyName, parameterName, value){
 }
 
 
-*/
