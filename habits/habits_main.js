@@ -28,7 +28,7 @@ runApp = function(){
 document.addEventListener("DOMContentLoaded", function(event) { 
     runAppRendering();
   });*/
-
+/* test merge from new branch*/
 onload = function(){
 /*var runAppRendering = function(){*/
     "use strict";
