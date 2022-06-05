@@ -41,7 +41,7 @@ onload = function(){
       }
 */
 
-
+/* test merge*/
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('debug') == "true"){
         document.getElementById("debug-section").style.display = "block";
