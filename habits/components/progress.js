@@ -252,7 +252,7 @@ var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletio
         currentDiv.style.background="rgb(255 251 234)";
         currentDiv.style.order="70";
     } else if (newCompletionPercentage<50){
-        currentDiv.style.border="1px solid lightgrey";
+        currentDiv.style.border="3px solid #c369bc";
         currentDiv.style.background="white";
         currentDiv.style.order="70";
     }
@@ -285,7 +285,7 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
         plusMinusDiv.firstChild.setAttribute("fill","red");
 
     } else if (newCompletionPercentage >=100){
-        currentDiv.style.border="3px solid lightgrey"; 
+        currentDiv.style.border="3px solid rgb(167 211 162)"; 
         taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
         if (taskIconDiv && plusMinusDiv){
             /*taskIconDiv.classList.remove("fa-warning");

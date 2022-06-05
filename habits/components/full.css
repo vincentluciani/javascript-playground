@@ -180,7 +180,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
 
 .box.big-action-button:hover{
     background: #cb79c5;
-    border: 1px solid #cb79c5;
+    border: 3px solid #cb79c5;
 }
 
 .plus-button:hover, .minus-button:hover,.plus-button.normal:hover, .minus-button.normal:hover, #date-filter:hover{
@@ -198,7 +198,8 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
     align-items: center;
     cursor: pointer;
     order:100;
-    border: 1px solid #b657af;
+    border: 3px solid #b657af;
+    width:213px
 }
 .huge-button{
     width: 208px;
