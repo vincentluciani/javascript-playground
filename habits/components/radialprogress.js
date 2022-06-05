@@ -1,13 +1,11 @@
 var updateProgressOnRadial = function( percentageValue, parameters){
 
-    circleRadius = ( parameters.containerHeight / 2 ) - parameters.strokeWidth;
+    var circleRadius = ( parameters.containerHeight / 2 ) - parameters.strokeWidth;
 
     var circleDiv = document.getElementById(parameters.suffixForIds+'_background-circle');
     var progressDiv = document.getElementById(parameters.suffixForIds+'_progress-circle');
     var percentageValueDiv = document.getElementById(parameters.suffixForIds+'_percentage-value');
     
-    var percentageCircleContainer = document.getElementById(parameters.suffixForIds+'_percentage-circle-container');
-
     if (percentageValueDiv){
         percentageValueDiv.innerHTML = percentageValue + " %";
     } else {
@@ -20,10 +18,8 @@ var updateProgressOnRadial = function( percentageValue, parameters){
     circleDiv.style.stroke  = parameters.emptyColor;
 
   
-    if (isNaN(percentageValue)) {
-        percentageValue = 100; 
-    }
-    else{
+    if (!isNaN(percentageValue)) {
+
         circleDiv.setAttribute('r',circleRadius);
         progressDiv.setAttribute('r',circleRadius);
         var circonference = Math.PI*circleRadius*2;
@@ -46,7 +42,7 @@ var updateProgressOnRadial = function( percentageValue, parameters){
 }
 
 
-var createProgressElements = function(parameters){
+var createRadialProgressBar = function(parameters){
 
     var circleRadius = ( parameters.containerHeight / 2 ) - parameters.strokeWidth;
 
@@ -85,8 +81,7 @@ var createProgressElements = function(parameters){
 
     var textMarginTop = (-1)*(parameters.containerHeight - parameters.strokeWidth - circleRadius + parameters.fontSize/1.9 + parameters.textTopAdjustment);
     var textMarginLeft = (parameters.strokeWidth + circleRadius)/1.5 + parameters.textLeftAdjustment;
-  /*  var roundedMarginTop = Math.round(textMarginTop/100)*100;
-    var roundedMarginLeft = Math.round(textMarginLeft/100)*100*/
+
     percentageValue.style.marginTop = textMarginTop.toString()+"px";
     percentageValue.style.marginLeft = textMarginLeft.toString()+"px";
     percentageValue.style.fontSize = parameters.fontSize.toString()+"px";

@@ -1,6 +1,6 @@
 var pushProgressToQueue = function(divToAnalyze) {
 
-    var progressArray = readElement(divToAnalyze);
+    var progressArray = progressDOMToJson(divToAnalyze);
 
     encourageIfPassedTarget(progressArray.numberOfCompletions, progressArray.target, progressArray.isCritical);
 
@@ -51,7 +51,6 @@ var executePushToQueue = function(newObject){
         console.log(lastElement);
     }
 
-    /*var intervalID = setInterval(pushItemInQueue, 50, newObject);*/
     updateQueue.push(newObject);
     
     console.log(updateQueue);
@@ -61,3 +60,4 @@ var executePushToQueue = function(newObject){
 var pushItemInQueue = function(newItem){
     updateQueue.push(newItem);
 }
+

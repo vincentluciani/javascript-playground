@@ -1,11 +1,12 @@
 var express = require('express')
+var cors = require('cors')
 var app = express()
 var url = require("url");
 var path = require("path");
 
 fs = require('fs')
 
-
+app.use(cors())
 
 app.get('/', function (req, res, next) {
   /*var pathname = url.parse(req.url).pathname;
@@ -25,6 +26,22 @@ app.get('/', function (req, res, next) {
       });
 
     
+})
+
+
+app.get('/get-habit-progress-journal', function (req, res, next) {
+
+    fs.readFile('test/habits.json', 'utf8', function (err,data) {
+        if (err) {
+          return console.log(err);
+        }
+        res.writeHead(200, {'Content-Type': 'text/json'});
+        res.write(data);
+        //res.json(data);
+        res.end();
+      });
+      
+      
 })
 
 app.get('/index.html', function (req, res, next) {
@@ -57,6 +74,40 @@ app.get('/manifest.json', function (req, res, next) {
 
   
 })
+
+app.get('/getItemByKey', function (req, res, next) {
+  var data = '{"id":"164655054444102","habitId":"16422714834470","habitDescription":"real push ups ","target":20,"progressDate":"2022-03-06","isNew":"true","isNegative":"undefined","numberOfCompletions":25}';
+  res.writeHead(200, {'Content-Type': 'text/html'});
+  res.write(data);
+  res.end();
+ 
+})
+
+app.get('/removeItemByKey', function (req, res, next) {
+  var data = '{"msg":"success"}';
+  res.writeHead(200, {'Content-Type': 'text/html'});
+  res.write(data);
+  res.end();
+ 
+})
+
+app.get('/setItemValue', function (req, res, next) {
+  var data = '{"msg":"success"}';
+  res.writeHead(200, {'Content-Type': 'text/html'});
+  res.write(data);
+  res.end();
+ 
+})
+
+app.get('/updateParamInItem', function (req, res, next) {
+  var data = '{"msg":"success"}';
+  res.writeHead(200, {'Content-Type': 'text/html'});
+  res.write(data);
+  res.end();
+ 
+})
+
+
 
 app.get('/components/full.css', function (req, res, next) {
 
@@ -151,10 +202,8 @@ app.get('/poc_pwa.html', function (req, res, next) {
 })
 
 
-
-
-
 app.listen(5000, function () {
-    console.log('Web server listening on port 5000')
+  console.log('CORS-enabled web server listening on port 5000')
 })
+
 

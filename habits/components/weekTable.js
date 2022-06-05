@@ -14,21 +14,18 @@ var weekTable = function(progressByDay){
         var iconCode="";
         if (result != null){
             if (result>=0){
-                iconCode="<i class='fa fa-circle icon'></i>";
+                iconCode=fullCirclePast;
             } else if (result<0){
                 if (i<todaysDateDayNum){
-                    iconCode="<i class='fa fa-circle icon red'></i>";
+                    iconCode=fullCircleRed;
                     numberOfMissesInWeek++;
                 } else if (i==todaysDateDayNum){
-                    iconCode="<i class='fa fa-circle-o icon today'></i>";
+                    iconCode=emptyCircleToday;
                 }
             }
         } else {
             if (i<=todaysDateDayNum){
-                iconCode="<i class='fa fa-minus icon'></i>";
-            } 
-            else {
-                iconCode="";
+                iconCode=minusIconGreen;
             }
         }
         tableCode += "<td>"+iconCode+"</td>"
@@ -42,17 +39,17 @@ var weekTable = function(progressByDay){
 
 var buildListOfDays = function(){
 
-    var listOfDays = {}
+    var listOfDays = {};
 
-    var dateTime = new Date();
-    var weekDay = dateTime.getDay();
-    var formattedDate = formatDate(dateTime); 
-    listOfDays[weekDay] = formattedDate;
+    var currentDateTime = new Date();
+    var currentWeekDay = currentDateTime.getDay();
+    listOfDays[currentWeekDay] = formatDate(currentDateTime);
 
-    if (weekDay == 0){
+    if (currentWeekDay == 0){
         return listOfDays;
     }
 
+    var weekDay, dateTime=currentDateTime;
     do{
         dateTime.setDate(dateTime.getDate() - 1);
         weekDay = dateTime.getDay();
@@ -95,3 +92,55 @@ var weekTableHeader = function(currentDayNumber){
 
     return headerString;
 }
+
+var buildWeekTableBox = function(weekTableObject,habitObject){
+    /* week table */
+    var tableCode = weekTableObject.tableCode
+    var numberOfMissesInWeek = weekTableObject.numberOfMissesInWeek
+    const weekSummaryTable = document.createElement("div");
+    var graphIcon = document.createElement("div");
+    graphIcon.setAttribute("class","task-icon-container");
+    graphIcon.innerHTML = calendarIcon;
+    const grapTitle = document.createTextNode(habitObject.habitDescription);
+    const grapTitleDiv = document.createElement("div");
+    grapTitleDiv.setAttribute("class","graph-title");
+    grapTitleDiv.appendChild(graphIcon);
+    grapTitleDiv.appendChild(grapTitle);
+    const weekSummaryTableTitle = document.createElement("div");
+    weekSummaryTableTitle.innerHTML = "This week summary:";
+    weekSummaryTableTitle.setAttribute("class","subtitle");
+    const markAsCriticalDiv = document.createElement("div");
+
+    markAsCriticalDiv.setAttribute("class","critical-link");
+    if (habitObject.isCritical && habitObject.isCritical=="true"){
+        markAsCriticalDiv.innerHTML = "Unmark as critical";
+        markAsCriticalDiv.setAttribute("onclick","unsetHabitAsCritical("+ habitObject.habitId +");");
+    } else {
+        markAsCriticalDiv.innerHTML = "Mark as critical";
+        markAsCriticalDiv.setAttribute("onclick","setHabitAsCritical("+ habitObject.habitId +");");
+    }
+    weekSummaryTable.setAttribute("class","table-summary");
+    weekSummaryTable.innerHTML = tableCode;
+
+    var newCanvaWrapper = document.createElement("div");
+
+    newCanvaWrapper.appendChild(grapTitleDiv); 
+    newCanvaWrapper.appendChild(weekSummaryTable);
+    newCanvaWrapper.appendChild(markAsCriticalDiv);
+    var brDiv = document.createElement("br");
+    newCanvaWrapper.appendChild(brDiv);
+    newCanvaWrapper.setAttribute("class","box canva-wrapper week-box");
+    if (numberOfMissesInWeek==0){
+        newCanvaWrapper.style.background="#daffd9";
+        newCanvaWrapper.style.border="1px solid rgb(167 211 162)"
+    } else if (numberOfMissesInWeek==1){
+        newCanvaWrapper.style.background="rgb(255 252 238)";
+        newCanvaWrapper.style.border="1px solid rgb(246 223 35)"
+    } else if (numberOfMissesInWeek>1){
+        newCanvaWrapper.style.background="white";
+    }
+    document.getElementById("no-week-summary").style.display = "none";
+    document.getElementById("week-summary-container").appendChild(newCanvaWrapper);
+
+}
+

@@ -57,7 +57,10 @@ sundayButtonInAddDiv.addEventListener('click', function(weekSelectionDiv,sundayB
 var setDayOfWeek = function(containerDiv, dayOfWeek,dayOfWeekDiv){
 
     var weekArrayString = containerDiv.getAttribute("weekday");
-    var weekArray = weekArrayString.split(" ");
+    var weekArray=[];
+    if (weekArrayString!=""){
+        weekArray = weekArrayString.split(" ");
+    }
 
     if (dayOfWeekDiv.classList.contains("selected")){
         dayOfWeekDiv.classList.remove("selected");
@@ -107,11 +110,8 @@ var isDayOfWeekInHabitWeeks = function(currentDate, stringOfWeekDays){
     debugWrite(arrayOfWeekDays.toString());
     
     const index = arrayOfWeekDays.indexOf(currentDayOfWeekString);
-    if (index > -1) {
-        return true;
-    }
-
-    return false;
+    
+    return (index > -1);
 }
 
 var dynamicWeekDaySelector = function(weekDay){
@@ -185,10 +185,7 @@ var isDayInListOfDaysString = function(dayToCheck, weekDayString){
     var arrayOfWeekDays = weekDayString.split(" ");
 
     const index = arrayOfWeekDays.indexOf(dayToCheck);
-    if (index > -1) {
-        return true;
-    }
-    return false;
+    return (index > -1);
 }
 
 var resetWeekDaySelector = function(weekDaySelector) {
@@ -196,8 +193,8 @@ var resetWeekDaySelector = function(weekDaySelector) {
     weekDaySelector.setAttribute("weekday","");
     var weekDays = weekDaySelector.getElementsByClassName("weekday");
 
-    for ( var i = 0; i < weekDays.length; i++){
-        weekDays[i].classList.remove("selected");
+    for ( var weekDay of weekDays){
+        weekDay.classList.remove("selected");
     }
 
 }

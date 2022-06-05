@@ -48,13 +48,13 @@ var readJournal = function(journalArray){
 		return ( convertJournalKeyToDateInt(b.key) - convertJournalKeyToDateInt(a.key))
 		});	
 
-    for ( var i=0; i< journalArray.length; i++){
-        var journalText = journalArray[i].text;
+    for ( var journalEntry of journalArray){
+        var journalText = journalEntry.text;
         if ( journalText.length > 0){
             var brDiv = document.createElement("br");
             var journalDiv = document.createElement("div");
             var dateDiv = document.createElement("div");
-            dateDiv.innerHTML = journalArray[i].key.substr(8);
+            dateDiv.innerHTML = journalEntry.key.substr(8);
             dateDiv.setAttribute("class","date-label");
             var textDiv = document.createElement("div");
             textDiv.innerHTML = journalText;

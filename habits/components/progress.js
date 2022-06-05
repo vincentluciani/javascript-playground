@@ -1,5 +1,5 @@
 
-var addElement = function(elementToAdd){
+var addProgressElement = function(elementToAdd){
 
     const newProgressDivision = document.createElement("div");
 
@@ -13,8 +13,6 @@ var addElement = function(elementToAdd){
     newProgressDivision.setAttribute("habitId",elementToAdd.habitId);
     newProgressDivision.setAttribute("isNegative", elementToAdd.isNegative);
     newProgressDivision.setAttribute("isCritical", elementToAdd.isCritical);
-
-    const dateDiv = document.createElement("div");
 
     const habitDescriptionText = document.createTextNode(elementToAdd.habitDescription);
     const targetValue = document.createElement("input");
@@ -41,9 +39,6 @@ var addElement = function(elementToAdd){
 
     progressInput.setAttribute("class","number-of-completion");
 
-    
-
-
     percentageCompletionInput.setAttribute("class","percentage-completion");
     percentageCompletionInput.setAttribute("progressDate",elementToAdd.progressDate);
     percentageCompletionInput.innerHTML = percentageCompletion.toString();
@@ -53,13 +48,20 @@ var addElement = function(elementToAdd){
     var expandButtonWrapper = document.createElement("span");
     expandButtonWrapper.setAttribute("class","plus-minus");
 
-    var expandButtonContainer = document.createElement("i");
+   /* var expandButtonContainer = document.createElement("i");
     expandButtonContainer.setAttribute("class","fa fa-plus");
-    expandButtonWrapper.appendChild(expandButtonContainer);
+    expandButtonWrapper.appendChild(expandButtonContainer);*/
+    expandButtonWrapper.innerHTML = expandIcon;
 
+    var taskIconContainer = document.createElement("div");
+    taskIconContainer.setAttribute("class","task-icon-container");/*
     var taskIcon = document.createElement("i");
     taskIcon.setAttribute("class","fa fa-tasks");
-    habitDescriptionContainer.appendChild(taskIcon);
+        taskIconContainer.appendChild(taskIcon);*/
+
+    taskIconContainer.innerHTML = taskIcon;
+
+    habitDescriptionContainer.appendChild(taskIconContainer);
     habitDescriptionContainer.appendChild(habitDescriptionText);
     newProgressDivision.appendChild(habitDescriptionContainer);
     newProgressDivision.appendChild(expandButtonWrapper);
@@ -71,8 +73,6 @@ var addElement = function(elementToAdd){
     currentProgressContainer.setAttribute("class","progress-container");
 
     if (elementToAdd.target > 1){
-    /*if (1==1){*/
-
         progressInput.setAttribute("type","number");
         progressInput.setAttribute("value",elementToAdd.numberOfCompletions);
         currentProgressContainer.appendChild(currentProgressText);
@@ -171,11 +171,11 @@ var addElement = function(elementToAdd){
             pushProgressToQueue(newProgressDivision);}
      }(newProgressDivision));
 
-     expandButtonContainer.addEventListener('click', function(expandButtonContainer,detailsArea) {
+     expandButtonWrapper.addEventListener('click', function(expandButtonWrapper,detailsArea) {
         return function(){
-            toggleExpandCollapse(expandButtonContainer,detailsArea);
+            toggleExpandCollapse(expandButtonWrapper,detailsArea);
         }
-     }(expandButtonContainer,detailsArea));
+     }(expandButtonWrapper,detailsArea));
 
      refreshProgress(newProgressDivision);
 
@@ -183,14 +183,122 @@ var addElement = function(elementToAdd){
 };
 
 var toggleExpandCollapse = function(toggleButton,divToTransform){
-
+/*
     const targetIsPlus = toggleButton.classList.toggle("fa-plus");
     const targetIsMinus = toggleButton.classList.toggle("fa-minus");
 
     if (targetIsPlus && !targetIsMinus){
         divToTransform.style.display = 'none';
+        toggleButton.innerHTML = expandIcon;
     } else {
         divToTransform.style.display = 'block';
+        toggleButton.innerHTML = collapseIcon;
+    }
+*/
+var currentFill = toggleButton.firstChild.getAttribute("fill");
+var currentStroke = toggleButton.firstChild.getAttribute("stroke");
+
+if (divToTransform.style.display=='block'){
+    divToTransform.style.display = 'none';
+    toggleButton.innerHTML = expandIcon;
+} else {
+    divToTransform.style.display = 'block';
+    toggleButton.innerHTML = collapseIcon;
+}
+toggleButton.firstChild.setAttribute("fill",currentFill);
+toggleButton.firstChild.setAttribute("stroke",currentStroke);
+}
+
+
+function renderPastProgressBoxes(){
+    for (const habitsElement of dataArrays.pastProgressArray){
+        addProgressElement(habitsElement);
+    }
+
+    applyFilters();
+    saveLoop();
+}
+
+
+var refreshProgress = function(currentDiv){
+    var newCompletion = currentDiv.getElementsByClassName("number-of-completion")[0];
+    var newCompletionPercentage = 0;
+
+    var isNegative = currentDiv.getAttribute("isNegative"); 
+    if (isNegative != null && isNegative == "true"){
+        if ( newCompletion.value <= parseInt(currentDiv.getAttribute("target")) ){
+            newCompletionPercentage = 100;
+        } 
+    } else {
+        newCompletionPercentage = Math.round(newCompletion.value * 100 / parseInt(currentDiv.getAttribute("target")));
+    }
+
+    currentDiv.getElementsByClassName("percentage-completion")[0].innerHTML = newCompletionPercentage;
+
+    setDivAppearanceBasedOnCompletion(currentDiv,newCompletionPercentage);
+
+    updateDailyProgress();
+
+}
+
+var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletionPercentage){
+
+    if (newCompletionPercentage>=100){
+        currentDiv.style.border="3px solid rgb(167 211 162)";
+        currentDiv.style.order="95";
+        currentDiv.style.background="#daffd9";
+    } else if (newCompletionPercentage>=50){
+        currentDiv.style.border="3px solid rgb(246 223 35)";
+        currentDiv.style.background="rgb(255 251 234)";
+        currentDiv.style.order="70";
+    } else if (newCompletionPercentage<50){
+        currentDiv.style.border="3px solid #c369bc";
+        currentDiv.style.background="white";
+        currentDiv.style.order="70";
+    }
+    if (currentDiv.id && currentDiv.id == "daily-summary-container"){
+        currentDiv.style.order = "90";
     }
 
 }
+
+var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
+    var plusMinusDiv = currentDiv.getElementsByClassName("plus-minus")[0];
+    var taskIconDiv;
+
+    if (newCompletionPercentage <100 ){
+        currentDiv.style.order = "60";
+        currentDiv.style.border="3px solid red"; 
+        currentDiv.style.background="#fff1f1";
+
+        taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
+        if (taskIconDiv && plusMinusDiv){
+            taskIconDiv.innerHTML=warningIcon;
+            /*taskIconDiv.setAttribute("stroke","red");
+            taskIconDiv.setAttribute("fill","red");      */     
+            /*currentDiv.getElementsByClassName("fa")[0].classList.add("fa-warning");*/
+            currentDiv.getElementsByClassName("habit-description")[0].classList.add("red");
+            /*plusMinusDiv.style.color="red";*/
+     
+        }
+        plusMinusDiv.firstChild.setAttribute("stroke","red");
+        plusMinusDiv.firstChild.setAttribute("fill","red");
+
+    } else if (newCompletionPercentage >=100){
+        currentDiv.style.border="3px solid rgb(167 211 162)"; 
+        taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
+        if (taskIconDiv && plusMinusDiv){
+            /*taskIconDiv.classList.remove("fa-warning");
+            currentDiv.getElementsByClassName("fa")[0].classList.add("fa-tasks");*/
+            taskIconDiv.innerHTML=taskIcon;
+           /* taskIconDiv.setAttribute("stroke","black");
+            taskIconDiv.setAttribute("fill","black");  */
+            currentDiv.getElementsByClassName("habit-description")[0].classList.remove("red");
+            /*plusMinusDiv.style.color="#b657af";*/
+            
+        }    
+        plusMinusDiv.firstChild.setAttribute("stroke","#b657af");
+        plusMinusDiv.firstChild.setAttribute("fill","#b657af");
+    }
+}
+

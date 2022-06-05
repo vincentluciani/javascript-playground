@@ -11,11 +11,16 @@ var addHabitElement = function(elementToAdd){
     newHabitDivision.setAttribute("isCritical",elementToAdd.isCritical);
 
     const titleText = document.createTextNode("Update habit:");
-    var taskIcon = document.createElement("i");
+    var taskIconContainer = document.createElement("div");
+    taskIconContainer.setAttribute("class","task-icon-container");/*
+    /*var taskIcon = document.createElement("i");
     taskIcon.setAttribute("class","fa fa-tasks");
+    var taskIconSvg= taskIcon;
+    */
+    taskIconContainer.innerHTML = taskIcon;
 
     const titleTextDiv = document.createElement("div");
-    titleTextDiv.appendChild(taskIcon);
+    titleTextDiv.appendChild(taskIconContainer);
     titleTextDiv.appendChild(titleText);
 
     titleTextDiv.setAttribute("class", "habit-title");
@@ -67,25 +72,42 @@ var addHabitElement = function(elementToAdd){
     var onClickSaveFunctionCall = "saveChangesInHabit(" + elementToAdd.habitId.toString()+ ")";
     saveButton.setAttribute("onClick",onClickSaveFunctionCall);
     saveButton.setAttribute("class","add-button");
-    saveButton.innerHTML = '<i class="fa fa-save"></i> Save';
+    saveButton.innerHTML = '<div class="action-icon-container save-icon">'+saveIcon+'</div>Save';
     newHabitDivision.appendChild(saveButton);
 
     const deleteButton = document.createElement("div");
     var onClickFunctionCall = "requestHabitDeletion(" + elementToAdd.habitId.toString()+ ")";
     deleteButton.setAttribute("onClick",onClickFunctionCall);
     deleteButton.setAttribute("class","add-button");
-    deleteButton.innerHTML = '<i class="fa fa-trash"></i> Delete';
+    deleteButton.innerHTML = '<div class="action-icon-container delete-icon">'+deleteIcon+'</div>Delete';
     newHabitDivision.appendChild(deleteButton);
 
-
-
     document.getElementById('habits-definition-container').appendChild(newHabitDivision);
-
-
 }
+
+/* part of the form to add a new habit */
+var plusButtonInAddDiv = document.getElementById("plus-in-add-div");
+var minusButtonInAddDiv = document.getElementById("minus-in-add-div");
+var newTargetDiv = document.getElementById("new-target");
+
+plusButtonInAddDiv.addEventListener('click', function(targetDiv) {
+    return function(){
+        addOneToProgress(targetDiv);
+    }
+}(newTargetDiv));
+
+minusButtonInAddDiv.addEventListener('click', function(targetDiv) {
+    return function(){
+        minusOneToProgress(targetDiv);
+    }
+}(newTargetDiv));
+/* -- */
 
 var closeDeleteMessage = function(){
     document.getElementById("delete-message").style.display="none";
+}
+var closeSaveMessage = function(){
+    document.getElementById("save-message").style.display="none";
 }
 var requestHabitDeletion = function(habitId){
 
@@ -119,7 +141,6 @@ var deleteProgressFromHabitToday = function(habitId){
         var progressHabitId = progressDivs[i].getAttribute("habitid");
         var progressDate = progressDivs[i].getAttribute("progressDate");
 
-        /*var currentDateString = currentDateTime.getFullYear().toString().padStart(2,'0')+'-'+(currentDateTime.getMonth()+1).toString().padStart(2,'0')+'-'+currentDateTime.getDate().toString().padStart(2,'0'); */
         var currentDateString = formatDate(currentDateTime); 
 
         if ( (currentDateString == progressDate) && ( progressHabitId == habitId)) {
@@ -130,7 +151,87 @@ var deleteProgressFromHabitToday = function(habitId){
         }
     }
 
-
-
-
 }
+
+var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
+
+    var newCurrentDateTime = new Date();
+
+    var currentDateTimeMidnight = newCurrentDateTime.setHours(0,0,0,0);
+    var inputDateTimeMidnight = inputDateTime.setHours(0,0,0,0);
+    
+    if ( inputDateTimeMidnight > currentDateTimeMidnight){
+        return;
+    }
+
+    var progressElements = document.getElementsByClassName('habit-update');
+    var habitsElements = document.getElementsByClassName('habit-setting');
+
+    var habitsElementsLength = habitsElements.length;
+    for (var i=0; i<habitsElementsLength ;i++){
+
+        var isHabitProgressExisting = false;
+
+        for (var progressElement of progressElements){
+            if ( habitsElements[i].getAttribute("habitId") == progressElement.getAttribute("habitId") && progressElement.getAttribute("progressdate") == inputDate){
+                isHabitProgressExisting = true;
+            }
+        }
+
+        if ( !isHabitProgressExisting){
+            var isDayOK;
+            if (habitsElements[i].getAttribute("weekDay")){
+                debugWrite("Comparing current date time with habit week day");
+                debugWrite("Current date time:");
+                debugWrite(inputDateTime);
+                debugWrite("Habit week day:");
+                debugWrite(habitsElements[i].getAttribute("weekDay"));
+                debugWrite("Is critical?:");
+                debugWrite(habitsElements[i].getAttribute("iscritical"));
+                
+                isDayOK = isDayOfWeekInHabitWeeks(inputDateTime, habitsElements[i].getAttribute("weekDay"));
+            } else {
+                isDayOK = true;
+            }
+            if (isDayOK != null && isDayOK) {
+                let newProgressObject = {
+                    id: Date.now()*100+i,
+                    habitId: habitsElements[i].getAttribute("habitId"),
+                    habitDescription: habitsElements[i].getAttribute("habitDescription"),
+                    target: habitsElements[i].getAttribute("target"),
+                    progressDate: inputDate,
+                    isNew: true,
+                    isCritical: habitsElements[i].getAttribute("iscritical"),
+                    numberOfCompletions:0,
+                }
+                addProgressElement(newProgressObject);
+                console.log("added progress");
+                console.log(newProgressObject);
+                pushProgressArrayToQueue(newProgressObject);
+            }
+        }
+    }
+    /* go through all elements, if nothing with today's date, go through all habits and add new element with this habit id*/
+}
+
+var resetElementsOnNewHabitForm = function(){
+    var testElements = document.getElementsByClassName('habit-update');
+    for (const testElement of testElements){
+        var currentDiv = testElement;
+        currentDiv.style.display = 'block';
+        /*target number of completion on new habit form */
+        var progressClasses = currentDiv.getElementsByClassName("number-of-completion");
+        var progressDiv = progressClasses[0];
+
+        if (progressDiv != null){
+            refreshProgress(currentDiv);
+            progressDiv.addEventListener('change', function(inputDiv) {
+                return function(){
+                    refreshProgress(inputDiv);
+                    
+                }
+             }(currentDiv));
+        }    
+    }
+    return testElements;
+};
