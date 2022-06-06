@@ -175,7 +175,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
 }
 .box.habit-update{
     background-color: #fcfbfb;
-    order: 70;
+    order: 80;
 }
 
 .box.big-action-button:hover{

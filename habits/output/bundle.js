@@ -275,7 +275,7 @@ var checkIfChartLoaded = function(resolve, reject,totalWaitingTime){
 }
 
 
-var addHabitElement = function(elementToAdd){
+var addHabitDOMElement = function(elementToAdd){
     const newHabitDivision = document.createElement("div");
 
     newHabitDivision.setAttribute("habitDescription", elementToAdd.habitDescription);
@@ -481,7 +481,7 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
                     isCritical: habitsElements[i].getAttribute("iscritical"),
                     numberOfCompletions:0,
                 }
-                addProgressElement(newProgressObject);
+                addProgressDOMElement(newProgressObject);
                 console.log("added progress");
                 console.log(newProgressObject);
                 pushProgressArrayToQueue(newProgressObject);
@@ -629,7 +629,7 @@ var readJournal = function(journalArray){
 
 
 
-var addProgressElement = function(elementToAdd){
+var addProgressDOMElement = function(elementToAdd){
 
     const newProgressDivision = document.createElement("div");
 
@@ -843,7 +843,7 @@ toggleButton.firstChild.setAttribute("stroke",currentStroke);
 function renderPastProgressBoxes(){
     if (dataArrays.pastProgressArray){
         for (const habitsElement of dataArrays.pastProgressArray){
-            addProgressElement(habitsElement);
+            addProgressDOMElement(habitsElement);
         }
     }
 
@@ -1892,13 +1892,13 @@ onload = function(){
 
     if (dataArrays.todaysProgressArray){
         for (const progressElement of dataArrays.todaysProgressArray){
-            addProgressElement(progressElement);
+            addProgressDOMElement(progressElement);
         }
     }
  
     if (dataArrays.habitsArray){
         for (const habitsElement of dataArrays.habitsArray){
-            addHabitElement(habitsElement);
+            addHabitDOMElement(habitsElement);
         }
     }
     /* TODO : should be based on arrays and not on DOM */
@@ -2104,10 +2104,10 @@ var addNewHabitFromForm = function(){
     }
     if (isDayOK != null && isDayOK)
     {
-        addProgressElement(elementToAdd);
+        addProgressDOMElement(elementToAdd);
         pushProgressArrayToQueue(elementToAdd);
     }
-    addHabitElement(elementToAdd);
+    addHabitDOMElement(elementToAdd);
     
     document.getElementById('new-description').value = null;
     document.getElementById('new-target').value = 1;

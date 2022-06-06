@@ -87,13 +87,13 @@ var renderApplication = async function(){
 
     if (dataArrays.todaysProgressArray){
         for (const progressElement of dataArrays.todaysProgressArray){
-            addProgressElement(progressElement);
+            addProgressDOMElement(progressElement);
         }
     }
  
     if (dataArrays.habitsArray){
         for (const habitsElement of dataArrays.habitsArray){
-            addHabitElement(habitsElement);
+            addHabitDOMElement(habitsElement);
         }
     }
     /* TODO : should be based on arrays and not on DOM */
@@ -262,89 +262,6 @@ var addOneToProgress = function(divElement){
     divElement.value = (parseInt(divElement.value) + 1).toString();
 }
 
-/* Get information from the form to add new habits and add a PROGRESS (dom+memory for both)*/
-/* CAREFUL elementToAdd has data to build A PROGRESS */ 
-/* both habit and progress are added with this function */
-var addNewHabitFromForm = function(){
-
-    var elementToAdd={};
-    var newId = Date.now();
-    elementToAdd.id = newId.toString();
-    elementToAdd.habitId = (newId * 10).toString();
-    elementToAdd.habitDescription = document.getElementById('new-description').value;
-    elementToAdd.target = parseInt(document.getElementById('new-target').value);
-    elementToAdd.isNegative = document.getElementById('new-is-negative-flag').checked;
-    elementToAdd.progressDate = currentDate;
-    elementToAdd.numberOfCompletions = 0;
-    elementToAdd.isNew = true;
-    elementToAdd.isCritical = "false";
-    var weekDaySelector = document.getElementById('week-day-selection');
-    
-    elementToAdd.weekDay = weekDaySelector.getAttribute('weekDay');
-    if ( elementToAdd.weekDay == ""){
-        elementToAdd.weekDay ='monday tuesday wednesday thursday friday saturday sunday';
-    }
-
-    var isDayOK;
-    if (elementToAdd.weekDay){
-        isDayOK = isDayOfWeekInHabitWeeks(currentDateTime, elementToAdd.weekDay);
-    } else {
-        isDayOK = true;
-    }
-    if (isDayOK != null && isDayOK)
-    {
-        addProgressElement(elementToAdd);
-        pushProgressArrayToQueue(elementToAdd);
-    }
-    addHabitElement(elementToAdd);
-    
-    document.getElementById('new-description').value = null;
-    document.getElementById('new-target').value = 1;
-    document.getElementById('new-is-negative-flag').checked = false;
-    resetWeekDaySelector(weekDaySelector);
-
-    showProgressTab();
-
-    showStartProgressButtonOnHabits();
-
-    saveChangesInHabitFromObject(elementToAdd);
-
-    confirmAddition(elementToAdd.habitId);
-};
-
-var saveChangesInHabit = function(habitId){
-    var habitDiv = document.getElementById(habitId);
-    var habitJSON = habitDOMToJson(habitDiv);
-    pushHabitArrayToQueue(habitJSON);
-    confirmSave();
-
-}
-var setHabitAsCritical = function(habitId){
-    var habitDiv = document.getElementById(habitId);
-    var habitJSON = habitDOMToJson(habitDiv);
-    habitJSON.isCritical="true";
-    pushHabitArrayToQueue(habitJSON);
-};
-var unsetHabitAsCritical = function(habitId){
-    var habitDiv = document.getElementById(habitId);
-    var habitJSON = habitDOMToJson(habitDiv);
-    habitJSON.isCritical="false";
-    pushHabitArrayToQueue(habitJSON);
-};
-
-var saveChangesInHabitFromObject = function(habitElement){
-
-    var habitJSON = {};
-    habitJSON.habitId = habitElement.habitId;
-    habitJSON.isNegative = habitElement.isNegative;
-    habitJSON.habitDescription = habitElement.habitDescription;
-    habitJSON.target = habitElement.target;
-    habitJSON.weekDay = habitElement.weekDay;
-
-    pushHabitArrayToQueue(habitJSON);
-    
-};
-
 
 var closeAdditionConfirmation = function(){
     document.getElementById("addition-message").style.display="none";
@@ -365,7 +282,7 @@ var confirmSave = function(){
 };
 
 
-var extractElementsForUpdateLoggedIn = function(progressElements){
+/*var extractElementsForUpdateLoggedIn = function(progressElements){
     var outputElements = [];
     var progressElementsLength = progressElements.length;
     for (var i=0; i<progressElementsLength   && i < maxForNonLoggedIn; i++){
@@ -374,13 +291,14 @@ var extractElementsForUpdateLoggedIn = function(progressElements){
     }
 
     console.log(outputElements);
-};
+};*/
 
 /* Read habit from the dom and put it in json ( then it can be saved ) */
 var habitDOMToJson = function(elementToRead){
     var outputJson = {};
     outputJson.habitId = elementToRead.getAttribute("habitId");
     outputJson.isNegative = elementToRead.getAttribute("isNegative");
+    outputJson.order = elementToRead.getAttribute("order");
     outputJson.habitDescription = elementToRead.getElementsByClassName('habit-description-definition')[0].value;
     outputJson.target = parseInt(elementToRead.getElementsByClassName('habit-target-definition')[0].value);
     outputJson.weekDay = elementToRead.getElementsByClassName("week-day-selection")[0].getAttribute("weekDay");
@@ -399,6 +317,7 @@ var progressDOMToJson = function(elementToRead){
     outputJson.isNew = elementToRead.getAttribute("isNew");
     outputJson.isNegative = elementToRead.getAttribute("isNegative");
     outputJson.isCritical = elementToRead.getAttribute("isCritical");
+    outputJson.order = elementToRead.getAttribute("order")?elementToRead.getAttribute("order"):80;
     outputJson.numberOfCompletions = parseInt(elementToRead.getElementsByClassName("number-of-completion")[0].value);
 
     return outputJson;

@@ -1,5 +1,5 @@
 
-var addProgressElement = function(elementToAdd){
+var addProgressDOMElement = function(elementToAdd){
 
     const newProgressDivision = document.createElement("div");
 
@@ -13,6 +13,7 @@ var addProgressElement = function(elementToAdd){
     newProgressDivision.setAttribute("habitId",elementToAdd.habitId);
     newProgressDivision.setAttribute("isNegative", elementToAdd.isNegative);
     newProgressDivision.setAttribute("isCritical", elementToAdd.isCritical);
+    newProgressDivision.setAttribute("order", elementToAdd.order?elementToAdd.order:80);
 
     const habitDescriptionText = document.createTextNode(elementToAdd.habitDescription);
     const targetValue = document.createElement("input");
@@ -213,7 +214,7 @@ toggleButton.firstChild.setAttribute("stroke",currentStroke);
 function renderPastProgressBoxes(){
     if (dataArrays.pastProgressArray){
         for (const habitsElement of dataArrays.pastProgressArray){
-            addProgressElement(habitsElement);
+            addProgressDOMElement(habitsElement);
         }
     }
 
@@ -252,11 +253,11 @@ var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletio
     } else if (newCompletionPercentage>=50){
         currentDiv.style.border="3px solid rgb(246 223 35)";
         currentDiv.style.background="rgb(255 251 234)";
-        currentDiv.style.order="70";
+        /*currentDiv.style.order="80";*/
     } else if (newCompletionPercentage<50){
         currentDiv.style.border="3px solid #c369bc";
         currentDiv.style.background="white";
-        currentDiv.style.order="70";
+        /*currentDiv.style.order="80";*/
     }
     if (currentDiv.id && currentDiv.id == "daily-summary-container"){
         currentDiv.style.order = "90";
@@ -304,3 +305,64 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
     }
 }
 
+var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
+
+    var newCurrentDateTime = new Date();
+
+    var currentDateTimeMidnight = newCurrentDateTime.setHours(0,0,0,0);
+    var inputDateTimeMidnight = inputDateTime.setHours(0,0,0,0);
+    
+    if ( inputDateTimeMidnight > currentDateTimeMidnight){
+        return;
+    }
+
+    var progressElements = document.getElementsByClassName('habit-update');
+    var habitsElements = document.getElementsByClassName('habit-setting');
+
+    var habitsElementsLength = habitsElements.length;
+    for (var i=0; i<habitsElementsLength ;i++){
+
+        var isHabitProgressExisting = false;
+
+        for (var progressElement of progressElements){
+            if ( habitsElements[i].getAttribute("habitId") == progressElement.getAttribute("habitId") && progressElement.getAttribute("progressdate") == inputDate){
+                isHabitProgressExisting = true;
+            }
+        }
+
+        if ( !isHabitProgressExisting){
+            var isDayOK;
+            if (habitsElements[i].getAttribute("weekDay")){
+                debugWrite("Comparing current date time with habit week day");
+                debugWrite("Current date time:");
+                debugWrite(inputDateTime);
+                debugWrite("Habit week day:");
+                debugWrite(habitsElements[i].getAttribute("weekDay"));
+                debugWrite("Is critical?:");
+                debugWrite(habitsElements[i].getAttribute("iscritical"));
+                
+                isDayOK = isDayOfWeekInHabitWeeks(inputDateTime, habitsElements[i].getAttribute("weekDay"));
+            } else {
+                isDayOK = true;
+            }
+            if (isDayOK != null && isDayOK) {
+                let newProgressObject = {
+                    id: Date.now()*100+i,
+                    habitId: habitsElements[i].getAttribute("habitId"),
+                    habitDescription: habitsElements[i].getAttribute("habitDescription"),
+                    target: habitsElements[i].getAttribute("target"),
+                    progressDate: inputDate,
+                    isNew: true,
+                    isCritical: habitsElements[i].getAttribute("iscritical"),
+                    order: habitsElements[i].getAttribute("order")?habitsElements[i].getAttribute("order"):80,
+                    numberOfCompletions:0,
+                }
+                addProgressDOMElement(newProgressObject);
+                console.log("added progress");
+                console.log(newProgressObject);
+                pushProgressArrayToQueue(newProgressObject);
+            }
+        }
+    }
+    /* go through all elements, if nothing with today's date, go through all habits and add new element with this habit id*/
+}
