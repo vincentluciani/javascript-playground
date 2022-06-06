@@ -2125,20 +2125,20 @@ var addNewHabitFromForm = function(){
 
 var saveChangesInHabit = function(habitId){
     var habitDiv = document.getElementById(habitId);
-    var habitJSON = readHabitElement(habitDiv);
+    var habitJSON = habitDOMToJson(habitDiv);
     pushHabitArrayToQueue(habitJSON);
     confirmSave();
 
 }
 var setHabitAsCritical = function(habitId){
     var habitDiv = document.getElementById(habitId);
-    var habitJSON = readHabitElement(habitDiv);
+    var habitJSON = habitDOMToJson(habitDiv);
     habitJSON.isCritical="true";
     pushHabitArrayToQueue(habitJSON);
 };
 var unsetHabitAsCritical = function(habitId){
     var habitDiv = document.getElementById(habitId);
-    var habitJSON = readHabitElement(habitDiv);
+    var habitJSON = habitDOMToJson(habitDiv);
     habitJSON.isCritical="false";
     pushHabitArrayToQueue(habitJSON);
 };
@@ -2187,7 +2187,7 @@ var extractElementsForUpdateLoggedIn = function(progressElements){
     console.log(outputElements);
 };
 
-var readHabitElement = function(elementToRead){
+var habitDOMToJson = function(elementToRead){
     var outputJson = {};
     outputJson.habitId = elementToRead.getAttribute("habitId");
     outputJson.isNegative = elementToRead.getAttribute("isNegative");

@@ -6,22 +6,24 @@
 
 var getHabitProgressJournal = async function() {
 
+
     if (loggedIn){
-        var APIcallParameters = {
-            method: "GET",
-            url: `http://localhost:5000/get-habit-progress-journal?user="${apiUser}"`
-        };
+        var url = `http://localhost:5000/get-habit-progress-journal?user="${apiUser}"`;
         var response;
         try {
-            response = await APICall(APIcallParameters);
+            response = await fetch(url);
         } catch (e) {
             console.log('could not connect to the server');
             console.log(e);
             return getHabitProgressJournalFromStorage();
         } 
-
-        return response
-
+        if (response.status == '200'){
+            return response.json();
+        } else {
+            console.log('status of the api call:'+response.status);
+            return getHabitProgressJournalFromStorage();
+        }
+ 
     } else {
 
         return getHabitProgressJournalFromStorage();
