@@ -14,7 +14,7 @@ var radialProgressParameters = {
     anchorDivId: "daily-summary",
     suffixForIds: "12345"
 }
- 
+
 var currentDateTime = new Date();
 console.log("starting javascript:"+currentDateTime.toString());
 
