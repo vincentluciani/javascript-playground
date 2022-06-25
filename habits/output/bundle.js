@@ -287,6 +287,11 @@ var addHabitDOMElement = function(elementToAdd){
     newHabitDivision.setAttribute("isNegative",elementToAdd.isNegative);
     newHabitDivision.setAttribute("isCritical",elementToAdd.isCritical);
 
+    var minOrder = 80;
+    var habitOrder = elementToAdd.order?elementToAdd.order:minOrder;
+    newHabitDivision.style.order = habitOrder
+    newHabitDivision.setAttribute("order",habitOrder);
+
     const titleText = document.createTextNode("Update habit:");
     var taskIconContainer = document.createElement("div");
     taskIconContainer.setAttribute("class","task-icon-container");/*
@@ -330,20 +335,111 @@ var addHabitDOMElement = function(elementToAdd){
     var weekDaySelector = dynamicWeekDaySelector(elementToAdd.weekDay);
     newHabitDivision.appendChild(weekDaySelector);
 
+    /* PRIORITY */
+    const priorityText = document.createTextNode("Priority (1 is highest):");
+    const priorityTextDiv = document.createElement("div");
+    priorityTextDiv.appendChild(priorityText);
+
+    const priorityValue = document.createElement("input");
+    
+    priorityValue.setAttribute("class","habit-target-definition");
+    priorityValue.setAttribute("type","number");
+
+    priorityValue.value = parseInt(newHabitDivision.getAttribute("order",habitOrder))-minOrder;
+
+    priorityValue.addEventListener('input', function(habitDivision) {
+        return function(){
+            var newOrderInt = minOrder+parseInt(this.value);
+            habitDivision.setAttribute("order",newOrderInt.toString());
+        }
+    }(newHabitDivision));
+    /*var prioSetting = document.createElement("div");
+    prioSetting.setAttribute("class","prio-settings");
+    var laterButtonPrioText = document.createTextNode("Later");
+    var laterButtonPrio = document.createElement("div");
+    laterButtonPrio.appendChild(laterButtonPrioText);
+    laterButtonPrio.setAttribute("class","later-button normal");
+
+    var earlierButtonPrioText = document.createTextNode("Earlier");
+    var earlierButtonPrio = document.createElement("div");
+    earlierButtonPrio.appendChild(earlierButtonPrioText);
+    earlierButtonPrio.setAttribute("class","earlier-button normal");
+
+
+    laterButtonPrio.addEventListener('click', function(habitDivision) {
+        return function(){
+            var newOrder = habitDivision.getAttribute("order",habitOrder)+1;
+            if (newOrder>80){
+                newOrder=80;
+            }
+            habitDivision.style.order = newOrder
+            habitDivision.setAttribute("order",newOrder);
+        }
+    }(newHabitDivision));
+
+    earlierButtonPrio.addEventListener('click', function(habitDivision) {
+        return function(){
+            var newOrder = habitDivision.getAttribute("order",habitOrder)-1;
+            if (newOrder<60){
+                newOrder=60;
+            }
+            habitDivision.style.order = newOrder
+            habitDivision.setAttribute("order",newOrder);
+        }
+    }(newHabitDivision));
+
+    prioSetting.appendChild(earlierButtonPrio);
+    prioSetting.appendChild(laterButtonPrio);
+    newHabitDivision.appendChild(prioSetting);
+    */
+    newHabitDivision.appendChild(priorityTextDiv);
+    newHabitDivision.appendChild(priorityValue);
+    /* end priority */
+
+/* IS CRITICAL */
     const isCriticalDivText = document.createElement("div");
+    isCriticalDivText.setAttribute("class","input-title")
     isCriticalDivText.innerHTML="Critical:";
+    newHabitDivision.appendChild(isCriticalDivText);
+
+    var checkBoxContainer = document.createElement("label");
+    checkBoxContainer.setAttribute("class","custom-checkbox-container")
+
     const isCritical = document.createElement("input");
-    isCritical.setAttribute("type","checkbox");
-    isCritical.setAttribute("class","simple-checkbox");
     isCritical.setAttribute("id","is-critical");
+    isCritical.setAttribute("class","simple-checkbox");
     if (elementToAdd.isCritical!=null && elementToAdd.isCritical == "true") {
         isCritical.checked = true;  
     } else if (elementToAdd.isCritical == "false"){
         isCritical.checked = false;
     }
     isCritical.value=isCritical.checked;
-    newHabitDivision.appendChild(isCriticalDivText);
-    newHabitDivision.appendChild(isCritical);
+
+
+    var checkMark = document.createElement("span");
+    checkMark.setAttribute("class","checkmark");
+
+    isCritical.setAttribute("type","checkbox");
+
+    /*isCritical.addEventListener('click', function(newProgressDivision) {
+        return function(){
+            var progressInput = newProgressDivision.getElementsByClassName("number-of-completion")[0];         
+            if (progressInput.checked == true){
+                progressInput.setAttribute("value","1");
+            } else {
+                progressInput.setAttribute("value","0");
+            }
+            refreshProgress(newProgressDivision);
+            console.log("added progress");
+            console.log(newProgressDivision);
+            pushProgressToQueue(newProgressDivision);
+        }
+    }(newHabitDivision));*/
+
+    checkBoxContainer.appendChild(isCritical);
+    checkBoxContainer.appendChild(checkMark);
+    newHabitDivision.appendChild(checkBoxContainer);
+
 
     const saveButton = document.createElement("div");
     var onClickSaveFunctionCall = "saveChangesInHabit(" + elementToAdd.habitId.toString()+ ")";
@@ -407,7 +503,7 @@ var deleteHabit = function(habitId){
     var habitKey = "habit-"+habitId.toString();
     var element = document.getElementById(habitId.toString());
     element.parentNode.removeChild(element);
-    window.localStorage.removeItem(habitKey);
+    removeItemByKey(habitKey);
 }
 
 var deleteProgressFromHabitToday = function(habitId){
@@ -424,72 +520,13 @@ var deleteProgressFromHabitToday = function(habitId){
             var progressId = progressDivs[i].getAttribute("id");
             progressDivs[i].parentNode.removeChild(progressDivs[i]);
             var progressKey = "progress-"+progressId.toString();
-            window.localStorage.removeItem(progressKey);
+            removeItemByKey(progressKey);
         }
     }
 
 }
 
-var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
 
-    var newCurrentDateTime = new Date();
-
-    var currentDateTimeMidnight = newCurrentDateTime.setHours(0,0,0,0);
-    var inputDateTimeMidnight = inputDateTime.setHours(0,0,0,0);
-    
-    if ( inputDateTimeMidnight > currentDateTimeMidnight){
-        return;
-    }
-
-    var progressElements = document.getElementsByClassName('habit-update');
-    var habitsElements = document.getElementsByClassName('habit-setting');
-
-    var habitsElementsLength = habitsElements.length;
-    for (var i=0; i<habitsElementsLength ;i++){
-
-        var isHabitProgressExisting = false;
-
-        for (var progressElement of progressElements){
-            if ( habitsElements[i].getAttribute("habitId") == progressElement.getAttribute("habitId") && progressElement.getAttribute("progressdate") == inputDate){
-                isHabitProgressExisting = true;
-            }
-        }
-
-        if ( !isHabitProgressExisting){
-            var isDayOK;
-            if (habitsElements[i].getAttribute("weekDay")){
-                debugWrite("Comparing current date time with habit week day");
-                debugWrite("Current date time:");
-                debugWrite(inputDateTime);
-                debugWrite("Habit week day:");
-                debugWrite(habitsElements[i].getAttribute("weekDay"));
-                debugWrite("Is critical?:");
-                debugWrite(habitsElements[i].getAttribute("iscritical"));
-                
-                isDayOK = isDayOfWeekInHabitWeeks(inputDateTime, habitsElements[i].getAttribute("weekDay"));
-            } else {
-                isDayOK = true;
-            }
-            if (isDayOK != null && isDayOK) {
-                let newProgressObject = {
-                    id: Date.now()*100+i,
-                    habitId: habitsElements[i].getAttribute("habitId"),
-                    habitDescription: habitsElements[i].getAttribute("habitDescription"),
-                    target: habitsElements[i].getAttribute("target"),
-                    progressDate: inputDate,
-                    isNew: true,
-                    isCritical: habitsElements[i].getAttribute("iscritical"),
-                    numberOfCompletions:0,
-                }
-                addProgressDOMElement(newProgressObject);
-                console.log("added progress");
-                console.log(newProgressObject);
-                pushProgressArrayToQueue(newProgressObject);
-            }
-        }
-    }
-    /* go through all elements, if nothing with today's date, go through all habits and add new element with this habit id*/
-}
 
 var resetElementsOnNewHabitForm = function(){
     var testElements = document.getElementsByClassName('habit-update');
@@ -512,6 +549,92 @@ var resetElementsOnNewHabitForm = function(){
     }
     return testElements;
 };
+
+/* Get information from the form to add new habits and add a PROGRESS (dom+memory for both)*/
+/* CAREFUL elementToAdd has data to build A PROGRESS */ 
+/* both habit and progress are added with this function */
+var addNewHabitFromForm = function(){
+
+    var elementToAdd={};
+    var newId = Date.now();
+    elementToAdd.id = newId.toString();
+    elementToAdd.habitId = (newId * 10).toString();
+    elementToAdd.habitDescription = document.getElementById('new-description').value;
+    elementToAdd.target = parseInt(document.getElementById('new-target').value);
+    elementToAdd.isNegative = document.getElementById('new-is-negative-flag').checked;
+    elementToAdd.progressDate = currentDate;
+    elementToAdd.numberOfCompletions = 0;
+    elementToAdd.isNew = true;
+    elementToAdd.isCritical = "false";
+    elementToAdd.order=70;
+    var weekDaySelector = document.getElementById('week-day-selection');
+    
+    elementToAdd.weekDay = weekDaySelector.getAttribute('weekDay');
+    if ( elementToAdd.weekDay == ""){
+        elementToAdd.weekDay ='monday tuesday wednesday thursday friday saturday sunday';
+    }
+
+    var isDayOK;
+    if (elementToAdd.weekDay){
+        isDayOK = isDayOfWeekInHabitWeeks(currentDateTime, elementToAdd.weekDay);
+    } else {
+        isDayOK = true;
+    }
+    if (isDayOK != null && isDayOK)
+    {
+        addProgressDOMElement(elementToAdd);
+        pushProgressArrayToQueue(elementToAdd);
+    }
+    addHabitDOMElement(elementToAdd);
+    
+    document.getElementById('new-description').value = null;
+    document.getElementById('new-target').value = 1;
+    document.getElementById('new-is-negative-flag').checked = false;
+    resetWeekDaySelector(weekDaySelector);
+
+    showProgressTab();
+
+    showStartProgressButtonOnHabits();
+
+    saveChangesInHabitFromObject(elementToAdd);
+
+    confirmAddition(elementToAdd.habitId);
+};
+
+var saveChangesInHabit = function(habitId){
+    var habitDiv = document.getElementById(habitId);
+    var habitJSON = habitDOMToJson(habitDiv);
+    pushHabitArrayToQueue(habitJSON);
+    confirmSave();
+
+}
+var setHabitAsCritical = function(habitId){
+    var habitDiv = document.getElementById(habitId);
+    var habitJSON = habitDOMToJson(habitDiv);
+    habitJSON.isCritical="true";
+    pushHabitArrayToQueue(habitJSON);
+};
+var unsetHabitAsCritical = function(habitId){
+    var habitDiv = document.getElementById(habitId);
+    var habitJSON = habitDOMToJson(habitDiv);
+    habitJSON.isCritical="false";
+    pushHabitArrayToQueue(habitJSON);
+};
+
+var saveChangesInHabitFromObject = function(habitElement){
+
+    var habitJSON = {};
+    habitJSON.habitId = habitElement.habitId;
+    habitJSON.isNegative = habitElement.isNegative;
+    habitJSON.habitDescription = habitElement.habitDescription;
+    habitJSON.target = habitElement.target;
+    habitJSON.weekDay = habitElement.weekDay;
+
+    pushHabitArrayToQueue(habitJSON);
+    
+};
+
+
 /*var taskIcon = '<svg width="15px" height="15px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="none" fill="#000" stroke="#000" stroke-width="2" d="M12,20 L24,20 M12,12 L24,12 M12,4 L24,4 M1,19 L4,22 L9,17 M1,11 L4,14 L9,9 M9,1 L4,6 L1,3"/></svg>'
 */
 
@@ -557,12 +680,12 @@ var fullCircleRed = fullCirclePast.replace("#55d355","red");
 var minusIconGreen= '<svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" fill="#55d355" stroke="#55d355"  xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 50 50" style="enable-background:new 0 0 42 42;" xml:space="preserve"><path d="M37.059,16H26H16H4.941C2.224,16,0,18.282,0,21s2.224,5,4.941,5H16h10h11.059C39.776,26,42,23.718,42,21  S39.776,16,37.059,16z"/></svg>';
 
 var startIcon='<svg xmlns="http://www.w3.org/2000/svg" width="100px" height="100px" fill="#ffffff" stroke="#ffffff"  xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 485 485" style="enable-background:new 0 0 485 485;" xml:space="preserve"><g>	<path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5   s25.225,125.671,71.026,171.474C116.829,459.775,177.726,485,242.5,485s125.671-25.225,171.474-71.026   C459.775,368.171,485,307.274,485,242.5S459.775,116.829,413.974,71.026z M242.5,455C125.327,455,30,359.673,30,242.5   S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>	<polygon points="181.062,336.575 343.938,242.5 181.062,148.425  "/></g></svg>'
-var displayJournalEditBox = function(){
+var displayJournalEditBoxAsync = async function(){
     var progressDate = document.getElementById("date-filter").value;
     var editBox = document.getElementById("journal-edit-box");
     var editBoxTextBox = document.getElementById("daily-journal");
 
-    var currentText = getCurrentDateJournal(progressDate);
+    var currentText = await getCurrentDateJournal(progressDate);
     editBoxTextBox.value = "";
     if (currentText && currentText.length>0){
         editBoxTextBox.value = JSON.parse(currentText);
@@ -573,10 +696,18 @@ var displayJournalEditBox = function(){
     editBox.style.display="flex";
 };
 
-var getCurrentDateJournal = function(journalDate){
+var displayJournalEditBox = function(){
+    displayJournalEditBoxAsync().then(() => {
+        console.log('successfully displayed the journal');
+      }, reason => {
+        console.log(reason );
+      })
+}
 
-    return window.localStorage.getItem("journal-"+journalDate);
+var getCurrentDateJournal = async function(journalDate){
 
+    var journal = await getItemByKey("journal-"+journalDate);
+    return journal;
 }
 var closeJournal = function(){
     var editBox = document.getElementById("journal-edit-box");
@@ -607,11 +738,14 @@ var readJournal = function(journalArray){
 		return ( convertJournalKeyToDateInt(b.key) - convertJournalKeyToDateInt(a.key))
 		});	
 
+    document.getElementById("journal-container").innerHTML  = "";
+
     for ( var journalEntry of journalArray){
         var journalText = journalEntry.text;
         if ( journalText.length > 0){
             var brDiv = document.createElement("br");
             var journalDiv = document.createElement("div");
+            journalDiv.setAttribute("class","journal-container-day");
             var dateDiv = document.createElement("div");
             dateDiv.innerHTML = journalEntry.key.substr(8);
             dateDiv.setAttribute("class","date-label");
@@ -620,8 +754,8 @@ var readJournal = function(journalArray){
             textDiv.setAttribute("class","text-label");
             journalDiv.appendChild(dateDiv);
             journalDiv.appendChild(textDiv);   
-            journalDiv.appendChild(brDiv);
             document.getElementById("journal-container").appendChild(journalDiv);
+            document.getElementById("journal-container").appendChild(brDiv);
         }     
     }
 
@@ -643,6 +777,9 @@ var addProgressDOMElement = function(elementToAdd){
     newProgressDivision.setAttribute("habitId",elementToAdd.habitId);
     newProgressDivision.setAttribute("isNegative", elementToAdd.isNegative);
     newProgressDivision.setAttribute("isCritical", elementToAdd.isCritical);
+    var elementOrder = elementToAdd.order?elementToAdd.order:80;
+    newProgressDivision.setAttribute("order", elementOrder);
+    newProgressDivision.style.order = elementOrder;
 
     const habitDescriptionText = document.createTextNode(elementToAdd.habitDescription);
     const targetValue = document.createElement("input");
@@ -876,17 +1013,20 @@ var refreshProgress = function(currentDiv){
 var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletionPercentage){
 
     if (newCompletionPercentage>=100){
-        currentDiv.style.border="3px solid rgb(167 211 162)";
-        currentDiv.style.order="95";
+        currentDiv.style.borderColor="rgb(167 211 162)";
+        var newOrder = parseInt(currentDiv.getAttribute('order'))+100;
+        currentDiv.style.order=newOrder.toString();
         currentDiv.style.background="#daffd9";
     } else if (newCompletionPercentage>=50){
-        currentDiv.style.border="3px solid rgb(246 223 35)";
+        currentDiv.style.borderColor="rgb(246 223 35)";
         currentDiv.style.background="rgb(255 251 234)";
-        currentDiv.style.order="70";
+        currentDiv.style.order=currentDiv.getAttribute('order');
+        /*currentDiv.style.order="80";*/
     } else if (newCompletionPercentage<50){
-        currentDiv.style.border="3px solid #c369bc";
+        currentDiv.style.borderColor="lightgrey";
         currentDiv.style.background="white";
-        currentDiv.style.order="70";
+        currentDiv.style.order=currentDiv.getAttribute('order');
+        /*currentDiv.style.order="80";*/
     }
     if (currentDiv.id && currentDiv.id == "daily-summary-container"){
         currentDiv.style.order = "90";
@@ -899,8 +1039,8 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
     var taskIconDiv;
 
     if (newCompletionPercentage <100 ){
-        currentDiv.style.order = "60";
-        currentDiv.style.border="3px solid red"; 
+        /*currentDiv.style.order = "60";*/
+        currentDiv.style.borderColor="red"; 
         currentDiv.style.background="#fff1f1";
 
         taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
@@ -917,7 +1057,7 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
         plusMinusDiv.firstChild.setAttribute("fill","red");
 
     } else if (newCompletionPercentage >=100){
-        currentDiv.style.border="3px solid rgb(167 211 162)"; 
+        currentDiv.style.borderColor="rgb(167 211 162)"; 
         taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
         if (taskIconDiv && plusMinusDiv){
             /*taskIconDiv.classList.remove("fa-warning");
@@ -934,7 +1074,67 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
     }
 }
 
+var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
 
+    var newCurrentDateTime = new Date();
+
+    var currentDateTimeMidnight = newCurrentDateTime.setHours(0,0,0,0);
+    var inputDateTimeMidnight = inputDateTime.setHours(0,0,0,0);
+    
+    if ( inputDateTimeMidnight > currentDateTimeMidnight){
+        return;
+    }
+
+    var progressElements = document.getElementsByClassName('habit-update');
+    var habitsElements = document.getElementsByClassName('habit-setting');
+
+    var habitsElementsLength = habitsElements.length;
+    for (var i=0; i<habitsElementsLength ;i++){
+
+        var isHabitProgressExisting = false;
+
+        for (var progressElement of progressElements){
+            if ( habitsElements[i].getAttribute("habitId") == progressElement.getAttribute("habitId") && progressElement.getAttribute("progressdate") == inputDate){
+                isHabitProgressExisting = true;
+            }
+        }
+
+        if ( !isHabitProgressExisting){
+            var isDayOK;
+            if (habitsElements[i].getAttribute("weekDay")){
+                debugWrite("Comparing current date time with habit week day");
+                debugWrite("Current date time:");
+                debugWrite(inputDateTime);
+                debugWrite("Habit week day:");
+                debugWrite(habitsElements[i].getAttribute("weekDay"));
+                debugWrite("Is critical?:");
+                debugWrite(habitsElements[i].getAttribute("iscritical"));
+                
+                isDayOK = isDayOfWeekInHabitWeeks(inputDateTime, habitsElements[i].getAttribute("weekDay"));
+            } else {
+                isDayOK = true;
+            }
+            if (isDayOK != null && isDayOK) {
+                let newProgressObject = {
+                    id: Date.now()*100+i,
+                    habitId: habitsElements[i].getAttribute("habitId"),
+                    habitDescription: habitsElements[i].getAttribute("habitDescription"),
+                    target: habitsElements[i].getAttribute("target"),
+                    progressDate: inputDate,
+                    isNew: true,
+                    isCritical: habitsElements[i].getAttribute("iscritical"),
+                    order: habitsElements[i].getAttribute("order")?habitsElements[i].getAttribute("order"):80,
+                    numberOfCompletions:0,
+                }
+                addProgressDOMElement(newProgressObject);
+                console.log("added progress");
+                console.log(newProgressObject);
+                pushProgressArrayToQueue(newProgressObject);
+            }
+        }
+    }
+    /* go through all elements, if nothing with today's date, go through all habits and add new element with this habit id*/
+}
 
 var updateProgressOnRadial = function( percentageValue, parameters){
 
@@ -1491,47 +1691,6 @@ var getMemoryDetails = function(){
     }
 
 }
-var getHabitProgressJournal = function(){
-
-    if (loggedIn){
-       /* dataArrays=getHabitProgressJournalWhenLoggedIn();*/
-    } else {
-       dataArrays=getHabitProgressJournalWhenNotLoggedIn();
-    }
-
-};
-
-
-
-var getHabitProgressJournalWhenNotLoggedIn = function(){
-    var progressArray=[];
-    var habitsArray=[];
-    var journalArray = [];
-    var todaysProgressArray=[];
-    var pastProgressArray=[];
-    var localStorageLength = localStorage.length;
-
-    for (var i = 0; i < localStorageLength && i < maxForNonLoggedIn; i++){
-        var currentKey = localStorage.key(i);
-        if ( currentKey.indexOf("progress-") >= 0){
-            var progressValue = JSON.parse(localStorage.getItem(currentKey));
-            if ( progressValue.progressDate == formattedTodaysDate()){
-                todaysProgressArray.push(progressValue);
-            } else if (daysSinceToday(progressValue.progressDate)<=30) {
-                pastProgressArray.push(progressValue);
-            }
-            progressArray.push(progressValue);
-        } else if ( currentKey.indexOf("habit-") >= 0){
-            habitsArray.push(JSON.parse(localStorage.getItem(currentKey)));
-        } else if ( currentKey.indexOf("journal-") >= 0){
-            journalArray.push({'key':currentKey,'text':JSON.parse(localStorage.getItem(currentKey))});
-        }
-    }
-
-    return {progressArray,habitsArray,journalArray,todaysProgressArray,pastProgressArray};
-
-};
-
 var pushProgressToQueue = function(divToAnalyze) {
 
     var progressArray = progressDOMToJson(divToAnalyze);
@@ -1606,13 +1765,14 @@ var readQueueProgress = function() {
         /* todo send the element to the backend using an API call */ 
         var currentDate = new Date();
         document.getElementById('last-saved-information').innerHTML = "Last saved: "+currentDate.toLocaleTimeString();
-        document.getElementById('last-saved-information-habits').innerHTML = "Last saved: "+currentDate.toLocaleTimeString();   
+        document.getElementById('last-saved-information-habits').innerHTML = "Last saved: "+currentDate.toLocaleTimeString(); 
     }
+    
 }
 
 var putInStorage = function(id,value){
   try {
-    window.localStorage.setItem(id, value);
+    setItem(id, value);
   } catch (error) {
     console.error(error);
     console.error("Problem writing progress:"+elementToProcess.id.toString());
@@ -1625,25 +1785,27 @@ var putInStorage = function(id,value){
 
 /* TODO PUT FAILED UPDATES THROUGH APIS IN A QUEUE ON LOCAL STORAGE OR COOKIES */
 
-/*
+
 var getHabitProgressJournal = async function() {
 
+
     if (loggedIn){
-        var APIcallParameters = {
-            method: "GET",
-            url: "http://localhost:5000/get-habit-progress-journal"
-        };
+        var url = `http://localhost:5000/get-habit-progress-journal?user="${apiUser}"`;
         var response;
         try {
-            response = await APICall(APIcallParameters);
+            response = await fetch(url);
         } catch (e) {
             console.log('could not connect to the server');
             console.log(e);
             return getHabitProgressJournalFromStorage();
         } 
-
-        return response
-
+        if (response.status == '200'){
+            return response.json();
+        } else {
+            console.log('status of the api call:'+response.status);
+            return getHabitProgressJournalFromStorage();
+        }
+ 
     } else {
 
         return getHabitProgressJournalFromStorage();
@@ -1684,7 +1846,7 @@ var removeItemByKey = async function(keyName) {
 
         var APIcallParameters = {
             method: "GET",
-            url: `http://localhost:5000/removeItemByKey?keyName=${keyName}`
+            url: `http://localhost:5000/removeItemByKey?keyName=${keyName}&user="${apiUser}"`
         };
 
         var response;
@@ -1702,7 +1864,7 @@ var getItemByKey = async function(keyName) {
     if (loggedIn){
         var APIcallParameters = {
             method: "GET",
-            url: `http://localhost:5000/getItemByKey?keyName=${keyName}`
+            url: `http://localhost:5000/getItemByKey?keyName=${keyName}&user="${apiUser}"`
         };
 
         var response;
@@ -1726,7 +1888,7 @@ var setItem = async function(keyName, value) {
 
     var APIcallParameters = {
         method: "GET",
-        url: `http://localhost:5000/setItemValue?keyName=${keyName}&value=${value}`
+        url: `http://localhost:5000/setItemValue?keyName=${keyName}&value=${value}&user="${apiUser}"`
     };
 
     var response;
@@ -1761,7 +1923,7 @@ var updateParameterInItemValue = async function(keyName, parameterName, value){
        
     var APIcallParameters = {
     method: "GET",
-    url: `http://localhost:5000/updateParamInItem?keyName=${keyName}&parameterName=${parameterName}&value=${value}`
+    url: `http://localhost:5000/updateParamInItem?keyName=${keyName}&parameterName=${parameterName}&value=${value}&user="${apiUser}"`
      };
 
      response='';
@@ -1776,56 +1938,12 @@ var updateParameterInItemValue = async function(keyName, parameterName, value){
 }
 
 
-*/
-var loggedIn = true;
-
-var asyncTestRunner = async function(){
-    var response = await getHabitProgressJournal();
-    console.log('test: response from getHabitProgressJournal');
-    console.log(response);
-    var response2 = await getItemByKey('progress-164655054444102');
-    console.log('test: content of progress-164655054444102');
-    console.log(response2); 
-    var response3 = await setItem('test-1','{"param1":"test11","param2":"test12"}');
-    var response4 = await setItem('test-2','{"param1":"test21","param2":"test22"}');
-    var response5 = await getItemByKey('test-1');
-    console.log('test:test-1 after insertion');
-    console.log(response5); 
-    var response6 = await getItemByKey('test-2');
-    console.log('test:test-2 after insertion');
-    console.log(response6); 
-    var response7 = await removeItemByKey('test-2');
-    var response8 = await getItemByKey('test-1');
-    console.log('test:test-1 after deletion of test-2');
-    console.log(response8); 
-    var response9 = await getItemByKey('test-2');
-    console.log('test:test-2 after deletion');
-    console.log(response9); 
-    
-    var response9b = await updateParameterInItemValue("test-1", "param2", "abc");
-    var response10 = await getItemByKey('test-1');
-    console.log('test:test-1 after update');
-    console.log(response10); 
-
-}
-
-var test = function(){
-    asyncTestRunner()            
-    .then(function(response){
-        console.log("test completed");
-    }    )    
-    .catch(function(error) {
-        console.log(error);
-    })
-}
-test();
-
-
 
 var dataArrays = {}
 var loggedIn = false;
 var maxForNonLoggedIn = 2000;
 var updateQueue = [];
+var apiUser;
 var radialProgressParameters = {    
     strokeWidth : 6,
     containerHeight : 80,
@@ -1851,7 +1969,7 @@ runApp = function(){
 document.addEventListener("DOMContentLoaded", function(event) { 
     runAppRendering();
   });*/
-
+/* test merge from new branch*/
 onload = function(){
 /*var runAppRendering = function(){*/
     "use strict";
@@ -1865,10 +1983,14 @@ onload = function(){
       }
 */
 
-
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('debug') == "true"){
         document.getElementById("debug-section").style.display = "block";
+    }
+    apiUser = urlParams.get('user');
+    console.log('user:'+apiUser);
+    if (urlParams.get('user') && urlParams.get('user').length > 1){
+        loggedIn=true;
     }
 
     hideStartProgressButtonOnHabits();
@@ -1876,7 +1998,21 @@ onload = function(){
     document.getElementById("date-filter").value=currentDate;
     createRadialProgressBar(radialProgressParameters);
 
-    getHabitProgressJournal();
+    renderApplication()
+    .then(value => {
+        setTimeout(placeSVGIcons,5);
+        setTimeout(renderPastProgressBoxes,10); 
+        setTimeout(showSummariesTab,15); 
+        /*setTimeout(prepareSummaries,20);*/
+      }, reason => {
+        console.log(reason );
+      })
+
+    
+};
+
+var renderApplication = async function(){
+    dataArrays=await getHabitProgressJournal(); /* todo: this function should only extract and not also create divs */
  
     if (dataArrays.progressArray && dataArrays.progressArray.length >= 1){
         changeTabToProgress();
@@ -1903,13 +2039,7 @@ onload = function(){
     }
     /* TODO : should be based on arrays and not on DOM */
     addEmptyProgressBoxesOnNewDay(currentDate, currentDateTime);
-
-    setTimeout(placeSVGIcons,5);
-    setTimeout(renderPastProgressBoxes,10); 
-    setTimeout(showSummariesTab,15); 
-    setTimeout(prepareSummaries,20);
-};
-
+}
 
 function prepareSummaries(){
 
@@ -1928,6 +2058,11 @@ var saveLoop = function(){
     setInterval(readQueueProgress, 1000);
 
 }
+
+var reloadHabitProgressJournal = async function(){
+    dataArrays=await getHabitProgressJournal();
+}
+
 
 
 var placeSVGIcons = function(){
@@ -1975,7 +2110,7 @@ var loadScript = async function(scriptUrl){
 
 }
 var hideJournalBox = function(){
-    document.getElementById("journal-container").innerHTML = "no entry yet";
+    document.getElementById("journal-container").innerHTML = "<div class='journal-container-day'>No journal entry yet.</div>";
 }
 var hideProgressTab = function(){
     document.getElementById("progress-menu").style.display = "none";
@@ -1988,8 +2123,10 @@ var hideSummariesTab = function(){
     document.getElementById("go-to-summaries-button").style.display = "none";
 }
 var showSummariesTab = function(){
-    document.getElementById("graphs-menu").style.display = "block"; 
-    document.getElementById("go-to-summaries-button").style.display = "flex";
+    if (dataArrays.habitsArray && dataArrays.habitsArray.length >= 1){
+        document.getElementById("graphs-menu").style.display = "block"; 
+        document.getElementById("go-to-summaries-button").style.display = "flex";
+    }
 }
 
 var showGraphTab = function(){
@@ -2073,89 +2210,6 @@ var addOneToProgress = function(divElement){
     divElement.value = (parseInt(divElement.value) + 1).toString();
 }
 
-/* Get information from the form to add new habits and add a PROGRESS (dom+memory for both)*/
-/* CAREFUL elementToAdd has data to build A PROGRESS */ 
-/* both habit and progress are added with this function */
-var addNewHabitFromForm = function(){
-
-    var elementToAdd={};
-    var newId = Date.now();
-    elementToAdd.id = newId.toString();
-    elementToAdd.habitId = (newId * 10).toString();
-    elementToAdd.habitDescription = document.getElementById('new-description').value;
-    elementToAdd.target = parseInt(document.getElementById('new-target').value);
-    elementToAdd.isNegative = document.getElementById('new-is-negative-flag').checked;
-    elementToAdd.progressDate = currentDate;
-    elementToAdd.numberOfCompletions = 0;
-    elementToAdd.isNew = true;
-    elementToAdd.isCritical = "false";
-    var weekDaySelector = document.getElementById('week-day-selection');
-    
-    elementToAdd.weekDay = weekDaySelector.getAttribute('weekDay');
-    if ( elementToAdd.weekDay == ""){
-        elementToAdd.weekDay ='monday tuesday wednesday thursday friday saturday sunday';
-    }
-
-    var isDayOK;
-    if (elementToAdd.weekDay){
-        isDayOK = isDayOfWeekInHabitWeeks(currentDateTime, elementToAdd.weekDay);
-    } else {
-        isDayOK = true;
-    }
-    if (isDayOK != null && isDayOK)
-    {
-        addProgressDOMElement(elementToAdd);
-        pushProgressArrayToQueue(elementToAdd);
-    }
-    addHabitDOMElement(elementToAdd);
-    
-    document.getElementById('new-description').value = null;
-    document.getElementById('new-target').value = 1;
-    document.getElementById('new-is-negative-flag').checked = false;
-    resetWeekDaySelector(weekDaySelector);
-
-    showProgressTab();
-
-    showStartProgressButtonOnHabits();
-
-    saveChangesInHabitFromObject(elementToAdd);
-
-    confirmAddition(elementToAdd.habitId);
-};
-
-var saveChangesInHabit = function(habitId){
-    var habitDiv = document.getElementById(habitId);
-    var habitJSON = habitDOMToJson(habitDiv);
-    pushHabitArrayToQueue(habitJSON);
-    confirmSave();
-
-}
-var setHabitAsCritical = function(habitId){
-    var habitDiv = document.getElementById(habitId);
-    var habitJSON = habitDOMToJson(habitDiv);
-    habitJSON.isCritical="true";
-    pushHabitArrayToQueue(habitJSON);
-};
-var unsetHabitAsCritical = function(habitId){
-    var habitDiv = document.getElementById(habitId);
-    var habitJSON = habitDOMToJson(habitDiv);
-    habitJSON.isCritical="false";
-    pushHabitArrayToQueue(habitJSON);
-};
-
-var saveChangesInHabitFromObject = function(habitElement){
-
-    var habitJSON = {};
-    habitJSON.habitId = habitElement.habitId;
-    habitJSON.isNegative = habitElement.isNegative;
-    habitJSON.habitDescription = habitElement.habitDescription;
-    habitJSON.target = habitElement.target;
-    habitJSON.weekDay = habitElement.weekDay;
-
-    pushHabitArrayToQueue(habitJSON);
-    
-};
-
 
 var closeAdditionConfirmation = function(){
     document.getElementById("addition-message").style.display="none";
@@ -2176,7 +2230,7 @@ var confirmSave = function(){
 };
 
 
-var extractElementsForUpdateLoggedIn = function(progressElements){
+/*var extractElementsForUpdateLoggedIn = function(progressElements){
     var outputElements = [];
     var progressElementsLength = progressElements.length;
     for (var i=0; i<progressElementsLength   && i < maxForNonLoggedIn; i++){
@@ -2185,12 +2239,14 @@ var extractElementsForUpdateLoggedIn = function(progressElements){
     }
 
     console.log(outputElements);
-};
+};*/
 
+/* Read habit from the dom and put it in json ( then it can be saved ) */
 var habitDOMToJson = function(elementToRead){
     var outputJson = {};
     outputJson.habitId = elementToRead.getAttribute("habitId");
     outputJson.isNegative = elementToRead.getAttribute("isNegative");
+    outputJson.order = elementToRead.getAttribute("order");
     outputJson.habitDescription = elementToRead.getElementsByClassName('habit-description-definition')[0].value;
     outputJson.target = parseInt(elementToRead.getElementsByClassName('habit-target-definition')[0].value);
     outputJson.weekDay = elementToRead.getElementsByClassName("week-day-selection")[0].getAttribute("weekDay");
@@ -2209,6 +2265,7 @@ var progressDOMToJson = function(elementToRead){
     outputJson.isNew = elementToRead.getAttribute("isNew");
     outputJson.isNegative = elementToRead.getAttribute("isNegative");
     outputJson.isCritical = elementToRead.getAttribute("isCritical");
+    outputJson.order = elementToRead.getAttribute("order")?elementToRead.getAttribute("order"):80;
     outputJson.numberOfCompletions = parseInt(elementToRead.getElementsByClassName("number-of-completion")[0].value);
 
     return outputJson;
@@ -2253,18 +2310,26 @@ var changeTabToHabits = function(){
     document.getElementById("progress-menu").classList.remove("active");
     document.getElementById("habits-menu").classList.add("active");
     document.getElementById("graphs-menu").classList.remove("active");
-    document.getElementById('new-description').focus();
+    /*document.getElementById('new-description').focus();*/
 }
 
 var changeTabToSummaries = function(){
-    launchAllWeekTables(dataArrays.progressArray,dataArrays.habitsArray);
-    document.getElementById("habits-section").style.display = "none";
-    document.getElementById("progress-section").style.display = "none";
-    document.getElementById("graphs-section").style.display = "block";
-    document.getElementById("progress-menu").classList.remove("active");
-    document.getElementById("habits-menu").classList.remove("active");
-    document.getElementById("graphs-menu").classList.add("active");
-    subMenuGo('week-link');
+ 
+    reloadHabitProgressJournal().then(value => {
+        prepareSummaries();
+        launchAllWeekTables(dataArrays.progressArray,dataArrays.habitsArray);
+        document.getElementById("habits-section").style.display = "none";
+        document.getElementById("progress-section").style.display = "none";
+        document.getElementById("graphs-section").style.display = "block";
+        document.getElementById("progress-menu").classList.remove("active");
+        document.getElementById("habits-menu").classList.remove("active");
+        document.getElementById("graphs-menu").classList.add("active");
+        subMenuGo('week-link');
+        }, reason => {
+        console.log(reason );
+        })
+    
+    
 }
 
 var changeTabToGraph = function(){

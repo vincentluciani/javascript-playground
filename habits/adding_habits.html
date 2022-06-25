@@ -5,13 +5,18 @@
         <title>Discipline</title>
        <!-- <link rel="manifest" href="/manifest.json" /> -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />    
-      <!--  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito">-->
+        <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito">-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="theme-color" content="white">
         <link rel="apple-touch-icon" href="images/discipline-256.png">
 
         <link rel="stylesheet" href="components/full.css">
+        
         <link rel="preload" href="https://fonts.googleapis.com/css?family=Nunito" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <!--<link rel="preload" href="https://fonts.googleapis.com/css2?family=Kalam" as="style" onload="this.onload=null;this.rel='stylesheet'">-->
+        <!-- <link rel="preload" href="https://fonts.googleapis.com/css?family=Nunito" data-noprefix as="style" onload="this.rel='stylesheet'">-->
+        <!--<link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" media="print" onload="this.media='all'">-->
+       <!-- <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">-->
         <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito"></noscript>
     </head>
     <body>
@@ -36,7 +41,7 @@
         <div id="addition-message" class="positive-message">
             <div class="title" id="addition-message-title">Habit Successfully Added !</div>
             <div class="sub-title" id="addition-message-subtitle">What do you want to do next ?</div>
-            <div class="positive-message-button" onclick="changeTabToHabits();window.scrollTo(0, 0);closeAdditionConfirmation();">Add Another Habit</div>
+            <div class="positive-message-button" onclick="changeTabToHabits();window.scrollTo(0, 0);document.getElementById('new-description').focus();closeAdditionConfirmation();">Add Another Habit</div>
             <div class="positive-message-button" id="check-habit-button">Check My Habit</div>
             <div class="positive-message-button" onclick="changeTabToProgress();window.scrollTo(0, 0);;closeAdditionConfirmation();">Start My Day</div>
         </div>
@@ -53,8 +58,8 @@
                 <nav>
                     <ul class="horizontal-menu">
                         <li id="progress-menu" onclick="changeTabToProgress();"><a  id="menu_dashboard">Progress</a></li>
-                        <li id="graphs-menu" onclick="changeTabToSummaries();"><a id="menu_dashboard">Summaries</a></li>
                         <li id="habits-menu" onclick="changeTabToHabits();"><a id="menu_dashboard">Settings</a></li>
+                        <li id="graphs-menu" onclick="changeTabToSummaries();"><a id="menu_dashboard">Summaries</a></li>
                     </ul>
                 </nav>
             </div>
@@ -84,7 +89,7 @@
                       <!--  <i class="fa fa-edit"></i> -->
                     </div>
                 </div>
-                <div class="box big-action-button" onclick="changeTabToHabits();window.scrollTo(0, 0);">
+                <div class="box big-action-button" onclick="changeTabToHabits();window.scrollTo(0, 0);document.getElementById('new-description').focus();">
                     <div>New Habit</div>
                     <div class="action-icon-container" id="plus-icon-button">
                        <!-- <i class="fa fa-plus"></i>-->
@@ -99,19 +104,6 @@
                 </div>
             </div>
 
-        </div>
-
-        <div id="graphs-section" class="main-section" >
-            <div class="main-title fixed" >
-                <ul class="horizontal-submenu">
-                <li id="week-link" onclick="subMenuGo('week-link');" class="sub-menu selected-underline"><span id="week-link-icon" class="submenu-icon"></span>Week</li>
-                <li id="streaks-link" class="sub-menu" onclick="subMenuGo('streaks-link');"><span id="small-graph-icon" class="submenu-icon"></span>History</li>
-                <li id="journal-link" onclick="subMenuGo('journal-link');" class="sub-menu"><span id="small-graph-journal" class="submenu-icon"></span>Journal</lid>
-                </ul>
-            </div>
-            <div id="week-summary-container" class="week-summary-container" ></div>
-            <div id="streaks-container" class="week-summary-container" ></div>
-            <div id="journal-container-wrapper" class="journal-container-wrapper" ><div id="journal-container" class="journal-container" ></div></div>
         </div>
 
         <div id="habits-section" class="main-section">
@@ -157,6 +149,18 @@
             </div>
         </div>
 
+        <div id="graphs-section" class="main-section" >
+            <div class="main-title fixed" >
+                <ul class="horizontal-submenu">
+                <li id="week-link" onclick="subMenuGo('week-link');" class="sub-menu selected-underline"><span id="week-link-icon" class="submenu-icon"></span>Week</li>
+                <li id="streaks-link" class="sub-menu" onclick="subMenuGo('streaks-link');"><span id="small-graph-icon" class="submenu-icon"></span>History</li>
+                <li id="journal-link" onclick="subMenuGo('journal-link');" class="sub-menu"><span id="small-graph-journal" class="submenu-icon"></span>Journal</lid>
+                </ul>
+            </div>
+            <div id="week-summary-container" class="week-summary-container" ></div>
+            <div id="streaks-container" class="week-summary-container" ></div>
+            <div id="journal-container-wrapper" class="journal-container-wrapper" ><div id="journal-container" class="journal-container" ></div></div>
+        </div>
 
         <div class="overlay-for-message" id="journal-edit-box">
             <div class="message-in-overlay">

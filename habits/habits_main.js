@@ -62,7 +62,7 @@ onload = function(){
         setTimeout(placeSVGIcons,5);
         setTimeout(renderPastProgressBoxes,10); 
         setTimeout(showSummariesTab,15); 
-        setTimeout(prepareSummaries,20);
+        /*setTimeout(prepareSummaries,20);*/
       }, reason => {
         console.log(reason );
       })
@@ -118,6 +118,11 @@ var saveLoop = function(){
 
 }
 
+var reloadHabitProgressJournal = async function(){
+    dataArrays=await getHabitProgressJournal();
+}
+
+
 
 var placeSVGIcons = function(){
 
@@ -164,7 +169,7 @@ var loadScript = async function(scriptUrl){
 
 }
 var hideJournalBox = function(){
-    document.getElementById("journal-container").innerHTML = "no entry yet";
+    document.getElementById("journal-container").innerHTML = "<div class='journal-container-day'>No journal entry yet.</div>";
 }
 var hideProgressTab = function(){
     document.getElementById("progress-menu").style.display = "none";
@@ -177,8 +182,10 @@ var hideSummariesTab = function(){
     document.getElementById("go-to-summaries-button").style.display = "none";
 }
 var showSummariesTab = function(){
-    document.getElementById("graphs-menu").style.display = "block"; 
-    document.getElementById("go-to-summaries-button").style.display = "flex";
+    if (dataArrays.habitsArray && dataArrays.habitsArray.length >= 1){
+        document.getElementById("graphs-menu").style.display = "block"; 
+        document.getElementById("go-to-summaries-button").style.display = "flex";
+    }
 }
 
 var showGraphTab = function(){
@@ -362,18 +369,26 @@ var changeTabToHabits = function(){
     document.getElementById("progress-menu").classList.remove("active");
     document.getElementById("habits-menu").classList.add("active");
     document.getElementById("graphs-menu").classList.remove("active");
-    document.getElementById('new-description').focus();
+    /*document.getElementById('new-description').focus();*/
 }
 
 var changeTabToSummaries = function(){
-    launchAllWeekTables(dataArrays.progressArray,dataArrays.habitsArray);
-    document.getElementById("habits-section").style.display = "none";
-    document.getElementById("progress-section").style.display = "none";
-    document.getElementById("graphs-section").style.display = "block";
-    document.getElementById("progress-menu").classList.remove("active");
-    document.getElementById("habits-menu").classList.remove("active");
-    document.getElementById("graphs-menu").classList.add("active");
-    subMenuGo('week-link');
+ 
+    reloadHabitProgressJournal().then(value => {
+        prepareSummaries();
+        launchAllWeekTables(dataArrays.progressArray,dataArrays.habitsArray);
+        document.getElementById("habits-section").style.display = "none";
+        document.getElementById("progress-section").style.display = "none";
+        document.getElementById("graphs-section").style.display = "block";
+        document.getElementById("progress-menu").classList.remove("active");
+        document.getElementById("habits-menu").classList.remove("active");
+        document.getElementById("graphs-menu").classList.add("active");
+        subMenuGo('week-link');
+        }, reason => {
+        console.log(reason );
+        })
+    
+    
 }
 
 var changeTabToGraph = function(){

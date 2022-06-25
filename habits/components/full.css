@@ -1,7 +1,7 @@
  
 body{
     margin: 0px;
-   /* font-family: "Brush Script MT", "Nunito","candara","arial";*/
+   /* font-family: "Brush Script MT","Kalam", "Nunito","candara","arial";*/
     font-family: "Nunito","candara","arial";
     overflow-wrap: break-word;
     background: #fafafa;
@@ -10,6 +10,28 @@ body{
 #graphs-menu,#go-to-graph-button{
     display: none;
 }
+.earlier-button, .later-button{
+    background: #b657af;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    float: left;
+    padding: 9px;
+    margin-right: 2px;
+    width:54px;
+}
+.earlier-button{
+    border-radius: 15px 0px 0px 15px;
+}
+.later-button{
+    border-radius: 0px 15px 15px 0px;
+}
+.prio-settings{
+    display: flex;
+    clear: both;
+    margin-bottom: 12px
+}
+
 .green{
     background:#17bc25;
     color:white;
@@ -137,6 +159,9 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
     border-radius: 12px;
 }
 
+.input-title{
+    padding-top: 15px;
+}
 .main-section{
     margin-top:42px;
     padding-bottom: 80px;
@@ -180,7 +205,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
 
 .box.big-action-button:hover{
     background: #cb79c5;
-    border: 3px solid #cb79c5;
+    border: 1px solid #cb79c5;
 }
 
 .plus-button:hover, .minus-button:hover,.plus-button.normal:hover, .minus-button.normal:hover, #date-filter:hover{
@@ -197,8 +222,8 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
     justify-content: space-evenly;
     align-items: center;
     cursor: pointer;
-    order:100;
-    border: 3px solid #b657af;
+    order:500;
+    border: 1px solid #b657af;
     width:213px
 }
 .huge-button{
@@ -513,7 +538,7 @@ i{
 
 #date-filter{
     border: 2px solid #b657af;
-    border-radius: 15px;
+    border-radius: 6px;
     padding-left: 10px;
     padding-right: 10px;
     background: #f5bcff;
@@ -613,14 +638,18 @@ td,.red,.fa-warning{
 .graph-title{
     margin-bottom: 15px;
 }
-.journal-container{
-    padding: 40px 35px 35px 35px;
-    margin: 84px 20px 20px 20px;
+.journal-container-day{
+    padding: 33px 35px 35px 32px;
+    margin: 0px 20px 0px 20px;
     border: 1px solid  lightgray;
     border-radius: 12px;
     background: white;
     display: block;
 }
+.journal-container{
+    margin: 84px 0px 0px 0px;
+}
+
 .journal-container-wrapper{
     display:  none;
 }
@@ -664,6 +693,10 @@ td,.red,.fa-warning{
     margin-top: 13px;
   }
   
+.habit-setting .custom-checkbox-container{
+    margin-top: 3px;
+    padding-bottom:14px;
+}
   /* On mouse-over, add a grey background color */
 .custom-checkbox-container:hover input ~ .checkmark {
     background-color: #f0c0f1;
@@ -764,7 +797,7 @@ td,.red,.fa-warning{
         margin: 10px 0px 0px 0px;
 
     }
-    .positive-message .sub-title,.super-positive-message .sub-title{
+    .positive-message .sub-title,.super-positive-message .sub-title,.super-positive-message .title, .positive-message .title{
         margin:20px;
     }
     .positive-message .title,.super-positive-message .title{
@@ -790,6 +823,7 @@ td,.red,.fa-warning{
 
     .box.habit-update, .box.daily-summary, .box.big-action-button{
         width: 300px;
+        border-width: 1px;
     }
     .box.big-action-button{
         margin:13px;
@@ -920,6 +954,9 @@ td,.red,.fa-warning{
         width: 225px;
         height: 206px;
     }
+    .box.habit-update, .box.daily-summary, .box.big-action-button, .box.big-action-button:hover{
+        border-width: 1px;
+    }
     .habit-description{
         height: 65px;
         font-size: 20px;
@@ -931,6 +968,7 @@ td,.red,.fa-warning{
         text-decoration: underline;
         text-decoration-color: #c4c4c4;
         text-underline-offset: 3px;
+        text-decoration-thickness: from-font;
     }
 }
 @media (max-width:346px){

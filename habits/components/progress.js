@@ -13,7 +13,9 @@ var addProgressDOMElement = function(elementToAdd){
     newProgressDivision.setAttribute("habitId",elementToAdd.habitId);
     newProgressDivision.setAttribute("isNegative", elementToAdd.isNegative);
     newProgressDivision.setAttribute("isCritical", elementToAdd.isCritical);
-    newProgressDivision.setAttribute("order", elementToAdd.order?elementToAdd.order:80);
+    var elementOrder = elementToAdd.order?elementToAdd.order:80;
+    newProgressDivision.setAttribute("order", elementOrder);
+    newProgressDivision.style.order = elementOrder;
 
     const habitDescriptionText = document.createTextNode(elementToAdd.habitDescription);
     const targetValue = document.createElement("input");
@@ -247,16 +249,19 @@ var refreshProgress = function(currentDiv){
 var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletionPercentage){
 
     if (newCompletionPercentage>=100){
-        currentDiv.style.border="3px solid rgb(167 211 162)";
-        currentDiv.style.order="95";
+        currentDiv.style.borderColor="rgb(167 211 162)";
+        var newOrder = parseInt(currentDiv.getAttribute('order'))+100;
+        currentDiv.style.order=newOrder.toString();
         currentDiv.style.background="#daffd9";
     } else if (newCompletionPercentage>=50){
-        currentDiv.style.border="3px solid rgb(246 223 35)";
+        currentDiv.style.borderColor="rgb(246 223 35)";
         currentDiv.style.background="rgb(255 251 234)";
+        currentDiv.style.order=currentDiv.getAttribute('order');
         /*currentDiv.style.order="80";*/
     } else if (newCompletionPercentage<50){
-        currentDiv.style.border="3px solid #c369bc";
+        currentDiv.style.borderColor="lightgrey";
         currentDiv.style.background="white";
+        currentDiv.style.order=currentDiv.getAttribute('order');
         /*currentDiv.style.order="80";*/
     }
     if (currentDiv.id && currentDiv.id == "daily-summary-container"){
@@ -270,8 +275,8 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
     var taskIconDiv;
 
     if (newCompletionPercentage <100 ){
-        currentDiv.style.order = "60";
-        currentDiv.style.border="3px solid red"; 
+        /*currentDiv.style.order = "60";*/
+        currentDiv.style.borderColor="red"; 
         currentDiv.style.background="#fff1f1";
 
         taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
@@ -288,7 +293,7 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
         plusMinusDiv.firstChild.setAttribute("fill","red");
 
     } else if (newCompletionPercentage >=100){
-        currentDiv.style.border="3px solid rgb(167 211 162)"; 
+        currentDiv.style.borderColor="rgb(167 211 162)"; 
         taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
         if (taskIconDiv && plusMinusDiv){
             /*taskIconDiv.classList.remove("fa-warning");

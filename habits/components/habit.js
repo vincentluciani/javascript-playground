@@ -10,7 +10,8 @@ var addHabitDOMElement = function(elementToAdd){
     newHabitDivision.setAttribute("isNegative",elementToAdd.isNegative);
     newHabitDivision.setAttribute("isCritical",elementToAdd.isCritical);
 
-    var habitOrder = elementToAdd.order?elementToAdd.order:80;
+    var minOrder = 80;
+    var habitOrder = elementToAdd.order?elementToAdd.order:minOrder;
     newHabitDivision.style.order = habitOrder
     newHabitDivision.setAttribute("order",habitOrder);
 
@@ -58,8 +59,25 @@ var addHabitDOMElement = function(elementToAdd){
     newHabitDivision.appendChild(weekDaySelector);
 
     /* PRIORITY */
-    var prioSetting = document.createElement("div");
+    const priorityText = document.createTextNode("Priority (1 is highest):");
+    const priorityTextDiv = document.createElement("div");
+    priorityTextDiv.appendChild(priorityText);
 
+    const priorityValue = document.createElement("input");
+    
+    priorityValue.setAttribute("class","habit-target-definition");
+    priorityValue.setAttribute("type","number");
+
+    priorityValue.value = parseInt(newHabitDivision.getAttribute("order",habitOrder))-minOrder;
+
+    priorityValue.addEventListener('input', function(habitDivision) {
+        return function(){
+            var newOrderInt = minOrder+parseInt(this.value);
+            habitDivision.setAttribute("order",newOrderInt.toString());
+        }
+    }(newHabitDivision));
+    /*var prioSetting = document.createElement("div");
+    prioSetting.setAttribute("class","prio-settings");
     var laterButtonPrioText = document.createTextNode("Later");
     var laterButtonPrio = document.createElement("div");
     laterButtonPrio.appendChild(laterButtonPrioText);
@@ -96,23 +114,55 @@ var addHabitDOMElement = function(elementToAdd){
     prioSetting.appendChild(earlierButtonPrio);
     prioSetting.appendChild(laterButtonPrio);
     newHabitDivision.appendChild(prioSetting);
+    */
+    newHabitDivision.appendChild(priorityTextDiv);
+    newHabitDivision.appendChild(priorityValue);
     /* end priority */
 
-
+/* IS CRITICAL */
     const isCriticalDivText = document.createElement("div");
+    isCriticalDivText.setAttribute("class","input-title")
     isCriticalDivText.innerHTML="Critical:";
+    newHabitDivision.appendChild(isCriticalDivText);
+
+    var checkBoxContainer = document.createElement("label");
+    checkBoxContainer.setAttribute("class","custom-checkbox-container")
+
     const isCritical = document.createElement("input");
-    isCritical.setAttribute("type","checkbox");
-    isCritical.setAttribute("class","simple-checkbox");
     isCritical.setAttribute("id","is-critical");
+    isCritical.setAttribute("class","simple-checkbox");
     if (elementToAdd.isCritical!=null && elementToAdd.isCritical == "true") {
         isCritical.checked = true;  
     } else if (elementToAdd.isCritical == "false"){
         isCritical.checked = false;
     }
     isCritical.value=isCritical.checked;
-    newHabitDivision.appendChild(isCriticalDivText);
-    newHabitDivision.appendChild(isCritical);
+
+
+    var checkMark = document.createElement("span");
+    checkMark.setAttribute("class","checkmark");
+
+    isCritical.setAttribute("type","checkbox");
+
+    /*isCritical.addEventListener('click', function(newProgressDivision) {
+        return function(){
+            var progressInput = newProgressDivision.getElementsByClassName("number-of-completion")[0];         
+            if (progressInput.checked == true){
+                progressInput.setAttribute("value","1");
+            } else {
+                progressInput.setAttribute("value","0");
+            }
+            refreshProgress(newProgressDivision);
+            console.log("added progress");
+            console.log(newProgressDivision);
+            pushProgressToQueue(newProgressDivision);
+        }
+    }(newHabitDivision));*/
+
+    checkBoxContainer.appendChild(isCritical);
+    checkBoxContainer.appendChild(checkMark);
+    newHabitDivision.appendChild(checkBoxContainer);
+
 
     const saveButton = document.createElement("div");
     var onClickSaveFunctionCall = "saveChangesInHabit(" + elementToAdd.habitId.toString()+ ")";

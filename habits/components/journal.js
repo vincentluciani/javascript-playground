@@ -56,11 +56,14 @@ var readJournal = function(journalArray){
 		return ( convertJournalKeyToDateInt(b.key) - convertJournalKeyToDateInt(a.key))
 		});	
 
+    document.getElementById("journal-container").innerHTML  = "";
+
     for ( var journalEntry of journalArray){
         var journalText = journalEntry.text;
         if ( journalText.length > 0){
             var brDiv = document.createElement("br");
             var journalDiv = document.createElement("div");
+            journalDiv.setAttribute("class","journal-container-day");
             var dateDiv = document.createElement("div");
             dateDiv.innerHTML = journalEntry.key.substr(8);
             dateDiv.setAttribute("class","date-label");
@@ -69,8 +72,8 @@ var readJournal = function(journalArray){
             textDiv.setAttribute("class","text-label");
             journalDiv.appendChild(dateDiv);
             journalDiv.appendChild(textDiv);   
-            journalDiv.appendChild(brDiv);
             document.getElementById("journal-container").appendChild(journalDiv);
+            document.getElementById("journal-container").appendChild(brDiv);
         }     
     }
 
