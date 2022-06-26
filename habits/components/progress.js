@@ -174,6 +174,14 @@ var addProgressDOMElement = function(elementToAdd){
             pushProgressToQueue(newProgressDivision);}
      }(newProgressDivision));
 
+     titleDiv = newProgressDivision.getElementsByClassName('habit-description')[0];
+
+     titleDiv.addEventListener('click', function(expandButtonWrapper,detailsArea) {
+        return function(){
+            toggleExpandCollapse(expandButtonWrapper,detailsArea);
+        }
+     }(expandButtonWrapper,detailsArea));
+
      expandButtonWrapper.addEventListener('click', function(expandButtonWrapper,detailsArea) {
         return function(){
             toggleExpandCollapse(expandButtonWrapper,detailsArea);
@@ -250,8 +258,9 @@ var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletio
 
     if (newCompletionPercentage>=100){
         currentDiv.style.borderColor="rgb(167 211 162)";
-        var newOrder = parseInt(currentDiv.getAttribute('order'))+100;
+        var newOrder = 180;/*parseInt(currentDiv.getAttribute('order'))+100;*/
         currentDiv.style.order=newOrder.toString();
+        currentDiv.setAttribute('order',newOrder.toString());
         currentDiv.style.background="#daffd9";
     } else if (newCompletionPercentage>=50){
         currentDiv.style.borderColor="rgb(246 223 35)";
