@@ -289,7 +289,8 @@ var addNewHabitFromForm = function(){
     elementToAdd.numberOfCompletions = 0;
     elementToAdd.isNew = true;
     elementToAdd.isCritical = "false";
-    elementToAdd.order=70;
+    elementToAdd.order=81;
+
     var weekDaySelector = document.getElementById('week-day-selection');
     
     elementToAdd.weekDay = weekDaySelector.getAttribute('weekDay');

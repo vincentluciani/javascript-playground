@@ -566,7 +566,8 @@ var addNewHabitFromForm = function(){
     elementToAdd.numberOfCompletions = 0;
     elementToAdd.isNew = true;
     elementToAdd.isCritical = "false";
-    elementToAdd.order=70;
+    elementToAdd.order=80;
+
     var weekDaySelector = document.getElementById('week-day-selection');
     
     elementToAdd.weekDay = weekDaySelector.getAttribute('weekDay');
@@ -938,6 +939,14 @@ var addProgressDOMElement = function(elementToAdd){
             pushProgressToQueue(newProgressDivision);}
      }(newProgressDivision));
 
+     titleDiv = newProgressDivision.getElementsByClassName('habit-description')[0];
+
+     titleDiv.addEventListener('click', function(expandButtonWrapper,detailsArea) {
+        return function(){
+            toggleExpandCollapse(expandButtonWrapper,detailsArea);
+        }
+     }(expandButtonWrapper,detailsArea));
+
      expandButtonWrapper.addEventListener('click', function(expandButtonWrapper,detailsArea) {
         return function(){
             toggleExpandCollapse(expandButtonWrapper,detailsArea);
@@ -1014,8 +1023,9 @@ var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletio
 
     if (newCompletionPercentage>=100){
         currentDiv.style.borderColor="rgb(167 211 162)";
-        var newOrder = parseInt(currentDiv.getAttribute('order'))+100;
+        var newOrder = 180;/*parseInt(currentDiv.getAttribute('order'))+100;*/
         currentDiv.style.order=newOrder.toString();
+        currentDiv.setAttribute('order',newOrder.toString());
         currentDiv.style.background="#daffd9";
     } else if (newCompletionPercentage>=50){
         currentDiv.style.borderColor="rgb(246 223 35)";
@@ -1844,17 +1854,19 @@ var removeItemByKey = async function(keyName) {
 
         window.localStorage.removeItem(keyName);
 
-        var APIcallParameters = {
-            method: "GET",
-            url: `http://localhost:5000/removeItemByKey?keyName=${keyName}&user="${apiUser}"`
-        };
+        if (loggedIn){
+            var APIcallParameters = {
+                method: "GET",
+                url: `http://localhost:5000/removeItemByKey?keyName=${keyName}&user="${apiUser}"`
+            };
 
-        var response;
-        try {
-            response = await APICall(APIcallParameters);
-        } catch (e) {
-            console.log(e);
-        } 
+            var response;
+            try {
+                response = await APICall(APIcallParameters);
+            } catch (e) {
+                console.log(e);
+            } 
+        }
         console.log('item removed');
         return response
 
@@ -1886,17 +1898,19 @@ var getItemByKey = async function(keyName) {
 var setItem = async function(keyName, value) {
     window.localStorage.setItem(keyName, value)
 
-    var APIcallParameters = {
-        method: "GET",
-        url: `http://localhost:5000/setItemValue?keyName=${keyName}&value=${value}&user="${apiUser}"`
-    };
+    if (loggedIn){
+        var APIcallParameters = {
+            method: "GET",
+            url: `http://localhost:5000/setItemValue?keyName=${keyName}&value=${value}&user="${apiUser}"`
+        };
 
-    var response;
-    try {
-        response = await APICall(APIcallParameters);
-    } catch (e) {
-        console.log(e);
-    } 
+        var response;
+        try {
+            response = await APICall(APIcallParameters);
+        } catch (e) {
+            console.log(e);
+        } 
+    }
     console.log('item set:'+keyName+":"+value);
     return response
 
@@ -1921,17 +1935,19 @@ var updateParameterInItemValue = async function(keyName, parameterName, value){
     var status = await setItem(keyName,objectValue);
     console.log("update executed");
        
-    var APIcallParameters = {
-    method: "GET",
-    url: `http://localhost:5000/updateParamInItem?keyName=${keyName}&parameterName=${parameterName}&value=${value}&user="${apiUser}"`
-     };
+    if (loggedIn){
+        var APIcallParameters = {
+        method: "GET",
+        url: `http://localhost:5000/updateParamInItem?keyName=${keyName}&parameterName=${parameterName}&value=${value}&user="${apiUser}"`
+        };
 
-     response='';
-     try {
-         response = await APICall(APIcallParameters);
-     } catch (e) {
-         console.log(e);
-     } 
+        response='';
+        try {
+            response = await APICall(APIcallParameters);
+        } catch (e) {
+            console.log(e);
+        } 
+    }
      console.log('item set:'+keyName+":"+value);
      return response
 
@@ -2365,18 +2381,22 @@ var launchHabitChart = function(fullData,habitObject){
 
     var j = dataToShow.length-1;
 
-    var numberOfDays = (dataToShow[j].x - dataToShow[0].x)/1000/60/60/24;
-    if (numberOfDays>0){
-        unitPerMonth=Math.round(unitAccumulation*30/numberOfDays);
-    }
+
 
     if ( j < 0){
         return false;
     }
 
+    var numberOfDays=0;
+
     if (j >= 0 && dataToShow[j] && dataToShow[j].x){
         debugWrite("Launching Chart");
         debugWrite(dataToShow[j].x.getDay());
+
+        numberOfDays = (dataToShow[j].x - dataToShow[0].x)/1000/60/60/24;
+        if (numberOfDays>0){
+            unitPerMonth=Math.round(unitAccumulation*30/numberOfDays);
+        }
     } else {
         return false;
     }

@@ -62,17 +62,19 @@ var removeItemByKey = async function(keyName) {
 
         window.localStorage.removeItem(keyName);
 
-        var APIcallParameters = {
-            method: "GET",
-            url: `http://localhost:5000/removeItemByKey?keyName=${keyName}&user="${apiUser}"`
-        };
+        if (loggedIn){
+            var APIcallParameters = {
+                method: "GET",
+                url: `http://localhost:5000/removeItemByKey?keyName=${keyName}&user="${apiUser}"`
+            };
 
-        var response;
-        try {
-            response = await APICall(APIcallParameters);
-        } catch (e) {
-            console.log(e);
-        } 
+            var response;
+            try {
+                response = await APICall(APIcallParameters);
+            } catch (e) {
+                console.log(e);
+            } 
+        }
         console.log('item removed');
         return response
 
@@ -104,17 +106,19 @@ var getItemByKey = async function(keyName) {
 var setItem = async function(keyName, value) {
     window.localStorage.setItem(keyName, value)
 
-    var APIcallParameters = {
-        method: "GET",
-        url: `http://localhost:5000/setItemValue?keyName=${keyName}&value=${value}&user="${apiUser}"`
-    };
+    if (loggedIn){
+        var APIcallParameters = {
+            method: "GET",
+            url: `http://localhost:5000/setItemValue?keyName=${keyName}&value=${value}&user="${apiUser}"`
+        };
 
-    var response;
-    try {
-        response = await APICall(APIcallParameters);
-    } catch (e) {
-        console.log(e);
-    } 
+        var response;
+        try {
+            response = await APICall(APIcallParameters);
+        } catch (e) {
+            console.log(e);
+        } 
+    }
     console.log('item set:'+keyName+":"+value);
     return response
 
@@ -139,17 +143,19 @@ var updateParameterInItemValue = async function(keyName, parameterName, value){
     var status = await setItem(keyName,objectValue);
     console.log("update executed");
        
-    var APIcallParameters = {
-    method: "GET",
-    url: `http://localhost:5000/updateParamInItem?keyName=${keyName}&parameterName=${parameterName}&value=${value}&user="${apiUser}"`
-     };
+    if (loggedIn){
+        var APIcallParameters = {
+        method: "GET",
+        url: `http://localhost:5000/updateParamInItem?keyName=${keyName}&parameterName=${parameterName}&value=${value}&user="${apiUser}"`
+        };
 
-     response='';
-     try {
-         response = await APICall(APIcallParameters);
-     } catch (e) {
-         console.log(e);
-     } 
+        response='';
+        try {
+            response = await APICall(APIcallParameters);
+        } catch (e) {
+            console.log(e);
+        } 
+    }
      console.log('item set:'+keyName+":"+value);
      return response
 

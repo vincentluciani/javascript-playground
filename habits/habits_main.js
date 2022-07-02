@@ -62,10 +62,12 @@ onload = function(){
         setTimeout(placeSVGIcons,5);
         setTimeout(renderPastProgressBoxes,10); 
         setTimeout(showSummariesTab,15); 
+        setTimeout(loadAudio,25);
         /*setTimeout(prepareSummaries,20);*/
       }, reason => {
         console.log(reason );
       })
+
 
     
 };
@@ -167,6 +169,61 @@ var loadScript = async function(scriptUrl){
     );
 
 
+}
+
+var loadAudio = function(videoUrl){
+    /*
+    <video
+    title="Advertisement"
+    webkit-playsinline="true"
+    playsinline="true"
+    style="background-color: rgb(0, 0, 0); position: absolute; width: 640px; height: 360px;"
+    src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    autoplay=""></video>
+
+
+    <video
+    title="Advertisement"
+    style="background-color: rgb(0, 0, 0); position: absolute; width: 640px; height: 360px;"
+    src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    autoplay="true"
+    muted="muted"></video>
+
+    <audio>
+    <source src="file_name" type="audio_file_type">
+    </audio>
+    https://www.geeksforgeeks.org/how-to-embed-audio-and-video-in-html/
+    */
+    /*var audio = new Audio();
+    audio.src = "resources/crowd_cheering.wav";
+    audio.addEventListener('loadeddata',function(){
+        audio.play();
+    });
+    
+    
+    var audioDiv = new Audio(url);
+    document.body.appendChild(audioDiv);
+
+    myAudioElement.addEventListener("canplaythrough", event => {
+  myAudioElement.play();
+});
+
+https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio
+
+
+  <audio  src="resources/crowd_cheering.wav" id="cheering-audio"></audio>
+    */
+
+    const audioDiv = document.createElement("audio");
+    audioDiv.setAttribute('src','resources/crowd_cheering.wav');
+    audioDiv.setAttribute('id','cheering-audio');
+    document.body.appendChild(audioDiv);
+
+}
+
+var playCheers = function(){
+    var audioDiv = document.getElementById("cheering-audio");
+    audioDiv.play();
 }
 var hideJournalBox = function(){
     document.getElementById("journal-container").innerHTML = "<div class='journal-container-day'>No journal entry yet.</div>";
@@ -424,18 +481,22 @@ var launchHabitChart = function(fullData,habitObject){
 
     var j = dataToShow.length-1;
 
-    var numberOfDays = (dataToShow[j].x - dataToShow[0].x)/1000/60/60/24;
-    if (numberOfDays>0){
-        unitPerMonth=Math.round(unitAccumulation*30/numberOfDays);
-    }
+
 
     if ( j < 0){
         return false;
     }
 
+    var numberOfDays=0;
+
     if (j >= 0 && dataToShow[j] && dataToShow[j].x){
         debugWrite("Launching Chart");
         debugWrite(dataToShow[j].x.getDay());
+
+        numberOfDays = (dataToShow[j].x - dataToShow[0].x)/1000/60/60/24;
+        if (numberOfDays>0){
+            unitPerMonth=Math.round(unitAccumulation*30/numberOfDays);
+        }
     } else {
         return false;
     }
