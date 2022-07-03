@@ -1,7 +1,6 @@
 
 
 var giveSuperKudos = function(title,description){
-    playCheers();
     document.getElementById("super-positive-message").style.display="flex";
     document.getElementById("super-positive-message-title").innerHTML = title;
     document.getElementById("super-positive-message-subtitle").innerHTML = description ;
@@ -9,10 +8,11 @@ var giveSuperKudos = function(title,description){
 
 var encourageIfPassedTarget = function(result, target, isCritical){
 
-    playCheers();
     if ( result == target && isCritical && isCritical == "true"){
+        playCheers();
         giveSuperKudos("Special kudos to you :)","You mastered a critical habit today!");
     } else if (result == target){
+        playCheers();
         document.getElementById("positive-message").style.display="flex";
         document.getElementById("positive-message-title").innerHTML = buildCongratulationTitle('en_US')+" :)";
         document.getElementById("positive-message-subtitle").innerHTML = buildCongratulationSubTitle('en_US');

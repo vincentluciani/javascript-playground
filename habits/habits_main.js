@@ -215,7 +215,7 @@ https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio
     */
 
     const audioDiv = document.createElement("audio");
-    audioDiv.setAttribute('src','resources/crowd_cheering.wav');
+    audioDiv.setAttribute('src','resources/crowd_cheering_6seconds.mp3');
     audioDiv.setAttribute('id','cheering-audio');
     document.body.appendChild(audioDiv);
 

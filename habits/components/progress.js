@@ -274,7 +274,7 @@ var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletio
         /*currentDiv.style.order="80";*/
     }
     if (currentDiv.id && currentDiv.id == "daily-summary-container"){
-        currentDiv.style.order = "90";
+        currentDiv.style.order = "179";
     }
 
 }

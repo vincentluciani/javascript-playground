@@ -22,6 +22,11 @@ gulp.task('pack-service-worker', function () {
         .pipe(gulp.dest('output'));
 });
 
+gulp.task('copy-resources', function () {    
+    return gulp.src(['resources/*.mp3'])
+        .pipe(gulp.dest('output/resources'));
+});
+
 gulp.task('pack-css', function () {    
     return gulp.src(['components/*.css'])
         .pipe(concat('bundle.css'))
@@ -59,4 +64,4 @@ gulp.task('process-html', function () {
 });
 
 
-gulp.task('default', gulp.series(['pack-js','pack-css','process-html','pack-service-worker']));
+gulp.task('default', gulp.series(['pack-js','pack-css','process-html','pack-service-worker','copy-resources']));

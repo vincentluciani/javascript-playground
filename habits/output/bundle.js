@@ -64,20 +64,22 @@ var getDailyProgress=function(){
 
 
 var giveSuperKudos = function(title,description){
-        document.getElementById("super-positive-message").style.display="flex";
-        document.getElementById("super-positive-message-title").innerHTML = title;
-        document.getElementById("super-positive-message-subtitle").innerHTML = description ;
+    document.getElementById("super-positive-message").style.display="flex";
+    document.getElementById("super-positive-message-title").innerHTML = title;
+    document.getElementById("super-positive-message-subtitle").innerHTML = description ;
 }
 
 var encourageIfPassedTarget = function(result, target, isCritical){
 
-        if ( result == target && isCritical && isCritical == "true"){
-            giveSuperKudos("Special kudos to you :)","You mastered a critical habit today!");
-        } else if (result == target){
-            document.getElementById("positive-message").style.display="flex";
-            document.getElementById("positive-message-title").innerHTML = buildCongratulationTitle('en_US')+" :)";
-            document.getElementById("positive-message-subtitle").innerHTML = buildCongratulationSubTitle('en_US');
-        }
+    if ( result == target && isCritical && isCritical == "true"){
+        playCheers();
+        giveSuperKudos("Special kudos to you :)","You mastered a critical habit today!");
+    } else if (result == target){
+        playCheers();
+        document.getElementById("positive-message").style.display="flex";
+        document.getElementById("positive-message-title").innerHTML = buildCongratulationTitle('en_US')+" :)";
+        document.getElementById("positive-message-subtitle").innerHTML = buildCongratulationSubTitle('en_US');
+    }
 
 }
 
@@ -566,7 +568,7 @@ var addNewHabitFromForm = function(){
     elementToAdd.numberOfCompletions = 0;
     elementToAdd.isNew = true;
     elementToAdd.isCritical = "false";
-    elementToAdd.order=80;
+    elementToAdd.order=81;
 
     var weekDaySelector = document.getElementById('week-day-selection');
     
@@ -1039,7 +1041,7 @@ var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletio
         /*currentDiv.style.order="80";*/
     }
     if (currentDiv.id && currentDiv.id == "daily-summary-container"){
-        currentDiv.style.order = "90";
+        currentDiv.style.order = "179";
     }
 
 }
@@ -2019,10 +2021,12 @@ onload = function(){
         setTimeout(placeSVGIcons,5);
         setTimeout(renderPastProgressBoxes,10); 
         setTimeout(showSummariesTab,15); 
+        setTimeout(loadAudio,25);
         /*setTimeout(prepareSummaries,20);*/
       }, reason => {
         console.log(reason );
       })
+
 
     
 };
@@ -2124,6 +2128,61 @@ var loadScript = async function(scriptUrl){
     );
 
 
+}
+
+var loadAudio = function(videoUrl){
+    /*
+    <video
+    title="Advertisement"
+    webkit-playsinline="true"
+    playsinline="true"
+    style="background-color: rgb(0, 0, 0); position: absolute; width: 640px; height: 360px;"
+    src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    autoplay=""></video>
+
+
+    <video
+    title="Advertisement"
+    style="background-color: rgb(0, 0, 0); position: absolute; width: 640px; height: 360px;"
+    src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    autoplay="true"
+    muted="muted"></video>
+
+    <audio>
+    <source src="file_name" type="audio_file_type">
+    </audio>
+    https://www.geeksforgeeks.org/how-to-embed-audio-and-video-in-html/
+    */
+    /*var audio = new Audio();
+    audio.src = "resources/crowd_cheering.wav";
+    audio.addEventListener('loadeddata',function(){
+        audio.play();
+    });
+    
+    
+    var audioDiv = new Audio(url);
+    document.body.appendChild(audioDiv);
+
+    myAudioElement.addEventListener("canplaythrough", event => {
+  myAudioElement.play();
+});
+
+https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio
+
+
+  <audio  src="resources/crowd_cheering.wav" id="cheering-audio"></audio>
+    */
+
+    const audioDiv = document.createElement("audio");
+    audioDiv.setAttribute('src','resources/crowd_cheering_6seconds.mp3');
+    audioDiv.setAttribute('id','cheering-audio');
+    document.body.appendChild(audioDiv);
+
+}
+
+var playCheers = function(){
+    var audioDiv = document.getElementById("cheering-audio");
+    audioDiv.play();
 }
 var hideJournalBox = function(){
     document.getElementById("journal-container").innerHTML = "<div class='journal-container-day'>No journal entry yet.</div>";
