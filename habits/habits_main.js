@@ -367,6 +367,8 @@ var habitDOMToJson = function(elementToRead){
     outputJson.target = parseInt(elementToRead.getElementsByClassName('habit-target-definition')[0].value);
     outputJson.weekDay = elementToRead.getElementsByClassName("week-day-selection")[0].getAttribute("weekDay");
     outputJson.isCritical = elementToRead.getElementsByClassName("simple-checkbox")[0].checked.toString();
+    outputJson.isSuspendableDuringSickness = elementToRead.getElementsByClassName("simple-checkbox")[1].checked.toString();
+    outputJson.isSuspendableDuringOtherCases = elementToRead.getElementsByClassName("simple-checkbox")[2].checked.toString();
     return outputJson;
 };
 
@@ -381,6 +383,8 @@ var progressDOMToJson = function(elementToRead){
     outputJson.isNew = elementToRead.getAttribute("isNew");
     outputJson.isNegative = elementToRead.getAttribute("isNegative");
     outputJson.isCritical = elementToRead.getAttribute("isCritical");
+    outputJson.isSuspendableDuringSickness = elementToRead.getAttribute("isSuspendableDuringSickness");
+    outputJson.isSuspendableDuringOtherCases = elementToRead.getAttribute("isSuspendableDuringOtherCases");
     outputJson.order = elementToRead.getAttribute("order")?elementToRead.getAttribute("order"):80;
     outputJson.numberOfCompletions = parseInt(elementToRead.getElementsByClassName("number-of-completion")[0].value);
 

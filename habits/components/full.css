@@ -7,6 +7,18 @@ body{
     background: #fafafa;
 }
 
+.countdown-container{
+    clear: both;
+    display: flex;
+}
+
+.countdown-button{
+    width: 21px;
+    height: 22px;
+    fill: #b657af;
+    
+    margin-left: 5px;
+}
 #graphs-menu,#go-to-graph-button{
     display: none;
 }
@@ -315,9 +327,15 @@ h2{
     margin-bottom: 12px;
 }
 
-.percentage-completion::after{
+/*.percentage-completion::after{
     content: " %";
+}*/
+
+.percentage-completion{
+    display: none;
 }
+
+
 .habit-description{
     font-weight: bold;
     color:#404040;

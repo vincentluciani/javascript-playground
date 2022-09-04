@@ -9,6 +9,8 @@ var addHabitDOMElement = function(elementToAdd){
     newHabitDivision.setAttribute("weekDay",elementToAdd.weekDay);
     newHabitDivision.setAttribute("isNegative",elementToAdd.isNegative);
     newHabitDivision.setAttribute("isCritical",elementToAdd.isCritical);
+    newHabitDivision.setAttribute("isSuspendableDuringSickness",elementToAdd.isSuspendableDuringSickness);
+    newHabitDivision.setAttribute("isSuspendableDuringOtherCases",elementToAdd.isSuspendableDuringOtherCases);
 
     var minOrder = 80;
     var habitOrder = elementToAdd.order?elementToAdd.order:minOrder;
@@ -119,50 +121,17 @@ var addHabitDOMElement = function(elementToAdd){
     newHabitDivision.appendChild(priorityValue);
     /* end priority */
 
-/* IS CRITICAL */
-    const isCriticalDivText = document.createElement("div");
-    isCriticalDivText.setAttribute("class","input-title")
-    isCriticalDivText.innerHTML="Critical:";
-    newHabitDivision.appendChild(isCriticalDivText);
-
-    var checkBoxContainer = document.createElement("label");
-    checkBoxContainer.setAttribute("class","custom-checkbox-container")
-
-    const isCritical = document.createElement("input");
-    isCritical.setAttribute("id","is-critical");
-    isCritical.setAttribute("class","simple-checkbox");
-    if (elementToAdd.isCritical!=null && elementToAdd.isCritical == "true") {
-        isCritical.checked = true;  
-    } else if (elementToAdd.isCritical == "false"){
-        isCritical.checked = false;
-    }
-    isCritical.value=isCritical.checked;
-
-
-    var checkMark = document.createElement("span");
-    checkMark.setAttribute("class","checkmark");
-
-    isCritical.setAttribute("type","checkbox");
-
-    /*isCritical.addEventListener('click', function(newProgressDivision) {
-        return function(){
-            var progressInput = newProgressDivision.getElementsByClassName("number-of-completion")[0];         
-            if (progressInput.checked == true){
-                progressInput.setAttribute("value","1");
-            } else {
-                progressInput.setAttribute("value","0");
-            }
-            refreshProgress(newProgressDivision);
-            console.log("added progress");
-            console.log(newProgressDivision);
-            pushProgressToQueue(newProgressDivision);
-        }
-    }(newHabitDivision));*/
-
-    checkBoxContainer.appendChild(isCritical);
-    checkBoxContainer.appendChild(checkMark);
+    /* IS CRITICAL */
+    var checkBoxContainer = checkboxWithTitle("Critical:",elementToAdd.isCritical);
     newHabitDivision.appendChild(checkBoxContainer);
 
+    /* IS SUSPENDABLE DURING SICKNESS */
+    var checkBoxContainerSuspendableSickness = checkboxWithTitle("Suspendable during sickness:",elementToAdd.isSuspendableDuringSickness);
+    newHabitDivision.appendChild(checkBoxContainerSuspendableSickness);
+
+    /* IS SUSPENDABLE DURING other cases */
+    var checkBoxContainerSuspendableOtherCases = checkboxWithTitle("Suspendable during other cases:",elementToAdd.isSuspendableDuringOtherCases);
+    newHabitDivision.appendChild(checkBoxContainerSuspendableOtherCases);
 
     const saveButton = document.createElement("div");
     var onClickSaveFunctionCall = "saveChangesInHabit(" + elementToAdd.habitId.toString()+ ")";
@@ -289,6 +258,8 @@ var addNewHabitFromForm = function(){
     elementToAdd.numberOfCompletions = 0;
     elementToAdd.isNew = true;
     elementToAdd.isCritical = "false";
+    elementToAdd.isSuspendableDuringSickness = "false";
+    elementToAdd.isSuspendableDuringOtherCases = "false";
     elementToAdd.order=81;
 
     var weekDaySelector = document.getElementById('week-day-selection');
