@@ -12,12 +12,14 @@ body{
     display: flex;
 }
 
+.number-of-minutes,.number-of-seconds,.minutes-second-separator{
+    font-size: 30px;
+}
 .countdown-button{
-    width: 21px;
+    width: 47px;
     height: 22px;
     fill: #b657af;
-    
-    margin-left: 5px;
+    margin-left: 18px
 }
 #graphs-menu,#go-to-graph-button{
     display: none;

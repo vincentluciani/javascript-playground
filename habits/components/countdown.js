@@ -134,6 +134,8 @@ class DigitalCounter {
     stopCounter(){
         this.state="new";
         clearInterval(this.counterPointer);
+        this.setNumberOfMinutes(this.initialValue);
+        this.setNumberOfSeconds(0);
         this.callbackFunction();
     }
 
