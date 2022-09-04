@@ -11,7 +11,8 @@ var addHabitDOMElement = function(elementToAdd){
     newHabitDivision.setAttribute("isCritical",elementToAdd.isCritical);
     newHabitDivision.setAttribute("isSuspendableDuringSickness",elementToAdd.isSuspendableDuringSickness);
     newHabitDivision.setAttribute("isSuspendableDuringOtherCases",elementToAdd.isSuspendableDuringOtherCases);
-
+    newHabitDivision.setAttribute("isTimerNecessary",elementToAdd.isTimerNecessary);
+    newHabitDivision.setAttribute("timerInitialNumberOfMinutes",elementToAdd.timerInitialNumberOfMinutes);
     var minOrder = 80;
     var habitOrder = elementToAdd.order?elementToAdd.order:minOrder;
     newHabitDivision.style.order = habitOrder
@@ -121,16 +122,28 @@ var addHabitDOMElement = function(elementToAdd){
     newHabitDivision.appendChild(priorityValue);
     /* end priority */
 
+    /* Timer */
+    var checkBoxContainerIsTimerNecessary = checkboxWithTitle("Do you need a timer:",elementToAdd.isCritical,"is-timer-necessary-"+elementToAdd.habitId.toString());
+    newHabitDivision.appendChild(checkBoxContainerIsTimerNecessary);
+    const timerTimeTextDiv = document.createTextNode("Time in minutes:");
+    const timerTimeInput = document.createElement("input");
+    timerTimeInput.setAttribute("type","number");
+    timerTimeInput.setAttribute("id","initial-time"+elementToAdd.habitId.toString());
+    timerTimeInput.value = elementToAdd.timerInitialNumberOfMinutes;
+    newHabitDivision.appendChild(timerTimeTextDiv);
+    newHabitDivision.appendChild(timerTimeInput)
+    /*timer-value*/
+
     /* IS CRITICAL */
-    var checkBoxContainer = checkboxWithTitle("Critical:",elementToAdd.isCritical);
+    var checkBoxContainer = checkboxWithTitle("Critical:",elementToAdd.isCritical,"is-critical-"+elementToAdd.habitId.toString());
     newHabitDivision.appendChild(checkBoxContainer);
 
     /* IS SUSPENDABLE DURING SICKNESS */
-    var checkBoxContainerSuspendableSickness = checkboxWithTitle("Suspendable during sickness:",elementToAdd.isSuspendableDuringSickness);
+    var checkBoxContainerSuspendableSickness = checkboxWithTitle("Suspendable during sickness:",elementToAdd.isSuspendableDuringSickness,"is-suspendable-during-sickness-"+elementToAdd.habitId.toString());
     newHabitDivision.appendChild(checkBoxContainerSuspendableSickness);
 
     /* IS SUSPENDABLE DURING other cases */
-    var checkBoxContainerSuspendableOtherCases = checkboxWithTitle("Suspendable during other cases:",elementToAdd.isSuspendableDuringOtherCases);
+    var checkBoxContainerSuspendableOtherCases = checkboxWithTitle("Suspendable during other cases:",elementToAdd.isSuspendableDuringOtherCases,"is-suspendable-in-other-cases-"+elementToAdd.habitId.toString());
     newHabitDivision.appendChild(checkBoxContainerSuspendableOtherCases);
 
     const saveButton = document.createElement("div");
@@ -258,6 +271,8 @@ var addNewHabitFromForm = function(){
     elementToAdd.numberOfCompletions = 0;
     elementToAdd.isNew = true;
     elementToAdd.isCritical = "false";
+    elementToAdd.isTimerNecessary = "false";
+    elementToAdd.timerInitialNumberOfMinutes = 0;
     elementToAdd.isSuspendableDuringSickness = "false";
     elementToAdd.isSuspendableDuringOtherCases = "false";
     elementToAdd.order=81;

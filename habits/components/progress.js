@@ -1,6 +1,6 @@
 
 var actionsWhenCountdownEnd = function(){
-    alert("the end")
+    giveCheers();
 ;}
 
 var addProgressDOMElement = function(elementToAdd){
@@ -19,6 +19,8 @@ var addProgressDOMElement = function(elementToAdd){
     newProgressDivision.setAttribute("isCritical", elementToAdd.isCritical);
     newProgressDivision.setAttribute("isSuspendableDuringSickness", elementToAdd.isSuspendableDuringSickness);
     newProgressDivision.setAttribute("isSuspendableDuringOtherCases", elementToAdd.isSuspendableDuringOtherCases);
+    newProgressDivision.setAttribute("isTimerNecessary", elementToAdd.isTimerNecessary);
+    newProgressDivision.setAttribute("timerInitialNumberOfMinutes", elementToAdd.timerInitialNumberOfMinutes);
     var elementOrder = elementToAdd.order?elementToAdd.order:80;
     newProgressDivision.setAttribute("order", elementOrder);
     newProgressDivision.style.order = elementOrder;
@@ -160,18 +162,20 @@ var addProgressDOMElement = function(elementToAdd){
 
     }
 
-    var countDownTitle = document.createElement("div");
-    countDownTitle.innerHTML = "Countdown";
-    countDownTitle.setAttribute("class","progress-container");
-    
-    detailsArea.appendChild(countDownTitle);
+    /* Countdown */
+    if (elementToAdd.isTimerNecessary == "true"){
+        var countDownTitle = document.createElement("div");
+        countDownTitle.innerHTML = "Countdown";
+        countDownTitle.setAttribute("class","progress-container");
+        
+        detailsArea.appendChild(countDownTitle);
 
-    var countDownContainer = document.createElement("div");
-    var countDownContainerId = "countdown-container-"+elementToAdd.id
+        var countDownContainer = document.createElement("div");
+        var countDownContainerId = "countdown-container-"+elementToAdd.id
 
-    countDownContainer.setAttribute("id",countDownContainerId);
-    detailsArea.appendChild(countDownContainer);
- 
+        countDownContainer.setAttribute("id",countDownContainerId);
+        detailsArea.appendChild(countDownContainer);
+    }
     var completionTextContainer = document.createElement("div");
     completionTextContainer.setAttribute("class","progress-container");
 
@@ -205,8 +209,9 @@ var addProgressDOMElement = function(elementToAdd){
         }
      }(expandButtonWrapper,detailsArea));
 
-     var newCounterDiv = new DigitalCounter(1,countDownContainerId,"new-counter-"+elementToAdd.id,false,actionsWhenCountdownEnd);
-
+     if (elementToAdd.isTimerNecessary == "true"){
+        var newCounterDiv = new DigitalCounter(elementToAdd.timerInitialNumberOfMinutes,countDownContainerId,"new-counter-"+elementToAdd.id,false,actionsWhenCountdownEnd);
+     }
      refreshProgress(newProgressDivision);
 
 
@@ -389,6 +394,8 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
                     isCritical: habitsElements[i].getAttribute("iscritical"),
                     isSuspendableDuringSickness: habitsElements[i].getAttribute("isSuspendableDuringSickness"),
                     isSuspendableDuringOtherCases: habitsElements[i].getAttribute("isSuspendableDuringOtherCases"),
+                    isTimerNecessary: habitsElements[i].getAttribute("isTimerNecessary"),
+                    timerInitialNumberOfMinutes: habitsElements[i].getAttribute("timerInitialNumberOfMinutes"),
                     order: habitsElements[i].getAttribute("order")?habitsElements[i].getAttribute("order"):80,
                     numberOfCompletions:0,
                 }

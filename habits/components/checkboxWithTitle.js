@@ -1,5 +1,5 @@
 
-var checkboxWithTitle = function(title,variable){
+var checkboxWithTitle = function(title,variable,divId){
 
     const divContainer = document.createElement("div");
     const divText = document.createElement("div");
@@ -11,7 +11,7 @@ var checkboxWithTitle = function(title,variable){
     checkBoxContainer.setAttribute("class","custom-checkbox-container")
     
     const newInput = document.createElement("input");
-    newInput.setAttribute("id","is-critical");
+    newInput.setAttribute("id",divId);
     newInput.setAttribute("class","simple-checkbox");
     if (variable!=null && variable == "true") {
         newInput.checked = true;  

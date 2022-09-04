@@ -12,13 +12,20 @@ var encourageIfPassedTarget = function(result, target, isCritical){
         playCheers();
         giveSuperKudos("Special kudos to you :)","You mastered a critical habit today!");
     } else if (result == target){
-        playCheers();
-        document.getElementById("positive-message").style.display="flex";
-        document.getElementById("positive-message-title").innerHTML = buildCongratulationTitle('en_US')+" :)";
-        document.getElementById("positive-message-subtitle").innerHTML = buildCongratulationSubTitle('en_US');
+        giveCheers();
     }
 
 }
+
+var giveCheers = function(){
+
+    playCheers();
+    document.getElementById("positive-message").style.display="flex";
+    document.getElementById("positive-message-title").innerHTML = buildCongratulationTitle('en_US')+" :)";
+    document.getElementById("positive-message-subtitle").innerHTML = buildCongratulationSubTitle('en_US');
+}
+
+
 
  var closeMessage = function(){
     document.getElementById("positive-message").style.display="none";
