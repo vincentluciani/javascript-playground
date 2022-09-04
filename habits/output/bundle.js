@@ -1,3 +1,196 @@
+
+var checkboxWithTitle = function(title,variable,divId){
+
+    const divContainer = document.createElement("div");
+    const divText = document.createElement("div");
+    divText.setAttribute("class","input-title")
+    divText.innerHTML=title;
+    divContainer.appendChild(divText);
+    
+    var checkBoxContainer = document.createElement("label");
+    checkBoxContainer.setAttribute("class","custom-checkbox-container")
+    
+    const newInput = document.createElement("input");
+    newInput.setAttribute("id",divId);
+    newInput.setAttribute("class","simple-checkbox");
+    if (variable!=null && variable == "true") {
+        newInput.checked = true;  
+    } else if (variable == "false"){
+        newInput.checked = false;
+    }
+    newInput.value=newInput.checked;
+    
+    var checkMark = document.createElement("span");
+    checkMark.setAttribute("class","checkmark");
+    
+    newInput.setAttribute("type","checkbox");
+    
+    checkBoxContainer.appendChild(newInput);
+    checkBoxContainer.appendChild(checkMark);
+    divContainer.appendChild(checkBoxContainer);
+
+    return divContainer;
+}
+
+class DigitalCounter {
+    constructor(initialValue,parentDivId,countDownDivId,autoStart,callbackFunction) {
+        this.numberOfMinutes=0;
+        this.numberOfSeconds=0;
+        this.initialValue = initialValue;
+        this.callbackFunction = callbackFunction;
+        this.initializeIcons();
+        this.initializeDivs(countDownDivId);
+        this.inializeCounter(initialValue);
+        this.attachResultingDiv(parentDivId);
+        this.state="new";
+        if (autoStart){
+            this.startCounter();
+        }
+    }
+
+    initializeDivs(countDownDivId){
+        this.countDownStartButtonId = "start-button-"+countDownDivId
+        this.countDownStartButton = document.createElement("div");
+        this.countDownStartButton.setAttribute("id","start-button-"+countDownDivId);
+        this.countDownStartButton.setAttribute("class","counter-start-button countdown-button");
+
+        this.countDownInterruptButtonId = "interrupt-button-"+countDownDivId
+        this.countDownInterruptButton = document.createElement("div");
+        this.countDownInterruptButton.setAttribute("id","interrupt-button-"+countDownDivId);
+        this.countDownInterruptButton.setAttribute("class","interrupt-button countdown-button");
+
+        this.countDownResetButtonId = "reset-button-"+countDownDivId
+        this.countDownResetButton = document.createElement("div");
+        this.countDownResetButton.setAttribute("id","reset-button-"+countDownDivId);
+        this.countDownResetButton.setAttribute("class","reset-button countdown-button");
+
+        this.counterDiv = document.createElement("div");
+        this.counterDiv.setAttribute("id",countDownDivId);
+        this.counterDiv.setAttribute("class","countdown-container");
+        this.minutesSecondsSeparator = document.createElement("div");
+        this.minutesSecondsSeparator.setAttribute("id","minutes-second-separator-"+countDownDivId);
+        this.minutesSecondsSeparator.setAttribute("class","minutes-second-separator");
+        this.numberOfMinutesDiv = document.createElement("div");
+        this.numberOfMinutesDiv.setAttribute("id","number-of-minutes-"+countDownDivId);
+        this.numberOfMinutesDiv.setAttribute("class","number-of-minutes");
+        this.minutesSecondsSeparator.innerHTML=":";
+        this.numberOfSecondsDiv = document.createElement("div");
+        this.numberOfSecondsDiv.setAttribute("id","number-of-seconds-"+countDownDivId);
+        this.numberOfSecondsDiv.setAttribute("class","number-of-seconds");
+
+        this.counterDiv.appendChild(this.numberOfMinutesDiv);
+        this.counterDiv.appendChild(this.minutesSecondsSeparator);
+        this.counterDiv.appendChild(this.numberOfSecondsDiv);
+        this.counterDiv.appendChild(this.countDownStartButton);
+        this.counterDiv.appendChild(this.countDownInterruptButton)
+        this.counterDiv.appendChild(this.countDownResetButton)
+
+        this.countDownStartButton.appendChild(this.playButtonIcon);
+        this.countDownInterruptButton.appendChild(this.pauseButtonIcon);
+        this.countDownResetButton.appendChild(this.stopButtonIcon);
+        this.countDownStartButton.addEventListener('click', this.startCounter.bind(this));
+        this.countDownInterruptButton.addEventListener('click', this.interruptCounter.bind(this));
+        this.countDownResetButton.addEventListener('click', this.resetCounter.bind(this));
+
+    }
+
+    attachResultingDiv(parentDivId){
+        document.getElementById(parentDivId).appendChild(this.counterDiv);
+    }
+    inializeCounter(counterValue){
+        this.numberOfMinutes = counterValue;
+        this.numberOfSeconds = 0;
+        this.setSecondsInDiv(this.numberOfSeconds);
+        this.setMinutesInDiv(this.numberOfMinutes);
+    }
+
+    setMinutesInDiv(numberOfMinutes){
+        this.numberOfMinutesDiv.innerHTML = this.getTextValueForCounter(this.numberOfMinutes);
+    }
+
+    setSecondsInDiv(numberOfSeconds){
+        this.numberOfSecondsDiv.innerHTML = this.getTextValueForCounter(this.numberOfSeconds);
+    }
+
+    getTextValueForCounter(numericValue){
+        return numericValue.toString().padStart(2,"0");
+    }
+
+    startCounter(){
+        this.state="started";
+        this.counterPointer = setInterval(this.decrementCounter.bind(this),1000);
+    }
+
+    interruptCounter(){
+        if (this.state == "started"){
+            clearInterval(this.counterPointer);
+            this.state= "paused";
+        } else if (this.state == "paused") {
+            this.startCounter();
+        }
+
+    }
+
+    resetCounter(){
+        clearInterval(this.counterPointer);
+        this.setNumberOfMinutes(this.initialValue);
+        this.setNumberOfSeconds(0);
+    }
+
+
+    getNumberOfSeconds(){
+        return this.numberOfSeconds;
+    }
+    getNumberOfMinutes(){
+        return this.numberOfMinutes;
+    }
+    setNumberOfMinutes(numberOfMinutes){
+        this.numberOfMinutes = numberOfMinutes;
+        this.setMinutesInDiv(this.numberOfMinutes);
+    }
+    setNumberOfSeconds(numberOfSeconds){
+        this.numberOfSeconds = numberOfSeconds;
+        this.setSecondsInDiv(this.numberOfSeconds);
+    }
+    decrementCounter(){
+        if (this.numberOfMinutes == 0 && this.numberOfSeconds == 1){
+            this.setNumberOfSeconds(this.initialValue);
+            this.stopCounter();
+            return;
+        }
+        if ( this.numberOfSeconds > 0 ){
+            this.setNumberOfSeconds(this.numberOfSeconds - 1);
+        } else {
+            this.setNumberOfSeconds(59);
+            this.setNumberOfMinutes(this.numberOfMinutes - 1);
+        }
+    }
+    stopCounter(){
+        this.state="new";
+        clearInterval(this.counterPointer);
+        this.setNumberOfMinutes(this.initialValue);
+        this.setNumberOfSeconds(0);
+        this.callbackFunction();
+    }
+
+    initializeIcons(){
+        this.playButtonIcon = document.createElement("div");
+        this.playButtonIcon.innerHTML = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 485 485" style="enable-background:new 0 0 485 485;" xml:space="preserve"><g><path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5 s25.225,125.671,71.026,171.474C116.829,459.775,177.726,485,242.5,485s125.671-25.225,171.474-71.026 C459.775,368.171,485,307.274,485,242.5S459.775,116.829,413.974,71.026z M242.5,455C125.327,455,30,359.673,30,242.5 S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>       <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/></g></svg>';
+
+        this.pauseButtonIcon = document.createElement("div");
+        this.pauseButtonIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 330 330" style="enable-background:new 0 0 330 330;" xml:space="preserve"><g id="XMLID_105_">       <path id="XMLID_106_" d="M165,0C74.019,0,0,74.019,0,165s74.019,165,165,165s165-74.019,165-165S255.981,0,165,0z M165,300   c-74.439,0-135-60.561-135-135S90.561,30,165,30s135,60.561,135,135S239.439,300,165,300z"/><path id="XMLID_109_" d="M194.25,82.5c-8.284,0-15,6.716-15,15v135c0,8.284,6.716,15,15,15s15-6.716,15-15v-135   C209.25,89.216,202.534,82.5,194.25,82.5z"/>            <path id="XMLID_110_" d="M135.75,82.5c-8.284,0-15,6.716-15,15v135c0,8.284,6.716,15,15,15s15-6.716,15-15v-135   C150.75,89.216,144.034,82.5,135.75,82.5z"/></g>';
+
+        this.stopButtonIcon = document.createElement("div");
+        this.stopButtonIcon.innerHTML = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 330 330" style="enable-background:new 0 0 330 330;" xml:space="preserve"><g id="XMLID_223_"><path id="XMLID_224_" d="M225.75,89.25h-121.5c-8.284,0-15,6.716-15,15v121.5c0,8.284,6.716,15,15,15h121.5c8.284,0,15-6.716,15-15 v-121.5C240.75,95.966,234.034,89.25,225.75,89.25z"/><path id="XMLID_225_" d="M165,0C74.019,0,0,74.019,0,165s74.019,165,165,165s165-74.019,165-165S255.981,0,165,0z M165,300 c-74.439,0-135-60.561-135-135S90.561,30,165,30s135,60.561,135,135S239.439,300,165,300z"/></g></svg>';
+
+    }
+}
+
+function callbackFunction(){
+    alert("the end");
+}
+
+
 var updateDailyProgress = function(){
 
     var dailyProgress = getDailyProgress(); 
@@ -75,13 +268,20 @@ var encourageIfPassedTarget = function(result, target, isCritical){
         playCheers();
         giveSuperKudos("Special kudos to you :)","You mastered a critical habit today!");
     } else if (result == target){
-        playCheers();
-        document.getElementById("positive-message").style.display="flex";
-        document.getElementById("positive-message-title").innerHTML = buildCongratulationTitle('en_US')+" :)";
-        document.getElementById("positive-message-subtitle").innerHTML = buildCongratulationSubTitle('en_US');
+        giveCheers();
     }
 
 }
+
+var giveCheers = function(){
+
+    playCheers();
+    document.getElementById("positive-message").style.display="flex";
+    document.getElementById("positive-message-title").innerHTML = buildCongratulationTitle('en_US')+" :)";
+    document.getElementById("positive-message-subtitle").innerHTML = buildCongratulationSubTitle('en_US');
+}
+
+
 
  var closeMessage = function(){
     document.getElementById("positive-message").style.display="none";
@@ -288,7 +488,10 @@ var addHabitDOMElement = function(elementToAdd){
     newHabitDivision.setAttribute("weekDay",elementToAdd.weekDay);
     newHabitDivision.setAttribute("isNegative",elementToAdd.isNegative);
     newHabitDivision.setAttribute("isCritical",elementToAdd.isCritical);
-
+    newHabitDivision.setAttribute("isSuspendableDuringSickness",elementToAdd.isSuspendableDuringSickness);
+    newHabitDivision.setAttribute("isSuspendableDuringOtherCases",elementToAdd.isSuspendableDuringOtherCases);
+    newHabitDivision.setAttribute("isTimerNecessary",elementToAdd.isTimerNecessary);
+    newHabitDivision.setAttribute("timerInitialNumberOfMinutes",elementToAdd.timerInitialNumberOfMinutes);
     var minOrder = 80;
     var habitOrder = elementToAdd.order?elementToAdd.order:minOrder;
     newHabitDivision.style.order = habitOrder
@@ -398,50 +601,29 @@ var addHabitDOMElement = function(elementToAdd){
     newHabitDivision.appendChild(priorityValue);
     /* end priority */
 
-/* IS CRITICAL */
-    const isCriticalDivText = document.createElement("div");
-    isCriticalDivText.setAttribute("class","input-title")
-    isCriticalDivText.innerHTML="Critical:";
-    newHabitDivision.appendChild(isCriticalDivText);
+    /* Timer */
+    var checkBoxContainerIsTimerNecessary = checkboxWithTitle("Do you need a timer:",elementToAdd.isCritical,"is-timer-necessary-"+elementToAdd.habitId.toString());
+    newHabitDivision.appendChild(checkBoxContainerIsTimerNecessary);
+    const timerTimeTextDiv = document.createTextNode("Time in minutes:");
+    const timerTimeInput = document.createElement("input");
+    timerTimeInput.setAttribute("type","number");
+    timerTimeInput.setAttribute("id","initial-time"+elementToAdd.habitId.toString());
+    timerTimeInput.value = elementToAdd.timerInitialNumberOfMinutes;
+    newHabitDivision.appendChild(timerTimeTextDiv);
+    newHabitDivision.appendChild(timerTimeInput)
+    /*timer-value*/
 
-    var checkBoxContainer = document.createElement("label");
-    checkBoxContainer.setAttribute("class","custom-checkbox-container")
-
-    const isCritical = document.createElement("input");
-    isCritical.setAttribute("id","is-critical");
-    isCritical.setAttribute("class","simple-checkbox");
-    if (elementToAdd.isCritical!=null && elementToAdd.isCritical == "true") {
-        isCritical.checked = true;  
-    } else if (elementToAdd.isCritical == "false"){
-        isCritical.checked = false;
-    }
-    isCritical.value=isCritical.checked;
-
-
-    var checkMark = document.createElement("span");
-    checkMark.setAttribute("class","checkmark");
-
-    isCritical.setAttribute("type","checkbox");
-
-    /*isCritical.addEventListener('click', function(newProgressDivision) {
-        return function(){
-            var progressInput = newProgressDivision.getElementsByClassName("number-of-completion")[0];         
-            if (progressInput.checked == true){
-                progressInput.setAttribute("value","1");
-            } else {
-                progressInput.setAttribute("value","0");
-            }
-            refreshProgress(newProgressDivision);
-            console.log("added progress");
-            console.log(newProgressDivision);
-            pushProgressToQueue(newProgressDivision);
-        }
-    }(newHabitDivision));*/
-
-    checkBoxContainer.appendChild(isCritical);
-    checkBoxContainer.appendChild(checkMark);
+    /* IS CRITICAL */
+    var checkBoxContainer = checkboxWithTitle("Critical:",elementToAdd.isCritical,"is-critical-"+elementToAdd.habitId.toString());
     newHabitDivision.appendChild(checkBoxContainer);
 
+    /* IS SUSPENDABLE DURING SICKNESS */
+    var checkBoxContainerSuspendableSickness = checkboxWithTitle("Suspendable during sickness:",elementToAdd.isSuspendableDuringSickness,"is-suspendable-during-sickness-"+elementToAdd.habitId.toString());
+    newHabitDivision.appendChild(checkBoxContainerSuspendableSickness);
+
+    /* IS SUSPENDABLE DURING other cases */
+    var checkBoxContainerSuspendableOtherCases = checkboxWithTitle("Suspendable during other cases:",elementToAdd.isSuspendableDuringOtherCases,"is-suspendable-in-other-cases-"+elementToAdd.habitId.toString());
+    newHabitDivision.appendChild(checkBoxContainerSuspendableOtherCases);
 
     const saveButton = document.createElement("div");
     var onClickSaveFunctionCall = "saveChangesInHabit(" + elementToAdd.habitId.toString()+ ")";
@@ -568,6 +750,10 @@ var addNewHabitFromForm = function(){
     elementToAdd.numberOfCompletions = 0;
     elementToAdd.isNew = true;
     elementToAdd.isCritical = "false";
+    elementToAdd.isTimerNecessary = "false";
+    elementToAdd.timerInitialNumberOfMinutes = 0;
+    elementToAdd.isSuspendableDuringSickness = "false";
+    elementToAdd.isSuspendableDuringOtherCases = "false";
     elementToAdd.order=81;
 
     var weekDaySelector = document.getElementById('week-day-selection');
@@ -766,6 +952,10 @@ var readJournal = function(journalArray){
 
 
 
+var actionsWhenCountdownEnd = function(){
+    giveCheers();
+;}
+
 var addProgressDOMElement = function(elementToAdd){
 
     const newProgressDivision = document.createElement("div");
@@ -780,6 +970,10 @@ var addProgressDOMElement = function(elementToAdd){
     newProgressDivision.setAttribute("habitId",elementToAdd.habitId);
     newProgressDivision.setAttribute("isNegative", elementToAdd.isNegative);
     newProgressDivision.setAttribute("isCritical", elementToAdd.isCritical);
+    newProgressDivision.setAttribute("isSuspendableDuringSickness", elementToAdd.isSuspendableDuringSickness);
+    newProgressDivision.setAttribute("isSuspendableDuringOtherCases", elementToAdd.isSuspendableDuringOtherCases);
+    newProgressDivision.setAttribute("isTimerNecessary", elementToAdd.isTimerNecessary);
+    newProgressDivision.setAttribute("timerInitialNumberOfMinutes", elementToAdd.timerInitialNumberOfMinutes);
     var elementOrder = elementToAdd.order?elementToAdd.order:80;
     newProgressDivision.setAttribute("order", elementOrder);
     newProgressDivision.style.order = elementOrder;
@@ -921,12 +1115,25 @@ var addProgressDOMElement = function(elementToAdd){
 
     }
 
+    /* Countdown */
+    if (elementToAdd.isTimerNecessary == "true"){
+        var countDownTitle = document.createElement("div");
+        countDownTitle.innerHTML = "Countdown";
+        countDownTitle.setAttribute("class","progress-container");
+        
+        detailsArea.appendChild(countDownTitle);
 
+        var countDownContainer = document.createElement("div");
+        var countDownContainerId = "countdown-container-"+elementToAdd.id
+
+        countDownContainer.setAttribute("id",countDownContainerId);
+        detailsArea.appendChild(countDownContainer);
+    }
     var completionTextContainer = document.createElement("div");
     completionTextContainer.setAttribute("class","progress-container");
 
     completionTextContainer.appendChild(currentCompletionText);
-    detailsArea.appendChild(completionTextContainer);
+    /*detailsArea.appendChild(completionTextContainer);*/
     detailsArea.appendChild(percentageCompletionInput);
     newProgressDivision.appendChild(detailsArea);
 
@@ -955,6 +1162,9 @@ var addProgressDOMElement = function(elementToAdd){
         }
      }(expandButtonWrapper,detailsArea));
 
+     if (elementToAdd.isTimerNecessary == "true"){
+        var newCounterDiv = new DigitalCounter(elementToAdd.timerInitialNumberOfMinutes,countDownContainerId,"new-counter-"+elementToAdd.id,false,actionsWhenCountdownEnd);
+     }
      refreshProgress(newProgressDivision);
 
 
@@ -1135,6 +1345,10 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
                     progressDate: inputDate,
                     isNew: true,
                     isCritical: habitsElements[i].getAttribute("iscritical"),
+                    isSuspendableDuringSickness: habitsElements[i].getAttribute("isSuspendableDuringSickness"),
+                    isSuspendableDuringOtherCases: habitsElements[i].getAttribute("isSuspendableDuringOtherCases"),
+                    isTimerNecessary: habitsElements[i].getAttribute("isTimerNecessary"),
+                    timerInitialNumberOfMinutes: habitsElements[i].getAttribute("timerInitialNumberOfMinutes"),
                     order: habitsElements[i].getAttribute("order")?habitsElements[i].getAttribute("order"):80,
                     numberOfCompletions:0,
                 }
@@ -1991,15 +2205,95 @@ document.addEventListener("DOMContentLoaded", function(event) {
 onload = function(){
 /*var runAppRendering = function(){*/
     "use strict";
-/*
+/* tests of service worker must be done on http://localhost:5000/ */
+
+    let newWorker;
+
+    // The click event on the notification
+    document.getElementById('reload').addEventListener('click', function(){
+    newWorker.postMessage({ action: 'skipWaiting' });
+    });
+
     if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("./sw-min.js").then(function(registration) {
+        navigator.serviceWorker.register("/sw-min.js").then(function(registration) {
             console.log('ServiceWorker registration successful with scope: ', registration.scope);
-        }).catch(function(err) {
-              console.log('ServiceWorker registration failed: ', err);
+            if (registration.installing) {
+                console.log("Service worker installing");
+              } else if (registration.waiting) {
+                console.log("Service worker installed");
+              } else if (registration.active) {
+                console.log("Service worker active");
+              }
+            /* No controller for this page, nothing to do for now.*/
+            if (!navigator.serviceWorker.controller) {
+                console.log('No service worker controlling this page.');
+            }    
+
+            if (registration.waiting) {
+                console.log('Service working in skipwaiting state.');
+            }
+
+            registration.addEventListener('updatefound', () => 
+            {
+                /* A wild service worker has appeared in reg.installing! */
+                newWorker = registration.installing;
+                
+                if (newWorker){
+                newWorker.addEventListener('statechange', () => {
+                    /* Has network.state changed? */
+                        switch (newWorker.state) {
+                            case 'installed':
+                            if (navigator.serviceWorker.controller) {
+                            /* new update available */
+                                let notification = document.getElementById('notification ');
+                                notification.className = 'show';
+                            }
+                            /* No update available */
+                            break;
+                        }
+                    });
+                }
+                console.log('Updating service worker.');
+                registration.update();
             });
-      }
-*/
+        })/*.catch(function(err) {
+              console.log('ServiceWorker registration failed: ', err);
+        })*/;
+    }
+
+
+    //   if ('serviceWorker' in navigator) {
+
+    //     navigator.serviceWorker.register('/sw-min.js').then(reg => {
+    //         console.log('ServiceWorker registration successful with scope: ', reg.scope);
+
+    //       reg.addEventListener('updatefound', () => {
+    //         /* A wild service worker has appeared in reg.installing! */
+    //         newWorker = reg.installing;
+    
+    //         newWorker.addEventListener('statechange', () => {
+    //           /* Has network.state changed? */
+    //           switch (newWorker.state) {
+    //             case 'installed':
+    //               if (navigator.serviceWorker.controller) {
+    //                /* new update available */
+    //                 showUpdateBar();
+    //               }
+    //               /* No update available */
+    //               break;
+    //           }
+    //         });
+    //       });
+    //     }).catch(function(err) {
+    //         console.log('ServiceWorker registration failed: ', err);
+    //       });
+
+    //       let refreshing;
+    //       navigator.serviceWorker.addEventListener('controllerchange', function () {
+    //         if (refreshing) return;
+    //         window.location.reload();
+    //         refreshing = true;
+    //       });
 
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('debug') == "true"){
@@ -2325,7 +2619,16 @@ var habitDOMToJson = function(elementToRead){
     outputJson.habitDescription = elementToRead.getElementsByClassName('habit-description-definition')[0].value;
     outputJson.target = parseInt(elementToRead.getElementsByClassName('habit-target-definition')[0].value);
     outputJson.weekDay = elementToRead.getElementsByClassName("week-day-selection")[0].getAttribute("weekDay");
-    outputJson.isCritical = elementToRead.getElementsByClassName("simple-checkbox")[0].checked.toString();
+    // outputJson.isCritical = elementToRead.getElementsByClassName("simple-checkbox")[1].checked.toString();
+    // outputJson.isSuspendableDuringSickness = elementToRead.getElementsByClassName("simple-checkbox")[2].checked.toString();
+    // outputJson.isSuspendableDuringOtherCases = elementToRead.getElementsByClassName("simple-checkbox")[3].checked.toString();
+    // outputJson.isTimerNecessary = elementToRead.getElementsByClassName("simple-checkbox")[0].checked.toString();
+    outputJson.isTimerNecessary = document.getElementById("is-timer-necessary-"+outputJson.habitId.toString()).checked.toString();;
+    outputJson.isSuspendableDuringOtherCases = document.getElementById("is-suspendable-in-other-cases-"+outputJson.habitId.toString()).checked.toString();;
+    outputJson.isSuspendableDuringSickness = document.getElementById("is-suspendable-during-sickness-"+outputJson.habitId.toString()).checked.toString();;
+    outputJson.isCritical = document.getElementById("is-critical-"+outputJson.habitId.toString()).checked.toString();
+
+    outputJson.timerInitialNumberOfMinutes = document.getElementById("initial-time"+outputJson.habitId.toString()).value;
     return outputJson;
 };
 
@@ -2340,6 +2643,8 @@ var progressDOMToJson = function(elementToRead){
     outputJson.isNew = elementToRead.getAttribute("isNew");
     outputJson.isNegative = elementToRead.getAttribute("isNegative");
     outputJson.isCritical = elementToRead.getAttribute("isCritical");
+    outputJson.isSuspendableDuringSickness = elementToRead.getAttribute("isSuspendableDuringSickness");
+    outputJson.isSuspendableDuringOtherCases = elementToRead.getAttribute("isSuspendableDuringOtherCases");
     outputJson.order = elementToRead.getAttribute("order")?elementToRead.getAttribute("order"):80;
     outputJson.numberOfCompletions = parseInt(elementToRead.getElementsByClassName("number-of-completion")[0].value);
 

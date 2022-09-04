@@ -185,6 +185,15 @@ app.get('/pwa-icon-512.png', function (req, res, next) {
   /* https://stackoverflow.com/questions/21235696/display-images-in-html-nodejs*/
 })
 
+app.get('/resources/crowd_cheering_6seconds.mp3', function (req, res, next) {
+
+  var fileToLoad  = fs.readFileSync('output/pwa-icon-512.png')
+     
+  res.writeHead(200, {'Content-Type': 'image/png'});
+  res.end(fileToLoad, 'binary');
+  /* https://stackoverflow.com/questions/21235696/display-images-in-html-nodejs*/
+})
+
 
 app.get('/poc_pwa.html', function (req, res, next) {
 

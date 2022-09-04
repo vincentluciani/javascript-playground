@@ -7,6 +7,14 @@ body{
     background: #fafafa;
 }
 
+#new-version-notification{
+    display: none;
+}
+
+#new-version-notification.show{
+    display: flex;
+}
+
 .countdown-container{
     clear: both;
     display: flex;
