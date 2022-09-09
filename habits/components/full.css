@@ -792,6 +792,12 @@ td,.red,.fa-warning{
 
 @media (max-width: 649px){
 
+    .number-of-minutes,.minutes-second-separator,.number-of-seconds{
+        margin-top:9px;
+    }
+    .number-of-seconds{
+        margin-right: 31px;
+    }
     #streaks-container, #week-summary-container{
         padding-top: 64px;
     }

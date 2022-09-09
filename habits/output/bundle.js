@@ -92,6 +92,20 @@ class DigitalCounter {
         this.countDownInterruptButton.addEventListener('click', this.interruptCounter.bind(this));
         this.countDownResetButton.addEventListener('click', this.resetCounter.bind(this));
 
+        this.myVideo = document.createElement("video");
+        this.myVideo.setAttribute("id","video");
+        this.myVideo.setAttribute("width","1px");
+        this.myVideo.setAttribute("height","1px");
+        /*video id="video" width="1px" height="1px" controls>*/
+        this.sourcemp4 = document.createElement("source");
+        this.sourceogg = document.createElement("source");
+        this.sourcemp4.setAttribute("src","resources/muted-blank.mp4");
+        this.sourceogg.setAttribute("src","resources/muted-blank.ogg");
+        this.sourcemp4.setAttribute("type","video/mp4");
+        this.sourceogg.setAttribute("type","video/ogg");
+        this.myVideo.appendChild(this.sourcemp4);
+        this.myVideo.appendChild(this.sourceogg);
+
     }
 
     attachResultingDiv(parentDivId){
@@ -118,11 +132,13 @@ class DigitalCounter {
 
     startCounter(){
         this.state="started";
+        this.preventSleep();
         this.counterPointer = setInterval(this.decrementCounter.bind(this),1000);
     }
 
     interruptCounter(){
         if (this.state == "started"){
+            this.allowSleep()
             clearInterval(this.counterPointer);
             this.state= "paused";
         } else if (this.state == "paused") {
@@ -132,6 +148,7 @@ class DigitalCounter {
     }
 
     resetCounter(){
+        this.allowSleep();
         clearInterval(this.counterPointer);
         this.setNumberOfMinutes(this.initialValue);
         this.setNumberOfSeconds(0);
@@ -167,6 +184,7 @@ class DigitalCounter {
     }
     stopCounter(){
         this.state="new";
+        this.allowSleep();
         clearInterval(this.counterPointer);
         this.setNumberOfMinutes(this.initialValue);
         this.setNumberOfSeconds(0);
@@ -175,15 +193,36 @@ class DigitalCounter {
 
     initializeIcons(){
         this.playButtonIcon = document.createElement("div");
-        this.playButtonIcon.innerHTML = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 485 485" style="enable-background:new 0 0 485 485;" xml:space="preserve"><g><path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5 s25.225,125.671,71.026,171.474C116.829,459.775,177.726,485,242.5,485s125.671-25.225,171.474-71.026 C459.775,368.171,485,307.274,485,242.5S459.775,116.829,413.974,71.026z M242.5,455C125.327,455,30,359.673,30,242.5 S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>       <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/></g></svg>';
+        this.playButtonIcon.innerHTML = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 485.74 485.74" style="enable-background:new 0 0 485.74 485.74;" xml:space="preserve"><g><g><path d="M242.872,0C108.732,0,0.004,108.736,0.004,242.864c0,134.14,108.728,242.876,242.868,242.876 c134.136,0,242.864-108.736,242.864-242.876C485.736,108.736,377.008,0,242.872,0z M338.412,263.94l-134.36,92.732 c-16.776,11.588-30.584,4.248-30.584-16.316V145.38c0-20.556,13.808-27.9,30.584-16.312l134.32,92.732 C355.136,233.384,355.176,252.348,338.412,263.94z"/></g></svg>';
 
         this.pauseButtonIcon = document.createElement("div");
-        this.pauseButtonIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 330 330" style="enable-background:new 0 0 330 330;" xml:space="preserve"><g id="XMLID_105_">       <path id="XMLID_106_" d="M165,0C74.019,0,0,74.019,0,165s74.019,165,165,165s165-74.019,165-165S255.981,0,165,0z M165,300   c-74.439,0-135-60.561-135-135S90.561,30,165,30s135,60.561,135,135S239.439,300,165,300z"/><path id="XMLID_109_" d="M194.25,82.5c-8.284,0-15,6.716-15,15v135c0,8.284,6.716,15,15,15s15-6.716,15-15v-135   C209.25,89.216,202.534,82.5,194.25,82.5z"/>            <path id="XMLID_110_" d="M135.75,82.5c-8.284,0-15,6.716-15,15v135c0,8.284,6.716,15,15,15s15-6.716,15-15v-135   C150.75,89.216,144.034,82.5,135.75,82.5z"/></g>';
-
+        this.pauseButtonIcon.innerHTML = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 300.003 300.003" style="enable-background:new 0 0 300.003 300.003;" xml:space="preserve"><g><g><path d="M150.001,0c-82.838,0-150,67.159-150,150c0,82.838,67.162,150.003,150,150.003c82.843,0,150-67.165,150-150.003 C300.001,67.159,232.846,0,150.001,0z M134.41,194.538c0,9.498-7.7,17.198-17.198,17.198s-17.198-7.7-17.198-17.198V105.46 c0-9.498,7.7-17.198,17.198-17.198s17.198,7.7,17.198,17.198V194.538z M198.955,194.538c0,9.498-7.701,17.198-17.198,17.198 c-9.498,0-17.198-7.7-17.198-17.198V105.46c0-9.498,7.7-17.198,17.198-17.198s17.198,7.7,17.198,17.198V194.538z"/></g></svg>';
         this.stopButtonIcon = document.createElement("div");
-        this.stopButtonIcon.innerHTML = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 330 330" style="enable-background:new 0 0 330 330;" xml:space="preserve"><g id="XMLID_223_"><path id="XMLID_224_" d="M225.75,89.25h-121.5c-8.284,0-15,6.716-15,15v121.5c0,8.284,6.716,15,15,15h121.5c8.284,0,15-6.716,15-15 v-121.5C240.75,95.966,234.034,89.25,225.75,89.25z"/><path id="XMLID_225_" d="M165,0C74.019,0,0,74.019,0,165s74.019,165,165,165s165-74.019,165-165S255.981,0,165,0z M165,300 c-74.439,0-135-60.561-135-135S90.561,30,165,30s135,60.561,135,135S239.439,300,165,300z"/></g></svg>';
+        this.stopButtonIcon.innerHTML = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 455 455" style="enable-background:new 0 0 455 455;" xml:space="preserve"><g><g><path d="M227.5,0C101.761,0,0,101.75,0,227.5C0,353.239,101.75,455,227.5,455C353.24,455,455,353.25,455,227.5 C455,101.761,353.25,0,227.5,0z M308.27,289.139c0,10.548-8.582,19.13-19.131,19.13H165.862c-10.548,0-19.13-8.582-19.13-19.13 V165.861c0-10.548,8.582-19.13,19.13-19.13h123.277c10.549,0,19.131,8.582,19.131,19.13V289.139z"/></g></svg>';
 
     }
+
+    addVideo(){
+        document.body.appendChild(this.myVideo);
+    }
+    preventSleep()
+    {
+        this.addVideo();
+        this.myVideo.loop=true;
+        this.myVideo.play(); 
+    } ;
+
+    allowSleep()
+    {
+        this.myVideo.removeAttribute('loop');
+        this.myVideo.pause();
+        try{
+        document.body.removeChild(this.myVideo);
+        } catch(e){
+
+        }
+    };
+
 }
 
 function callbackFunction(){
@@ -276,9 +315,11 @@ var encourageIfPassedTarget = function(result, target, isCritical){
 var giveCheers = function(){
 
     playCheers();
+    var title = buildCongratulationTitle('en_US')+" :)";
+    var subTitle = buildCongratulationSubTitle('en_US') ;
     document.getElementById("positive-message").style.display="flex";
-    document.getElementById("positive-message-title").innerHTML = buildCongratulationTitle('en_US')+" :)";
-    document.getElementById("positive-message-subtitle").innerHTML = buildCongratulationSubTitle('en_US');
+    document.getElementById("positive-message-title").innerHTML = title;
+    document.getElementById("positive-message-subtitle").innerHTML = subTitle;
 }
 
 
@@ -845,7 +886,7 @@ var trophyIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25px" height="2
 
 
 var trophyIcon2='<svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve"><g><g><g><path d="M256,250.719c-59.095,0-107.172,48.048-107.172,107.107S196.905,464.933,256,464.933     c59.095,0,107.172-48.048,107.172-107.107S315.094,250.719,256,250.719z M256,444.02c-47.565,0-86.26-38.667-86.26-86.196     s38.696-86.196,86.26-86.196s86.26,38.667,86.26,86.196C342.26,405.354,303.564,444.02,256,444.02z"/><path d="M510.777,11.057c-1.814-3.415-5.366-5.768-9.232-5.768H324.945c-3.474,0-6.722,1.946-8.667,4.826l-60.222,89.33     l-60.341-89.394c-1.945-2.875-5.189-4.764-8.662-4.764H10.456c-3.869,0-7.42,2.356-9.235,5.772     c-1.814,3.417-1.593,7.665,0.572,10.87l153.112,226.567c-29.437,27.22-47.9,66.157-47.9,109.302     c0,82.104,66.839,148.915,148.995,148.915s148.995-66.79,148.995-148.895c0-43.077-18.406-81.93-47.763-109.143L510.21,21.921     C512.373,18.717,512.592,14.471,510.777,11.057z M431.422,26.2L303.206,216.368c-14.268-4.775-29.493-7.55-45.302-7.75     L380.962,26.2H431.422z M330.503,26.2h25.23L231.301,210.762c-10.83,1.813-21.267,4.687-31.177,8.709L330.503,26.2z      M181.503,26.2l61.943,91.818l-12.591,18.543L156.289,26.2H181.503z M131.044,26.2l87.202,129.153l-25.211,37.24L80.596,26.2     H131.044z M30.144,26.2h25.209l125.071,185.186l-12.617,18.582L30.144,26.2z M384.083,357.826     c0,70.574-57.458,127.99-128.084,127.99s-128.084-57.416-128.084-127.99S185.374,229.836,256,229.836     S384.083,287.252,384.083,357.826z M340.882,235.304c-5.719-3.976-11.728-7.675-17.99-10.832L456.652,26.2h25.22L340.882,235.304     z"/></g></g></g></svg>';
-var trophyIconBig = '<svg xmlns="http://www.w3.org/2000/svg" stroke="white" fill="white" width="200px" height="200px" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 510 510" style="enable-background:new 0 0 981.555 981.555;" xml:space="preserve"><path xmlns="http://www.w3.org/2000/svg" d="M512,112c0-25.641-9.984-49.75-28.117-67.875C456.906,17.141,417.795,9.914,384,21.844V16c0-8.836-7.163-16-16-16H144  c-8.837,0-16,7.164-16,16v5.844c-33.798-11.93-72.904-4.711-99.883,22.281C9.984,62.25,0,86.359,0,112s9.984,49.75,28.117,67.875  c0.2,0.203,0.438,0.328,0.643,0.523c0.193,0.188,0.33,0.406,0.529,0.586l109.258,98.75c5.021,4.555,58.156,45.031,85.453,52.07V384  l-16,64h-16c-17.673,0-32,14.328-32,32v32h192v-32c0-17.672-14.327-32-32-32h-16l-16-64v-52.195  c27.297-7.039,80.433-47.531,85.453-52.07l109.258-98.75c0.199-0.18,0.336-0.398,0.529-0.586c0.205-0.195,0.443-0.32,0.643-0.523  C502.016,161.75,512,137.641,512,112z M393.367,89.375c12.484-12.469,32.781-12.469,45.266,0C444.672,95.422,448,103.453,448,112  c0,8.461-3.281,16.406-9.207,22.43L384,183.953V95.766C387.382,94.227,390.587,92.156,393.367,89.375z M73.367,89.375  c12.484-12.469,32.781-12.469,45.266,0c2.78,2.781,5.985,4.844,9.367,6.391v88.187L73.207,134.43C67.281,128.406,64,120.461,64,112  C64,103.453,67.328,95.422,73.367,89.375z"/></svg>'
+var trophyIconBig = '<svg xmlns="http://www.w3.org/2000/svg" stroke="white" fill="white" width="180px" height="180px" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 510 510" style="enable-background:new 0 0 981.555 981.555;" xml:space="preserve"><path xmlns="http://www.w3.org/2000/svg" d="M512,112c0-25.641-9.984-49.75-28.117-67.875C456.906,17.141,417.795,9.914,384,21.844V16c0-8.836-7.163-16-16-16H144  c-8.837,0-16,7.164-16,16v5.844c-33.798-11.93-72.904-4.711-99.883,22.281C9.984,62.25,0,86.359,0,112s9.984,49.75,28.117,67.875  c0.2,0.203,0.438,0.328,0.643,0.523c0.193,0.188,0.33,0.406,0.529,0.586l109.258,98.75c5.021,4.555,58.156,45.031,85.453,52.07V384  l-16,64h-16c-17.673,0-32,14.328-32,32v32h192v-32c0-17.672-14.327-32-32-32h-16l-16-64v-52.195  c27.297-7.039,80.433-47.531,85.453-52.07l109.258-98.75c0.199-0.18,0.336-0.398,0.529-0.586c0.205-0.195,0.443-0.32,0.643-0.523  C502.016,161.75,512,137.641,512,112z M393.367,89.375c12.484-12.469,32.781-12.469,45.266,0C444.672,95.422,448,103.453,448,112  c0,8.461-3.281,16.406-9.207,22.43L384,183.953V95.766C387.382,94.227,390.587,92.156,393.367,89.375z M73.367,89.375  c12.484-12.469,32.781-12.469,45.266,0c2.78,2.781,5.985,4.844,9.367,6.391v88.187L73.207,134.43C67.281,128.406,64,120.461,64,112  C64,103.453,67.328,95.422,73.367,89.375z"/></svg>'
 
 var warningIcon = '<svg xmlns="http://www.w3.org/2000/svg"  width="15px" height="15px" fill="red" stroke="red"  xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 491.537 491.537" style="enable-background:new 0 0 491.537 491.537;" xml:space="preserve"><g><g>	<path d="M488.117,459.466l-223.1-447.2c-10.4-17.4-32-13.1-37.5,0l-225.2,449.3c-8,15.6,6.3,29.2,18.8,29.2h449.6c0,0,0.3,0,0.8,0    C487.517,490.766,497.017,472.466,488.117,459.466z M54.417,450.066l191.8-383.6l190.8,383.7h-382.6V450.066z"/><path d="M225.417,206.166v104.3c0,11.5,9.4,20.9,20.9,20.9c11.5,0,19.8-8.3,20.9-19.8v-105.4c0-11.5-9.4-20.9-20.9-20.9    C234.817,185.266,225.417,194.666,225.417,206.166z"/>		<circle cx="246.217" cy="388.066" r="20.5"/></g></g></svg>';
 
@@ -1118,7 +1159,7 @@ var addProgressDOMElement = function(elementToAdd){
     /* Countdown */
     if (elementToAdd.isTimerNecessary == "true"){
         var countDownTitle = document.createElement("div");
-        countDownTitle.innerHTML = "Countdown";
+        countDownTitle.innerHTML = "Countdown:";
         countDownTitle.setAttribute("class","progress-container");
         
         detailsArea.appendChild(countDownTitle);
@@ -2207,94 +2248,7 @@ onload = function(){
     "use strict";
 /* tests of service worker must be done on http://localhost:5000/ */
 
-    let newWorker;
-
-    // The click event on the notification
-    document.getElementById('reload').addEventListener('click', function(){
-    newWorker.postMessage({ action: 'skipWaiting' });
-    });
-
-    if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("/sw-min.js").then(function(registration) {
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-            if (registration.installing) {
-                console.log("Service worker installing");
-              } else if (registration.waiting) {
-                console.log("Service worker installed");
-              } else if (registration.active) {
-                console.log("Service worker active");
-              }
-            /* No controller for this page, nothing to do for now.*/
-            if (!navigator.serviceWorker.controller) {
-                console.log('No service worker controlling this page.');
-            }    
-
-            if (registration.waiting) {
-                console.log('Service working in skipwaiting state.');
-            }
-
-            registration.addEventListener('updatefound', () => 
-            {
-                /* A wild service worker has appeared in reg.installing! */
-                newWorker = registration.installing;
-                
-                if (newWorker){
-                newWorker.addEventListener('statechange', () => {
-                    /* Has network.state changed? */
-                        switch (newWorker.state) {
-                            case 'installed':
-                            if (navigator.serviceWorker.controller) {
-                            /* new update available */
-                                let notification = document.getElementById('notification ');
-                                notification.className = 'show';
-                            }
-                            /* No update available */
-                            break;
-                        }
-                    });
-                }
-                console.log('Updating service worker.');
-                registration.update();
-            });
-        })/*.catch(function(err) {
-              console.log('ServiceWorker registration failed: ', err);
-        })*/;
-    }
-
-
-    //   if ('serviceWorker' in navigator) {
-
-    //     navigator.serviceWorker.register('/sw-min.js').then(reg => {
-    //         console.log('ServiceWorker registration successful with scope: ', reg.scope);
-
-    //       reg.addEventListener('updatefound', () => {
-    //         /* A wild service worker has appeared in reg.installing! */
-    //         newWorker = reg.installing;
     
-    //         newWorker.addEventListener('statechange', () => {
-    //           /* Has network.state changed? */
-    //           switch (newWorker.state) {
-    //             case 'installed':
-    //               if (navigator.serviceWorker.controller) {
-    //                /* new update available */
-    //                 showUpdateBar();
-    //               }
-    //               /* No update available */
-    //               break;
-    //           }
-    //         });
-    //       });
-    //     }).catch(function(err) {
-    //         console.log('ServiceWorker registration failed: ', err);
-    //       });
-
-    //       let refreshing;
-    //       navigator.serviceWorker.addEventListener('controllerchange', function () {
-    //         if (refreshing) return;
-    //         window.location.reload();
-    //         refreshing = true;
-    //       });
-
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('debug') == "true"){
         document.getElementById("debug-section").style.display = "block";

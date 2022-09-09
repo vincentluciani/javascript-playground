@@ -23,9 +23,11 @@ gulp.task('pack-service-worker', function () {
 });
 
 gulp.task('copy-resources', function () {    
-    return gulp.src(['resources/*.mp3'])
+    return gulp.src(['resources/*.*'])
         .pipe(gulp.dest('output/resources'));
 });
+
+
 
 gulp.task('pack-css', function () {    
     return gulp.src(['components/*.css'])

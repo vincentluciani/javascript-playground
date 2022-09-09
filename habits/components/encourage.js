@@ -20,9 +20,11 @@ var encourageIfPassedTarget = function(result, target, isCritical){
 var giveCheers = function(){
 
     playCheers();
+    var title = buildCongratulationTitle('en_US')+" :)";
+    var subTitle = buildCongratulationSubTitle('en_US') ;
     document.getElementById("positive-message").style.display="flex";
-    document.getElementById("positive-message-title").innerHTML = buildCongratulationTitle('en_US')+" :)";
-    document.getElementById("positive-message-subtitle").innerHTML = buildCongratulationSubTitle('en_US');
+    document.getElementById("positive-message-title").innerHTML = title;
+    document.getElementById("positive-message-subtitle").innerHTML = subTitle;
 }
 
 

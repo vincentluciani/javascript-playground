@@ -165,7 +165,7 @@ var addProgressDOMElement = function(elementToAdd){
     /* Countdown */
     if (elementToAdd.isTimerNecessary == "true"){
         var countDownTitle = document.createElement("div");
-        countDownTitle.innerHTML = "Countdown";
+        countDownTitle.innerHTML = "Countdown:";
         countDownTitle.setAttribute("class","progress-container");
         
         detailsArea.appendChild(countDownTitle);

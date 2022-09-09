@@ -58,6 +58,20 @@ class DigitalCounter {
         this.countDownInterruptButton.addEventListener('click', this.interruptCounter.bind(this));
         this.countDownResetButton.addEventListener('click', this.resetCounter.bind(this));
 
+        this.myVideo = document.createElement("video");
+        this.myVideo.setAttribute("id","video");
+        this.myVideo.setAttribute("width","1px");
+        this.myVideo.setAttribute("height","1px");
+        /*video id="video" width="1px" height="1px" controls>*/
+        this.sourcemp4 = document.createElement("source");
+        this.sourceogg = document.createElement("source");
+        this.sourcemp4.setAttribute("src","resources/muted-blank.mp4");
+        this.sourceogg.setAttribute("src","resources/muted-blank.ogg");
+        this.sourcemp4.setAttribute("type","video/mp4");
+        this.sourceogg.setAttribute("type","video/ogg");
+        this.myVideo.appendChild(this.sourcemp4);
+        this.myVideo.appendChild(this.sourceogg);
+
     }
 
     attachResultingDiv(parentDivId){
@@ -84,11 +98,13 @@ class DigitalCounter {
 
     startCounter(){
         this.state="started";
+        this.preventSleep();
         this.counterPointer = setInterval(this.decrementCounter.bind(this),1000);
     }
 
     interruptCounter(){
         if (this.state == "started"){
+            this.allowSleep()
             clearInterval(this.counterPointer);
             this.state= "paused";
         } else if (this.state == "paused") {
@@ -98,6 +114,7 @@ class DigitalCounter {
     }
 
     resetCounter(){
+        this.allowSleep();
         clearInterval(this.counterPointer);
         this.setNumberOfMinutes(this.initialValue);
         this.setNumberOfSeconds(0);
@@ -133,6 +150,7 @@ class DigitalCounter {
     }
     stopCounter(){
         this.state="new";
+        this.allowSleep();
         clearInterval(this.counterPointer);
         this.setNumberOfMinutes(this.initialValue);
         this.setNumberOfSeconds(0);
@@ -141,15 +159,36 @@ class DigitalCounter {
 
     initializeIcons(){
         this.playButtonIcon = document.createElement("div");
-        this.playButtonIcon.innerHTML = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 485 485" style="enable-background:new 0 0 485 485;" xml:space="preserve"><g><path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5 s25.225,125.671,71.026,171.474C116.829,459.775,177.726,485,242.5,485s125.671-25.225,171.474-71.026 C459.775,368.171,485,307.274,485,242.5S459.775,116.829,413.974,71.026z M242.5,455C125.327,455,30,359.673,30,242.5 S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>       <polygon points="181.062,336.575 343.938,242.5 181.062,148.425 	"/></g></svg>';
+        this.playButtonIcon.innerHTML = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 485.74 485.74" style="enable-background:new 0 0 485.74 485.74;" xml:space="preserve"><g><g><path d="M242.872,0C108.732,0,0.004,108.736,0.004,242.864c0,134.14,108.728,242.876,242.868,242.876 c134.136,0,242.864-108.736,242.864-242.876C485.736,108.736,377.008,0,242.872,0z M338.412,263.94l-134.36,92.732 c-16.776,11.588-30.584,4.248-30.584-16.316V145.38c0-20.556,13.808-27.9,30.584-16.312l134.32,92.732 C355.136,233.384,355.176,252.348,338.412,263.94z"/></g></svg>';
 
         this.pauseButtonIcon = document.createElement("div");
-        this.pauseButtonIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 330 330" style="enable-background:new 0 0 330 330;" xml:space="preserve"><g id="XMLID_105_">       <path id="XMLID_106_" d="M165,0C74.019,0,0,74.019,0,165s74.019,165,165,165s165-74.019,165-165S255.981,0,165,0z M165,300   c-74.439,0-135-60.561-135-135S90.561,30,165,30s135,60.561,135,135S239.439,300,165,300z"/><path id="XMLID_109_" d="M194.25,82.5c-8.284,0-15,6.716-15,15v135c0,8.284,6.716,15,15,15s15-6.716,15-15v-135   C209.25,89.216,202.534,82.5,194.25,82.5z"/>            <path id="XMLID_110_" d="M135.75,82.5c-8.284,0-15,6.716-15,15v135c0,8.284,6.716,15,15,15s15-6.716,15-15v-135   C150.75,89.216,144.034,82.5,135.75,82.5z"/></g>';
-
+        this.pauseButtonIcon.innerHTML = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 300.003 300.003" style="enable-background:new 0 0 300.003 300.003;" xml:space="preserve"><g><g><path d="M150.001,0c-82.838,0-150,67.159-150,150c0,82.838,67.162,150.003,150,150.003c82.843,0,150-67.165,150-150.003 C300.001,67.159,232.846,0,150.001,0z M134.41,194.538c0,9.498-7.7,17.198-17.198,17.198s-17.198-7.7-17.198-17.198V105.46 c0-9.498,7.7-17.198,17.198-17.198s17.198,7.7,17.198,17.198V194.538z M198.955,194.538c0,9.498-7.701,17.198-17.198,17.198 c-9.498,0-17.198-7.7-17.198-17.198V105.46c0-9.498,7.7-17.198,17.198-17.198s17.198,7.7,17.198,17.198V194.538z"/></g></svg>';
         this.stopButtonIcon = document.createElement("div");
-        this.stopButtonIcon.innerHTML = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 330 330" style="enable-background:new 0 0 330 330;" xml:space="preserve"><g id="XMLID_223_"><path id="XMLID_224_" d="M225.75,89.25h-121.5c-8.284,0-15,6.716-15,15v121.5c0,8.284,6.716,15,15,15h121.5c8.284,0,15-6.716,15-15 v-121.5C240.75,95.966,234.034,89.25,225.75,89.25z"/><path id="XMLID_225_" d="M165,0C74.019,0,0,74.019,0,165s74.019,165,165,165s165-74.019,165-165S255.981,0,165,0z M165,300 c-74.439,0-135-60.561-135-135S90.561,30,165,30s135,60.561,135,135S239.439,300,165,300z"/></g></svg>';
+        this.stopButtonIcon.innerHTML = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 455 455" style="enable-background:new 0 0 455 455;" xml:space="preserve"><g><g><path d="M227.5,0C101.761,0,0,101.75,0,227.5C0,353.239,101.75,455,227.5,455C353.24,455,455,353.25,455,227.5 C455,101.761,353.25,0,227.5,0z M308.27,289.139c0,10.548-8.582,19.13-19.131,19.13H165.862c-10.548,0-19.13-8.582-19.13-19.13 V165.861c0-10.548,8.582-19.13,19.13-19.13h123.277c10.549,0,19.131,8.582,19.131,19.13V289.139z"/></g></svg>';
 
     }
+
+    addVideo(){
+        document.body.appendChild(this.myVideo);
+    }
+    preventSleep()
+    {
+        this.addVideo();
+        this.myVideo.loop=true;
+        this.myVideo.play(); 
+    } ;
+
+    allowSleep()
+    {
+        this.myVideo.removeAttribute('loop');
+        this.myVideo.pause();
+        try{
+        document.body.removeChild(this.myVideo);
+        } catch(e){
+
+        }
+    };
+
 }
 
 function callbackFunction(){
