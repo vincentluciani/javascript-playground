@@ -13,7 +13,7 @@
   </head>
   <body class="fullscreen">
     <div class="container">
-      <h1 class="title">version 38                                                                                                                                                                                                                                                                                                                                                           </h1>
+      <h1 class="title">version 46                                                                                                                                                                                                                                                                                                                                                         </h1>
       <button id="send-message" onClick="sendMessage();">Send message</button>
       <button id="skip-waiting" onClick="skipWaiting();">Click here to get the new version</button>
       <div id="debug"></div>
@@ -59,9 +59,18 @@
 
               serviceWorker.addEventListener('statechange', () => {
               // newWorker.state has changed
+              document.getElementById("debug").innerHTML += 'new worker changed -';
             });
           });
         } );
+
+
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          // This fires when the service worker controlling this page
+          // changes, eg a new worker has skipped waiting and become
+          // the new active worker.
+          document.getElementById("debug").innerHTML += 'new worker has skipped waiting -';
+        });
 
         if (serviceWorker) {
           document.getElementById("state").innerHTML+=serviceWorker.state+" - ";

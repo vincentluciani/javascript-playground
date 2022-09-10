@@ -1,4 +1,4 @@
-let version = 38;
+let version = 46;
 let cacheName = "pwa-test-v"+version.toString();
 let mainCachedFile = "./poc_pwa.html";
 
@@ -11,6 +11,12 @@ const broadcast = new BroadcastChannel('count-channel');
 self.addEventListener("install", (e) => {
   console.log("sending a message  from the service worker");
   sendMessage('Service worker speaking: I am going to cache:'+mainCachedFile);
+  caches.keys().then(function(names) {
+    for (let name of names)
+      if (name != cacheName){
+        caches.delete(name);
+      }
+});
   e.waitUntil(
     // caches.open(cacheName).then(function (cache) {
     //   return cache.addAll(filesToCache.map(function(urlToPrefetch) {
@@ -52,12 +58,7 @@ broadcast.onmessage = (event) => {
   }
   if (event.data && event.data.action === 'skipWaiting') {
     self.skipWaiting();
-    caches.keys().then(function(names) {
-      for (let name of names)
-        if (name != cacheName){
-          caches.delete(name);
-        }
-  });
+
   }
 };
 
