@@ -9,7 +9,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="theme-color" content="white">
         <link rel="apple-touch-icon" href="images/discipline-256.png">
-
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
         <link rel="stylesheet" href="components/full.css">
         <link rel="preload" href="https://fonts.googleapis.com/css?family=Nunito" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito"></noscript>
@@ -59,7 +59,19 @@
                 </nav>
             </div>
         </div>
-
+        <div id="g_id_onload"
+            data-client_id="YOUR_GOOGLE_CLIENT_ID"
+            data-login_uri="https://localhost:3000"
+            data-auto_prompt="false">
+        </div>
+        <div class="g_id_signin"
+            data-type="standard"
+            data-size="large"
+            data-theme="outline"
+            data-text="sign_in_with"
+            data-shape="rectangular"
+            data-logo_alignment="left">
+        </div>
         <div id="progress-section" class="main-section">
             <div id="progress-title" class="main-title" >
                 <div class="main-title-only"><h2>Update your progress</h2></div>
@@ -187,6 +199,7 @@
         <script type="text/javascript" src="synchronization/debugTools.js"></script> 
         <script type="text/javascript" src="synchronization/getElements.js"></script> 
         <script type="text/javascript" src="habits_main.js"></script>
+        <script type="text/javascript" src="components/secret.js"></script>
         <script type="text/javascript" src="components/weekDaySelector.js"></script>
         <script type="text/javascript" src="components/weekTable.js"></script>
         <script type="text/javascript" src="components/dailySummary.js"></script>

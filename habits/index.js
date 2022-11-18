@@ -3,12 +3,25 @@ var cors = require('cors')
 var app = express()
 var url = require("url");
 var path = require("path");
+const https = require('https');
+let options = {}
 
 fs = require('fs')
 
+
+var keyFile = fs.readFileSync('C:\\software\\certificate\\vince.com.key');
+var certFile = fs.readFileSync('C:\\software\\certificate\\vince.com.crt');
+
+options = {
+    key: keyFile,
+    cert: certFile
+};
+
+let httpServer = https.createServer(options,app);
+
 app.use(cors())
 
-app.get('/', function (req, res, next) {
+app.get('/uat', function (req, res, next) {
   /*var pathname = url.parse(req.url).pathname;
   var isImage = 0, contentType, fileToLoad;
   var extension = pathname.split('.').pop();
@@ -28,6 +41,61 @@ app.get('/', function (req, res, next) {
     
 })
 
+//app.get('/^\/(components|language|libraries|synchronization)\/.+$/', function (req, res, next) {
+app.get('/:directory(components|language|libraries|synchronization)/:component.:extension', function (req, res, next) {
+
+    fs.readFile(req.params.directory+'/'+req.params.component+"."+req.params.extension, 'utf8', function (err,data) {
+        if (err) {
+          return console.log(err);
+        }
+
+        let componentType = "application/javascript"
+        if (req.params.extension === "css"){
+          componentType = "text/css"
+        }
+        res.writeHead(200, {'Content-Type': componentType});
+        res.write(data);
+        res.end();
+      });
+
+    
+})
+
+app.get('/habits_main.js', function (req, res, next) {
+
+  fs.readFile('habits_main.js', 'utf8', function (err,data) {
+      var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+
+      if (err) {
+        return console.log(err);
+      }
+      res.writeHead(200, {'Content-Type': 'text/html'});
+      res.write(data);
+      res.end();
+    });
+
+  
+})
+
+app.get('/', function (req, res, next) {
+  /*var pathname = url.parse(req.url).pathname;
+  var isImage = 0, contentType, fileToLoad;
+  var extension = pathname.split('.').pop();
+  var file = "." + pathname;
+  var dirs = pathname.split('/');*/
+    fs.readFile('adding_habits.html', 'utf8', function (err,data) {
+        var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+
+        if (err) {
+          return console.log(err);
+        }
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        res.write(data);
+        res.end();
+      });
+
+    
+})
 
 app.get('/get-habit-progress-journal', function (req, res, next) {
 
@@ -200,9 +268,9 @@ app.get('/poc_pwa.html', function (req, res, next) {
   
 })
 
+httpServer.listen(3000,() => {
+  console.log(`Server started on port 3000`);
+});
 
-app.listen(5000, function () {
-  console.log('CORS-enabled web server listening on port 5000')
-})
 
 
