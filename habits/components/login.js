@@ -22,6 +22,7 @@ var addGoogleLoginSection = function(){
 
     newOnLoadButton.setAttribute("id","g_id_onload");
     newOnLoadButton.setAttribute("data-client_id", secret.clientId);
+    newOnLoadButton.setAttribute("data-auto_select", "true");
     newOnLoadButton.setAttribute("data-login_uri", "https://localhost:3000");
     newOnLoadButton.setAttribute("data-auto_prompt", "false" );
 

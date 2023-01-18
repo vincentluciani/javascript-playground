@@ -10,7 +10,7 @@ var qs = require('querystring');
 fs = require('fs')
 
 const {OAuth2Client} = require('google-auth-library');
-const client = new OAuth2Client("YOUR_GOOGLE_CLIENT_ID");
+const client = new OAuth2Client("903755806212-pkn2usnkiokpig0f8ievtejld2hsov7u.apps.googleusercontent.com");
 
 
 
@@ -87,7 +87,7 @@ app.post('/', function(req, res, next) {
       async function verify(token) {
         const ticket = await client.verifyIdToken({
             idToken: token,
-            audience: "YOUR_GOOGLE_CLIENT_ID",  
+            audience: "903755806212-pkn2usnkiokpig0f8ievtejld2hsov7u.apps.googleusercontent.com",  
         });
         const payload = ticket.getPayload();
         const userid = payload['sub'];
