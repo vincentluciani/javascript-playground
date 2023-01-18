@@ -30,8 +30,35 @@ document.addEventListener("DOMContentLoaded", function(event) {
   });*/
 
 function handleCredentialResponse(response) {
-console.log("Encoded JWT ID token: " + response.credential);
+    document.getElementById('signin_status').innerHTML = "Signed in";
+    console.log("Encoded JWT ID token: " + response.credential);
 }
+
+function initializeGoogleButton(){
+
+
+    var clientId = document.getElementById('g_id_onload').getAttribute('data-client_id');
+
+    google.accounts.id.initialize({
+        client_id: clientId,
+        callback: handleCredentialResponse
+      });
+      google.accounts.id.renderButton(
+        document.getElementById("buttonDiv"),
+        { theme: "outline", size: "large" }  // customization attributes
+      );
+      google.accounts.id.prompt(); // also display the One Tap dialog
+
+      const googleSignOutButton = document.getElementById("g_id_signout");
+      googleSignOutButton.onclick = () => {
+            google.accounts.id.disableAutoSelect();
+            document.getElementById('signin_status').innerHTML = "Signed out";
+          }
+  
+}
+
+
+
 
 onload = function(){
 /*var runAppRendering = function(){*/
@@ -45,20 +72,15 @@ onload = function(){
             });
       }
 */
-    document.getElementById("g_id_onload").setAttribute('data-client_id',secret.clientId)
-    google.accounts.id.initialize({
-      client_id: secret.clientId,
-      callback: handleCredentialResponse
-    });
-    google.accounts.id.renderButton(
-      document.getElementById("buttonDiv"),
-      { theme: "outline", size: "large" }  // customization attributes
-    );
-    google.accounts.id.prompt(); // also display the One Tap dialog
 
+   /* addGoogleLoginSection();   */ 
 
+    
 
 /* test merge*/
+
+    initializeGoogleButton();
+
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('debug') == "true"){
         document.getElementById("debug-section").style.display = "block";
@@ -74,6 +96,7 @@ onload = function(){
     if (dataArrays.progressArray && dataArrays.progressArray.length >= 1){
         changeTabToProgress();
         showProgressTab();
+        
     }
     else {
         hideProgressTab();
