@@ -628,48 +628,6 @@ var readJournal = function(journalArray){
 }
 
 
-var addGoogleLoginSection = function(){
-/*
-    <div id="g_id_onload"
-    data-client_id="YOUR_GOOGLE_CLIENT_ID"
-    data-login_uri="https://localhost:3000"
-    data-auto_prompt="false">
-</div>
-<div class="g_id_signin"
-    data-type="standard"
-    data-size="large"
-    data-theme="outline"
-    data-text="sign_in_with"
-    data-shape="rectangular"
-    data-logo_alignment="left">
-</div>*/
-
-
-    const googleLoginSection  = document.createElement("div");
-    googleLoginSection.setAttribute("class","google-login-section"); 
-    const newOnLoadButton = document.createElement("div");
-    const newGoogleLoginButton = document.createElement("div");
-
-    newOnLoadButton.setAttribute("id","g_id_onload");
-    newOnLoadButton.setAttribute("data-client_id", secret.clientId);
-    newOnLoadButton.setAttribute("data-auto_select", "true");
-    newOnLoadButton.setAttribute("data-login_uri", "https://localhost:3000");
-    newOnLoadButton.setAttribute("data-auto_prompt", "false" );
-
-    newGoogleLoginButton.setAttribute("class", "g_id_signin");
-    newGoogleLoginButton.setAttribute("data-type","standard");
-    newGoogleLoginButton.setAttribute("data-size","large");
-    newGoogleLoginButton.setAttribute("data-theme", "outline");
-    newGoogleLoginButton.setAttribute("data-text","sign_in_with" );
-    newGoogleLoginButton.setAttribute("data-shape", "rectangular");
-    newGoogleLoginButton.setAttribute("data-logo_alignment", "left");
-
-    googleLoginSection.appendChild(newOnLoadButton);
-    googleLoginSection.appendChild(newGoogleLoginButton);
-
-    document.getElementById('habits-container').appendChild(googleLoginSection);
- 
-};
 
 var addProgressElement = function(elementToAdd){
 
@@ -1864,7 +1822,6 @@ test();
 
 
 
-
 var dataArrays = {}
 var loggedIn = false;
 var maxForNonLoggedIn = 2000;
@@ -1895,37 +1852,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     runAppRendering();
   });*/
 
-function handleCredentialResponse(response) {
-    document.getElementById('signin_status').innerHTML = "Signed in";
-    console.log("Encoded JWT ID token: " + response.credential);
-}
-
-function initializeGoogleButton(){
-
-
-    var clientId = document.getElementById('g_id_onload').getAttribute('data-client_id');
-
-    google.accounts.id.initialize({
-        client_id: clientId,
-        callback: handleCredentialResponse
-      });
-      google.accounts.id.renderButton(
-        document.getElementById("buttonDiv"),
-        { theme: "outline", size: "large" }  // customization attributes
-      );
-      google.accounts.id.prompt(); // also display the One Tap dialog
-
-      const googleSignOutButton = document.getElementById("g_id_signout");
-      googleSignOutButton.onclick = () => {
-            google.accounts.id.disableAutoSelect();
-            document.getElementById('signin_status').innerHTML = "Signed out";
-          }
-  
-}
-
-
-
-
 onload = function(){
 /*var runAppRendering = function(){*/
     "use strict";
@@ -1939,13 +1865,6 @@ onload = function(){
       }
 */
 
-   /* addGoogleLoginSection();   */ 
-
-    
-
-/* test merge*/
-
-    initializeGoogleButton();
 
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('debug') == "true"){
@@ -1962,7 +1881,6 @@ onload = function(){
     if (dataArrays.progressArray && dataArrays.progressArray.length >= 1){
         changeTabToProgress();
         showProgressTab();
-        
     }
     else {
         hideProgressTab();
