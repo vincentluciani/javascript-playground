@@ -30,23 +30,6 @@ gulp.task('pack-css', function () {
 });
 
 
-gulp.task('put-client-id-html', function(){
-    return gulp.src(['adding_habits.html'])
-    .pipe(replace('YOUR_GOOGLE_CLIENT_ID', fs.readFileSync('googleclientid.txt', 'utf8'))) 
-    .pipe(rename('adding_habits_transformed.html'))
-    .pipe(gulp.dest('.'));
-
-})
-
-gulp.task('put-client-id-node', function(){
-    return gulp.src(['index.js'])
-    .pipe(replace('YOUR_GOOGLE_CLIENT_ID', fs.readFileSync('googleclientid.txt', 'utf8'))) 
-    .pipe(rename('index-transformed.js'))
-    .pipe(gulp.dest('.'));
-
-})
-
-
 gulp.task('process-html', function () {    
     return gulp.src(['adding_habits.html'])
         .pipe(replace('<link rel="stylesheet" href="components/full.css">', '<style>'+fs.readFileSync('output/bundle.css', 'utf8')+'</style>'))  
@@ -55,7 +38,7 @@ gulp.task('process-html', function () {
         .pipe(replace('<script type="text/javascript" src="libraries/date.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="libraries/random.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="habits_main.js"></script>',''))
-        .pipe(replace('<script type="text/javascript" src="components/login.js"></script>',''))       
+        .pipe(replace('<script type="text/javascript" src="components/secret.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/weekTable.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/weekDaySelector.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/habit.js"></script>',''))
@@ -76,4 +59,4 @@ gulp.task('process-html', function () {
 });
 
 
-gulp.task('default', gulp.series(['put-client-id-html','put-client-id-node','pack-js','pack-css','process-html','pack-service-worker']));
+gulp.task('default', gulp.series(['pack-js','pack-css','process-html','pack-service-worker']));

@@ -5,13 +5,8 @@ var url = require("url");
 var path = require("path");
 const https = require('https');
 let options = {}
-var qs = require('querystring');
 
 fs = require('fs')
-
-const {OAuth2Client} = require('google-auth-library');
-const client = new OAuth2Client("YOUR_GOOGLE_CLIENT_ID");
-
 
 
 var keyFile = fs.readFileSync('C:\\software\\certificate\\vince.com.key');
@@ -66,38 +61,6 @@ app.get('/:directory(components|language|libraries|synchronization)/:component.:
     
 })
 
-app.post('/', function(req, res, next) {
-
-  var body = '';
-
-  req.on('data', function (data) {
-      body += data;
-
-      // Too much POST data, kill the connection!
-      // 1e6 === 1 * Math.pow(10, 6) === 1 * 1000000 ~~~ 1MB
-      if (body.length > 1e6)
-          req.connection.destroy();
-  });
-
-  req.on('end', function () {
-      var post = qs.parse(body);
-      // use post['blah'], etc.
-      console.log(post['credential'])
-
-      async function verify(token) {
-        const ticket = await client.verifyIdToken({
-            idToken: token,
-            audience: "YOUR_GOOGLE_CLIENT_ID",  
-        });
-        const payload = ticket.getPayload();
-        const userid = payload['sub'];
-      }
-      verify(post['credential']).catch(console.error);
-
-  });
-
-})
-
 app.get('/habits_main.js', function (req, res, next) {
 
   fs.readFile('habits_main.js', 'utf8', function (err,data) {
@@ -120,7 +83,7 @@ app.get('/', function (req, res, next) {
   var extension = pathname.split('.').pop();
   var file = "." + pathname;
   var dirs = pathname.split('/');*/
-    fs.readFile('adding_habits_transformed.html', 'utf8', function (err,data) {
+    fs.readFile('adding_habits.html', 'utf8', function (err,data) {
         var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
 
         if (err) {

@@ -15,8 +15,6 @@
         <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito"></noscript>
     </head>
     <body>
-        
-       
         <div id="positive-message" class="positive-message">
             <div class="action-icon-container" id="trophy-icon-positive"></div>
             <div class="title" id="positive-message-title"></div>
@@ -61,6 +59,19 @@
                 </nav>
             </div>
         </div>
+        <div id="g_id_onload"
+            data-client_id="YOUR_GOOGLE_CLIENT_ID"
+            data-login_uri="https://localhost:3000"
+            data-auto_prompt="false">
+        </div>
+        <div class="g_id_signin"
+            data-type="standard"
+            data-size="large"
+            data-theme="outline"
+            data-text="sign_in_with"
+            data-shape="rectangular"
+            data-logo_alignment="left">
+        </div>
         <div id="progress-section" class="main-section">
             <div id="progress-title" class="main-title" >
                 <div class="main-title-only"><h2>Update your progress</h2></div>
@@ -70,7 +81,8 @@
                     <input id="text-filter" class="action-input" type="text" ></input> 
                 </div>
                 <label id="last-saved-information"></label>
-            </div> 
+            </div>
+            
             <div id="habits-container" class="habits-container">
                 <div id="daily-summary-container" class="box first daily-summary">
                     <div class="habit-description"><div class="task-icon-container trophy-icon icon"></div>Daily Summary</div>
@@ -78,51 +90,29 @@
                     <div id="daily-summary"></div>
                     <div id="daily-summary-comment"></div>
                 </div>
-                <div id="google-container" class="box first daily-summary">
-                    <div id="g_id_onload"
-                    data-client_id="YOUR_GOOGLE_CLIENT_ID"
-                    data-callback="handleCredentialResponse"
-                    data-auto_select="true"
-                    > <!--   data-auto_select="true" data-auto_prompt="false"  data-login_uri="https://www.vince.com/discipline/"-->
-                    </div>
-                    <div class="g_id_signin"
-                        data-type="standard"
-                        data-size="large"
-                        data-theme="outline"
-                        data-text="sign_in_with"
-                        data-shape="rectangular"
-                        data-logo_alignment="left">
-                    </div>
-                    <div id="signin_status">Signed out</div>
-                    <script>
-                        function onSignIn(credentialResponse) {
-                            document.getElementById('signin_status') = "Signed in";
-                        }
-                    </script>
-            
-                    <div class="g_id_signout" id="g_id_signout">Sign Out</div>   
-                </div>
                 <div class="box big-action-button" onclick="displayJournalEditBox();window.scrollTo(0, 0);">
                     <div>Daily Journal</div>
                     <div class="action-icon-container" id="daily-journal-icon">
-                        <!--  <i class="fa fa-edit"></i> -->
+                      <!--  <i class="fa fa-edit"></i> -->
                     </div>
                 </div>
                 <div class="box big-action-button" onclick="changeTabToHabits();window.scrollTo(0, 0);">
                     <div>New Habit</div>
                     <div class="action-icon-container" id="plus-icon-button">
-                        <!-- <i class="fa fa-plus"></i>-->
+                       <!-- <i class="fa fa-plus"></i>-->
                     </div>
 
                 </div>
                 <div id="go-to-summaries-button" class="box big-action-button" onclick="changeTabToSummaries();window.scrollTo(0, 0);">
                     <div>Summaries</div>
                     <div class="action-icon-container" id="week-table-icon">
-                        <!--<i class="fa fa-bar-chart"></i> -->
+                       <!--<i class="fa fa-bar-chart"></i> -->
                     </div>
                 </div>
             </div>
+
         </div>
+
         <div id="graphs-section" class="main-section" >
             <div class="main-title fixed" >
                 <ul class="horizontal-submenu">
@@ -167,7 +157,7 @@
                     <div onClick='addNewHabitFromForm();' id="add-button" class="add-button"><div class="action-icon-container save-icon" id="save-icon"></div>Save</div>
                 </div>
                 
-                <!-- <div class="box big-action-button" id="save-button-in-habits" onclick="extractElementsForUpdate();">
+               <!-- <div class="box big-action-button" id="save-button-in-habits" onclick="extractElementsForUpdate();">
                     <div>Save</div>
                     <i class="fa fa-save"></i> 
                 </div> -->
@@ -178,6 +168,7 @@
 
             </div>
         </div>
+
 
         <div class="overlay-for-message" id="journal-edit-box">
             <div class="message-in-overlay">
@@ -204,11 +195,11 @@
         <script type="text/javascript" src="language/english.js"></script>
         <script type="text/javascript" src="libraries/random.js"></script>
         <script type="text/javascript" src="libraries/date.js"></script>
-        <script type="text/javascript" src="components/login.js"></script>
         <script type="text/javascript" src="components/icons.js"></script>
         <script type="text/javascript" src="synchronization/debugTools.js"></script> 
         <script type="text/javascript" src="synchronization/getElements.js"></script> 
         <script type="text/javascript" src="habits_main.js"></script>
+        <script type="text/javascript" src="components/secret.js"></script>
         <script type="text/javascript" src="components/weekDaySelector.js"></script>
         <script type="text/javascript" src="components/weekTable.js"></script>
         <script type="text/javascript" src="components/dailySummary.js"></script>
