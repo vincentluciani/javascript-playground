@@ -43,7 +43,7 @@ function initializeGoogleButton(){
         client_id: clientId,
         callback: handleCredentialResponse
       });
-      google.accounts.id.renderButton(
+    /*  google.accounts.id.renderButton(
         document.getElementById("buttonDiv"),
         { theme: "outline", size: "large" }  // customization attributes
       );
@@ -53,7 +53,7 @@ function initializeGoogleButton(){
       googleSignOutButton.onclick = () => {
             google.accounts.id.disableAutoSelect();
             document.getElementById('signin_status').innerHTML = "Signed out";
-          }
+          }*/
   
 }
 

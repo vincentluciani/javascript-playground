@@ -85,7 +85,8 @@
                     data-auto_select="true"
                     > <!--   data-auto_select="true" data-auto_prompt="false"  data-login_uri="https://www.vince.com/discipline/"-->
                     </div>
-                    <div class="g_id_signin"
+                    <div id="signin_status">Signed out</div>
+                 <!--   <div class="g_id_signin"
                         data-type="standard"
                         data-size="large"
                         data-theme="outline"
@@ -93,14 +94,21 @@
                         data-shape="rectangular"
                         data-logo_alignment="left">
                     </div>
-                    <div id="signin_status">Signed out</div>
+                    
                     <script>
                         function onSignIn(credentialResponse) {
                             document.getElementById('signin_status') = "Signed in";
                         }
-                    </script>
+                    </script> -->
             
-                    <div class="g_id_signout" id="g_id_signout">Sign Out</div>   
+                    <div class="g_id_signout" id="g_id_signout" onClick>Sign Out</div>   
+                    <div id="signout_button">sign out 2</div>
+                    <script>
+                          const button = document.getElementById('signout_button');
+                                button.onclick = () => {
+                                google.accounts.id.disableAutoSelect();
+                                }
+                    </script>
                 </div>
                 <div class="box big-action-button" onclick="displayJournalEditBox();window.scrollTo(0, 0);">
                     <div>Daily Journal</div>
