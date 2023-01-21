@@ -1901,19 +1901,30 @@ function handleCredentialResponse(response) {
 }
 
 function initializeGoogleButton(){
+/*
+    google.accounts.id.initialize({
+        client_id: "YOUR_GOOGLE_CLIENT_ID",
+        callback: "https://www.vince.com/discipline/"
+      });
 
+    google.accounts.id.prompt();
+    */
 
     var clientId = document.getElementById('g_id_onload').getAttribute('data-client_id');
 
+    /*
     google.accounts.id.initialize({
-        client_id: clientId,
+        client_id: "YOUR_GOOGLE_CLIENT_ID",
         callback: handleCredentialResponse
       });
+
+      google.accounts.id.prompt();*/
+
     /*  google.accounts.id.renderButton(
         document.getElementById("buttonDiv"),
         { theme: "outline", size: "large" }  // customization attributes
       );
-      google.accounts.id.prompt(); // also display the One Tap dialog
+      // also display the One Tap dialog
 
       const googleSignOutButton = document.getElementById("g_id_signout");
       googleSignOutButton.onclick = () => {

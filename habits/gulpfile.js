@@ -33,6 +33,7 @@ gulp.task('pack-css', function () {
 gulp.task('put-client-id-html', function(){
     return gulp.src(['adding_habits.html'])
     .pipe(replace('YOUR_GOOGLE_CLIENT_ID', fs.readFileSync('googleclientid.txt', 'utf8'))) 
+    .pipe(replace('habits_main.js', 'habits_main_transformed.js')) 
     .pipe(rename('adding_habits_transformed.html'))
     .pipe(gulp.dest('.'));
 
@@ -46,6 +47,13 @@ gulp.task('put-client-id-node', function(){
 
 })
 
+gulp.task('put-client-id-main', function(){
+    return gulp.src(['habits_main.js'])
+    .pipe(replace('YOUR_GOOGLE_CLIENT_ID', fs.readFileSync('googleclientid.txt', 'utf8'))) 
+    .pipe(rename('habits_main_transformed.js'))
+    .pipe(gulp.dest('.'));
+
+})
 
 gulp.task('process-html', function () {    
     return gulp.src(['adding_habits.html'])
@@ -76,4 +84,4 @@ gulp.task('process-html', function () {
 });
 
 
-gulp.task('default', gulp.series(['put-client-id-html','put-client-id-node','pack-js','pack-css','process-html','pack-service-worker']));
+gulp.task('default', gulp.series(['put-client-id-html','put-client-id-main','put-client-id-node','pack-js','pack-css','process-html','pack-service-worker']));

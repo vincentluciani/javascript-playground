@@ -82,8 +82,9 @@
                     <div id="g_id_onload"
                     data-client_id="YOUR_GOOGLE_CLIENT_ID"
                     data-callback="handleCredentialResponse"
+                    data-itp_support="false"
                     data-auto_select="true"
-                    > <!--   data-auto_select="true" data-auto_prompt="false"  data-login_uri="https://www.vince.com/discipline/"-->
+                    > <!--   data-login_uri="https://www.vince.com/discipline/"    data-auto_select="true" data-auto_prompt="false"  data-login_uri="https://www.vince.com/discipline/"-->
                     </div>
                     <div id="signin_status">Signed out</div>
                  <!--   <div class="g_id_signin"
@@ -101,12 +102,13 @@
                         }
                     </script> -->
             
-                    <div class="g_id_signout" id="g_id_signout" onClick>Sign Out</div>   
+                   <!-- <div class="g_id_signout" id="g_id_signout" onClick>Sign Out</div> -->  
                     <div id="signout_button">sign out 2</div>
                     <script>
                           const button = document.getElementById('signout_button');
                                 button.onclick = () => {
                                 google.accounts.id.disableAutoSelect();
+                                document.getElementById('signin_status').innerHTML = "Signed out";
                                 }
                     </script>
                 </div>
