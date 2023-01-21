@@ -7,4 +7,5 @@ adding_habits_v2.html
 adding_habits_transformed.html
 index-transformed.js
 habits_main_transformed.js
-output
+output/bundle.js
+output/bundle-min.js

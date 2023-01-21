@@ -1903,7 +1903,7 @@ function handleCredentialResponse(response) {
 function initializeGoogleButton(){
 /*
     google.accounts.id.initialize({
-        client_id: "YOUR_GOOGLE_CLIENT_ID",
+        client_id: "YOURGOOGLE_CLIENT_ID",
         callback: "https://www.vince.com/discipline/"
       });
 
@@ -1914,7 +1914,7 @@ function initializeGoogleButton(){
 
     /*
     google.accounts.id.initialize({
-        client_id: "YOUR_GOOGLE_CLIENT_ID",
+        client_id: "YOURGOOGLE_CLIENT_ID",
         callback: handleCredentialResponse
       });
 
