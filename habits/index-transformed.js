@@ -106,13 +106,30 @@ app.get('/habits_main.js', function (req, res, next) {
       if (err) {
         return console.log(err);
       }
-      res.writeHead(200, {'Content-Type': 'text/html'});
+      res.writeHead(200, {'Content-Type': 'text/javascript'});
       res.write(data);
       res.end();
     });
 
   
 })
+
+app.get('/habits_main_transformed.js', function (req, res, next) {
+
+  fs.readFile('habits_main_transformed.js', 'utf8', function (err,data) {
+      var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+
+      if (err) {
+        return console.log(err);
+      }
+      res.writeHead(200, {'Content-Type': 'text/javascript'});
+      res.write(data);
+      res.end();
+    });
+
+  
+})
+
 
 app.get('/', function (req, res, next) {
   /*var pathname = url.parse(req.url).pathname;
