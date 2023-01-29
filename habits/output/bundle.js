@@ -1898,8 +1898,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
 function handleCredentialResponse(response) {
     document.getElementById('signin_status').innerHTML = "Signed in";
     console.log("Encoded JWT ID token: " + response.credential);
+    sendToken(response.credential);
 }
 
+function sendToken(token) {
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'https://www.vince.com/api/discipline/auth');
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function() {
+      console.log('Signed in information: ' + xhr.responseText);
+      document.getElementById("google-image").setAttribute("src", xhr.responseText);
+    };
+    xhr.send('token=' + token);
+
+}
 function initializeGoogleButton(){
 /*
     google.accounts.id.initialize({
@@ -1933,9 +1946,6 @@ function initializeGoogleButton(){
           }*/
   
 }
-
-
-
 
 onload = function(){
 /*var runAppRendering = function(){*/

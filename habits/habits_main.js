@@ -38,7 +38,7 @@ function handleCredentialResponse(response) {
 function sendToken(token) {
 
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'https://www.vince.com/api/discipline/habits/auth');
+    xhr.open('POST', 'https://www.vince.com/api/discipline/auth');
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onload = function() {
       console.log('Signed in information: ' + xhr.responseText);
@@ -80,9 +80,6 @@ function initializeGoogleButton(){
           }*/
   
 }
-
-
-
 
 onload = function(){
 /*var runAppRendering = function(){*/
