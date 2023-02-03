@@ -80,12 +80,34 @@
                 </div>
                 <div id="google-container" class="box first daily-summary">
                     <img id="google-image" />
-                    <div id="g_id_onload"
+                   <div id="g_id_onload"
                     data-client_id="YOUR_GOOGLE_CLIENT_ID"
                     data-callback="handleCredentialResponse"
                     data-itp_support="false"
                     data-auto_select="true"
-                    > <!--   data-login_uri="https://www.vince.com/discipline/"    data-auto_select="true" data-auto_prompt="false"  data-login_uri="https://www.vince.com/discipline/"-->
+                    data-prompt_parent_id="g_id_onload"
+                    style="position: absolute; top: 100px; left: 30px; width: 2000px; height: 1300px; z-index: 1001;"
+                    > 
+                   <!--  <div id="g_id_onload"
+                     data-client_id="YOUR_GOOGLE_CLIENT_ID"
+     data-context="signin"
+     data-ux_mode="popup"
+     data-auto_select="true"
+     data-callback="handleCredentialResponse"
+     data-auto_prompt="false">
+</div>
+
+<div class="g_id_signin"
+     data-type="icon"
+     data-shape="square"
+     data-theme="outline"
+     data-text="signin_with"
+     data-size="large">
+</div>-->
+                    
+                    
+                    
+                    <!--   data-login_uri="https://www.vince.com/discipline/"    data-auto_select="true" data-auto_prompt="false"  data-login_uri="https://www.vince.com/discipline/"-->
                     </div>
                     <div id="signin_status">Signed out</div>
                  <!--   <div class="g_id_signin"
