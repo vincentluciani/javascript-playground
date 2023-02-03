@@ -1242,11 +1242,7 @@ toggleButton.firstChild.setAttribute("stroke",currentStroke);
 function renderPastProgressBoxes(){
     if (dataArrays.pastProgressArray){
         for (const habitsElement of dataArrays.pastProgressArray){
-<<<<<<< HEAD
-            addProgressElement(habitsElement);
-=======
             addProgressDOMElement(habitsElement);
->>>>>>> data-from-api
         }
     }
 
@@ -1290,11 +1286,7 @@ var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletio
         currentDiv.style.order=currentDiv.getAttribute('order');
         /*currentDiv.style.order="80";*/
     } else if (newCompletionPercentage<50){
-<<<<<<< HEAD
-        currentDiv.style.border="3px solid #c369bc";
-=======
         currentDiv.style.borderColor="lightgrey";
->>>>>>> data-from-api
         currentDiv.style.background="white";
         currentDiv.style.order=currentDiv.getAttribute('order');
         /*currentDiv.style.order="80";*/
@@ -1328,11 +1320,7 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
         plusMinusDiv.firstChild.setAttribute("fill","red");
 
     } else if (newCompletionPercentage >=100){
-<<<<<<< HEAD
-        currentDiv.style.border="3px solid rgb(167 211 162)"; 
-=======
         currentDiv.style.borderColor="rgb(167 211 162)"; 
->>>>>>> data-from-api
         taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
         if (taskIconDiv && plusMinusDiv){
             /*taskIconDiv.classList.remove("fa-warning");
@@ -2064,7 +2052,6 @@ var putInStorage = function(id,value){
 
 /* TODO PUT FAILED UPDATES THROUGH APIS IN A QUEUE ON LOCAL STORAGE OR COOKIES */
 
-
 var getHabitProgressJournal = async function() {
 
 
@@ -2078,11 +2065,6 @@ var getHabitProgressJournal = async function() {
             console.log(e);
             return getHabitProgressJournalFromStorage();
         } 
-<<<<<<< HEAD
-
-        return response
-
-=======
         if (response.status == '200'){
             return response.json();
         } else {
@@ -2090,7 +2072,6 @@ var getHabitProgressJournal = async function() {
             return getHabitProgressJournalFromStorage();
         }
  
->>>>>>> data-from-api
     } else {
 
         return getHabitProgressJournalFromStorage();
@@ -2266,7 +2247,7 @@ onload = function(){
     "use strict";
 /* tests of service worker must be done on http://localhost:5000/ */
 
-    
+
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('debug') == "true"){
         document.getElementById("debug-section").style.display = "block";

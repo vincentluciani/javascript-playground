@@ -160,5 +160,3 @@ var updateParameterInItemValue = async function(keyName, parameterName, value){
 
 }
 
-
-*/
