@@ -1,6 +1,10 @@
 libraries/chart.min.js
 libraries/moment.min.js
 habits_main_transformed.js
+output/index.html
+output/bundle.js
+output/bundle.css
+output/bundle-min.css
 googleclientid.txt
 secret.js
 adding_habits_transformed.html
