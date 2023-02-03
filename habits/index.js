@@ -111,6 +111,36 @@ app.get('/get-habit-progress-journal', function (req, res, next) {
       
 })
 
+app.get('/poc_pwa.html', function (req, res, next) {
+
+  fs.readFile('poc_pwa.html', 'utf8', function (err,data) {
+    var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+
+    if (err) {
+      return console.log(err);
+    }
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.write(data);
+    res.end();
+  });
+        
+})
+
+app.get('/sw-test.js', function (req, res, next) {
+
+  fs.readFile('sw-test.js', 'utf8', function (err,data) {
+      if (err) {
+        return console.log(err);
+      }
+      res.writeHead(200, {'Content-Type': 'text/javascript'});
+      res.write(data);
+      res.end();
+    });
+        
+})
+
+
+
 app.get('/index.html', function (req, res, next) {
 
     fs.readFile('output/index.html', 'utf8', function (err,data) {
@@ -245,6 +275,15 @@ app.get('/sw-min.js', function (req, res, next) {
 
 
 app.get('/pwa-icon-512.png', function (req, res, next) {
+
+  var fileToLoad  = fs.readFileSync('output/pwa-icon-512.png')
+     
+  res.writeHead(200, {'Content-Type': 'image/png'});
+  res.end(fileToLoad, 'binary');
+  /* https://stackoverflow.com/questions/21235696/display-images-in-html-nodejs*/
+})
+
+app.get('/resources/crowd_cheering_6seconds.mp3', function (req, res, next) {
 
   var fileToLoad  = fs.readFileSync('output/pwa-icon-512.png')
      

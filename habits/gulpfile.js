@@ -22,6 +22,13 @@ gulp.task('pack-service-worker', function () {
         .pipe(gulp.dest('output'));
 });
 
+gulp.task('copy-resources', function () {    
+    return gulp.src(['resources/*.*'])
+        .pipe(gulp.dest('output/resources'));
+});
+
+
+
 gulp.task('pack-css', function () {    
     return gulp.src(['components/*.css'])
         .pipe(concat('bundle.css'))
@@ -37,8 +44,9 @@ gulp.task('process-html', function () {
         .pipe(replace('<script type="text/javascript" src="language/english.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="libraries/date.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="libraries/random.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="libraries/http.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="habits_main.js"></script>',''))
-        .pipe(replace('<script type="text/javascript" src="components/secret.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/checkboxWithTitle.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/weekTable.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/weekDaySelector.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/habit.js"></script>',''))
@@ -48,8 +56,9 @@ gulp.task('process-html', function () {
         .pipe(replace('<script type="text/javascript" src="components/dailySummary.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/radialprogress.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/encourage.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/countdown.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="synchronization/pushProgressToQueue.js"></script>','')) 
-        .pipe(replace('<script type="text/javascript" src="synchronization/getElements.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="synchronization/storage.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="synchronization/debugTools.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/icons.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="synchronization/readQueue.js"></script>','<script>'+fs.readFileSync('output/bundle-min.js', 'utf8')+'</script>'))   
@@ -59,4 +68,4 @@ gulp.task('process-html', function () {
 });
 
 
-gulp.task('default', gulp.series(['pack-js','pack-css','process-html','pack-service-worker']));
+gulp.task('default', gulp.series(['pack-js','pack-css','process-html','pack-service-worker','copy-resources']));

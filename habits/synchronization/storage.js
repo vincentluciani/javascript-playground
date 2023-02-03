@@ -3,25 +3,26 @@
 
 /* TODO PUT FAILED UPDATES THROUGH APIS IN A QUEUE ON LOCAL STORAGE OR COOKIES */
 
-/*
 var getHabitProgressJournal = async function() {
 
+
     if (loggedIn){
-        var APIcallParameters = {
-            method: "GET",
-            url: "http://localhost:5000/get-habit-progress-journal"
-        };
+        var url = `http://localhost:5000/get-habit-progress-journal?user="${apiUser}"`;
         var response;
         try {
-            response = await APICall(APIcallParameters);
+            response = await fetch(url);
         } catch (e) {
             console.log('could not connect to the server');
             console.log(e);
             return getHabitProgressJournalFromStorage();
         } 
-
-        return response
-
+        if (response.status == '200'){
+            return response.json();
+        } else {
+            console.log('status of the api call:'+response.status);
+            return getHabitProgressJournalFromStorage();
+        }
+ 
     } else {
 
         return getHabitProgressJournalFromStorage();
@@ -60,17 +61,19 @@ var removeItemByKey = async function(keyName) {
 
         window.localStorage.removeItem(keyName);
 
-        var APIcallParameters = {
-            method: "GET",
-            url: `http://localhost:5000/removeItemByKey?keyName=${keyName}`
-        };
+        if (loggedIn){
+            var APIcallParameters = {
+                method: "GET",
+                url: `http://localhost:5000/removeItemByKey?keyName=${keyName}&user="${apiUser}"`
+            };
 
-        var response;
-        try {
-            response = await APICall(APIcallParameters);
-        } catch (e) {
-            console.log(e);
-        } 
+            var response;
+            try {
+                response = await APICall(APIcallParameters);
+            } catch (e) {
+                console.log(e);
+            } 
+        }
         console.log('item removed');
         return response
 
@@ -80,7 +83,7 @@ var getItemByKey = async function(keyName) {
     if (loggedIn){
         var APIcallParameters = {
             method: "GET",
-            url: `http://localhost:5000/getItemByKey?keyName=${keyName}`
+            url: `http://localhost:5000/getItemByKey?keyName=${keyName}&user="${apiUser}"`
         };
 
         var response;
@@ -102,17 +105,19 @@ var getItemByKey = async function(keyName) {
 var setItem = async function(keyName, value) {
     window.localStorage.setItem(keyName, value)
 
-    var APIcallParameters = {
-        method: "GET",
-        url: `http://localhost:5000/setItemValue?keyName=${keyName}&value=${value}`
-    };
+    if (loggedIn){
+        var APIcallParameters = {
+            method: "GET",
+            url: `http://localhost:5000/setItemValue?keyName=${keyName}&value=${value}&user="${apiUser}"`
+        };
 
-    var response;
-    try {
-        response = await APICall(APIcallParameters);
-    } catch (e) {
-        console.log(e);
-    } 
+        var response;
+        try {
+            response = await APICall(APIcallParameters);
+        } catch (e) {
+            console.log(e);
+        } 
+    }
     console.log('item set:'+keyName+":"+value);
     return response
 
@@ -137,17 +142,19 @@ var updateParameterInItemValue = async function(keyName, parameterName, value){
     var status = await setItem(keyName,objectValue);
     console.log("update executed");
        
-    var APIcallParameters = {
-    method: "GET",
-    url: `http://localhost:5000/updateParamInItem?keyName=${keyName}&parameterName=${parameterName}&value=${value}`
-     };
+    if (loggedIn){
+        var APIcallParameters = {
+        method: "GET",
+        url: `http://localhost:5000/updateParamInItem?keyName=${keyName}&parameterName=${parameterName}&value=${value}&user="${apiUser}"`
+        };
 
-     response='';
-     try {
-         response = await APICall(APIcallParameters);
-     } catch (e) {
-         console.log(e);
-     } 
+        response='';
+        try {
+            response = await APICall(APIcallParameters);
+        } catch (e) {
+            console.log(e);
+        } 
+    }
      console.log('item set:'+keyName+":"+value);
      return response
 

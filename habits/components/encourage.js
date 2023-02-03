@@ -1,22 +1,33 @@
 
 
 var giveSuperKudos = function(title,description){
-        document.getElementById("super-positive-message").style.display="flex";
-        document.getElementById("super-positive-message-title").innerHTML = title;
-        document.getElementById("super-positive-message-subtitle").innerHTML = description ;
+    document.getElementById("super-positive-message").style.display="flex";
+    document.getElementById("super-positive-message-title").innerHTML = title;
+    document.getElementById("super-positive-message-subtitle").innerHTML = description ;
 }
 
 var encourageIfPassedTarget = function(result, target, isCritical){
 
-        if ( result == target && isCritical && isCritical == "true"){
-            giveSuperKudos("Special kudos to you :)","You mastered a critical habit today!");
-        } else if (result == target){
-            document.getElementById("positive-message").style.display="flex";
-            document.getElementById("positive-message-title").innerHTML = buildCongratulationTitle('en_US')+" :)";
-            document.getElementById("positive-message-subtitle").innerHTML = buildCongratulationSubTitle('en_US');
-        }
+    if ( result == target && isCritical && isCritical == "true"){
+        playCheers();
+        giveSuperKudos("Special kudos to you :)","You mastered a critical habit today!");
+    } else if (result == target){
+        giveCheers();
+    }
 
 }
+
+var giveCheers = function(){
+
+    playCheers();
+    var title = buildCongratulationTitle('en_US')+" :)";
+    var subTitle = buildCongratulationSubTitle('en_US') ;
+    document.getElementById("positive-message").style.display="flex";
+    document.getElementById("positive-message-title").innerHTML = title;
+    document.getElementById("positive-message-subtitle").innerHTML = subTitle;
+}
+
+
 
  var closeMessage = function(){
     document.getElementById("positive-message").style.display="none";

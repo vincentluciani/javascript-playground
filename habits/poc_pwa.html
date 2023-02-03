@@ -5,10 +5,135 @@
     <title>My First PWA</title>
     <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      #skip-waiting{
+        display:none;
+      }
+    </style>
   </head>
   <body class="fullscreen">
     <div class="container">
-      <h1 class="title">My First PWA!</h1>
+      <h1 class="title">version 46                                                                                                                                                                                                                                                                                                                                                         </h1>
+      <button id="send-message" onClick="sendMessage();">Send message</button>
+      <button id="skip-waiting" onClick="skipWaiting();">Click here to get the new version</button>
+      <div id="debug"></div>
+      <div id="state"></div>
     </div>
+    <script>
+      let serviceWorker
+
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw-test.js").then(function(registration) {
+
+          document.getElementById("debug").innerHTML ="";
+          document.getElementById("state").innerHTML ="";
+          if (registration.installing) {
+            serviceWorker = registration.installing;
+            document.getElementById("skip-waiting").style.display = "block";
+            document.getElementById("debug").innerHTML += 'installing -';
+          } else if (registration.waiting) {
+            serviceWorker = registration.waiting;
+            document.getElementById("skip-waiting").style.display = "block";
+            document.getElementById("debug").innerHTML += 'waiting -';
+          } else if (registration.active) {
+            serviceWorker = registration.active;
+            document.getElementById("debug").innerHTML += 'active -';
+            document.getElementById("skip-waiting").style.display = "none";
+
+          }
+
+          registration.addEventListener('updatefound', () => {
+              if (registration.installing) {
+              serviceWorker = registration.installing;
+              document.getElementById("skip-waiting").style.display = "block";
+              document.getElementById("debug").innerHTML += 'new installing -';
+              } else if (registration.waiting) {
+                serviceWorker = registration.waiting;
+                document.getElementById("skip-waiting").style.display = "block";
+                document.getElementById("debug").innerHTML += 'new waiting -';
+              } else if (registration.active) {
+                serviceWorker = registration.active;
+                document.getElementById("skip-waiting").style.display = "none";
+                document.getElementById("debug").innerHTML += 'new active -';
+              }
+
+              serviceWorker.addEventListener('statechange', () => {
+              // newWorker.state has changed
+              document.getElementById("debug").innerHTML += 'new worker changed -';
+            });
+          });
+        } );
+
+
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          // This fires when the service worker controlling this page
+          // changes, eg a new worker has skipped waiting and become
+          // the new active worker.
+          document.getElementById("debug").innerHTML += 'new worker has skipped waiting -';
+        });
+
+        if (serviceWorker) {
+          document.getElementById("state").innerHTML+=serviceWorker.state+" - ";
+          serviceWorker.addEventListener('statechange', (e) => {
+            document.getElementById("state").innerHTML+=e.target.state+" - ";
+
+
+
+          });
+
+                      //listen to messages
+            //           serviceWorker.onmessage = (event) => {
+            //   if (event.data && event.data.type === 'MSG_ID') {
+            //     document.getElementById("debug").innerHTML += event.data;
+            //   }
+            // };
+
+          //   navigator.serviceWorker.addEventListener('message', (event) => {
+          //     document.getElementById("debug").innerHTML += event.data.msg + " " + event.data.url;
+          // console.log(event.data.msg, event.data.url);
+          //   });
+        }
+      }
+/*https://felixgerschau.com/how-to-communicate-with-service-workers*/
+
+      // var sendMessage = function(){
+      //       //send message
+      //       // serviceWorker.controller.postMessage({
+      //       //   type: 'MSG_ID',
+      //       // });
+      //       channel.postMessage('This is a test message.');
+      // }
+
+      //             // From your client pages:
+      //             const channel = new BroadcastChannel('sw-messages');
+                  
+      //       channel.addEventListener('message', event => {
+      //           console.log('Received', event.data);
+      //       });
+
+          var sendMessage = function(){
+            broadcast.postMessage({
+            type: 'INCREASE_COUNT',
+          });
+          }
+
+            
+          const broadcast = new BroadcastChannel('count-channel');
+
+          // Listen to the response
+          broadcast.onmessage = (event) => {
+            console.log(event.data.payload);
+            document.getElementById("debug").innerHTML +=event.data.payload;
+          };
+
+          // Send first request
+          broadcast.postMessage({
+            type: 'INCREASE_COUNT',
+          });
+
+          var skipWaiting = function(){
+            broadcast.postMessage({action:'skipWaiting'}); 
+          }
+    </script>
   </body>
 </html>

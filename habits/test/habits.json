@@ -8952,7 +8952,7 @@
         {
             "habitId": "16508796598600",
             "isNegative": "false",
-            "habitDescription": "Squats after pushup",
+            "habitDescription": "--Squats after pushup",
             "target": 20,
             "weekDay": " tuesday thursday sunday",
             "isCritical": "false"
@@ -8960,7 +8960,7 @@
         {
             "habitId": "16422714081460",
             "isNegative": "null",
-            "habitDescription": "drink one white cup of liquids",
+            "habitDescription": "--drink one white cup of liquids",
             "target": 3,
             "weekDay": "monday tuesday wednesday friday sunday thursday saturday",
             "isCritical": "false"
@@ -8968,7 +8968,7 @@
         {
             "habitId": "16422713931750",
             "isNegative": "null",
-            "habitDescription": "water eyes",
+            "habitDescription": "--water eyes",
             "target": 1,
             "weekDay": "monday tuesday wednesday thursday friday",
             "isCritical": "false"
@@ -8976,14 +8976,14 @@
         {
             "habitId": "16422714489290",
             "isNegative": "null",
-            "habitDescription": "small walk",
+            "habitDescription": "--small walk",
             "target": 3,
             "weekDay": "monday wednesday friday"
         },
         {
             "habitId": "16472477096690",
             "isNegative": "false",
-            "habitDescription": "No news on mobile",
+            "habitDescription": "--No news on mobile",
             "target": 1,
             "weekDay": " monday tuesday wednesday thursday friday saturday sunday",
             "isCritical": "false"
@@ -8991,7 +8991,7 @@
         {
             "habitId": "16422714624050",
             "isNegative": "null",
-            "habitDescription": "meditation 10min",
+            "habitDescription": "--meditation 10min",
             "target": 1,
             "weekDay": "monday wednesday friday tuesday thursday saturday sunday",
             "isCritical": "false"
@@ -8999,7 +8999,7 @@
         {
             "habitId": "16539924344490",
             "isNegative": "false",
-            "habitDescription": "Warm water first thing in morning",
+            "habitDescription": "--Warm water first thing in morning",
             "target": 1,
             "weekDay": "monday tuesday wednesday thursday friday saturday sunday",
             "isCritical": "true"
@@ -9007,14 +9007,14 @@
         {
             "habitId": "16542701707520",
             "isNegative": false,
-            "habitDescription": "No Milk",
+            "habitDescription": "--No Milk",
             "target": 1,
             "weekDay": "monday wednesday thursday saturday"
         },
         {
             "habitId": "16422714834470",
             "isNegative": "null",
-            "habitDescription": "real push ups",
+            "habitDescription": "--real push ups",
             "target": 20,
             "weekDay": "tuesday thursday sunday saturday",
             "isCritical": "false"
@@ -9022,7 +9022,7 @@
         {
             "habitId": "16435630560150",
             "isNegative": "false",
-            "habitDescription": "No sugar no peanuts",
+            "habitDescription": "--No sugar no peanuts",
             "target": 1,
             "weekDay": " monday tuesday wednesday thursday friday saturday",
             "isCritical": "true"
@@ -9030,14 +9030,14 @@
         {
             "habitId": "16422714275660",
             "isNegative": "false",
-            "habitDescription": "walk kms",
+            "habitDescription": "--walk kms",
             "target": 8,
             "weekDay": " sunday thursday tuesday"
         },
         {
             "habitId": "16532806040840",
             "isNegative": false,
-            "habitDescription": "10 eye movements  at end of work",
+            "habitDescription": "--10 eye movements  at end of work",
             "target": 1,
             "weekDay": "monday tuesday wednesday thursday friday"
         }

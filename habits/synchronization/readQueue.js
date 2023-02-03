@@ -8,13 +8,14 @@ var readQueueProgress = function() {
         /* todo send the element to the backend using an API call */ 
         var currentDate = new Date();
         document.getElementById('last-saved-information').innerHTML = "Last saved: "+currentDate.toLocaleTimeString();
-        document.getElementById('last-saved-information-habits').innerHTML = "Last saved: "+currentDate.toLocaleTimeString();   
+        document.getElementById('last-saved-information-habits').innerHTML = "Last saved: "+currentDate.toLocaleTimeString(); 
     }
+    
 }
 
 var putInStorage = function(id,value){
   try {
-    window.localStorage.setItem(id, value);
+    setItem(id, value);
   } catch (error) {
     console.error(error);
     console.error("Problem writing progress:"+elementToProcess.id.toString());

@@ -1,3 +1,235 @@
+
+var checkboxWithTitle = function(title,variable,divId){
+
+    const divContainer = document.createElement("div");
+    const divText = document.createElement("div");
+    divText.setAttribute("class","input-title")
+    divText.innerHTML=title;
+    divContainer.appendChild(divText);
+    
+    var checkBoxContainer = document.createElement("label");
+    checkBoxContainer.setAttribute("class","custom-checkbox-container")
+    
+    const newInput = document.createElement("input");
+    newInput.setAttribute("id",divId);
+    newInput.setAttribute("class","simple-checkbox");
+    if (variable!=null && variable == "true") {
+        newInput.checked = true;  
+    } else if (variable == "false"){
+        newInput.checked = false;
+    }
+    newInput.value=newInput.checked;
+    
+    var checkMark = document.createElement("span");
+    checkMark.setAttribute("class","checkmark");
+    
+    newInput.setAttribute("type","checkbox");
+    
+    checkBoxContainer.appendChild(newInput);
+    checkBoxContainer.appendChild(checkMark);
+    divContainer.appendChild(checkBoxContainer);
+
+    return divContainer;
+}
+
+class DigitalCounter {
+    constructor(initialValue,parentDivId,countDownDivId,autoStart,callbackFunction) {
+        this.numberOfMinutes=0;
+        this.numberOfSeconds=0;
+        this.initialValue = initialValue;
+        this.callbackFunction = callbackFunction;
+        this.initializeIcons();
+        this.initializeDivs(countDownDivId);
+        this.inializeCounter(initialValue);
+        this.attachResultingDiv(parentDivId);
+        this.state="new";
+        if (autoStart){
+            this.startCounter();
+        }
+    }
+
+    initializeDivs(countDownDivId){
+        this.countDownStartButtonId = "start-button-"+countDownDivId
+        this.countDownStartButton = document.createElement("div");
+        this.countDownStartButton.setAttribute("id","start-button-"+countDownDivId);
+        this.countDownStartButton.setAttribute("class","counter-start-button countdown-button");
+
+        this.countDownInterruptButtonId = "interrupt-button-"+countDownDivId
+        this.countDownInterruptButton = document.createElement("div");
+        this.countDownInterruptButton.setAttribute("id","interrupt-button-"+countDownDivId);
+        this.countDownInterruptButton.setAttribute("class","interrupt-button countdown-button");
+
+        this.countDownResetButtonId = "reset-button-"+countDownDivId
+        this.countDownResetButton = document.createElement("div");
+        this.countDownResetButton.setAttribute("id","reset-button-"+countDownDivId);
+        this.countDownResetButton.setAttribute("class","reset-button countdown-button");
+
+        this.counterDiv = document.createElement("div");
+        this.counterDiv.setAttribute("id",countDownDivId);
+        this.counterDiv.setAttribute("class","countdown-container");
+        this.minutesSecondsSeparator = document.createElement("div");
+        this.minutesSecondsSeparator.setAttribute("id","minutes-second-separator-"+countDownDivId);
+        this.minutesSecondsSeparator.setAttribute("class","minutes-second-separator");
+        this.numberOfMinutesDiv = document.createElement("div");
+        this.numberOfMinutesDiv.setAttribute("id","number-of-minutes-"+countDownDivId);
+        this.numberOfMinutesDiv.setAttribute("class","number-of-minutes");
+        this.minutesSecondsSeparator.innerHTML=":";
+        this.numberOfSecondsDiv = document.createElement("div");
+        this.numberOfSecondsDiv.setAttribute("id","number-of-seconds-"+countDownDivId);
+        this.numberOfSecondsDiv.setAttribute("class","number-of-seconds");
+
+        this.counterDiv.appendChild(this.numberOfMinutesDiv);
+        this.counterDiv.appendChild(this.minutesSecondsSeparator);
+        this.counterDiv.appendChild(this.numberOfSecondsDiv);
+        this.counterDiv.appendChild(this.countDownStartButton);
+        this.counterDiv.appendChild(this.countDownInterruptButton)
+        this.counterDiv.appendChild(this.countDownResetButton)
+
+        this.countDownStartButton.appendChild(this.playButtonIcon);
+        this.countDownInterruptButton.appendChild(this.pauseButtonIcon);
+        this.countDownResetButton.appendChild(this.stopButtonIcon);
+        this.countDownStartButton.addEventListener('click', this.startCounter.bind(this));
+        this.countDownInterruptButton.addEventListener('click', this.interruptCounter.bind(this));
+        this.countDownResetButton.addEventListener('click', this.resetCounter.bind(this));
+
+        this.myVideo = document.createElement("video");
+        this.myVideo.setAttribute("id","video");
+        this.myVideo.setAttribute("width","1px");
+        this.myVideo.setAttribute("height","1px");
+        /*video id="video" width="1px" height="1px" controls>*/
+        this.sourcemp4 = document.createElement("source");
+        this.sourceogg = document.createElement("source");
+        this.sourcemp4.setAttribute("src","resources/muted-blank.mp4");
+        this.sourceogg.setAttribute("src","resources/muted-blank.ogg");
+        this.sourcemp4.setAttribute("type","video/mp4");
+        this.sourceogg.setAttribute("type","video/ogg");
+        this.myVideo.appendChild(this.sourcemp4);
+        this.myVideo.appendChild(this.sourceogg);
+
+    }
+
+    attachResultingDiv(parentDivId){
+        document.getElementById(parentDivId).appendChild(this.counterDiv);
+    }
+    inializeCounter(counterValue){
+        this.numberOfMinutes = counterValue;
+        this.numberOfSeconds = 0;
+        this.setSecondsInDiv(this.numberOfSeconds);
+        this.setMinutesInDiv(this.numberOfMinutes);
+    }
+
+    setMinutesInDiv(numberOfMinutes){
+        this.numberOfMinutesDiv.innerHTML = this.getTextValueForCounter(this.numberOfMinutes);
+    }
+
+    setSecondsInDiv(numberOfSeconds){
+        this.numberOfSecondsDiv.innerHTML = this.getTextValueForCounter(this.numberOfSeconds);
+    }
+
+    getTextValueForCounter(numericValue){
+        return numericValue.toString().padStart(2,"0");
+    }
+
+    startCounter(){
+        this.state="started";
+        this.preventSleep();
+        this.counterPointer = setInterval(this.decrementCounter.bind(this),1000);
+    }
+
+    interruptCounter(){
+        if (this.state == "started"){
+            this.allowSleep()
+            clearInterval(this.counterPointer);
+            this.state= "paused";
+        } else if (this.state == "paused") {
+            this.startCounter();
+        }
+
+    }
+
+    resetCounter(){
+        this.allowSleep();
+        clearInterval(this.counterPointer);
+        this.setNumberOfMinutes(this.initialValue);
+        this.setNumberOfSeconds(0);
+    }
+
+
+    getNumberOfSeconds(){
+        return this.numberOfSeconds;
+    }
+    getNumberOfMinutes(){
+        return this.numberOfMinutes;
+    }
+    setNumberOfMinutes(numberOfMinutes){
+        this.numberOfMinutes = numberOfMinutes;
+        this.setMinutesInDiv(this.numberOfMinutes);
+    }
+    setNumberOfSeconds(numberOfSeconds){
+        this.numberOfSeconds = numberOfSeconds;
+        this.setSecondsInDiv(this.numberOfSeconds);
+    }
+    decrementCounter(){
+        if (this.numberOfMinutes == 0 && this.numberOfSeconds == 1){
+            this.setNumberOfSeconds(this.initialValue);
+            this.stopCounter();
+            return;
+        }
+        if ( this.numberOfSeconds > 0 ){
+            this.setNumberOfSeconds(this.numberOfSeconds - 1);
+        } else {
+            this.setNumberOfSeconds(59);
+            this.setNumberOfMinutes(this.numberOfMinutes - 1);
+        }
+    }
+    stopCounter(){
+        this.state="new";
+        this.allowSleep();
+        clearInterval(this.counterPointer);
+        this.setNumberOfMinutes(this.initialValue);
+        this.setNumberOfSeconds(0);
+        this.callbackFunction();
+    }
+
+    initializeIcons(){
+        this.playButtonIcon = document.createElement("div");
+        this.playButtonIcon.innerHTML = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 485.74 485.74" style="enable-background:new 0 0 485.74 485.74;" xml:space="preserve"><g><g><path d="M242.872,0C108.732,0,0.004,108.736,0.004,242.864c0,134.14,108.728,242.876,242.868,242.876 c134.136,0,242.864-108.736,242.864-242.876C485.736,108.736,377.008,0,242.872,0z M338.412,263.94l-134.36,92.732 c-16.776,11.588-30.584,4.248-30.584-16.316V145.38c0-20.556,13.808-27.9,30.584-16.312l134.32,92.732 C355.136,233.384,355.176,252.348,338.412,263.94z"/></g></svg>';
+
+        this.pauseButtonIcon = document.createElement("div");
+        this.pauseButtonIcon.innerHTML = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 300.003 300.003" style="enable-background:new 0 0 300.003 300.003;" xml:space="preserve"><g><g><path d="M150.001,0c-82.838,0-150,67.159-150,150c0,82.838,67.162,150.003,150,150.003c82.843,0,150-67.165,150-150.003 C300.001,67.159,232.846,0,150.001,0z M134.41,194.538c0,9.498-7.7,17.198-17.198,17.198s-17.198-7.7-17.198-17.198V105.46 c0-9.498,7.7-17.198,17.198-17.198s17.198,7.7,17.198,17.198V194.538z M198.955,194.538c0,9.498-7.701,17.198-17.198,17.198 c-9.498,0-17.198-7.7-17.198-17.198V105.46c0-9.498,7.7-17.198,17.198-17.198s17.198,7.7,17.198,17.198V194.538z"/></g></svg>';
+        this.stopButtonIcon = document.createElement("div");
+        this.stopButtonIcon.innerHTML = '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 455 455" style="enable-background:new 0 0 455 455;" xml:space="preserve"><g><g><path d="M227.5,0C101.761,0,0,101.75,0,227.5C0,353.239,101.75,455,227.5,455C353.24,455,455,353.25,455,227.5 C455,101.761,353.25,0,227.5,0z M308.27,289.139c0,10.548-8.582,19.13-19.131,19.13H165.862c-10.548,0-19.13-8.582-19.13-19.13 V165.861c0-10.548,8.582-19.13,19.13-19.13h123.277c10.549,0,19.131,8.582,19.131,19.13V289.139z"/></g></svg>';
+
+    }
+
+    addVideo(){
+        document.body.appendChild(this.myVideo);
+    }
+    preventSleep()
+    {
+        this.addVideo();
+        this.myVideo.loop=true;
+        this.myVideo.play(); 
+    } ;
+
+    allowSleep()
+    {
+        this.myVideo.removeAttribute('loop');
+        this.myVideo.pause();
+        try{
+        document.body.removeChild(this.myVideo);
+        } catch(e){
+
+        }
+    };
+
+}
+
+function callbackFunction(){
+    alert("the end");
+}
+
+
 var updateDailyProgress = function(){
 
     var dailyProgress = getDailyProgress(); 
@@ -64,22 +296,33 @@ var getDailyProgress=function(){
 
 
 var giveSuperKudos = function(title,description){
-        document.getElementById("super-positive-message").style.display="flex";
-        document.getElementById("super-positive-message-title").innerHTML = title;
-        document.getElementById("super-positive-message-subtitle").innerHTML = description ;
+    document.getElementById("super-positive-message").style.display="flex";
+    document.getElementById("super-positive-message-title").innerHTML = title;
+    document.getElementById("super-positive-message-subtitle").innerHTML = description ;
 }
 
 var encourageIfPassedTarget = function(result, target, isCritical){
 
-        if ( result == target && isCritical && isCritical == "true"){
-            giveSuperKudos("Special kudos to you :)","You mastered a critical habit today!");
-        } else if (result == target){
-            document.getElementById("positive-message").style.display="flex";
-            document.getElementById("positive-message-title").innerHTML = buildCongratulationTitle('en_US')+" :)";
-            document.getElementById("positive-message-subtitle").innerHTML = buildCongratulationSubTitle('en_US');
-        }
+    if ( result == target && isCritical && isCritical == "true"){
+        playCheers();
+        giveSuperKudos("Special kudos to you :)","You mastered a critical habit today!");
+    } else if (result == target){
+        giveCheers();
+    }
 
 }
+
+var giveCheers = function(){
+
+    playCheers();
+    var title = buildCongratulationTitle('en_US')+" :)";
+    var subTitle = buildCongratulationSubTitle('en_US') ;
+    document.getElementById("positive-message").style.display="flex";
+    document.getElementById("positive-message-title").innerHTML = title;
+    document.getElementById("positive-message-subtitle").innerHTML = subTitle;
+}
+
+
 
  var closeMessage = function(){
     document.getElementById("positive-message").style.display="none";
@@ -275,7 +518,7 @@ var checkIfChartLoaded = function(resolve, reject,totalWaitingTime){
 }
 
 
-var addHabitElement = function(elementToAdd){
+var addHabitDOMElement = function(elementToAdd){
     const newHabitDivision = document.createElement("div");
 
     newHabitDivision.setAttribute("habitDescription", elementToAdd.habitDescription);
@@ -286,6 +529,14 @@ var addHabitElement = function(elementToAdd){
     newHabitDivision.setAttribute("weekDay",elementToAdd.weekDay);
     newHabitDivision.setAttribute("isNegative",elementToAdd.isNegative);
     newHabitDivision.setAttribute("isCritical",elementToAdd.isCritical);
+    newHabitDivision.setAttribute("isSuspendableDuringSickness",elementToAdd.isSuspendableDuringSickness);
+    newHabitDivision.setAttribute("isSuspendableDuringOtherCases",elementToAdd.isSuspendableDuringOtherCases);
+    newHabitDivision.setAttribute("isTimerNecessary",elementToAdd.isTimerNecessary);
+    newHabitDivision.setAttribute("timerInitialNumberOfMinutes",elementToAdd.timerInitialNumberOfMinutes);
+    var minOrder = 80;
+    var habitOrder = elementToAdd.order?elementToAdd.order:minOrder;
+    newHabitDivision.style.order = habitOrder
+    newHabitDivision.setAttribute("order",habitOrder);
 
     const titleText = document.createTextNode("Update habit:");
     var taskIconContainer = document.createElement("div");
@@ -330,20 +581,90 @@ var addHabitElement = function(elementToAdd){
     var weekDaySelector = dynamicWeekDaySelector(elementToAdd.weekDay);
     newHabitDivision.appendChild(weekDaySelector);
 
-    const isCriticalDivText = document.createElement("div");
-    isCriticalDivText.innerHTML="Critical:";
-    const isCritical = document.createElement("input");
-    isCritical.setAttribute("type","checkbox");
-    isCritical.setAttribute("class","simple-checkbox");
-    isCritical.setAttribute("id","is-critical");
-    if (elementToAdd.isCritical!=null && elementToAdd.isCritical == "true") {
-        isCritical.checked = true;  
-    } else if (elementToAdd.isCritical == "false"){
-        isCritical.checked = false;
-    }
-    isCritical.value=isCritical.checked;
-    newHabitDivision.appendChild(isCriticalDivText);
-    newHabitDivision.appendChild(isCritical);
+    /* PRIORITY */
+    const priorityText = document.createTextNode("Priority (1 is highest):");
+    const priorityTextDiv = document.createElement("div");
+    priorityTextDiv.appendChild(priorityText);
+
+    const priorityValue = document.createElement("input");
+    
+    priorityValue.setAttribute("class","habit-target-definition");
+    priorityValue.setAttribute("type","number");
+
+    priorityValue.value = parseInt(newHabitDivision.getAttribute("order",habitOrder))-minOrder;
+
+    priorityValue.addEventListener('input', function(habitDivision) {
+        return function(){
+            var newOrderInt = minOrder+parseInt(this.value);
+            habitDivision.setAttribute("order",newOrderInt.toString());
+        }
+    }(newHabitDivision));
+    /*var prioSetting = document.createElement("div");
+    prioSetting.setAttribute("class","prio-settings");
+    var laterButtonPrioText = document.createTextNode("Later");
+    var laterButtonPrio = document.createElement("div");
+    laterButtonPrio.appendChild(laterButtonPrioText);
+    laterButtonPrio.setAttribute("class","later-button normal");
+
+    var earlierButtonPrioText = document.createTextNode("Earlier");
+    var earlierButtonPrio = document.createElement("div");
+    earlierButtonPrio.appendChild(earlierButtonPrioText);
+    earlierButtonPrio.setAttribute("class","earlier-button normal");
+
+
+    laterButtonPrio.addEventListener('click', function(habitDivision) {
+        return function(){
+            var newOrder = habitDivision.getAttribute("order",habitOrder)+1;
+            if (newOrder>80){
+                newOrder=80;
+            }
+            habitDivision.style.order = newOrder
+            habitDivision.setAttribute("order",newOrder);
+        }
+    }(newHabitDivision));
+
+    earlierButtonPrio.addEventListener('click', function(habitDivision) {
+        return function(){
+            var newOrder = habitDivision.getAttribute("order",habitOrder)-1;
+            if (newOrder<60){
+                newOrder=60;
+            }
+            habitDivision.style.order = newOrder
+            habitDivision.setAttribute("order",newOrder);
+        }
+    }(newHabitDivision));
+
+    prioSetting.appendChild(earlierButtonPrio);
+    prioSetting.appendChild(laterButtonPrio);
+    newHabitDivision.appendChild(prioSetting);
+    */
+    newHabitDivision.appendChild(priorityTextDiv);
+    newHabitDivision.appendChild(priorityValue);
+    /* end priority */
+
+    /* Timer */
+    var checkBoxContainerIsTimerNecessary = checkboxWithTitle("Do you need a timer:",elementToAdd.isCritical,"is-timer-necessary-"+elementToAdd.habitId.toString());
+    newHabitDivision.appendChild(checkBoxContainerIsTimerNecessary);
+    const timerTimeTextDiv = document.createTextNode("Time in minutes:");
+    const timerTimeInput = document.createElement("input");
+    timerTimeInput.setAttribute("type","number");
+    timerTimeInput.setAttribute("id","initial-time"+elementToAdd.habitId.toString());
+    timerTimeInput.value = elementToAdd.timerInitialNumberOfMinutes;
+    newHabitDivision.appendChild(timerTimeTextDiv);
+    newHabitDivision.appendChild(timerTimeInput)
+    /*timer-value*/
+
+    /* IS CRITICAL */
+    var checkBoxContainer = checkboxWithTitle("Critical:",elementToAdd.isCritical,"is-critical-"+elementToAdd.habitId.toString());
+    newHabitDivision.appendChild(checkBoxContainer);
+
+    /* IS SUSPENDABLE DURING SICKNESS */
+    var checkBoxContainerSuspendableSickness = checkboxWithTitle("Suspendable during sickness:",elementToAdd.isSuspendableDuringSickness,"is-suspendable-during-sickness-"+elementToAdd.habitId.toString());
+    newHabitDivision.appendChild(checkBoxContainerSuspendableSickness);
+
+    /* IS SUSPENDABLE DURING other cases */
+    var checkBoxContainerSuspendableOtherCases = checkboxWithTitle("Suspendable during other cases:",elementToAdd.isSuspendableDuringOtherCases,"is-suspendable-in-other-cases-"+elementToAdd.habitId.toString());
+    newHabitDivision.appendChild(checkBoxContainerSuspendableOtherCases);
 
     const saveButton = document.createElement("div");
     var onClickSaveFunctionCall = "saveChangesInHabit(" + elementToAdd.habitId.toString()+ ")";
@@ -407,7 +728,7 @@ var deleteHabit = function(habitId){
     var habitKey = "habit-"+habitId.toString();
     var element = document.getElementById(habitId.toString());
     element.parentNode.removeChild(element);
-    window.localStorage.removeItem(habitKey);
+    removeItemByKey(habitKey);
 }
 
 var deleteProgressFromHabitToday = function(habitId){
@@ -424,72 +745,13 @@ var deleteProgressFromHabitToday = function(habitId){
             var progressId = progressDivs[i].getAttribute("id");
             progressDivs[i].parentNode.removeChild(progressDivs[i]);
             var progressKey = "progress-"+progressId.toString();
-            window.localStorage.removeItem(progressKey);
+            removeItemByKey(progressKey);
         }
     }
 
 }
 
-var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
 
-    var newCurrentDateTime = new Date();
-
-    var currentDateTimeMidnight = newCurrentDateTime.setHours(0,0,0,0);
-    var inputDateTimeMidnight = inputDateTime.setHours(0,0,0,0);
-    
-    if ( inputDateTimeMidnight > currentDateTimeMidnight){
-        return;
-    }
-
-    var progressElements = document.getElementsByClassName('habit-update');
-    var habitsElements = document.getElementsByClassName('habit-setting');
-
-    var habitsElementsLength = habitsElements.length;
-    for (var i=0; i<habitsElementsLength ;i++){
-
-        var isHabitProgressExisting = false;
-
-        for (var progressElement of progressElements){
-            if ( habitsElements[i].getAttribute("habitId") == progressElement.getAttribute("habitId") && progressElement.getAttribute("progressdate") == inputDate){
-                isHabitProgressExisting = true;
-            }
-        }
-
-        if ( !isHabitProgressExisting){
-            var isDayOK;
-            if (habitsElements[i].getAttribute("weekDay")){
-                debugWrite("Comparing current date time with habit week day");
-                debugWrite("Current date time:");
-                debugWrite(inputDateTime);
-                debugWrite("Habit week day:");
-                debugWrite(habitsElements[i].getAttribute("weekDay"));
-                debugWrite("Is critical?:");
-                debugWrite(habitsElements[i].getAttribute("iscritical"));
-                
-                isDayOK = isDayOfWeekInHabitWeeks(inputDateTime, habitsElements[i].getAttribute("weekDay"));
-            } else {
-                isDayOK = true;
-            }
-            if (isDayOK != null && isDayOK) {
-                let newProgressObject = {
-                    id: Date.now()*100+i,
-                    habitId: habitsElements[i].getAttribute("habitId"),
-                    habitDescription: habitsElements[i].getAttribute("habitDescription"),
-                    target: habitsElements[i].getAttribute("target"),
-                    progressDate: inputDate,
-                    isNew: true,
-                    isCritical: habitsElements[i].getAttribute("iscritical"),
-                    numberOfCompletions:0,
-                }
-                addProgressElement(newProgressObject);
-                console.log("added progress");
-                console.log(newProgressObject);
-                pushProgressArrayToQueue(newProgressObject);
-            }
-        }
-    }
-    /* go through all elements, if nothing with today's date, go through all habits and add new element with this habit id*/
-}
 
 var resetElementsOnNewHabitForm = function(){
     var testElements = document.getElementsByClassName('habit-update');
@@ -512,6 +774,97 @@ var resetElementsOnNewHabitForm = function(){
     }
     return testElements;
 };
+
+/* Get information from the form to add new habits and add a PROGRESS (dom+memory for both)*/
+/* CAREFUL elementToAdd has data to build A PROGRESS */ 
+/* both habit and progress are added with this function */
+var addNewHabitFromForm = function(){
+
+    var elementToAdd={};
+    var newId = Date.now();
+    elementToAdd.id = newId.toString();
+    elementToAdd.habitId = (newId * 10).toString();
+    elementToAdd.habitDescription = document.getElementById('new-description').value;
+    elementToAdd.target = parseInt(document.getElementById('new-target').value);
+    elementToAdd.isNegative = document.getElementById('new-is-negative-flag').checked;
+    elementToAdd.progressDate = currentDate;
+    elementToAdd.numberOfCompletions = 0;
+    elementToAdd.isNew = true;
+    elementToAdd.isCritical = "false";
+    elementToAdd.isTimerNecessary = "false";
+    elementToAdd.timerInitialNumberOfMinutes = 0;
+    elementToAdd.isSuspendableDuringSickness = "false";
+    elementToAdd.isSuspendableDuringOtherCases = "false";
+    elementToAdd.order=81;
+
+    var weekDaySelector = document.getElementById('week-day-selection');
+    
+    elementToAdd.weekDay = weekDaySelector.getAttribute('weekDay');
+    if ( elementToAdd.weekDay == ""){
+        elementToAdd.weekDay ='monday tuesday wednesday thursday friday saturday sunday';
+    }
+
+    var isDayOK;
+    if (elementToAdd.weekDay){
+        isDayOK = isDayOfWeekInHabitWeeks(currentDateTime, elementToAdd.weekDay);
+    } else {
+        isDayOK = true;
+    }
+    if (isDayOK != null && isDayOK)
+    {
+        addProgressDOMElement(elementToAdd);
+        pushProgressArrayToQueue(elementToAdd);
+    }
+    addHabitDOMElement(elementToAdd);
+    
+    document.getElementById('new-description').value = null;
+    document.getElementById('new-target').value = 1;
+    document.getElementById('new-is-negative-flag').checked = false;
+    resetWeekDaySelector(weekDaySelector);
+
+    showProgressTab();
+
+    showStartProgressButtonOnHabits();
+
+    saveChangesInHabitFromObject(elementToAdd);
+
+    confirmAddition(elementToAdd.habitId);
+};
+
+var saveChangesInHabit = function(habitId){
+    var habitDiv = document.getElementById(habitId);
+    var habitJSON = habitDOMToJson(habitDiv);
+    pushHabitArrayToQueue(habitJSON);
+    confirmSave();
+
+}
+var setHabitAsCritical = function(habitId){
+    var habitDiv = document.getElementById(habitId);
+    var habitJSON = habitDOMToJson(habitDiv);
+    habitJSON.isCritical="true";
+    pushHabitArrayToQueue(habitJSON);
+};
+var unsetHabitAsCritical = function(habitId){
+    var habitDiv = document.getElementById(habitId);
+    var habitJSON = habitDOMToJson(habitDiv);
+    habitJSON.isCritical="false";
+    pushHabitArrayToQueue(habitJSON);
+};
+
+var saveChangesInHabitFromObject = function(habitElement){
+
+    var habitJSON = {};
+    habitJSON.habitId = habitElement.habitId;
+    habitJSON.isNegative = habitElement.isNegative;
+    habitJSON.habitDescription = habitElement.habitDescription;
+    habitJSON.target = habitElement.target;
+    habitJSON.weekDay = habitElement.weekDay;
+
+    pushHabitArrayToQueue(habitJSON);
+    
+};
+
+
 /*var taskIcon = '<svg width="15px" height="15px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="none" fill="#000" stroke="#000" stroke-width="2" d="M12,20 L24,20 M12,12 L24,12 M12,4 L24,4 M1,19 L4,22 L9,17 M1,11 L4,14 L9,9 M9,1 L4,6 L1,3"/></svg>'
 */
 
@@ -533,7 +886,7 @@ var trophyIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="25px" height="2
 
 
 var trophyIcon2='<svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve"><g><g><g><path d="M256,250.719c-59.095,0-107.172,48.048-107.172,107.107S196.905,464.933,256,464.933     c59.095,0,107.172-48.048,107.172-107.107S315.094,250.719,256,250.719z M256,444.02c-47.565,0-86.26-38.667-86.26-86.196     s38.696-86.196,86.26-86.196s86.26,38.667,86.26,86.196C342.26,405.354,303.564,444.02,256,444.02z"/><path d="M510.777,11.057c-1.814-3.415-5.366-5.768-9.232-5.768H324.945c-3.474,0-6.722,1.946-8.667,4.826l-60.222,89.33     l-60.341-89.394c-1.945-2.875-5.189-4.764-8.662-4.764H10.456c-3.869,0-7.42,2.356-9.235,5.772     c-1.814,3.417-1.593,7.665,0.572,10.87l153.112,226.567c-29.437,27.22-47.9,66.157-47.9,109.302     c0,82.104,66.839,148.915,148.995,148.915s148.995-66.79,148.995-148.895c0-43.077-18.406-81.93-47.763-109.143L510.21,21.921     C512.373,18.717,512.592,14.471,510.777,11.057z M431.422,26.2L303.206,216.368c-14.268-4.775-29.493-7.55-45.302-7.75     L380.962,26.2H431.422z M330.503,26.2h25.23L231.301,210.762c-10.83,1.813-21.267,4.687-31.177,8.709L330.503,26.2z      M181.503,26.2l61.943,91.818l-12.591,18.543L156.289,26.2H181.503z M131.044,26.2l87.202,129.153l-25.211,37.24L80.596,26.2     H131.044z M30.144,26.2h25.209l125.071,185.186l-12.617,18.582L30.144,26.2z M384.083,357.826     c0,70.574-57.458,127.99-128.084,127.99s-128.084-57.416-128.084-127.99S185.374,229.836,256,229.836     S384.083,287.252,384.083,357.826z M340.882,235.304c-5.719-3.976-11.728-7.675-17.99-10.832L456.652,26.2h25.22L340.882,235.304     z"/></g></g></g></svg>';
-var trophyIconBig = '<svg xmlns="http://www.w3.org/2000/svg" stroke="white" fill="white" width="200px" height="200px" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 510 510" style="enable-background:new 0 0 981.555 981.555;" xml:space="preserve"><path xmlns="http://www.w3.org/2000/svg" d="M512,112c0-25.641-9.984-49.75-28.117-67.875C456.906,17.141,417.795,9.914,384,21.844V16c0-8.836-7.163-16-16-16H144  c-8.837,0-16,7.164-16,16v5.844c-33.798-11.93-72.904-4.711-99.883,22.281C9.984,62.25,0,86.359,0,112s9.984,49.75,28.117,67.875  c0.2,0.203,0.438,0.328,0.643,0.523c0.193,0.188,0.33,0.406,0.529,0.586l109.258,98.75c5.021,4.555,58.156,45.031,85.453,52.07V384  l-16,64h-16c-17.673,0-32,14.328-32,32v32h192v-32c0-17.672-14.327-32-32-32h-16l-16-64v-52.195  c27.297-7.039,80.433-47.531,85.453-52.07l109.258-98.75c0.199-0.18,0.336-0.398,0.529-0.586c0.205-0.195,0.443-0.32,0.643-0.523  C502.016,161.75,512,137.641,512,112z M393.367,89.375c12.484-12.469,32.781-12.469,45.266,0C444.672,95.422,448,103.453,448,112  c0,8.461-3.281,16.406-9.207,22.43L384,183.953V95.766C387.382,94.227,390.587,92.156,393.367,89.375z M73.367,89.375  c12.484-12.469,32.781-12.469,45.266,0c2.78,2.781,5.985,4.844,9.367,6.391v88.187L73.207,134.43C67.281,128.406,64,120.461,64,112  C64,103.453,67.328,95.422,73.367,89.375z"/></svg>'
+var trophyIconBig = '<svg xmlns="http://www.w3.org/2000/svg" stroke="white" fill="white" width="180px" height="180px" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 510 510" style="enable-background:new 0 0 981.555 981.555;" xml:space="preserve"><path xmlns="http://www.w3.org/2000/svg" d="M512,112c0-25.641-9.984-49.75-28.117-67.875C456.906,17.141,417.795,9.914,384,21.844V16c0-8.836-7.163-16-16-16H144  c-8.837,0-16,7.164-16,16v5.844c-33.798-11.93-72.904-4.711-99.883,22.281C9.984,62.25,0,86.359,0,112s9.984,49.75,28.117,67.875  c0.2,0.203,0.438,0.328,0.643,0.523c0.193,0.188,0.33,0.406,0.529,0.586l109.258,98.75c5.021,4.555,58.156,45.031,85.453,52.07V384  l-16,64h-16c-17.673,0-32,14.328-32,32v32h192v-32c0-17.672-14.327-32-32-32h-16l-16-64v-52.195  c27.297-7.039,80.433-47.531,85.453-52.07l109.258-98.75c0.199-0.18,0.336-0.398,0.529-0.586c0.205-0.195,0.443-0.32,0.643-0.523  C502.016,161.75,512,137.641,512,112z M393.367,89.375c12.484-12.469,32.781-12.469,45.266,0C444.672,95.422,448,103.453,448,112  c0,8.461-3.281,16.406-9.207,22.43L384,183.953V95.766C387.382,94.227,390.587,92.156,393.367,89.375z M73.367,89.375  c12.484-12.469,32.781-12.469,45.266,0c2.78,2.781,5.985,4.844,9.367,6.391v88.187L73.207,134.43C67.281,128.406,64,120.461,64,112  C64,103.453,67.328,95.422,73.367,89.375z"/></svg>'
 
 var warningIcon = '<svg xmlns="http://www.w3.org/2000/svg"  width="15px" height="15px" fill="red" stroke="red"  xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 491.537 491.537" style="enable-background:new 0 0 491.537 491.537;" xml:space="preserve"><g><g>	<path d="M488.117,459.466l-223.1-447.2c-10.4-17.4-32-13.1-37.5,0l-225.2,449.3c-8,15.6,6.3,29.2,18.8,29.2h449.6c0,0,0.3,0,0.8,0    C487.517,490.766,497.017,472.466,488.117,459.466z M54.417,450.066l191.8-383.6l190.8,383.7h-382.6V450.066z"/><path d="M225.417,206.166v104.3c0,11.5,9.4,20.9,20.9,20.9c11.5,0,19.8-8.3,20.9-19.8v-105.4c0-11.5-9.4-20.9-20.9-20.9    C234.817,185.266,225.417,194.666,225.417,206.166z"/>		<circle cx="246.217" cy="388.066" r="20.5"/></g></g></svg>';
 
@@ -557,12 +910,12 @@ var fullCircleRed = fullCirclePast.replace("#55d355","red");
 var minusIconGreen= '<svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" fill="#55d355" stroke="#55d355"  xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 50 50" style="enable-background:new 0 0 42 42;" xml:space="preserve"><path d="M37.059,16H26H16H4.941C2.224,16,0,18.282,0,21s2.224,5,4.941,5H16h10h11.059C39.776,26,42,23.718,42,21  S39.776,16,37.059,16z"/></svg>';
 
 var startIcon='<svg xmlns="http://www.w3.org/2000/svg" width="100px" height="100px" fill="#ffffff" stroke="#ffffff"  xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 485 485" style="enable-background:new 0 0 485 485;" xml:space="preserve"><g>	<path d="M413.974,71.026C368.171,25.225,307.274,0,242.5,0S116.829,25.225,71.026,71.026C25.225,116.829,0,177.726,0,242.5   s25.225,125.671,71.026,171.474C116.829,459.775,177.726,485,242.5,485s125.671-25.225,171.474-71.026   C459.775,368.171,485,307.274,485,242.5S459.775,116.829,413.974,71.026z M242.5,455C125.327,455,30,359.673,30,242.5   S125.327,30,242.5,30S455,125.327,455,242.5S359.673,455,242.5,455z"/>	<polygon points="181.062,336.575 343.938,242.5 181.062,148.425  "/></g></svg>'
-var displayJournalEditBox = function(){
+var displayJournalEditBoxAsync = async function(){
     var progressDate = document.getElementById("date-filter").value;
     var editBox = document.getElementById("journal-edit-box");
     var editBoxTextBox = document.getElementById("daily-journal");
 
-    var currentText = getCurrentDateJournal(progressDate);
+    var currentText = await getCurrentDateJournal(progressDate);
     editBoxTextBox.value = "";
     if (currentText && currentText.length>0){
         editBoxTextBox.value = JSON.parse(currentText);
@@ -573,10 +926,18 @@ var displayJournalEditBox = function(){
     editBox.style.display="flex";
 };
 
-var getCurrentDateJournal = function(journalDate){
+var displayJournalEditBox = function(){
+    displayJournalEditBoxAsync().then(() => {
+        console.log('successfully displayed the journal');
+      }, reason => {
+        console.log(reason );
+      })
+}
 
-    return window.localStorage.getItem("journal-"+journalDate);
+var getCurrentDateJournal = async function(journalDate){
 
+    var journal = await getItemByKey("journal-"+journalDate);
+    return journal;
 }
 var closeJournal = function(){
     var editBox = document.getElementById("journal-edit-box");
@@ -607,11 +968,14 @@ var readJournal = function(journalArray){
 		return ( convertJournalKeyToDateInt(b.key) - convertJournalKeyToDateInt(a.key))
 		});	
 
+    document.getElementById("journal-container").innerHTML  = "";
+
     for ( var journalEntry of journalArray){
         var journalText = journalEntry.text;
         if ( journalText.length > 0){
             var brDiv = document.createElement("br");
             var journalDiv = document.createElement("div");
+            journalDiv.setAttribute("class","journal-container-day");
             var dateDiv = document.createElement("div");
             dateDiv.innerHTML = journalEntry.key.substr(8);
             dateDiv.setAttribute("class","date-label");
@@ -620,8 +984,8 @@ var readJournal = function(journalArray){
             textDiv.setAttribute("class","text-label");
             journalDiv.appendChild(dateDiv);
             journalDiv.appendChild(textDiv);   
-            journalDiv.appendChild(brDiv);
             document.getElementById("journal-container").appendChild(journalDiv);
+            document.getElementById("journal-container").appendChild(brDiv);
         }     
     }
 
@@ -629,7 +993,11 @@ var readJournal = function(journalArray){
 
 
 
-var addProgressElement = function(elementToAdd){
+var actionsWhenCountdownEnd = function(){
+    giveCheers();
+;}
+
+var addProgressDOMElement = function(elementToAdd){
 
     const newProgressDivision = document.createElement("div");
 
@@ -643,6 +1011,13 @@ var addProgressElement = function(elementToAdd){
     newProgressDivision.setAttribute("habitId",elementToAdd.habitId);
     newProgressDivision.setAttribute("isNegative", elementToAdd.isNegative);
     newProgressDivision.setAttribute("isCritical", elementToAdd.isCritical);
+    newProgressDivision.setAttribute("isSuspendableDuringSickness", elementToAdd.isSuspendableDuringSickness);
+    newProgressDivision.setAttribute("isSuspendableDuringOtherCases", elementToAdd.isSuspendableDuringOtherCases);
+    newProgressDivision.setAttribute("isTimerNecessary", elementToAdd.isTimerNecessary);
+    newProgressDivision.setAttribute("timerInitialNumberOfMinutes", elementToAdd.timerInitialNumberOfMinutes);
+    var elementOrder = elementToAdd.order?elementToAdd.order:80;
+    newProgressDivision.setAttribute("order", elementOrder);
+    newProgressDivision.style.order = elementOrder;
 
     const habitDescriptionText = document.createTextNode(elementToAdd.habitDescription);
     const targetValue = document.createElement("input");
@@ -781,12 +1156,25 @@ var addProgressElement = function(elementToAdd){
 
     }
 
+    /* Countdown */
+    if (elementToAdd.isTimerNecessary == "true"){
+        var countDownTitle = document.createElement("div");
+        countDownTitle.innerHTML = "Countdown:";
+        countDownTitle.setAttribute("class","progress-container");
+        
+        detailsArea.appendChild(countDownTitle);
 
+        var countDownContainer = document.createElement("div");
+        var countDownContainerId = "countdown-container-"+elementToAdd.id
+
+        countDownContainer.setAttribute("id",countDownContainerId);
+        detailsArea.appendChild(countDownContainer);
+    }
     var completionTextContainer = document.createElement("div");
     completionTextContainer.setAttribute("class","progress-container");
 
     completionTextContainer.appendChild(currentCompletionText);
-    detailsArea.appendChild(completionTextContainer);
+    /*detailsArea.appendChild(completionTextContainer);*/
     detailsArea.appendChild(percentageCompletionInput);
     newProgressDivision.appendChild(detailsArea);
 
@@ -801,12 +1189,23 @@ var addProgressElement = function(elementToAdd){
             pushProgressToQueue(newProgressDivision);}
      }(newProgressDivision));
 
+     titleDiv = newProgressDivision.getElementsByClassName('habit-description')[0];
+
+     titleDiv.addEventListener('click', function(expandButtonWrapper,detailsArea) {
+        return function(){
+            toggleExpandCollapse(expandButtonWrapper,detailsArea);
+        }
+     }(expandButtonWrapper,detailsArea));
+
      expandButtonWrapper.addEventListener('click', function(expandButtonWrapper,detailsArea) {
         return function(){
             toggleExpandCollapse(expandButtonWrapper,detailsArea);
         }
      }(expandButtonWrapper,detailsArea));
 
+     if (elementToAdd.isTimerNecessary == "true"){
+        var newCounterDiv = new DigitalCounter(elementToAdd.timerInitialNumberOfMinutes,countDownContainerId,"new-counter-"+elementToAdd.id,false,actionsWhenCountdownEnd);
+     }
      refreshProgress(newProgressDivision);
 
 
@@ -843,7 +1242,11 @@ toggleButton.firstChild.setAttribute("stroke",currentStroke);
 function renderPastProgressBoxes(){
     if (dataArrays.pastProgressArray){
         for (const habitsElement of dataArrays.pastProgressArray){
+<<<<<<< HEAD
             addProgressElement(habitsElement);
+=======
+            addProgressDOMElement(habitsElement);
+>>>>>>> data-from-api
         }
     }
 
@@ -876,20 +1279,28 @@ var refreshProgress = function(currentDiv){
 var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletionPercentage){
 
     if (newCompletionPercentage>=100){
-        currentDiv.style.border="3px solid rgb(167 211 162)";
-        currentDiv.style.order="95";
+        currentDiv.style.borderColor="rgb(167 211 162)";
+        var newOrder = 180;/*parseInt(currentDiv.getAttribute('order'))+100;*/
+        currentDiv.style.order=newOrder.toString();
+        currentDiv.setAttribute('order',newOrder.toString());
         currentDiv.style.background="#daffd9";
     } else if (newCompletionPercentage>=50){
-        currentDiv.style.border="3px solid rgb(246 223 35)";
+        currentDiv.style.borderColor="rgb(246 223 35)";
         currentDiv.style.background="rgb(255 251 234)";
-        currentDiv.style.order="70";
+        currentDiv.style.order=currentDiv.getAttribute('order');
+        /*currentDiv.style.order="80";*/
     } else if (newCompletionPercentage<50){
+<<<<<<< HEAD
         currentDiv.style.border="3px solid #c369bc";
+=======
+        currentDiv.style.borderColor="lightgrey";
+>>>>>>> data-from-api
         currentDiv.style.background="white";
-        currentDiv.style.order="70";
+        currentDiv.style.order=currentDiv.getAttribute('order');
+        /*currentDiv.style.order="80";*/
     }
     if (currentDiv.id && currentDiv.id == "daily-summary-container"){
-        currentDiv.style.order = "90";
+        currentDiv.style.order = "179";
     }
 
 }
@@ -899,8 +1310,8 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
     var taskIconDiv;
 
     if (newCompletionPercentage <100 ){
-        currentDiv.style.order = "60";
-        currentDiv.style.border="3px solid red"; 
+        /*currentDiv.style.order = "60";*/
+        currentDiv.style.borderColor="red"; 
         currentDiv.style.background="#fff1f1";
 
         taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
@@ -917,7 +1328,11 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
         plusMinusDiv.firstChild.setAttribute("fill","red");
 
     } else if (newCompletionPercentage >=100){
+<<<<<<< HEAD
         currentDiv.style.border="3px solid rgb(167 211 162)"; 
+=======
+        currentDiv.style.borderColor="rgb(167 211 162)"; 
+>>>>>>> data-from-api
         taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
         if (taskIconDiv && plusMinusDiv){
             /*taskIconDiv.classList.remove("fa-warning");
@@ -934,7 +1349,71 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
     }
 }
 
+var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
 
+    var newCurrentDateTime = new Date();
+
+    var currentDateTimeMidnight = newCurrentDateTime.setHours(0,0,0,0);
+    var inputDateTimeMidnight = inputDateTime.setHours(0,0,0,0);
+    
+    if ( inputDateTimeMidnight > currentDateTimeMidnight){
+        return;
+    }
+
+    var progressElements = document.getElementsByClassName('habit-update');
+    var habitsElements = document.getElementsByClassName('habit-setting');
+
+    var habitsElementsLength = habitsElements.length;
+    for (var i=0; i<habitsElementsLength ;i++){
+
+        var isHabitProgressExisting = false;
+
+        for (var progressElement of progressElements){
+            if ( habitsElements[i].getAttribute("habitId") == progressElement.getAttribute("habitId") && progressElement.getAttribute("progressdate") == inputDate){
+                isHabitProgressExisting = true;
+            }
+        }
+
+        if ( !isHabitProgressExisting){
+            var isDayOK;
+            if (habitsElements[i].getAttribute("weekDay")){
+                debugWrite("Comparing current date time with habit week day");
+                debugWrite("Current date time:");
+                debugWrite(inputDateTime);
+                debugWrite("Habit week day:");
+                debugWrite(habitsElements[i].getAttribute("weekDay"));
+                debugWrite("Is critical?:");
+                debugWrite(habitsElements[i].getAttribute("iscritical"));
+                
+                isDayOK = isDayOfWeekInHabitWeeks(inputDateTime, habitsElements[i].getAttribute("weekDay"));
+            } else {
+                isDayOK = true;
+            }
+            if (isDayOK != null && isDayOK) {
+                let newProgressObject = {
+                    id: Date.now()*100+i,
+                    habitId: habitsElements[i].getAttribute("habitId"),
+                    habitDescription: habitsElements[i].getAttribute("habitDescription"),
+                    target: habitsElements[i].getAttribute("target"),
+                    progressDate: inputDate,
+                    isNew: true,
+                    isCritical: habitsElements[i].getAttribute("iscritical"),
+                    isSuspendableDuringSickness: habitsElements[i].getAttribute("isSuspendableDuringSickness"),
+                    isSuspendableDuringOtherCases: habitsElements[i].getAttribute("isSuspendableDuringOtherCases"),
+                    isTimerNecessary: habitsElements[i].getAttribute("isTimerNecessary"),
+                    timerInitialNumberOfMinutes: habitsElements[i].getAttribute("timerInitialNumberOfMinutes"),
+                    order: habitsElements[i].getAttribute("order")?habitsElements[i].getAttribute("order"):80,
+                    numberOfCompletions:0,
+                }
+                addProgressDOMElement(newProgressObject);
+                console.log("added progress");
+                console.log(newProgressObject);
+                pushProgressArrayToQueue(newProgressObject);
+            }
+        }
+    }
+    /* go through all elements, if nothing with today's date, go through all habits and add new element with this habit id*/
+}
 
 var updateProgressOnRadial = function( percentageValue, parameters){
 
@@ -1491,47 +1970,6 @@ var getMemoryDetails = function(){
     }
 
 }
-var getHabitProgressJournal = function(){
-
-    if (loggedIn){
-       /* dataArrays=getHabitProgressJournalWhenLoggedIn();*/
-    } else {
-       dataArrays=getHabitProgressJournalWhenNotLoggedIn();
-    }
-
-};
-
-
-
-var getHabitProgressJournalWhenNotLoggedIn = function(){
-    var progressArray=[];
-    var habitsArray=[];
-    var journalArray = [];
-    var todaysProgressArray=[];
-    var pastProgressArray=[];
-    var localStorageLength = localStorage.length;
-
-    for (var i = 0; i < localStorageLength && i < maxForNonLoggedIn; i++){
-        var currentKey = localStorage.key(i);
-        if ( currentKey.indexOf("progress-") >= 0){
-            var progressValue = JSON.parse(localStorage.getItem(currentKey));
-            if ( progressValue.progressDate == formattedTodaysDate()){
-                todaysProgressArray.push(progressValue);
-            } else if (daysSinceToday(progressValue.progressDate)<=30) {
-                pastProgressArray.push(progressValue);
-            }
-            progressArray.push(progressValue);
-        } else if ( currentKey.indexOf("habit-") >= 0){
-            habitsArray.push(JSON.parse(localStorage.getItem(currentKey)));
-        } else if ( currentKey.indexOf("journal-") >= 0){
-            journalArray.push({'key':currentKey,'text':JSON.parse(localStorage.getItem(currentKey))});
-        }
-    }
-
-    return {progressArray,habitsArray,journalArray,todaysProgressArray,pastProgressArray};
-
-};
-
 var pushProgressToQueue = function(divToAnalyze) {
 
     var progressArray = progressDOMToJson(divToAnalyze);
@@ -1606,13 +2044,14 @@ var readQueueProgress = function() {
         /* todo send the element to the backend using an API call */ 
         var currentDate = new Date();
         document.getElementById('last-saved-information').innerHTML = "Last saved: "+currentDate.toLocaleTimeString();
-        document.getElementById('last-saved-information-habits').innerHTML = "Last saved: "+currentDate.toLocaleTimeString();   
+        document.getElementById('last-saved-information-habits').innerHTML = "Last saved: "+currentDate.toLocaleTimeString(); 
     }
+    
 }
 
 var putInStorage = function(id,value){
   try {
-    window.localStorage.setItem(id, value);
+    setItem(id, value);
   } catch (error) {
     console.error(error);
     console.error("Problem writing progress:"+elementToProcess.id.toString());
@@ -1625,25 +2064,33 @@ var putInStorage = function(id,value){
 
 /* TODO PUT FAILED UPDATES THROUGH APIS IN A QUEUE ON LOCAL STORAGE OR COOKIES */
 
-/*
+
 var getHabitProgressJournal = async function() {
 
+
     if (loggedIn){
-        var APIcallParameters = {
-            method: "GET",
-            url: "http://localhost:5000/get-habit-progress-journal"
-        };
+        var url = `http://localhost:5000/get-habit-progress-journal?user="${apiUser}"`;
         var response;
         try {
-            response = await APICall(APIcallParameters);
+            response = await fetch(url);
         } catch (e) {
             console.log('could not connect to the server');
             console.log(e);
             return getHabitProgressJournalFromStorage();
         } 
+<<<<<<< HEAD
 
         return response
 
+=======
+        if (response.status == '200'){
+            return response.json();
+        } else {
+            console.log('status of the api call:'+response.status);
+            return getHabitProgressJournalFromStorage();
+        }
+ 
+>>>>>>> data-from-api
     } else {
 
         return getHabitProgressJournalFromStorage();
@@ -1682,17 +2129,19 @@ var removeItemByKey = async function(keyName) {
 
         window.localStorage.removeItem(keyName);
 
-        var APIcallParameters = {
-            method: "GET",
-            url: `http://localhost:5000/removeItemByKey?keyName=${keyName}`
-        };
+        if (loggedIn){
+            var APIcallParameters = {
+                method: "GET",
+                url: `http://localhost:5000/removeItemByKey?keyName=${keyName}&user="${apiUser}"`
+            };
 
-        var response;
-        try {
-            response = await APICall(APIcallParameters);
-        } catch (e) {
-            console.log(e);
-        } 
+            var response;
+            try {
+                response = await APICall(APIcallParameters);
+            } catch (e) {
+                console.log(e);
+            } 
+        }
         console.log('item removed');
         return response
 
@@ -1702,7 +2151,7 @@ var getItemByKey = async function(keyName) {
     if (loggedIn){
         var APIcallParameters = {
             method: "GET",
-            url: `http://localhost:5000/getItemByKey?keyName=${keyName}`
+            url: `http://localhost:5000/getItemByKey?keyName=${keyName}&user="${apiUser}"`
         };
 
         var response;
@@ -1724,17 +2173,19 @@ var getItemByKey = async function(keyName) {
 var setItem = async function(keyName, value) {
     window.localStorage.setItem(keyName, value)
 
-    var APIcallParameters = {
-        method: "GET",
-        url: `http://localhost:5000/setItemValue?keyName=${keyName}&value=${value}`
-    };
+    if (loggedIn){
+        var APIcallParameters = {
+            method: "GET",
+            url: `http://localhost:5000/setItemValue?keyName=${keyName}&value=${value}&user="${apiUser}"`
+        };
 
-    var response;
-    try {
-        response = await APICall(APIcallParameters);
-    } catch (e) {
-        console.log(e);
-    } 
+        var response;
+        try {
+            response = await APICall(APIcallParameters);
+        } catch (e) {
+            console.log(e);
+        } 
+    }
     console.log('item set:'+keyName+":"+value);
     return response
 
@@ -1759,66 +2210,23 @@ var updateParameterInItemValue = async function(keyName, parameterName, value){
     var status = await setItem(keyName,objectValue);
     console.log("update executed");
        
-    var APIcallParameters = {
-    method: "GET",
-    url: `http://localhost:5000/updateParamInItem?keyName=${keyName}&parameterName=${parameterName}&value=${value}`
-     };
+    if (loggedIn){
+        var APIcallParameters = {
+        method: "GET",
+        url: `http://localhost:5000/updateParamInItem?keyName=${keyName}&parameterName=${parameterName}&value=${value}&user="${apiUser}"`
+        };
 
-     response='';
-     try {
-         response = await APICall(APIcallParameters);
-     } catch (e) {
-         console.log(e);
-     } 
+        response='';
+        try {
+            response = await APICall(APIcallParameters);
+        } catch (e) {
+            console.log(e);
+        } 
+    }
      console.log('item set:'+keyName+":"+value);
      return response
 
 }
-
-
-*/
-var loggedIn = true;
-
-var asyncTestRunner = async function(){
-    var response = await getHabitProgressJournal();
-    console.log('test: response from getHabitProgressJournal');
-    console.log(response);
-    var response2 = await getItemByKey('progress-164655054444102');
-    console.log('test: content of progress-164655054444102');
-    console.log(response2); 
-    var response3 = await setItem('test-1','{"param1":"test11","param2":"test12"}');
-    var response4 = await setItem('test-2','{"param1":"test21","param2":"test22"}');
-    var response5 = await getItemByKey('test-1');
-    console.log('test:test-1 after insertion');
-    console.log(response5); 
-    var response6 = await getItemByKey('test-2');
-    console.log('test:test-2 after insertion');
-    console.log(response6); 
-    var response7 = await removeItemByKey('test-2');
-    var response8 = await getItemByKey('test-1');
-    console.log('test:test-1 after deletion of test-2');
-    console.log(response8); 
-    var response9 = await getItemByKey('test-2');
-    console.log('test:test-2 after deletion');
-    console.log(response9); 
-    
-    var response9b = await updateParameterInItemValue("test-1", "param2", "abc");
-    var response10 = await getItemByKey('test-1');
-    console.log('test:test-1 after update');
-    console.log(response10); 
-
-}
-
-var test = function(){
-    asyncTestRunner()            
-    .then(function(response){
-        console.log("test completed");
-    }    )    
-    .catch(function(error) {
-        console.log(error);
-    })
-}
-test();
 
 
 
@@ -1826,6 +2234,7 @@ var dataArrays = {}
 var loggedIn = false;
 var maxForNonLoggedIn = 2000;
 var updateQueue = [];
+var apiUser;
 var radialProgressParameters = {    
     strokeWidth : 6,
     containerHeight : 80,
@@ -1851,24 +2260,21 @@ runApp = function(){
 document.addEventListener("DOMContentLoaded", function(event) { 
     runAppRendering();
   });*/
-
+/* test merge from new branch*/
 onload = function(){
 /*var runAppRendering = function(){*/
     "use strict";
-/*
-    if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("./sw-min.js").then(function(registration) {
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-        }).catch(function(err) {
-              console.log('ServiceWorker registration failed: ', err);
-            });
-      }
-*/
+/* tests of service worker must be done on http://localhost:5000/ */
 
-
+    
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('debug') == "true"){
         document.getElementById("debug-section").style.display = "block";
+    }
+    apiUser = urlParams.get('user');
+    console.log('user:'+apiUser);
+    if (urlParams.get('user') && urlParams.get('user').length > 1){
+        loggedIn=true;
     }
 
     hideStartProgressButtonOnHabits();
@@ -1876,7 +2282,23 @@ onload = function(){
     document.getElementById("date-filter").value=currentDate;
     createRadialProgressBar(radialProgressParameters);
 
-    getHabitProgressJournal();
+    renderApplication()
+    .then(value => {
+        setTimeout(placeSVGIcons,5);
+        setTimeout(renderPastProgressBoxes,10); 
+        setTimeout(showSummariesTab,15); 
+        setTimeout(loadAudio,25);
+        /*setTimeout(prepareSummaries,20);*/
+      }, reason => {
+        console.log(reason );
+      })
+
+
+    
+};
+
+var renderApplication = async function(){
+    dataArrays=await getHabitProgressJournal(); /* todo: this function should only extract and not also create divs */
  
     if (dataArrays.progressArray && dataArrays.progressArray.length >= 1){
         changeTabToProgress();
@@ -1892,24 +2314,18 @@ onload = function(){
 
     if (dataArrays.todaysProgressArray){
         for (const progressElement of dataArrays.todaysProgressArray){
-            addProgressElement(progressElement);
+            addProgressDOMElement(progressElement);
         }
     }
  
     if (dataArrays.habitsArray){
         for (const habitsElement of dataArrays.habitsArray){
-            addHabitElement(habitsElement);
+            addHabitDOMElement(habitsElement);
         }
     }
     /* TODO : should be based on arrays and not on DOM */
     addEmptyProgressBoxesOnNewDay(currentDate, currentDateTime);
-
-    setTimeout(placeSVGIcons,5);
-    setTimeout(renderPastProgressBoxes,10); 
-    setTimeout(showSummariesTab,15); 
-    setTimeout(prepareSummaries,20);
-};
-
+}
 
 function prepareSummaries(){
 
@@ -1928,6 +2344,11 @@ var saveLoop = function(){
     setInterval(readQueueProgress, 1000);
 
 }
+
+var reloadHabitProgressJournal = async function(){
+    dataArrays=await getHabitProgressJournal();
+}
+
 
 
 var placeSVGIcons = function(){
@@ -1974,8 +2395,63 @@ var loadScript = async function(scriptUrl){
 
 
 }
+
+var loadAudio = function(videoUrl){
+    /*
+    <video
+    title="Advertisement"
+    webkit-playsinline="true"
+    playsinline="true"
+    style="background-color: rgb(0, 0, 0); position: absolute; width: 640px; height: 360px;"
+    src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    autoplay=""></video>
+
+
+    <video
+    title="Advertisement"
+    style="background-color: rgb(0, 0, 0); position: absolute; width: 640px; height: 360px;"
+    src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    autoplay="true"
+    muted="muted"></video>
+
+    <audio>
+    <source src="file_name" type="audio_file_type">
+    </audio>
+    https://www.geeksforgeeks.org/how-to-embed-audio-and-video-in-html/
+    */
+    /*var audio = new Audio();
+    audio.src = "resources/crowd_cheering.wav";
+    audio.addEventListener('loadeddata',function(){
+        audio.play();
+    });
+    
+    
+    var audioDiv = new Audio(url);
+    document.body.appendChild(audioDiv);
+
+    myAudioElement.addEventListener("canplaythrough", event => {
+  myAudioElement.play();
+});
+
+https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio
+
+
+  <audio  src="resources/crowd_cheering.wav" id="cheering-audio"></audio>
+    */
+
+    const audioDiv = document.createElement("audio");
+    audioDiv.setAttribute('src','resources/crowd_cheering_6seconds.mp3');
+    audioDiv.setAttribute('id','cheering-audio');
+    document.body.appendChild(audioDiv);
+
+}
+
+var playCheers = function(){
+    var audioDiv = document.getElementById("cheering-audio");
+    audioDiv.play();
+}
 var hideJournalBox = function(){
-    document.getElementById("journal-container").innerHTML = "no entry yet";
+    document.getElementById("journal-container").innerHTML = "<div class='journal-container-day'>No journal entry yet.</div>";
 }
 var hideProgressTab = function(){
     document.getElementById("progress-menu").style.display = "none";
@@ -1988,8 +2464,10 @@ var hideSummariesTab = function(){
     document.getElementById("go-to-summaries-button").style.display = "none";
 }
 var showSummariesTab = function(){
-    document.getElementById("graphs-menu").style.display = "block"; 
-    document.getElementById("go-to-summaries-button").style.display = "flex";
+    if (dataArrays.habitsArray && dataArrays.habitsArray.length >= 1){
+        document.getElementById("graphs-menu").style.display = "block"; 
+        document.getElementById("go-to-summaries-button").style.display = "flex";
+    }
 }
 
 var showGraphTab = function(){
@@ -2073,89 +2551,6 @@ var addOneToProgress = function(divElement){
     divElement.value = (parseInt(divElement.value) + 1).toString();
 }
 
-/* Get information from the form to add new habits and add a PROGRESS (dom+memory for both)*/
-/* CAREFUL elementToAdd has data to build A PROGRESS */ 
-/* both habit and progress are added with this function */
-var addNewHabitFromForm = function(){
-
-    var elementToAdd={};
-    var newId = Date.now();
-    elementToAdd.id = newId.toString();
-    elementToAdd.habitId = (newId * 10).toString();
-    elementToAdd.habitDescription = document.getElementById('new-description').value;
-    elementToAdd.target = parseInt(document.getElementById('new-target').value);
-    elementToAdd.isNegative = document.getElementById('new-is-negative-flag').checked;
-    elementToAdd.progressDate = currentDate;
-    elementToAdd.numberOfCompletions = 0;
-    elementToAdd.isNew = true;
-    elementToAdd.isCritical = "false";
-    var weekDaySelector = document.getElementById('week-day-selection');
-    
-    elementToAdd.weekDay = weekDaySelector.getAttribute('weekDay');
-    if ( elementToAdd.weekDay == ""){
-        elementToAdd.weekDay ='monday tuesday wednesday thursday friday saturday sunday';
-    }
-
-    var isDayOK;
-    if (elementToAdd.weekDay){
-        isDayOK = isDayOfWeekInHabitWeeks(currentDateTime, elementToAdd.weekDay);
-    } else {
-        isDayOK = true;
-    }
-    if (isDayOK != null && isDayOK)
-    {
-        addProgressElement(elementToAdd);
-        pushProgressArrayToQueue(elementToAdd);
-    }
-    addHabitElement(elementToAdd);
-    
-    document.getElementById('new-description').value = null;
-    document.getElementById('new-target').value = 1;
-    document.getElementById('new-is-negative-flag').checked = false;
-    resetWeekDaySelector(weekDaySelector);
-
-    showProgressTab();
-
-    showStartProgressButtonOnHabits();
-
-    saveChangesInHabitFromObject(elementToAdd);
-
-    confirmAddition(elementToAdd.habitId);
-};
-
-var saveChangesInHabit = function(habitId){
-    var habitDiv = document.getElementById(habitId);
-    var habitJSON = readHabitElement(habitDiv);
-    pushHabitArrayToQueue(habitJSON);
-    confirmSave();
-
-}
-var setHabitAsCritical = function(habitId){
-    var habitDiv = document.getElementById(habitId);
-    var habitJSON = readHabitElement(habitDiv);
-    habitJSON.isCritical="true";
-    pushHabitArrayToQueue(habitJSON);
-};
-var unsetHabitAsCritical = function(habitId){
-    var habitDiv = document.getElementById(habitId);
-    var habitJSON = readHabitElement(habitDiv);
-    habitJSON.isCritical="false";
-    pushHabitArrayToQueue(habitJSON);
-};
-
-var saveChangesInHabitFromObject = function(habitElement){
-
-    var habitJSON = {};
-    habitJSON.habitId = habitElement.habitId;
-    habitJSON.isNegative = habitElement.isNegative;
-    habitJSON.habitDescription = habitElement.habitDescription;
-    habitJSON.target = habitElement.target;
-    habitJSON.weekDay = habitElement.weekDay;
-
-    pushHabitArrayToQueue(habitJSON);
-    
-};
-
 
 var closeAdditionConfirmation = function(){
     document.getElementById("addition-message").style.display="none";
@@ -2176,7 +2571,7 @@ var confirmSave = function(){
 };
 
 
-var extractElementsForUpdateLoggedIn = function(progressElements){
+/*var extractElementsForUpdateLoggedIn = function(progressElements){
     var outputElements = [];
     var progressElementsLength = progressElements.length;
     for (var i=0; i<progressElementsLength   && i < maxForNonLoggedIn; i++){
@@ -2185,16 +2580,27 @@ var extractElementsForUpdateLoggedIn = function(progressElements){
     }
 
     console.log(outputElements);
-};
+};*/
 
-var readHabitElement = function(elementToRead){
+/* Read habit from the dom and put it in json ( then it can be saved ) */
+var habitDOMToJson = function(elementToRead){
     var outputJson = {};
     outputJson.habitId = elementToRead.getAttribute("habitId");
     outputJson.isNegative = elementToRead.getAttribute("isNegative");
+    outputJson.order = elementToRead.getAttribute("order");
     outputJson.habitDescription = elementToRead.getElementsByClassName('habit-description-definition')[0].value;
     outputJson.target = parseInt(elementToRead.getElementsByClassName('habit-target-definition')[0].value);
     outputJson.weekDay = elementToRead.getElementsByClassName("week-day-selection")[0].getAttribute("weekDay");
-    outputJson.isCritical = elementToRead.getElementsByClassName("simple-checkbox")[0].checked.toString();
+    // outputJson.isCritical = elementToRead.getElementsByClassName("simple-checkbox")[1].checked.toString();
+    // outputJson.isSuspendableDuringSickness = elementToRead.getElementsByClassName("simple-checkbox")[2].checked.toString();
+    // outputJson.isSuspendableDuringOtherCases = elementToRead.getElementsByClassName("simple-checkbox")[3].checked.toString();
+    // outputJson.isTimerNecessary = elementToRead.getElementsByClassName("simple-checkbox")[0].checked.toString();
+    outputJson.isTimerNecessary = document.getElementById("is-timer-necessary-"+outputJson.habitId.toString()).checked.toString();;
+    outputJson.isSuspendableDuringOtherCases = document.getElementById("is-suspendable-in-other-cases-"+outputJson.habitId.toString()).checked.toString();;
+    outputJson.isSuspendableDuringSickness = document.getElementById("is-suspendable-during-sickness-"+outputJson.habitId.toString()).checked.toString();;
+    outputJson.isCritical = document.getElementById("is-critical-"+outputJson.habitId.toString()).checked.toString();
+
+    outputJson.timerInitialNumberOfMinutes = document.getElementById("initial-time"+outputJson.habitId.toString()).value;
     return outputJson;
 };
 
@@ -2209,6 +2615,9 @@ var progressDOMToJson = function(elementToRead){
     outputJson.isNew = elementToRead.getAttribute("isNew");
     outputJson.isNegative = elementToRead.getAttribute("isNegative");
     outputJson.isCritical = elementToRead.getAttribute("isCritical");
+    outputJson.isSuspendableDuringSickness = elementToRead.getAttribute("isSuspendableDuringSickness");
+    outputJson.isSuspendableDuringOtherCases = elementToRead.getAttribute("isSuspendableDuringOtherCases");
+    outputJson.order = elementToRead.getAttribute("order")?elementToRead.getAttribute("order"):80;
     outputJson.numberOfCompletions = parseInt(elementToRead.getElementsByClassName("number-of-completion")[0].value);
 
     return outputJson;
@@ -2253,18 +2662,26 @@ var changeTabToHabits = function(){
     document.getElementById("progress-menu").classList.remove("active");
     document.getElementById("habits-menu").classList.add("active");
     document.getElementById("graphs-menu").classList.remove("active");
-    document.getElementById('new-description').focus();
+    /*document.getElementById('new-description').focus();*/
 }
 
 var changeTabToSummaries = function(){
-    launchAllWeekTables(dataArrays.progressArray,dataArrays.habitsArray);
-    document.getElementById("habits-section").style.display = "none";
-    document.getElementById("progress-section").style.display = "none";
-    document.getElementById("graphs-section").style.display = "block";
-    document.getElementById("progress-menu").classList.remove("active");
-    document.getElementById("habits-menu").classList.remove("active");
-    document.getElementById("graphs-menu").classList.add("active");
-    subMenuGo('week-link');
+ 
+    reloadHabitProgressJournal().then(value => {
+        prepareSummaries();
+        launchAllWeekTables(dataArrays.progressArray,dataArrays.habitsArray);
+        document.getElementById("habits-section").style.display = "none";
+        document.getElementById("progress-section").style.display = "none";
+        document.getElementById("graphs-section").style.display = "block";
+        document.getElementById("progress-menu").classList.remove("active");
+        document.getElementById("habits-menu").classList.remove("active");
+        document.getElementById("graphs-menu").classList.add("active");
+        subMenuGo('week-link');
+        }, reason => {
+        console.log(reason );
+        })
+    
+    
 }
 
 var changeTabToGraph = function(){
@@ -2300,18 +2717,22 @@ var launchHabitChart = function(fullData,habitObject){
 
     var j = dataToShow.length-1;
 
-    var numberOfDays = (dataToShow[j].x - dataToShow[0].x)/1000/60/60/24;
-    if (numberOfDays>0){
-        unitPerMonth=Math.round(unitAccumulation*30/numberOfDays);
-    }
+
 
     if ( j < 0){
         return false;
     }
 
+    var numberOfDays=0;
+
     if (j >= 0 && dataToShow[j] && dataToShow[j].x){
         debugWrite("Launching Chart");
         debugWrite(dataToShow[j].x.getDay());
+
+        numberOfDays = (dataToShow[j].x - dataToShow[0].x)/1000/60/60/24;
+        if (numberOfDays>0){
+            unitPerMonth=Math.round(unitAccumulation*30/numberOfDays);
+        }
     } else {
         return false;
     }

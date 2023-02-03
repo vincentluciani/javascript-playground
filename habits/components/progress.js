@@ -1,5 +1,9 @@
 
-var addProgressElement = function(elementToAdd){
+var actionsWhenCountdownEnd = function(){
+    giveCheers();
+;}
+
+var addProgressDOMElement = function(elementToAdd){
 
     const newProgressDivision = document.createElement("div");
 
@@ -13,6 +17,13 @@ var addProgressElement = function(elementToAdd){
     newProgressDivision.setAttribute("habitId",elementToAdd.habitId);
     newProgressDivision.setAttribute("isNegative", elementToAdd.isNegative);
     newProgressDivision.setAttribute("isCritical", elementToAdd.isCritical);
+    newProgressDivision.setAttribute("isSuspendableDuringSickness", elementToAdd.isSuspendableDuringSickness);
+    newProgressDivision.setAttribute("isSuspendableDuringOtherCases", elementToAdd.isSuspendableDuringOtherCases);
+    newProgressDivision.setAttribute("isTimerNecessary", elementToAdd.isTimerNecessary);
+    newProgressDivision.setAttribute("timerInitialNumberOfMinutes", elementToAdd.timerInitialNumberOfMinutes);
+    var elementOrder = elementToAdd.order?elementToAdd.order:80;
+    newProgressDivision.setAttribute("order", elementOrder);
+    newProgressDivision.style.order = elementOrder;
 
     const habitDescriptionText = document.createTextNode(elementToAdd.habitDescription);
     const targetValue = document.createElement("input");
@@ -151,12 +162,25 @@ var addProgressElement = function(elementToAdd){
 
     }
 
+    /* Countdown */
+    if (elementToAdd.isTimerNecessary == "true"){
+        var countDownTitle = document.createElement("div");
+        countDownTitle.innerHTML = "Countdown:";
+        countDownTitle.setAttribute("class","progress-container");
+        
+        detailsArea.appendChild(countDownTitle);
 
+        var countDownContainer = document.createElement("div");
+        var countDownContainerId = "countdown-container-"+elementToAdd.id
+
+        countDownContainer.setAttribute("id",countDownContainerId);
+        detailsArea.appendChild(countDownContainer);
+    }
     var completionTextContainer = document.createElement("div");
     completionTextContainer.setAttribute("class","progress-container");
 
     completionTextContainer.appendChild(currentCompletionText);
-    detailsArea.appendChild(completionTextContainer);
+    /*detailsArea.appendChild(completionTextContainer);*/
     detailsArea.appendChild(percentageCompletionInput);
     newProgressDivision.appendChild(detailsArea);
 
@@ -171,12 +195,23 @@ var addProgressElement = function(elementToAdd){
             pushProgressToQueue(newProgressDivision);}
      }(newProgressDivision));
 
+     titleDiv = newProgressDivision.getElementsByClassName('habit-description')[0];
+
+     titleDiv.addEventListener('click', function(expandButtonWrapper,detailsArea) {
+        return function(){
+            toggleExpandCollapse(expandButtonWrapper,detailsArea);
+        }
+     }(expandButtonWrapper,detailsArea));
+
      expandButtonWrapper.addEventListener('click', function(expandButtonWrapper,detailsArea) {
         return function(){
             toggleExpandCollapse(expandButtonWrapper,detailsArea);
         }
      }(expandButtonWrapper,detailsArea));
 
+     if (elementToAdd.isTimerNecessary == "true"){
+        var newCounterDiv = new DigitalCounter(elementToAdd.timerInitialNumberOfMinutes,countDownContainerId,"new-counter-"+elementToAdd.id,false,actionsWhenCountdownEnd);
+     }
      refreshProgress(newProgressDivision);
 
 
@@ -213,7 +248,7 @@ toggleButton.firstChild.setAttribute("stroke",currentStroke);
 function renderPastProgressBoxes(){
     if (dataArrays.pastProgressArray){
         for (const habitsElement of dataArrays.pastProgressArray){
-            addProgressElement(habitsElement);
+            addProgressDOMElement(habitsElement);
         }
     }
 
@@ -246,20 +281,24 @@ var refreshProgress = function(currentDiv){
 var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletionPercentage){
 
     if (newCompletionPercentage>=100){
-        currentDiv.style.border="3px solid rgb(167 211 162)";
-        currentDiv.style.order="95";
+        currentDiv.style.borderColor="rgb(167 211 162)";
+        var newOrder = 180;/*parseInt(currentDiv.getAttribute('order'))+100;*/
+        currentDiv.style.order=newOrder.toString();
+        currentDiv.setAttribute('order',newOrder.toString());
         currentDiv.style.background="#daffd9";
     } else if (newCompletionPercentage>=50){
-        currentDiv.style.border="3px solid rgb(246 223 35)";
+        currentDiv.style.borderColor="rgb(246 223 35)";
         currentDiv.style.background="rgb(255 251 234)";
-        currentDiv.style.order="70";
+        currentDiv.style.order=currentDiv.getAttribute('order');
+        /*currentDiv.style.order="80";*/
     } else if (newCompletionPercentage<50){
-        currentDiv.style.border="3px solid #c369bc";
+        currentDiv.style.borderColor="lightgrey";
         currentDiv.style.background="white";
-        currentDiv.style.order="70";
+        currentDiv.style.order=currentDiv.getAttribute('order');
+        /*currentDiv.style.order="80";*/
     }
     if (currentDiv.id && currentDiv.id == "daily-summary-container"){
-        currentDiv.style.order = "90";
+        currentDiv.style.order = "179";
     }
 
 }
@@ -269,8 +308,8 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
     var taskIconDiv;
 
     if (newCompletionPercentage <100 ){
-        currentDiv.style.order = "60";
-        currentDiv.style.border="3px solid red"; 
+        /*currentDiv.style.order = "60";*/
+        currentDiv.style.borderColor="red"; 
         currentDiv.style.background="#fff1f1";
 
         taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
@@ -287,7 +326,7 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
         plusMinusDiv.firstChild.setAttribute("fill","red");
 
     } else if (newCompletionPercentage >=100){
-        currentDiv.style.border="3px solid rgb(167 211 162)"; 
+        currentDiv.style.borderColor="rgb(167 211 162)"; 
         taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
         if (taskIconDiv && plusMinusDiv){
             /*taskIconDiv.classList.remove("fa-warning");
@@ -304,3 +343,68 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
     }
 }
 
+var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
+
+    var newCurrentDateTime = new Date();
+
+    var currentDateTimeMidnight = newCurrentDateTime.setHours(0,0,0,0);
+    var inputDateTimeMidnight = inputDateTime.setHours(0,0,0,0);
+    
+    if ( inputDateTimeMidnight > currentDateTimeMidnight){
+        return;
+    }
+
+    var progressElements = document.getElementsByClassName('habit-update');
+    var habitsElements = document.getElementsByClassName('habit-setting');
+
+    var habitsElementsLength = habitsElements.length;
+    for (var i=0; i<habitsElementsLength ;i++){
+
+        var isHabitProgressExisting = false;
+
+        for (var progressElement of progressElements){
+            if ( habitsElements[i].getAttribute("habitId") == progressElement.getAttribute("habitId") && progressElement.getAttribute("progressdate") == inputDate){
+                isHabitProgressExisting = true;
+            }
+        }
+
+        if ( !isHabitProgressExisting){
+            var isDayOK;
+            if (habitsElements[i].getAttribute("weekDay")){
+                debugWrite("Comparing current date time with habit week day");
+                debugWrite("Current date time:");
+                debugWrite(inputDateTime);
+                debugWrite("Habit week day:");
+                debugWrite(habitsElements[i].getAttribute("weekDay"));
+                debugWrite("Is critical?:");
+                debugWrite(habitsElements[i].getAttribute("iscritical"));
+                
+                isDayOK = isDayOfWeekInHabitWeeks(inputDateTime, habitsElements[i].getAttribute("weekDay"));
+            } else {
+                isDayOK = true;
+            }
+            if (isDayOK != null && isDayOK) {
+                let newProgressObject = {
+                    id: Date.now()*100+i,
+                    habitId: habitsElements[i].getAttribute("habitId"),
+                    habitDescription: habitsElements[i].getAttribute("habitDescription"),
+                    target: habitsElements[i].getAttribute("target"),
+                    progressDate: inputDate,
+                    isNew: true,
+                    isCritical: habitsElements[i].getAttribute("iscritical"),
+                    isSuspendableDuringSickness: habitsElements[i].getAttribute("isSuspendableDuringSickness"),
+                    isSuspendableDuringOtherCases: habitsElements[i].getAttribute("isSuspendableDuringOtherCases"),
+                    isTimerNecessary: habitsElements[i].getAttribute("isTimerNecessary"),
+                    timerInitialNumberOfMinutes: habitsElements[i].getAttribute("timerInitialNumberOfMinutes"),
+                    order: habitsElements[i].getAttribute("order")?habitsElements[i].getAttribute("order"):80,
+                    numberOfCompletions:0,
+                }
+                addProgressDOMElement(newProgressObject);
+                console.log("added progress");
+                console.log(newProgressObject);
+                pushProgressArrayToQueue(newProgressObject);
+            }
+        }
+    }
+    /* go through all elements, if nothing with today's date, go through all habits and add new element with this habit id*/
+}

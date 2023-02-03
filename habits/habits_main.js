@@ -3,6 +3,7 @@ var dataArrays = {}
 var loggedIn = false;
 var maxForNonLoggedIn = 2000;
 var updateQueue = [];
+var apiUser;
 var radialProgressParameters = {    
     strokeWidth : 6,
     containerHeight : 80,
@@ -28,40 +29,21 @@ runApp = function(){
 document.addEventListener("DOMContentLoaded", function(event) { 
     runAppRendering();
   });*/
-
-function handleCredentialResponse(response) {
-console.log("Encoded JWT ID token: " + response.credential);
-}
-
+/* test merge from new branch*/
 onload = function(){
 /*var runAppRendering = function(){*/
     "use strict";
-/*
-    if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("./sw-min.js").then(function(registration) {
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
-        }).catch(function(err) {
-              console.log('ServiceWorker registration failed: ', err);
-            });
-      }
-*/
-    document.getElementById("g_id_onload").setAttribute('data-client_id',secret.clientId)
-    google.accounts.id.initialize({
-      client_id: secret.clientId,
-      callback: handleCredentialResponse
-    });
-    google.accounts.id.renderButton(
-      document.getElementById("buttonDiv"),
-      { theme: "outline", size: "large" }  // customization attributes
-    );
-    google.accounts.id.prompt(); // also display the One Tap dialog
+/* tests of service worker must be done on http://localhost:5000/ */
 
 
-
-/* test merge*/
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('debug') == "true"){
         document.getElementById("debug-section").style.display = "block";
+    }
+    apiUser = urlParams.get('user');
+    console.log('user:'+apiUser);
+    if (urlParams.get('user') && urlParams.get('user').length > 1){
+        loggedIn=true;
     }
 
     hideStartProgressButtonOnHabits();
@@ -69,7 +51,23 @@ onload = function(){
     document.getElementById("date-filter").value=currentDate;
     createRadialProgressBar(radialProgressParameters);
 
-    getHabitProgressJournal();
+    renderApplication()
+    .then(value => {
+        setTimeout(placeSVGIcons,5);
+        setTimeout(renderPastProgressBoxes,10); 
+        setTimeout(showSummariesTab,15); 
+        setTimeout(loadAudio,25);
+        /*setTimeout(prepareSummaries,20);*/
+      }, reason => {
+        console.log(reason );
+      })
+
+
+    
+};
+
+var renderApplication = async function(){
+    dataArrays=await getHabitProgressJournal(); /* todo: this function should only extract and not also create divs */
  
     if (dataArrays.progressArray && dataArrays.progressArray.length >= 1){
         changeTabToProgress();
@@ -85,24 +83,18 @@ onload = function(){
 
     if (dataArrays.todaysProgressArray){
         for (const progressElement of dataArrays.todaysProgressArray){
-            addProgressElement(progressElement);
+            addProgressDOMElement(progressElement);
         }
     }
  
     if (dataArrays.habitsArray){
         for (const habitsElement of dataArrays.habitsArray){
-            addHabitElement(habitsElement);
+            addHabitDOMElement(habitsElement);
         }
     }
     /* TODO : should be based on arrays and not on DOM */
     addEmptyProgressBoxesOnNewDay(currentDate, currentDateTime);
-
-    setTimeout(placeSVGIcons,5);
-    setTimeout(renderPastProgressBoxes,10); 
-    setTimeout(showSummariesTab,15); 
-    setTimeout(prepareSummaries,20);
-};
-
+}
 
 function prepareSummaries(){
 
@@ -121,6 +113,11 @@ var saveLoop = function(){
     setInterval(readQueueProgress, 1000);
 
 }
+
+var reloadHabitProgressJournal = async function(){
+    dataArrays=await getHabitProgressJournal();
+}
+
 
 
 var placeSVGIcons = function(){
@@ -167,8 +164,63 @@ var loadScript = async function(scriptUrl){
 
 
 }
+
+var loadAudio = function(videoUrl){
+    /*
+    <video
+    title="Advertisement"
+    webkit-playsinline="true"
+    playsinline="true"
+    style="background-color: rgb(0, 0, 0); position: absolute; width: 640px; height: 360px;"
+    src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    autoplay=""></video>
+
+
+    <video
+    title="Advertisement"
+    style="background-color: rgb(0, 0, 0); position: absolute; width: 640px; height: 360px;"
+    src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    autoplay="true"
+    muted="muted"></video>
+
+    <audio>
+    <source src="file_name" type="audio_file_type">
+    </audio>
+    https://www.geeksforgeeks.org/how-to-embed-audio-and-video-in-html/
+    */
+    /*var audio = new Audio();
+    audio.src = "resources/crowd_cheering.wav";
+    audio.addEventListener('loadeddata',function(){
+        audio.play();
+    });
+    
+    
+    var audioDiv = new Audio(url);
+    document.body.appendChild(audioDiv);
+
+    myAudioElement.addEventListener("canplaythrough", event => {
+  myAudioElement.play();
+});
+
+https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio
+
+
+  <audio  src="resources/crowd_cheering.wav" id="cheering-audio"></audio>
+    */
+
+    const audioDiv = document.createElement("audio");
+    audioDiv.setAttribute('src','resources/crowd_cheering_6seconds.mp3');
+    audioDiv.setAttribute('id','cheering-audio');
+    document.body.appendChild(audioDiv);
+
+}
+
+var playCheers = function(){
+    var audioDiv = document.getElementById("cheering-audio");
+    audioDiv.play();
+}
 var hideJournalBox = function(){
-    document.getElementById("journal-container").innerHTML = "no entry yet";
+    document.getElementById("journal-container").innerHTML = "<div class='journal-container-day'>No journal entry yet.</div>";
 }
 var hideProgressTab = function(){
     document.getElementById("progress-menu").style.display = "none";
@@ -181,8 +233,10 @@ var hideSummariesTab = function(){
     document.getElementById("go-to-summaries-button").style.display = "none";
 }
 var showSummariesTab = function(){
-    document.getElementById("graphs-menu").style.display = "block"; 
-    document.getElementById("go-to-summaries-button").style.display = "flex";
+    if (dataArrays.habitsArray && dataArrays.habitsArray.length >= 1){
+        document.getElementById("graphs-menu").style.display = "block"; 
+        document.getElementById("go-to-summaries-button").style.display = "flex";
+    }
 }
 
 var showGraphTab = function(){
@@ -266,89 +320,6 @@ var addOneToProgress = function(divElement){
     divElement.value = (parseInt(divElement.value) + 1).toString();
 }
 
-/* Get information from the form to add new habits and add a PROGRESS (dom+memory for both)*/
-/* CAREFUL elementToAdd has data to build A PROGRESS */ 
-/* both habit and progress are added with this function */
-var addNewHabitFromForm = function(){
-
-    var elementToAdd={};
-    var newId = Date.now();
-    elementToAdd.id = newId.toString();
-    elementToAdd.habitId = (newId * 10).toString();
-    elementToAdd.habitDescription = document.getElementById('new-description').value;
-    elementToAdd.target = parseInt(document.getElementById('new-target').value);
-    elementToAdd.isNegative = document.getElementById('new-is-negative-flag').checked;
-    elementToAdd.progressDate = currentDate;
-    elementToAdd.numberOfCompletions = 0;
-    elementToAdd.isNew = true;
-    elementToAdd.isCritical = "false";
-    var weekDaySelector = document.getElementById('week-day-selection');
-    
-    elementToAdd.weekDay = weekDaySelector.getAttribute('weekDay');
-    if ( elementToAdd.weekDay == ""){
-        elementToAdd.weekDay ='monday tuesday wednesday thursday friday saturday sunday';
-    }
-
-    var isDayOK;
-    if (elementToAdd.weekDay){
-        isDayOK = isDayOfWeekInHabitWeeks(currentDateTime, elementToAdd.weekDay);
-    } else {
-        isDayOK = true;
-    }
-    if (isDayOK != null && isDayOK)
-    {
-        addProgressElement(elementToAdd);
-        pushProgressArrayToQueue(elementToAdd);
-    }
-    addHabitElement(elementToAdd);
-    
-    document.getElementById('new-description').value = null;
-    document.getElementById('new-target').value = 1;
-    document.getElementById('new-is-negative-flag').checked = false;
-    resetWeekDaySelector(weekDaySelector);
-
-    showProgressTab();
-
-    showStartProgressButtonOnHabits();
-
-    saveChangesInHabitFromObject(elementToAdd);
-
-    confirmAddition(elementToAdd.habitId);
-};
-
-var saveChangesInHabit = function(habitId){
-    var habitDiv = document.getElementById(habitId);
-    var habitJSON = readHabitElement(habitDiv);
-    pushHabitArrayToQueue(habitJSON);
-    confirmSave();
-
-}
-var setHabitAsCritical = function(habitId){
-    var habitDiv = document.getElementById(habitId);
-    var habitJSON = readHabitElement(habitDiv);
-    habitJSON.isCritical="true";
-    pushHabitArrayToQueue(habitJSON);
-};
-var unsetHabitAsCritical = function(habitId){
-    var habitDiv = document.getElementById(habitId);
-    var habitJSON = readHabitElement(habitDiv);
-    habitJSON.isCritical="false";
-    pushHabitArrayToQueue(habitJSON);
-};
-
-var saveChangesInHabitFromObject = function(habitElement){
-
-    var habitJSON = {};
-    habitJSON.habitId = habitElement.habitId;
-    habitJSON.isNegative = habitElement.isNegative;
-    habitJSON.habitDescription = habitElement.habitDescription;
-    habitJSON.target = habitElement.target;
-    habitJSON.weekDay = habitElement.weekDay;
-
-    pushHabitArrayToQueue(habitJSON);
-    
-};
-
 
 var closeAdditionConfirmation = function(){
     document.getElementById("addition-message").style.display="none";
@@ -369,7 +340,7 @@ var confirmSave = function(){
 };
 
 
-var extractElementsForUpdateLoggedIn = function(progressElements){
+/*var extractElementsForUpdateLoggedIn = function(progressElements){
     var outputElements = [];
     var progressElementsLength = progressElements.length;
     for (var i=0; i<progressElementsLength   && i < maxForNonLoggedIn; i++){
@@ -378,16 +349,27 @@ var extractElementsForUpdateLoggedIn = function(progressElements){
     }
 
     console.log(outputElements);
-};
+};*/
 
-var readHabitElement = function(elementToRead){
+/* Read habit from the dom and put it in json ( then it can be saved ) */
+var habitDOMToJson = function(elementToRead){
     var outputJson = {};
     outputJson.habitId = elementToRead.getAttribute("habitId");
     outputJson.isNegative = elementToRead.getAttribute("isNegative");
+    outputJson.order = elementToRead.getAttribute("order");
     outputJson.habitDescription = elementToRead.getElementsByClassName('habit-description-definition')[0].value;
     outputJson.target = parseInt(elementToRead.getElementsByClassName('habit-target-definition')[0].value);
     outputJson.weekDay = elementToRead.getElementsByClassName("week-day-selection")[0].getAttribute("weekDay");
-    outputJson.isCritical = elementToRead.getElementsByClassName("simple-checkbox")[0].checked.toString();
+    // outputJson.isCritical = elementToRead.getElementsByClassName("simple-checkbox")[1].checked.toString();
+    // outputJson.isSuspendableDuringSickness = elementToRead.getElementsByClassName("simple-checkbox")[2].checked.toString();
+    // outputJson.isSuspendableDuringOtherCases = elementToRead.getElementsByClassName("simple-checkbox")[3].checked.toString();
+    // outputJson.isTimerNecessary = elementToRead.getElementsByClassName("simple-checkbox")[0].checked.toString();
+    outputJson.isTimerNecessary = document.getElementById("is-timer-necessary-"+outputJson.habitId.toString()).checked.toString();;
+    outputJson.isSuspendableDuringOtherCases = document.getElementById("is-suspendable-in-other-cases-"+outputJson.habitId.toString()).checked.toString();;
+    outputJson.isSuspendableDuringSickness = document.getElementById("is-suspendable-during-sickness-"+outputJson.habitId.toString()).checked.toString();;
+    outputJson.isCritical = document.getElementById("is-critical-"+outputJson.habitId.toString()).checked.toString();
+
+    outputJson.timerInitialNumberOfMinutes = document.getElementById("initial-time"+outputJson.habitId.toString()).value;
     return outputJson;
 };
 
@@ -402,6 +384,9 @@ var progressDOMToJson = function(elementToRead){
     outputJson.isNew = elementToRead.getAttribute("isNew");
     outputJson.isNegative = elementToRead.getAttribute("isNegative");
     outputJson.isCritical = elementToRead.getAttribute("isCritical");
+    outputJson.isSuspendableDuringSickness = elementToRead.getAttribute("isSuspendableDuringSickness");
+    outputJson.isSuspendableDuringOtherCases = elementToRead.getAttribute("isSuspendableDuringOtherCases");
+    outputJson.order = elementToRead.getAttribute("order")?elementToRead.getAttribute("order"):80;
     outputJson.numberOfCompletions = parseInt(elementToRead.getElementsByClassName("number-of-completion")[0].value);
 
     return outputJson;
@@ -446,18 +431,26 @@ var changeTabToHabits = function(){
     document.getElementById("progress-menu").classList.remove("active");
     document.getElementById("habits-menu").classList.add("active");
     document.getElementById("graphs-menu").classList.remove("active");
-    document.getElementById('new-description').focus();
+    /*document.getElementById('new-description').focus();*/
 }
 
 var changeTabToSummaries = function(){
-    launchAllWeekTables(dataArrays.progressArray,dataArrays.habitsArray);
-    document.getElementById("habits-section").style.display = "none";
-    document.getElementById("progress-section").style.display = "none";
-    document.getElementById("graphs-section").style.display = "block";
-    document.getElementById("progress-menu").classList.remove("active");
-    document.getElementById("habits-menu").classList.remove("active");
-    document.getElementById("graphs-menu").classList.add("active");
-    subMenuGo('week-link');
+ 
+    reloadHabitProgressJournal().then(value => {
+        prepareSummaries();
+        launchAllWeekTables(dataArrays.progressArray,dataArrays.habitsArray);
+        document.getElementById("habits-section").style.display = "none";
+        document.getElementById("progress-section").style.display = "none";
+        document.getElementById("graphs-section").style.display = "block";
+        document.getElementById("progress-menu").classList.remove("active");
+        document.getElementById("habits-menu").classList.remove("active");
+        document.getElementById("graphs-menu").classList.add("active");
+        subMenuGo('week-link');
+        }, reason => {
+        console.log(reason );
+        })
+    
+    
 }
 
 var changeTabToGraph = function(){
@@ -493,18 +486,22 @@ var launchHabitChart = function(fullData,habitObject){
 
     var j = dataToShow.length-1;
 
-    var numberOfDays = (dataToShow[j].x - dataToShow[0].x)/1000/60/60/24;
-    if (numberOfDays>0){
-        unitPerMonth=Math.round(unitAccumulation*30/numberOfDays);
-    }
+
 
     if ( j < 0){
         return false;
     }
 
+    var numberOfDays=0;
+
     if (j >= 0 && dataToShow[j] && dataToShow[j].x){
         debugWrite("Launching Chart");
         debugWrite(dataToShow[j].x.getDay());
+
+        numberOfDays = (dataToShow[j].x - dataToShow[0].x)/1000/60/60/24;
+        if (numberOfDays>0){
+            unitPerMonth=Math.round(unitAccumulation*30/numberOfDays);
+        }
     } else {
         return false;
     }

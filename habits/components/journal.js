@@ -1,9 +1,9 @@
-var displayJournalEditBox = function(){
+var displayJournalEditBoxAsync = async function(){
     var progressDate = document.getElementById("date-filter").value;
     var editBox = document.getElementById("journal-edit-box");
     var editBoxTextBox = document.getElementById("daily-journal");
 
-    var currentText = getCurrentDateJournal(progressDate);
+    var currentText = await getCurrentDateJournal(progressDate);
     editBoxTextBox.value = "";
     if (currentText && currentText.length>0){
         editBoxTextBox.value = JSON.parse(currentText);
@@ -14,10 +14,18 @@ var displayJournalEditBox = function(){
     editBox.style.display="flex";
 };
 
-var getCurrentDateJournal = function(journalDate){
+var displayJournalEditBox = function(){
+    displayJournalEditBoxAsync().then(() => {
+        console.log('successfully displayed the journal');
+      }, reason => {
+        console.log(reason );
+      })
+}
 
-    return window.localStorage.getItem("journal-"+journalDate);
+var getCurrentDateJournal = async function(journalDate){
 
+    var journal = await getItemByKey("journal-"+journalDate);
+    return journal;
 }
 var closeJournal = function(){
     var editBox = document.getElementById("journal-edit-box");
@@ -48,11 +56,14 @@ var readJournal = function(journalArray){
 		return ( convertJournalKeyToDateInt(b.key) - convertJournalKeyToDateInt(a.key))
 		});	
 
+    document.getElementById("journal-container").innerHTML  = "";
+
     for ( var journalEntry of journalArray){
         var journalText = journalEntry.text;
         if ( journalText.length > 0){
             var brDiv = document.createElement("br");
             var journalDiv = document.createElement("div");
+            journalDiv.setAttribute("class","journal-container-day");
             var dateDiv = document.createElement("div");
             dateDiv.innerHTML = journalEntry.key.substr(8);
             dateDiv.setAttribute("class","date-label");
@@ -61,8 +72,8 @@ var readJournal = function(journalArray){
             textDiv.setAttribute("class","text-label");
             journalDiv.appendChild(dateDiv);
             journalDiv.appendChild(textDiv);   
-            journalDiv.appendChild(brDiv);
             document.getElementById("journal-container").appendChild(journalDiv);
+            document.getElementById("journal-container").appendChild(brDiv);
         }     
     }
 

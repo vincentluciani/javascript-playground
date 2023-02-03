@@ -5,7 +5,7 @@
         <title>Discipline</title>
        <!-- <link rel="manifest" href="/manifest.json" /> -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />    
-      <!--  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito">-->
+        <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito">-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="theme-color" content="white">
         <link rel="apple-touch-icon" href="images/discipline-256.png">
@@ -15,6 +15,13 @@
         <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito"></noscript>
     </head>
     <body>
+        <div id="new-version-notification" class="positive-message">
+            <div class="action-icon-container" id="trophy-icon-new-version"></div>
+            <div class="title" id="new-version-message-title">New Version Available</div>
+            <div class="sub-title" id="new-version-message-subtitle"></div>
+            <div class="positive-message-button" id="reload">Refresh</div>  
+            <div class="positive-message-button" onclick="closeMessage();">Skip</div>    
+        </div>
         <div id="positive-message" class="positive-message">
             <div class="action-icon-container" id="trophy-icon-positive"></div>
             <div class="title" id="positive-message-title"></div>
@@ -28,21 +35,21 @@
             <div class="super-positive-message-button" onclick="closeMessage();">OK</div>
         </div>
         <div id="delete-message" class="positive-message">
-            <div class="title" id="positive-message-title">Item Deletion</div>
-            <div class="sub-title" id="positive-message-subtitle">Are you sure you want to delete this habit?</div>
+            <div class="title" id="delete-message-title">Item Deletion</div>
+            <div class="sub-title" id="delete-message-subtitle">Are you sure you want to delete this habit?</div>
             <div class="positive-message-button" id="confirm-deletion-button">Yes</div>
             <div class="positive-message-button" onclick="closeDeleteMessage();">No</div>
         </div>
         <div id="addition-message" class="positive-message">
             <div class="title" id="addition-message-title">Habit Successfully Added !</div>
             <div class="sub-title" id="addition-message-subtitle">What do you want to do next ?</div>
-            <div class="positive-message-button" onclick="changeTabToHabits();window.scrollTo(0, 0);closeAdditionConfirmation();">Add Another Habit</div>
+            <div class="positive-message-button" onclick="changeTabToHabits();window.scrollTo(0, 0);document.getElementById('new-description').focus();closeAdditionConfirmation();">Add Another Habit</div>
             <div class="positive-message-button" id="check-habit-button">Check My Habit</div>
             <div class="positive-message-button" onclick="changeTabToProgress();window.scrollTo(0, 0);;closeAdditionConfirmation();">Start My Day</div>
         </div>
         <div id="save-message" class="positive-message">
-            <div class="title" id="positive-message-title">Saving Habit</div>
-            <div class="sub-title" id="positive-message-subtitle">You habit was saved successfully</div>
+            <div class="title" id="save-message-title">Saving Habit</div>
+            <div class="sub-title" id="save-message-subtitle">You habit was saved successfully</div>
             <div class="positive-message-button" onclick="closeSaveMessage();">OK</div>
         </div>
         <div id="header">
@@ -53,8 +60,8 @@
                 <nav>
                     <ul class="horizontal-menu">
                         <li id="progress-menu" onclick="changeTabToProgress();"><a  id="menu_dashboard">Progress</a></li>
-                        <li id="graphs-menu" onclick="changeTabToSummaries();"><a id="menu_dashboard">Summaries</a></li>
                         <li id="habits-menu" onclick="changeTabToHabits();"><a id="menu_dashboard">Settings</a></li>
+                        <li id="graphs-menu" onclick="changeTabToSummaries();"><a id="menu_dashboard">Summaries</a></li>
                     </ul>
                 </nav>
             </div>
@@ -96,7 +103,7 @@
                       <!--  <i class="fa fa-edit"></i> -->
                     </div>
                 </div>
-                <div class="box big-action-button" onclick="changeTabToHabits();window.scrollTo(0, 0);">
+                <div class="box big-action-button" onclick="changeTabToHabits();window.scrollTo(0, 0);document.getElementById('new-description').focus();">
                     <div>New Habit</div>
                     <div class="action-icon-container" id="plus-icon-button">
                        <!-- <i class="fa fa-plus"></i>-->
@@ -111,19 +118,6 @@
                 </div>
             </div>
 
-        </div>
-
-        <div id="graphs-section" class="main-section" >
-            <div class="main-title fixed" >
-                <ul class="horizontal-submenu">
-                <li id="week-link" onclick="subMenuGo('week-link');" class="sub-menu selected-underline"><span id="week-link-icon" class="submenu-icon"></span>Week</li>
-                <li id="streaks-link" class="sub-menu" onclick="subMenuGo('streaks-link');"><span id="small-graph-icon" class="submenu-icon"></span>History</li>
-                <li id="journal-link" onclick="subMenuGo('journal-link');" class="sub-menu"><span id="small-graph-journal" class="submenu-icon"></span>Journal</lid>
-                </ul>
-            </div>
-            <div id="week-summary-container" class="week-summary-container" ></div>
-            <div id="streaks-container" class="week-summary-container" ></div>
-            <div id="journal-container-wrapper" class="journal-container-wrapper" ><div id="journal-container" class="journal-container" ></div></div>
         </div>
 
         <div id="habits-section" class="main-section">
@@ -169,6 +163,18 @@
             </div>
         </div>
 
+        <div id="graphs-section" class="main-section" >
+            <div class="main-title fixed" >
+                <ul class="horizontal-submenu">
+                <li id="week-link" onclick="subMenuGo('week-link');" class="sub-menu selected-underline"><span id="week-link-icon" class="submenu-icon"></span>Week</li>
+                <li id="streaks-link" class="sub-menu" onclick="subMenuGo('streaks-link');"><span id="small-graph-icon" class="submenu-icon"></span>History</li>
+                <li id="journal-link" onclick="subMenuGo('journal-link');" class="sub-menu"><span id="small-graph-journal" class="submenu-icon"></span>Journal</lid>
+                </ul>
+            </div>
+            <div id="week-summary-container" class="week-summary-container" ></div>
+            <div id="streaks-container" class="week-summary-container" ></div>
+            <div id="journal-container-wrapper" class="journal-container-wrapper" ><div id="journal-container" class="journal-container" ></div></div>
+        </div>
 
         <div class="overlay-for-message" id="journal-edit-box">
             <div class="message-in-overlay">
@@ -190,24 +196,28 @@
             MEMORY - HABITS:
             <div id="memory-habit"></div>
         </div>
+
         <script type="text/javascript" src="components/radialprogress.js"></script>
         <script type="text/javascript" src="language/general.js"></script>
         <script type="text/javascript" src="language/english.js"></script>
         <script type="text/javascript" src="libraries/random.js"></script>
         <script type="text/javascript" src="libraries/date.js"></script>
+        <script type="text/javascript" src="libraries/http.js"></script>
         <script type="text/javascript" src="components/icons.js"></script>
         <script type="text/javascript" src="synchronization/debugTools.js"></script> 
-        <script type="text/javascript" src="synchronization/getElements.js"></script> 
+        <script type="text/javascript" src="synchronization/storage.js"></script> 
         <script type="text/javascript" src="habits_main.js"></script>
         <script type="text/javascript" src="components/secret.js"></script>
         <script type="text/javascript" src="components/weekDaySelector.js"></script>
         <script type="text/javascript" src="components/weekTable.js"></script>
         <script type="text/javascript" src="components/dailySummary.js"></script>
+        <script type="text/javascript" src="components/checkboxWithTitle.js"></script>
         <script type="text/javascript" src="components/graph.js"></script>
         <script type="text/javascript" src="components/habit.js"></script>
         <script type="text/javascript" src="components/journal.js"></script>
         <script type="text/javascript" src="components/progress.js"></script>
         <script type="text/javascript" src="components/encourage.js"></script>
+        <script type="text/javascript" src="components/countdown.js"></script>
         <script type="text/javascript" src="synchronization/pushProgressToQueue.js"></script>    
         <script type="text/javascript" src="synchronization/readQueue.js"></script> 
 
