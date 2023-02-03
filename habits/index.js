@@ -240,8 +240,8 @@ app.get('/poc_pwa.html', function (req, res, next) {
 })
 
 
-app.listen(5000, function () {
-  console.log('CORS-enabled web server listening on port 5000')
+app.listen(3000, function () {
+  console.log('CORS-enabled web server listening on port 3000')
 })
 
 
