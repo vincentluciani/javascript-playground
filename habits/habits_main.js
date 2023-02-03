@@ -33,19 +33,6 @@ function handleCredentialResponse(response) {
 console.log("Encoded JWT ID token: " + response.credential);
 }
 
-function initializeGoogleButton(){
-    google.accounts.id.initialize({
-        client_id: secret.clientId,
-        callback: handleCredentialResponse
-      });
-      google.accounts.id.renderButton(
-        document.getElementById("buttonDiv"),
-        { theme: "outline", size: "large" }  // customization attributes
-      );
-      google.accounts.id.prompt(); // also display the One Tap dialog
-  
-  
-}
 onload = function(){
 /*var runAppRendering = function(){*/
     "use strict";
@@ -58,10 +45,18 @@ onload = function(){
             });
       }
 */
+    document.getElementById("g_id_onload").setAttribute('data-client_id',secret.clientId)
+    google.accounts.id.initialize({
+      client_id: secret.clientId,
+      callback: handleCredentialResponse
+    });
+    google.accounts.id.renderButton(
+      document.getElementById("buttonDiv"),
+      { theme: "outline", size: "large" }  // customization attributes
+    );
+    google.accounts.id.prompt(); // also display the One Tap dialog
 
-    addGoogleLoginSection();    
 
-    
 
 /* test merge*/
     const urlParams = new URLSearchParams(window.location.search);
@@ -79,7 +74,6 @@ onload = function(){
     if (dataArrays.progressArray && dataArrays.progressArray.length >= 1){
         changeTabToProgress();
         showProgressTab();
-        initializeGoogleButton();
     }
     else {
         hideProgressTab();

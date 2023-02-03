@@ -39,7 +39,6 @@ gulp.task('process-html', function () {
         .pipe(replace('<script type="text/javascript" src="libraries/random.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="habits_main.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/secret.js"></script>',''))
-        .pipe(replace('<script type="text/javascript" src="components/login.js"></script>',''))       
         .pipe(replace('<script type="text/javascript" src="components/weekTable.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/weekDaySelector.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/habit.js"></script>',''))
