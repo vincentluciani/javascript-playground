@@ -7,7 +7,7 @@ var getHabitProgressJournal = async function() {
 
 
     if (loggedIn){
-        var url = `https://www.vince.com/api/discipline/habits/get`;
+        var url = `https://www.vince.com/api/discipline/habits/getall`;
         var response;
         var input = {
             token: googleToken
@@ -25,7 +25,8 @@ var getHabitProgressJournal = async function() {
             return getHabitProgressJournalFromStorage();
         } 
         if (response.status == '200'){
-            return response.json();
+            var apiResponse = await response.json();
+            return apiResponse;
         } else {
             console.log('status of the api call:'+response.status);
             return getHabitProgressJournalFromStorage();
