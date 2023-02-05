@@ -77,6 +77,7 @@ app.get('/habits_main.js', function (req, res, next) {
   
 })
 
+
 app.get('/', function (req, res, next) {
   /*var pathname = url.parse(req.url).pathname;
   var isImage = 0, contentType, fileToLoad;
@@ -90,6 +91,21 @@ app.get('/', function (req, res, next) {
           return console.log(err);
         }
         res.writeHead(200, {'Content-Type': 'text/html'});
+        res.write(data);
+        res.end();
+      });
+
+    
+})
+
+app.get('/resources/crowd_cheering_6seconds.mp3', function (req, res, next) {
+    fs.readFile('resources/crowd_cheering_6seconds.mp3', 'utf8', function (err,data) {
+        var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+
+        if (err) {
+          return console.log(err);
+        }
+        res.writeHead(200, {'Content-Type': 'audio/mpeg'});
         res.write(data);
         res.end();
       });
