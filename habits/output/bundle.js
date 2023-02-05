@@ -2047,6 +2047,15 @@ var putInStorage = function(id,value){
   }
 }
 
+var sendPost = function(url, message, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', url);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function() {
+      callback();
+    };
+    xhr.send(message);
+}
 "use strict";
 
 
@@ -2056,10 +2065,18 @@ var getHabitProgressJournal = async function() {
 
 
     if (loggedIn){
-        var url = `http://localhost:5000/get-habit-progress-journal?user="${apiUser}"`;
+        var url = `https://www.vince.com/api/discipline/habits/get`;
         var response;
+        var input = {
+            token: googleToken
+        }
         try {
-            response = await fetch(url);
+            response = await fetch
+            (url,{
+                method: "POST",
+                headers:{'Content-Type': 'application/json'},
+                body: JSON.stringify(input)
+                });
         } catch (e) {
             console.log('could not connect to the server');
             console.log(e);
@@ -2194,7 +2211,7 @@ var updateParameterInItemValue = async function(keyName, parameterName, value){
     if (loggedIn){
         var APIcallParameters = {
         method: "GET",
-        url: `http://localhost:5000/updateParamInItem?keyName=${keyName}&parameterName=${parameterName}&value=${value}&user="${apiUser}"`
+        url: `https://www.vince.com/api/discipline/habits/get?keyName=${keyName}&parameterName=${parameterName}&value=${value}&user="${apiUser}"`
         };
 
         response='';
@@ -2211,8 +2228,9 @@ var updateParameterInItemValue = async function(keyName, parameterName, value){
 
 
 
-var dataArrays = {}
-var loggedIn = false;
+var dataArrays = {};
+var googleToken = '';
+var loggedIn = true;
 var maxForNonLoggedIn = 2000;
 var updateQueue = [];
 var apiUser;
@@ -2242,6 +2260,32 @@ document.addEventListener("DOMContentLoaded", function(event) {
     runAppRendering();
   });*/
 /* test merge from new branch*/
+
+
+
+function handleCredentialResponse(response) {
+    document.getElementById('signin_status').innerHTML = "Signed in";
+    console.log("Encoded JWT ID token: " + response.credential);
+    googleToken=response.credential;
+    sendToken(response.credential);
+}
+
+function sendToken(token) {
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'https://www.vince.com/api/discipline/auth');
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function() {
+      console.log('Signed in information: ' + xhr.responseText);
+      document.getElementById("google-image").setAttribute("src", xhr.responseText);
+
+    };
+    xhr.send('token=' + token);
+
+}
+
+
+
 onload = function(){
 /*var runAppRendering = function(){*/
     "use strict";
@@ -2254,26 +2298,24 @@ onload = function(){
     }
     apiUser = urlParams.get('user');
     console.log('user:'+apiUser);
-    if (urlParams.get('user') && urlParams.get('user').length > 1){
-        loggedIn=true;
+    if (urlParams.get('nouser') == 'true'){
+        loggedIn=false;
     }
 
     hideStartProgressButtonOnHabits();
-
-    document.getElementById("date-filter").value=currentDate;
-    createRadialProgressBar(radialProgressParameters);
-
     renderApplication()
     .then(value => {
         setTimeout(placeSVGIcons,5);
         setTimeout(renderPastProgressBoxes,10); 
         setTimeout(showSummariesTab,15); 
-        setTimeout(loadAudio,25);
+        
         /*setTimeout(prepareSummaries,20);*/
       }, reason => {
         console.log(reason );
       })
-
+    document.getElementById("date-filter").value=currentDate;
+    createRadialProgressBar(radialProgressParameters);
+    setTimeout(loadAudio,1);
 
     
 };

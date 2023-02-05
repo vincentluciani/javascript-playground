@@ -1,6 +1,7 @@
 
-var dataArrays = {}
-var loggedIn = false;
+var dataArrays = {};
+var googleToken = '';
+var loggedIn = true;
 var maxForNonLoggedIn = 2000;
 var updateQueue = [];
 var apiUser;
@@ -30,6 +31,46 @@ document.addEventListener("DOMContentLoaded", function(event) {
     runAppRendering();
   });*/
 /* test merge from new branch*/
+
+
+
+function handleCredentialResponse(response) {
+    document.getElementById('signin_status').innerHTML = "Signed in";
+    console.log("Encoded JWT ID token: " + response.credential);
+    googleToken=response.credential;
+
+    renderApplication()
+    .then(value => {
+        setTimeout(placeSVGIcons,5);
+        setTimeout(renderPastProgressBoxes,10); 
+        setTimeout(showSummariesTab,15); 
+        
+        /*setTimeout(prepareSummaries,20);*/
+      }, reason => {
+        console.log(reason );
+      })
+    document.getElementById("date-filter").value=currentDate;
+    createRadialProgressBar(radialProgressParameters);
+    
+    sendToken(response.credential);
+}
+
+function sendToken(token) {
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'https://www.vince.com/api/discipline/auth');
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function() {
+      console.log('Signed in information: ' + xhr.responseText);
+      document.getElementById("google-image").setAttribute("src", xhr.responseText);
+
+    };
+    xhr.send('token=' + token);
+
+}
+
+
+
 onload = function(){
 /*var runAppRendering = function(){*/
     "use strict";
@@ -42,26 +83,13 @@ onload = function(){
     }
     apiUser = urlParams.get('user');
     console.log('user:'+apiUser);
-    if (urlParams.get('user') && urlParams.get('user').length > 1){
-        loggedIn=true;
+    if (urlParams.get('nouser') == 'true'){
+        loggedIn=false;
     }
 
     hideStartProgressButtonOnHabits();
 
-    document.getElementById("date-filter").value=currentDate;
-    createRadialProgressBar(radialProgressParameters);
-
-    renderApplication()
-    .then(value => {
-        setTimeout(placeSVGIcons,5);
-        setTimeout(renderPastProgressBoxes,10); 
-        setTimeout(showSummariesTab,15); 
-        setTimeout(loadAudio,25);
-        /*setTimeout(prepareSummaries,20);*/
-      }, reason => {
-        console.log(reason );
-      })
-
+    setTimeout(loadAudio,1);
 
     
 };

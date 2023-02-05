@@ -9,6 +9,13 @@ var fs = require('fs');
 
 var newValue = '<script type="text/javascript" src="output/bundle-min.js"></script> '
 
+gulp.task('put-client-id-html', function(){
+    return gulp.src(['adding_habits.html'])
+    .pipe(replace('YOUR_GOOGLE_CLIENT_ID', fs.readFileSync('googleclientid.txt', 'utf8'))) 
+    .pipe(rename('adding_habits_transformed.html'))
+    .pipe(gulp.dest('.'));
+
+})
 gulp.task('pack-js', function () {    
     return gulp.src(['components/*.js', 'libraries/random.js', 'libraries/date.js','language/general.js','language/english.js', 'synchronization/*.js','habits_main.js'])
         .pipe(concat('bundle.js'))
@@ -59,6 +66,7 @@ gulp.task('process-html', function () {
         .pipe(replace('<script type="text/javascript" src="components/countdown.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="synchronization/pushProgressToQueue.js"></script>','')) 
         .pipe(replace('<script type="text/javascript" src="synchronization/storage.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="synchronization/sendPost.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="synchronization/debugTools.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/icons.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="synchronization/readQueue.js"></script>','<script>'+fs.readFileSync('output/bundle-min.js', 'utf8')+'</script>'))   
@@ -67,5 +75,4 @@ gulp.task('process-html', function () {
         .pipe(gulp.dest('output'));
 });
 
-
-gulp.task('default', gulp.series(['pack-js','pack-css','process-html','pack-service-worker','copy-resources']));
+gulp.task('default', gulp.series(['put-client-id-html','pack-js','pack-css','process-html','pack-service-worker']));

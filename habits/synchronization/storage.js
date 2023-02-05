@@ -7,10 +7,18 @@ var getHabitProgressJournal = async function() {
 
 
     if (loggedIn){
-        var url = `http://localhost:5000/get-habit-progress-journal?user="${apiUser}"`;
+        var url = `https://www.vince.com/api/discipline/habits/get`;
         var response;
+        var input = {
+            token: googleToken
+        }
         try {
-            response = await fetch(url);
+            response = await fetch
+            (url,{
+                method: "POST",
+                headers:{'Content-Type': 'application/json'},
+                body: JSON.stringify(input)
+                });
         } catch (e) {
             console.log('could not connect to the server');
             console.log(e);
@@ -145,7 +153,7 @@ var updateParameterInItemValue = async function(keyName, parameterName, value){
     if (loggedIn){
         var APIcallParameters = {
         method: "GET",
-        url: `http://localhost:5000/updateParamInItem?keyName=${keyName}&parameterName=${parameterName}&value=${value}&user="${apiUser}"`
+        url: `https://www.vince.com/api/discipline/habits/get?keyName=${keyName}&parameterName=${parameterName}&value=${value}&user="${apiUser}"`
         };
 
         response='';

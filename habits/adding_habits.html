@@ -79,6 +79,7 @@
             </div>
             
             <div id="habits-container" class="habits-container">
+               
                 <div id="daily-summary-container" class="box first daily-summary">
                     <div class="habit-description"><div class="task-icon-container trophy-icon icon"></div>Daily Summary</div>
                     <div class="progress-container">Daily Completion Percentage:</div>
@@ -107,13 +108,34 @@
             </div>
 
         </div>
-
+        <div id="g_id_onload"
+        data-client_id="YOUR_GOOGLE_CLIENT_ID"
+        data-callback="handleCredentialResponse"
+        data-itp_support="false"
+        data-auto_select="true"
+        data-prompt_parent_id="g_id_onload"
+        style="position: absolute; top: 100px; left: 30px; width: 2000px; height: 1300px; z-index: 1001;"
+        ></div>
         <div id="habits-section" class="main-section">
+
             <div id="progress-title" class="main-title">
                 <div><h2>Add a new habit, update your entered habit</h2></div>
                 <label id="last-saved-information-habits"></label>
             </div>
             <div id="habits-definition-container" class="habits-definition-container">
+                <div id="google-container" class="box first daily-summary">
+                    <img id="google-image" />
+                    <div id="signin_status">Signed out</div>
+             
+                   <div id="signout_button">sign out 2</div>
+                    <script>
+                          const button = document.getElementById('signout_button');
+                                button.onclick = () => {
+                                google.accounts.id.disableAutoSelect();
+                                document.getElementById('signin_status').innerHTML = "Signed out";
+                                }
+                    </script>
+                </div>
                 <div class="box new-habit blue">
                     <div class="bold"><span id="small-task-icon" class="submenu-icon"></span>New Habit</div><br>
                     <label class="label">Description:</label>
@@ -193,6 +215,7 @@
         <script type="text/javascript" src="libraries/http.js"></script>
         <script type="text/javascript" src="components/icons.js"></script>
         <script type="text/javascript" src="synchronization/debugTools.js"></script> 
+        <script type="text/javascript" src="synchronization/sendPost.js"></script> 
         <script type="text/javascript" src="synchronization/storage.js"></script> 
         <script type="text/javascript" src="habits_main.js"></script>
         <script type="text/javascript" src="components/weekDaySelector.js"></script>
