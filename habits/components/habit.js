@@ -1,11 +1,14 @@
 var addHabitDOMElement = function(elementToAdd){
     const newHabitDivision = document.createElement("div");
-    elementToAdd.habitId= elementToAdd._id
+    elementToAdd.remoteHabitId= elementToAdd._id?elementToAdd._id:0;
+    elementToAdd.habitId= elementToAdd.id?elementToAdd.id:0;
+
     newHabitDivision.setAttribute("habitDescription", elementToAdd.habitDescription);
     newHabitDivision.setAttribute("target", elementToAdd.target);
     newHabitDivision.setAttribute("class", "box habit-setting");
     newHabitDivision.setAttribute("id",elementToAdd.habitId.toString());
     newHabitDivision.setAttribute("habitId",elementToAdd.habitId);
+    newHabitDivision.setAttribute("remoteHabitId",elementToAdd.remoteHabitId);   
     newHabitDivision.setAttribute("weekDay",elementToAdd.weekDay);
     newHabitDivision.setAttribute("isNegative",false);
     newHabitDivision.setAttribute("isCritical",elementToAdd.isCritical);
@@ -128,7 +131,7 @@ var addHabitDOMElement = function(elementToAdd){
     const timerTimeTextDiv = document.createTextNode("Time in minutes:");
     const timerTimeInput = document.createElement("input");
     timerTimeInput.setAttribute("type","number");
-    timerTimeInput.setAttribute("id","initial-time"+elementToAdd._id.toString());
+    timerTimeInput.setAttribute("id","initial-time"+elementToAdd.habitId.toString());
     timerTimeInput.value = elementToAdd.timerInitialNumberOfMinutes;
     newHabitDivision.appendChild(timerTimeTextDiv);
     newHabitDivision.appendChild(timerTimeInput)
@@ -264,6 +267,7 @@ var addNewHabitFromForm = function(){
     var newId = Date.now();
     elementToAdd.id = newId.toString();
     elementToAdd.habitId = (newId * 10).toString();
+    /*elementToAdd.id = elementToAdd.habitId;*/
     elementToAdd.habitDescription = document.getElementById('new-description').value;
     elementToAdd.target = parseInt(document.getElementById('new-target').value);
     elementToAdd.isNegative = document.getElementById('new-is-negative-flag').checked;

@@ -7,6 +7,10 @@ body{
     background: #fafafa;
 }
 
+#google-image{
+    width: 48px;
+    border-radius: 9px
+}
 #new-version-notification{
     display: none;
 }
