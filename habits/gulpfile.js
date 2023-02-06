@@ -45,7 +45,7 @@ gulp.task('pack-css', function () {
 
 
 gulp.task('process-html', function () {    
-    return gulp.src(['adding_habits.html'])
+    return gulp.src(['adding_habits_transformed.html'])
         .pipe(replace('<link rel="stylesheet" href="components/full.css">', '<style>'+fs.readFileSync('output/bundle.css', 'utf8')+'</style>'))  
         .pipe(replace('<script type="text/javascript" src="language/general.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="language/english.js"></script>',''))

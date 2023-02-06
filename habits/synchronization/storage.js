@@ -112,20 +112,37 @@ var getItemByKey = async function(keyName) {
 
 }
 var setItem = async function(keyName, value) {
-    window.localStorage.setItem(keyName, value)
+    var url=""
+    window.localStorage.setItem(keyName, value);
+    var jsonValue = JSON.parse(value);
+    jsonValue.token = googleToken;
 
     if (loggedIn){
-        var APIcallParameters = {
-            method: "GET",
-            url: `http://localhost:5000/setItemValue?keyName=${keyName}&value=${value}&user="${apiUser}"`
-        };
-
-        var response;
-        try {
-            response = await APICall(APIcallParameters);
-        } catch (e) {
-            console.log(e);
-        } 
+        var keyNameParts = keyName.split("-")
+        if (keyNameParts[0] == "progress"){
+            url = "https://www.vince.com/api/discipline/progress/add";
+        } else if  (keyNameParts[0] == "habit"){
+            url = "https://www.vince.com/api/discipline/habits/add";
+        }
+        try{
+            var response = await fetch
+                (url,{
+                    method: "POST",
+                    headers:{'Content-Type': 'application/json'},
+                    body: JSON.stringify(jsonValue)
+                    });
+            } catch (e) {
+                console.log('could not connect to the server');
+                console.log(e);
+                response = null;
+            } 
+        if (response.status == '200'){
+            var apiResponse = await response.json();
+            /* todo : apiResponse._id must update the id of the element if it is has been created from scratch*/
+            return apiResponse;
+        } else {
+            console.log('status of the api call:'+response.status);
+        }
     }
     console.log('item set:'+keyName+":"+value);
     return response
