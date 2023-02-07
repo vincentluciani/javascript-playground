@@ -1,7 +1,7 @@
 var addHabitDOMElement = function(elementToAdd){
     const newHabitDivision = document.createElement("div");
     elementToAdd.remoteHabitId= elementToAdd._id?elementToAdd._id:0;
-    elementToAdd.habitId= elementToAdd.id?elementToAdd.id:0;
+    elementToAdd.habitId= elementToAdd.habitId?elementToAdd.habitId:0;
 
     newHabitDivision.setAttribute("habitDescription", elementToAdd.habitDescription);
     newHabitDivision.setAttribute("target", elementToAdd.target);
@@ -265,7 +265,7 @@ var addNewHabitFromForm = function(){
 
     var elementToAdd={};
     var newId = Date.now();
-    elementToAdd.id = newId.toString();
+    elementToAdd.progressId = newId.toString();
     elementToAdd.habitId = (newId * 10).toString();
     /*elementToAdd.id = elementToAdd.habitId;*/
     elementToAdd.habitDescription = document.getElementById('new-description').value;
