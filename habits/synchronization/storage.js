@@ -10,7 +10,7 @@ var getHabitProgressJournal = async function() {
         var url = `https://www.vince.com/api/discipline/habits/getall`;
         var response;
         var input = {
-            token: googleToken,
+            token: applicationToken,
             requestDate: currentDate
         }
         try {

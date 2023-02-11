@@ -1,6 +1,7 @@
 
 var dataArrays = {};
 var googleToken = '';
+var applicationToken = '';
 var loggedIn = true;
 var maxForNonLoggedIn = 2000;
 var updateQueue = [];
@@ -38,24 +39,31 @@ function handleCredentialResponse(response) {
     document.getElementById('signin_status').innerHTML = "Signed in";
     console.log("Encoded JWT ID token: " + response.credential);
     googleToken=response.credential;
-
-    renderApplication()
-    .then(value => {
-        setTimeout(placeSVGIcons,5);
-        setTimeout(renderPastProgressBoxes,10); 
-        setTimeout(showSummariesTab,15); 
+    sendToken(response.credential).then(value => {
+        applicationToken = value.applicationJwtToken
+        renderApplication()
+        .then(value => {
+            setTimeout(placeSVGIcons,5);
+            setTimeout(renderPastProgressBoxes,10); 
+            setTimeout(showSummariesTab,15); 
+            
+            /*setTimeout(prepareSummaries,20);*/
+          }, reason => {
+            console.log(reason );
+          })
+        document.getElementById("date-filter").value=currentDate;
+        createRadialProgressBar(radialProgressParameters);
         
-        /*setTimeout(prepareSummaries,20);*/
-      }, reason => {
+    }, reason => {
         console.log(reason );
       })
-    document.getElementById("date-filter").value=currentDate;
-    createRadialProgressBar(radialProgressParameters);
+
+
     
-    sendToken(response.credential);
+
 }
 
-function sendToken(token) {
+async function sendToken(token) {
 
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'https://www.vince.com/api/discipline/auth');
@@ -63,7 +71,7 @@ function sendToken(token) {
     xhr.onload = function() {
       console.log('Signed in information: ' + xhr.responseText);
       document.getElementById("google-image").setAttribute("src", xhr.responseText);
-
+      return xhr.responseText
     };
     xhr.send('token=' + token);
 
