@@ -65,7 +65,7 @@ function handleCredentialResponse(response) {
 
 async function sendToken(token) {
 
-    var xhr = new XMLHttpRequest();
+   /* var xhr = new XMLHttpRequest();
     xhr.open('POST', 'https://www.vince.com/api/discipline/auth');
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onload = function() {
@@ -73,7 +73,29 @@ async function sendToken(token) {
       document.getElementById("google-image").setAttribute("src", xhr.responseText);
       return xhr.responseText
     };
-    xhr.send('token=' + token);
+    xhr.send('token=' + token);*/
+
+    try{
+        var response = await fetch
+            ('https://www.vince.com/api/discipline/auth',{
+                method: "POST",
+                headers:{'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'token=' + token
+                });
+        } catch (e) {
+            console.log('could not connect to the server');
+            console.log(e);
+            response = null;
+        } 
+    if (response.status == '200'){
+        var apiResponse = await response.json();
+        document.getElementById("google-image").setAttribute("src", apiResponse.picture);
+
+        /* todo : apiResponse._id must update the id of the element if it is has been created from scratch*/
+        return apiResponse;
+    } else {
+        console.log('status of the api call:'+response.status);
+    }
 
 }
 

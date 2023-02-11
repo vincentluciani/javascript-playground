@@ -116,7 +116,7 @@ var setItem = async function(keyName, value) {
     var url=""
     window.localStorage.setItem(keyName, value);
     var jsonValue = JSON.parse(value);
-    jsonValue.token = googleToken;
+    jsonValue.token = applicationToken;
 
     if (loggedIn){
         var keyNameParts = keyName.split("-")
