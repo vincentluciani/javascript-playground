@@ -7,8 +7,12 @@ var addProgressDOMElement = function(elementToAdd){
 
     const newProgressDivision = document.createElement("div");
 
+    elementToAdd.remoteProgressId= elementToAdd._id?elementToAdd._id:0;
+    /*elementToAdd.habitId= elementToAdd.habitId?elementToAdd.habitId:0;^/
+
     /* Main Attributes */
     newProgressDivision.setAttribute("id", elementToAdd.progressId );
+    newProgressDivision.setAttribute("remoteProgressId", elementToAdd.remoteProgressId );
     newProgressDivision.setAttribute("habitDescription", elementToAdd.habitDescription);
     newProgressDivision.setAttribute("target", elementToAdd.target);
     newProgressDivision.setAttribute("progressDate", elementToAdd.progressDate );
