@@ -444,6 +444,7 @@ var progressDOMToJson = function(elementToRead){
     outputJson.isCritical = elementToRead.getAttribute("isCritical");
     outputJson.isSuspendableDuringSickness = elementToRead.getAttribute("isSuspendableDuringSickness");
     outputJson.isSuspendableDuringOtherCases = elementToRead.getAttribute("isSuspendableDuringOtherCases");
+    outputJson.timerInitialNumberOfMinutes = elementToRead.getAttribute("timerInitialNumberOfMinutes");
     outputJson.order = elementToRead.getAttribute("order")?elementToRead.getAttribute("order"):80;
     outputJson.numberOfCompletions = parseInt(elementToRead.getElementsByClassName("number-of-completion")[0].value);
 
