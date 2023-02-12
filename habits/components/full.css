@@ -7,6 +7,19 @@ body{
     background: #fafafa;
 }
 
+#google-container{
+    border:0px;
+    width: 63px;
+    height: 71px;
+}
+}
+#signout_button{
+    font-size: 12px;
+    text-decoration: underline;
+    color: #464691;
+    display: none;
+    cursor: pointer;
+}
 #google-image{
     width: 48px;
     border-radius: 9px
@@ -861,7 +874,7 @@ td,.red,.fa-warning{
     }
 
     .box.habit-update, .box.daily-summary, .box.big-action-button{
-        width: 300px;
+        width: 321px;
         border-width: 1px;
     }
     .box.big-action-button{
@@ -956,6 +969,9 @@ td,.red,.fa-warning{
     }
     .progress-details{
         display: none;
+    }
+    .box.habit-update, .box.big-action-button, .daily-summary{
+        padding: 10px;
     }
 }
 @media (min-width: 650px){

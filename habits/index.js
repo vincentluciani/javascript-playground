@@ -98,20 +98,7 @@ app.get('/', function (req, res, next) {
     
 })
 
-app.get('/resources/crowd_cheering_6seconds.mp3', function (req, res, next) {
-    fs.readFile('resources/crowd_cheering_6seconds.mp3', 'utf8', function (err,data) {
-        var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
 
-        if (err) {
-          return console.log(err);
-        }
-        res.writeHead(200, {'Content-Type': 'audio/mpeg'});
-        res.write(data);
-        res.end();
-      });
-
-    
-})
 
 app.get('/get-habit-progress-journal', function (req, res, next) {
 
@@ -301,11 +288,11 @@ app.get('/pwa-icon-512.png', function (req, res, next) {
 
 app.get('/resources/crowd_cheering_6seconds.mp3', function (req, res, next) {
 
-  var fileToLoad  = fs.readFileSync('output/pwa-icon-512.png')
+  var fileToLoad  = fs.readFileSync('resources/crowd_cheering_6seconds.mp3')
      
-  res.writeHead(200, {'Content-Type': 'image/png'});
+  res.writeHead(200, {'Content-Type': 'audio/mpeg'});
   res.end(fileToLoad, 'binary');
-  /* https://stackoverflow.com/questions/21235696/display-images-in-html-nodejs*/
+
 })
 
 

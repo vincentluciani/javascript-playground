@@ -124,15 +124,14 @@
             </div>
             <div id="habits-definition-container" class="habits-definition-container">
                 <div id="google-container" class="box first daily-summary">
-                    <img id="google-image" />
-                    <div id="signin_status">Signed out</div>
-             
-                   <div id="signout_button">sign out 2</div>
+                    <img id="google-image" />        
+                   <div id="signout_button">Sign Out</div>
                     <script>
                           const button = document.getElementById('signout_button');
                                 button.onclick = () => {
                                 google.accounts.id.disableAutoSelect();
-                                document.getElementById('signin_status').innerHTML = "Signed out";
+                                document.getElementById("google-image").setAttribute("src", "");
+                                document.getElementById("signout_button").style.display= 'none';
                                 }
                     </script>
                 </div>

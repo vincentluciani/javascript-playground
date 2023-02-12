@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 function handleCredentialResponse(response) {
-    document.getElementById('signin_status').innerHTML = "Signed in";
+
     console.log("Encoded JWT ID token: " + response.credential);
     googleToken=response.credential;
     sendToken(response.credential).then(value => {
@@ -90,6 +90,7 @@ async function sendToken(token) {
     if (response.status == '200'){
         var apiResponse = await response.json();
         document.getElementById("google-image").setAttribute("src", apiResponse.picture);
+        document.getElementById("signout_button").style.display= 'block';
 
         /* todo : apiResponse._id must update the id of the element if it is has been created from scratch*/
         return apiResponse;
@@ -435,6 +436,7 @@ var habitDOMToJson = function(elementToRead){
 var progressDOMToJson = function(elementToRead){
     var outputJson = {};
     outputJson.id = elementToRead.getAttribute("id");
+    outputJson.progressId = elementToRead.getAttribute("id");
     outputJson.habitId = elementToRead.getAttribute("habitId");
     outputJson.habitDescription = elementToRead.getAttribute("habitDescription");
     outputJson.target = parseInt(elementToRead.getAttribute("target"));
