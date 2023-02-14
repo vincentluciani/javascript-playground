@@ -388,8 +388,10 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
                 isDayOK = true;
             }
             if (isDayOK != null && isDayOK) {
+                let newId = Date.now()*100+i;
                 let newProgressObject = {
-                    id: Date.now()*100+i,
+                    id:newId ,
+                    progressId: newId,
                     habitId: habitsElements[i].getAttribute("habitId"),
                     habitDescription: habitsElements[i].getAttribute("habitDescription"),
                     target: habitsElements[i].getAttribute("target"),
