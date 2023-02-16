@@ -16,7 +16,7 @@ var pushProgressToQueue = function(divToAnalyze) {
 var pushProgressArrayToQueue = function(objectToPush){
 
     var elementToAdd = {
-        'id': 'progress-'+objectToPush.id,
+        'id': 'progress-'+objectToPush.progressId,
         'value': JSON.stringify(objectToPush)
     }
 
