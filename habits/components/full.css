@@ -8,9 +8,7 @@ body{
 }
 
 #google-container{
-    border:0px;
-    width: 63px;
-    height: 71px;
+    width: 225px;
 }
 
 #signout_button{
@@ -22,12 +20,19 @@ body{
 }
 #google-image{
     width: 48px;
-    border-radius: 9px
+    border-radius: 9px;
+    margin-bottom: 10px
 }
 #new-version-notification{
     display: none;
 }
 
+#progress-menu{
+    display: none;
+}
+#habits-section{
+    display: block;
+}
 #new-version-notification.show{
     display: flex;
 }
@@ -600,9 +605,7 @@ input[type="date"],textarea{
 textarea{
     padding:5px;
 }
-#habits-section{
-    display:none;
-}
+
 #last-saved-information, #last-saved-information-habits{
     color: lightgrey;
     font-size: 13px;

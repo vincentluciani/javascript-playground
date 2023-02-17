@@ -39,6 +39,7 @@ function handleCredentialResponse(response) {
 
     console.log("Encoded JWT ID token: " + response.credential);
     googleToken=response.credential;
+   
     sendToken(response.credential).then(value => {
         applicationToken = value.applicationJwtToken
         renderApplication()
@@ -106,6 +107,7 @@ onload = function(){
 /*var runAppRendering = function(){*/
     "use strict";
 /* tests of service worker must be done on http://localhost:5000/ */
+
 
 
     const urlParams = new URLSearchParams(window.location.search);

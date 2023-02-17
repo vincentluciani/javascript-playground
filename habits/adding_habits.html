@@ -60,7 +60,7 @@
                 <nav>
                     <ul class="horizontal-menu">
                         <li id="progress-menu" onclick="changeTabToProgress();"><a  id="menu_dashboard">Progress</a></li>
-                        <li id="habits-menu" onclick="changeTabToHabits();"><a id="menu_dashboard">Settings</a></li>
+                        <li id="habits-menu" onclick="changeTabToHabits();" class="active"><a id="menu_dashboard">Settings</a></li>
                         <li id="graphs-menu" onclick="changeTabToSummaries();"><a id="menu_dashboard">Summaries</a></li>
                     </ul>
                 </nav>
@@ -114,7 +114,6 @@
         data-itp_support="false"
         data-auto_select="true"
         data-prompt_parent_id="g_id_onload"
-        style="position: absolute; top: 100px; left: 30px; z-index: 1001"
         ></div>
         <div id="habits-section" class="main-section">
 
@@ -123,16 +122,18 @@
                 <label id="last-saved-information-habits"></label>
             </div>
             <div id="habits-definition-container" class="habits-definition-container">
-                <div id="google-container" class="box first daily-summary">
+                <div id="google-container" class="box new-habit blue">
+                    <div class="bold"><span id="small-task-icon" class="submenu-icon"></span>Login</div><br>
+                    Being logged in, you can use the application on all devices and keep an unlimited number of days.<br>
                     <img id="google-image" />   
                     <div class="g_id_signin"
                         data-type="standard"
-                        data-shape="pill"
-                        data-theme="filled_blue"
-                        data-text="signin_with"
+                        data-shape="rectangular"
+                        data-theme="outline"
+                        data-text="sign_in_with"
                         data-size="large"
                         data-logo_alignment="left">
-                    </div>     
+                    </div>   
                    <div id="signout_button">Sign Out</div>
                     <script>
                           const button = document.getElementById('signout_button');
