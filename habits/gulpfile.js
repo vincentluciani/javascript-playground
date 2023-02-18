@@ -69,6 +69,7 @@ gulp.task('process-html', function () {
         .pipe(replace('<script type="text/javascript" src="synchronization/sendPost.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="synchronization/debugTools.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/icons.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/authentication.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="synchronization/readQueue.js"></script>','<script>'+fs.readFileSync('output/bundle-min.js', 'utf8')+'</script>'))   
         .pipe(htmlmin({ collapseWhitespace: true }))
         .pipe(rename('index.html'))

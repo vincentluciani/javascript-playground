@@ -17,11 +17,18 @@ body{
     color: #464691;
     display: none;
     cursor: pointer;
+    clear:both;
 }
 #google-image{
     width: 48px;
     border-radius: 9px;
-    margin-bottom: 10px
+    margin-bottom: 10px;
+    float: left;
+    margin-right: 10px;
+    margin-top:10px;
+}
+#login-text{
+    margin-top:13px;
 }
 #new-version-notification{
     display: none;

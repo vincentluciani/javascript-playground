@@ -90,8 +90,9 @@ async function sendToken(token) {
         } 
     if (response.status == '200'){
         var apiResponse = await response.json();
-        document.getElementById("google-image").setAttribute("src", apiResponse.picture);
-        document.getElementById("signout_button").style.display= 'block';
+
+        reactOnLogin(apiResponse);
+
 
         /* todo : apiResponse._id must update the id of the element if it is has been created from scratch*/
         return apiResponse;
