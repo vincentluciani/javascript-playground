@@ -72,7 +72,7 @@ var readJournal = function(journalArray){
             var journalDiv = document.createElement("div");
             journalDiv.setAttribute("class","journal-container-day");
             var dateDiv = document.createElement("div");
-            dateDiv.innerHTML = journalEntry.key.substr(8);
+            dateDiv.innerHTML = journalEntry.journalDate;
             dateDiv.setAttribute("class","date-label");
             var textDiv = document.createElement("div");
             textDiv.innerHTML = journalText;
