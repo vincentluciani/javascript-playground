@@ -5,8 +5,9 @@ var displayJournalEditBoxAsync = async function(){
 
     var currentText = await getCurrentDateJournal(progressDate);
     editBoxTextBox.value = "";
-    if (currentText && currentText.length>0){
-        editBoxTextBox.value = JSON.parse(currentText);
+    if (currentText && currentText.text && currentText.text.length>0){
+       /* editBoxTextBox.value = JSON.parse(currentText.text);*/
+       editBoxTextBox.value = currentText.text;
     }
 
     editBox.setAttribute("progressDate",progressDate);
@@ -25,16 +26,22 @@ var displayJournalEditBox = function(){
 var getCurrentDateJournal = async function(journalDate){
 
     var journal = await getItemByKey("journal-"+journalDate);
-    return journal;
+    return journal[0];
 }
 var closeJournal = function(){
     var editBox = document.getElementById("journal-edit-box");
     var journalDate = editBox.getAttribute("progressDate");
     var editBoxText = document.getElementById("daily-journal").value;
 
+    var journalEntry = {
+        text: editBoxText,
+        journalDate: journalDate
+    }
+
     var objectToSave = {
-        id: "journal-" + journalDate.toString(),
-        value: JSON.stringify(editBoxText)
+        'id': "journal-" + journalDate.toString(),
+        'value': JSON.stringify(journalEntry),
+
     }
 
     executePushToQueue(objectToSave);

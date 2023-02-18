@@ -89,21 +89,34 @@ var removeItemByKey = async function(keyName) {
 
 }
 var getItemByKey = async function(keyName) {
-
+/* todo handle case where item is not journal */
+    var keyNameParts = keyName.split("-");
     if (loggedIn){
-        var APIcallParameters = {
-            method: "GET",
-            url: `http://localhost:5000/getItemByKey?keyName=${keyName}&user="${apiUser}"`
-        };
-
+        var url = `https://www.vince.com/api/discipline/journal/get`;
         var response;
+        var input = {
+            token: applicationToken,
+            requestDate: keyNameParts[1]+"-"+keyNameParts[2]+"-"+keyNameParts[3]
+        }
         try {
-            response = await APICall(APIcallParameters);
+            response = await fetch
+            (url,{
+                method: "POST",
+                headers:{'Content-Type': 'application/json'},
+                body: JSON.stringify(input)
+                });
         } catch (e) {
+            console.log('could not connect to the server');
             console.log(e);
             return window.localStorage.getItem(keyName);
-        } 
-        return response
+        }
+        if (response.status == '200'){
+            var apiResponse = await response.json();
+            return apiResponse;
+        } else {
+            console.log('status of the api call:'+response.status);
+            return window.localStorage.getItem(keyName);
+        }
 
     } else {
         var itemValue = window.localStorage.getItem(keyName);
@@ -124,6 +137,8 @@ var setItem = async function(keyName, value) {
             url = "https://www.vince.com/api/discipline/progress/add";
         } else if  (keyNameParts[0] == "habit"){
             url = "https://www.vince.com/api/discipline/habits/add";
+        } else if (keyNameParts[0] == "journal"){
+            url = "https://www.vince.com/api/discipline/journal/add";
         }
         try{
             var response = await fetch
