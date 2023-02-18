@@ -51,7 +51,7 @@ var closeJournal = function(){
 
 
 var convertJournalKeyToDateInt = function(journalKey){
-    var resultString = journalKey.substring(8,12) + journalKey.substring(13,15)  + journalKey.substring(16,19)   
+    var resultString = journalKey.substring(0,4) + journalKey.substring(5,7) +journalKey.substring(8,10)   
     return parseInt(resultString);
 }
 var readJournal = function(journalArray){
@@ -60,7 +60,7 @@ var readJournal = function(journalArray){
         return 0;
     }
     journalArray.sort(function(a, b){
-		return ( convertJournalKeyToDateInt(b.key) - convertJournalKeyToDateInt(a.key))
+		return ( convertJournalKeyToDateInt(b.journalDate) - convertJournalKeyToDateInt(a.journalDate))
 		});	
 
     document.getElementById("journal-container").innerHTML  = "";
