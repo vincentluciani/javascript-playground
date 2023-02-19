@@ -213,7 +213,7 @@ var addProgressDOMElement = function(elementToAdd){
         }
      }(expandButtonWrapper,detailsArea));
 
-     if (elementToAdd.isTimerNecessary == "true"){
+     if (elementToAdd.isTimerNecessary == true){
         var newCounterDiv = new DigitalCounter(elementToAdd.timerInitialNumberOfMinutes,countDownContainerId,"new-counter-"+elementToAdd.progressId,false,actionsWhenCountdownEnd);
      }
      refreshProgress(newProgressDivision);
