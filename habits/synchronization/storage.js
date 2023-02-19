@@ -70,19 +70,39 @@ var getHabitProgressJournalFromStorage = function(){
 var removeItemByKey = async function(keyName) {
 
         window.localStorage.removeItem(keyName);
+        var keyNameParts = keyName.split("-");
+        
+        var storageType = keyNameParts[0];
+        if (storageType=='habit'){
+            storageType='habits';
+        }
+        var url=`https://www.vince.com/api/discipline/${storageType}/delete`;
+        var id = keyNameParts[1];
 
         if (loggedIn){
-            var APIcallParameters = {
-                method: "GET",
-                url: `http://localhost:5000/removeItemByKey?keyName=${keyName}&user="${apiUser}"`
-            };
-
             var response;
-            try {
-                response = await APICall(APIcallParameters);
-            } catch (e) {
-                console.log(e);
-            } 
+        var input = {
+            token: applicationToken,
+            id: id
+        }
+        try {
+            response = await fetch
+            (url,{
+                method: "POST",
+                headers:{'Content-Type': 'application/json'},
+                body: JSON.stringify(input)
+                });
+        } catch (e) {
+            console.log('could not connect to the server');
+            console.log(e);
+            return false;
+        }
+        if (response.status == '200'){
+            var apiResponse = await response.json();
+            return apiResponse;
+        } else {
+            console.log('status of the api call:'+response.status);
+        }
         }
         console.log('item removed');
         return response
