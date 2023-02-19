@@ -48,7 +48,7 @@ var addProgressDOMElement = function(elementToAdd){
                 percentageCompletion = 100;
             }
     } else {
-        percentageCompletion = Math.round(elementToAdd.numberOfCompletions * 100 / elementToAdd.target) ;
+        percentageCompletion = Math.round(elementToAdd.numberOfCompletions * 100 / parseInt(elementToAdd.target)) ;
     }
  
 
@@ -167,7 +167,7 @@ var addProgressDOMElement = function(elementToAdd){
     }
 
     /* Countdown */
-    if (elementToAdd.isTimerNecessary == "true"){
+    if (elementToAdd.isTimerNecessary == true){
         var countDownTitle = document.createElement("div");
         countDownTitle.innerHTML = "Countdown:";
         countDownTitle.setAttribute("class","progress-container");
@@ -266,7 +266,7 @@ var refreshProgress = function(currentDiv){
     var newCompletionPercentage = 0;
 
     var isNegative = currentDiv.getAttribute("isNegative"); 
-    if (isNegative != null && isNegative == "true"){
+    if (isNegative != null && isNegative == true){
         if ( newCompletion.value <= parseInt(currentDiv.getAttribute("target")) ){
             newCompletionPercentage = 100;
         } 
@@ -361,6 +361,9 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
     var progressElements = document.getElementsByClassName('habit-update');
     var habitsElements = document.getElementsByClassName('habit-setting');
 
+    if (progressElements.length == 0 && habitsElements.length >0){
+        showProgressTab();
+    }
     var habitsElementsLength = habitsElements.length;
     for (var i=0; i<habitsElementsLength ;i++){
 
@@ -394,15 +397,15 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
                     progressId: newId,
                     habitId: habitsElements[i].getAttribute("habitId"),
                     habitDescription: habitsElements[i].getAttribute("habitDescription"),
-                    target: habitsElements[i].getAttribute("target"),
+                    target: parseInt(habitsElements[i].getAttribute("target")),
                     progressDate: inputDate,
                     isNew: true,
-                    isCritical: habitsElements[i].getAttribute("iscritical"),
-                    isSuspendableDuringSickness: habitsElements[i].getAttribute("isSuspendableDuringSickness"),
-                    isSuspendableDuringOtherCases: habitsElements[i].getAttribute("isSuspendableDuringOtherCases"),
-                    isTimerNecessary: habitsElements[i].getAttribute("isTimerNecessary"),
-                    timerInitialNumberOfMinutes: habitsElements[i].getAttribute("timerInitialNumberOfMinutes"),
-                    order: habitsElements[i].getAttribute("order")?habitsElements[i].getAttribute("order"):80,
+                    isCritical: (habitsElements[i].getAttribute("iscritical")==='true'),
+                    isSuspendableDuringSickness: (habitsElements[i].getAttribute("isSuspendableDuringSickness")==='true'),
+                    isSuspendableDuringOtherCases: (habitsElements[i].getAttribute("isSuspendableDuringOtherCases")==='true'),
+                    isTimerNecessary: (habitsElements[i].getAttribute("isTimerNecessary")==='true'),
+                    timerInitialNumberOfMinutes: parseInt(habitsElements[i].getAttribute("timerInitialNumberOfMinutes")),
+                    order: habitsElements[i].getAttribute("order")?parseInt(habitsElements[i].getAttribute("order")):80,
                     numberOfCompletions:0,
                 }
                 addProgressDOMElement(newProgressObject);

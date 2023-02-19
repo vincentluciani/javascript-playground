@@ -334,7 +334,7 @@ var setDivAppearanceBasedOnCompletion = function(currentDiv,newCompletionPercent
 
     putBorderBackgroundOrderBasedOnCompletion(currentDiv,newCompletionPercentage);
 
-    if ( currentDiv.getAttribute("iscritical") !=null && currentDiv.getAttribute("iscritical") == "true"){
+    if ( currentDiv.getAttribute("iscritical") !=null && currentDiv.getAttribute("iscritical") == 'true'){
         setDivAppearanceForCritical(currentDiv,newCompletionPercentage);
     }
 }
@@ -426,10 +426,10 @@ var habitDOMToJson = function(elementToRead){
     // outputJson.isSuspendableDuringSickness = elementToRead.getElementsByClassName("simple-checkbox")[2].checked.toString();
     // outputJson.isSuspendableDuringOtherCases = elementToRead.getElementsByClassName("simple-checkbox")[3].checked.toString();
     // outputJson.isTimerNecessary = elementToRead.getElementsByClassName("simple-checkbox")[0].checked.toString();
-    outputJson.isTimerNecessary = document.getElementById("is-timer-necessary-"+outputJson.habitId.toString()).checked.toString();
-    outputJson.isSuspendableDuringOtherCases = document.getElementById("is-suspendable-in-other-cases-"+outputJson.habitId.toString()).checked.toString();
-    outputJson.isSuspendableDuringSickness = document.getElementById("is-suspendable-during-sickness-"+outputJson.habitId.toString()).checked.toString();
-    outputJson.isCritical = document.getElementById("is-critical-"+outputJson.habitId.toString()).checked.toString();
+    outputJson.isTimerNecessary = document.getElementById("is-timer-necessary-"+outputJson.habitId.toString()).checked;
+    outputJson.isSuspendableDuringOtherCases = document.getElementById("is-suspendable-in-other-cases-"+outputJson.habitId.toString()).checked;
+    outputJson.isSuspendableDuringSickness = document.getElementById("is-suspendable-during-sickness-"+outputJson.habitId.toString()).checked;
+    outputJson.isCritical = document.getElementById("is-critical-"+outputJson.habitId.toString()).checked;
 
     outputJson.timerInitialNumberOfMinutes = document.getElementById("initial-time"+outputJson.habitId.toString()).value;
     return outputJson;

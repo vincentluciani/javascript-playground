@@ -274,11 +274,11 @@ var addNewHabitFromForm = function(){
     elementToAdd.progressDate = currentDate;
     elementToAdd.numberOfCompletions = 0;
     elementToAdd.isNew = true;
-    elementToAdd.isCritical = "false";
-    elementToAdd.isTimerNecessary = "false";
+    elementToAdd.isCritical = false;
+    elementToAdd.isTimerNecessary = false;
     elementToAdd.timerInitialNumberOfMinutes = 0;
-    elementToAdd.isSuspendableDuringSickness = "false";
-    elementToAdd.isSuspendableDuringOtherCases = "false";
+    elementToAdd.isSuspendableDuringSickness = false;
+    elementToAdd.isSuspendableDuringOtherCases = false;
     elementToAdd.order=81;
 
     var weekDaySelector = document.getElementById('week-day-selection');
@@ -325,13 +325,13 @@ var saveChangesInHabit = function(habitId){
 var setHabitAsCritical = function(habitId){
     var habitDiv = document.getElementById(habitId);
     var habitJSON = habitDOMToJson(habitDiv);
-    habitJSON.isCritical="true";
+    habitJSON.isCritical=true;
     pushHabitArrayToQueue(habitJSON);
 };
 var unsetHabitAsCritical = function(habitId){
     var habitDiv = document.getElementById(habitId);
     var habitJSON = habitDOMToJson(habitDiv);
-    habitJSON.isCritical="false";
+    habitJSON.isCritical=false;
     pushHabitArrayToQueue(habitJSON);
 };
 

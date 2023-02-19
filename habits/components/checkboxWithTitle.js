@@ -13,7 +13,7 @@ var checkboxWithTitle = function(title,variable,divId){
     const newInput = document.createElement("input");
     newInput.setAttribute("id",divId);
     newInput.setAttribute("class","simple-checkbox");
-    if (variable!=null && variable == "true") {
+    if (variable!=null && variable == true) {
         newInput.checked = true;  
     } else if (variable == "false"){
         newInput.checked = false;
