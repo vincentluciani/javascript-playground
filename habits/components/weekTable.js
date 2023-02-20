@@ -112,7 +112,7 @@ var buildWeekTableBox = function(weekTableObject,habitObject){
     const markAsCriticalDiv = document.createElement("div");
 
     markAsCriticalDiv.setAttribute("class","critical-link");
-    if (habitObject.isCritical && habitObject.isCritical=="true"){
+    if (habitObject.isCritical && habitObject.isCritical==true){
         markAsCriticalDiv.innerHTML = "Unmark as critical";
         markAsCriticalDiv.setAttribute("onclick","unsetHabitAsCritical("+ habitObject.habitId +");");
     } else {

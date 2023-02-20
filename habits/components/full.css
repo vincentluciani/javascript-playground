@@ -7,9 +7,6 @@ body{
     background: #fafafa;
 }
 
-#google-container{
-    width: 225px;
-}
 
 #signout_button{
     font-size: 12px;
@@ -223,7 +220,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
     background: white;
 }
 .box.new-habit,.habit-setting{
-    width: 208px;
+    width: 225px;
     padding: 20px;
 }
 
@@ -387,7 +384,7 @@ i{
     font-weight: bold;
 }
 #new-description,.habit-description-definition{
-    width: 191px;
+    width: 213px;
     margin-bottom: 10px;
 }
 
