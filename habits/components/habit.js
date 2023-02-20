@@ -126,7 +126,7 @@ var addHabitDOMElement = function(elementToAdd){
     /* end priority */
 
     /* Timer */
-    var checkBoxContainerIsTimerNecessary = checkboxWithTitle("Do you need a timer:",elementToAdd.isCritical,"is-timer-necessary-"+elementToAdd.habitId.toString());
+    var checkBoxContainerIsTimerNecessary = checkboxWithTitle("Do you need a timer:",elementToAdd.isTimerNecessary,"is-timer-necessary-"+elementToAdd.habitId.toString());
     newHabitDivision.appendChild(checkBoxContainerIsTimerNecessary);
     const timerTimeTextDiv = document.createTextNode("Time in minutes:");
     const timerTimeInput = document.createElement("input");
