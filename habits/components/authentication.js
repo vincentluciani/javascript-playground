@@ -11,6 +11,13 @@ const reactOnLogin = function(apiResponse) {
         listOfButtons[i].style.display = 'none';
     }
 
+    document.getElementById("google-container").classList.add("new-habit");
+    document.getElementById("google-container").classList.remove("new-habit-focused");
+    document.getElementById("new-habit").classList.remove("new-habit");
+    document.getElementById("new-habit").classList.add("new-habit-focused");
+    document.getElementById("google-image").style.display="block";
+   
+     
 }
 
 
@@ -25,5 +32,11 @@ const reactOnLogout = function() {
     for (var i=0; i< listOfButtons.length;i++){
         listOfButtons[i].style.display = 'block';
     }
+
+    document.getElementById("google-container").classList.remove("new-habit");
+    document.getElementById("google-container").classList.add("new-habit-focused");
+    document.getElementById("new-habit").classList.add("new-habit");
+    document.getElementById("new-habit").classList.remove("new-habit-focused");
+    document.getElementById("google-image").style.display="none";
 
 }

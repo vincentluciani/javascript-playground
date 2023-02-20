@@ -23,6 +23,7 @@ body{
     float: left;
     margin-right: 10px;
     margin-top:10px;
+    display: none;
 }
 #login-text{
     margin-top:13px;
@@ -85,7 +86,7 @@ body{
     background:#17bc25;
     color:white;
 }
-.blue{
+.new-habit-focused{
     background:#fffceb;
     color:black;
 }
@@ -219,7 +220,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
 .habit-graph{
     background: white;
 }
-.box.new-habit,.habit-setting{
+.box.new-habit,.habit-setting,.new-habit-focused{
     width: 225px;
     padding: 20px;
 }
@@ -227,7 +228,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
 .box{
     border: 1px solid  lightgray;
 }
-.box.new-habit{
+.box.new-habit-focused{
     border: 5px solid #c369bc;
 }
 
@@ -474,7 +475,7 @@ i{
 .habit-description-definition{
     margin-bottom: 10px;
 }
-.habit-setting{
+.habit-setting,.new-habit{
     background: white /*#fefff3*/;
 }
 
@@ -923,7 +924,7 @@ td,.red,.fa-warning{
         margin-left: 10px;
     }
 
-    .box.new-habit,.habit-setting{
+    .box.new-habit,.habit-setting,.new-habit-focused{
         width: 281px;
         padding: 20px;
     }
@@ -1050,7 +1051,7 @@ td,.red,.fa-warning{
     #new-description{
         width:209px;
     }
-    .box.new-habit,.habit-setting{
+    .box.new-habit,.habit-setting,.new-habit-focused{
         width: 224px;
     }
     .habit-description{
