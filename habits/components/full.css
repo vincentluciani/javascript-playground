@@ -1,4 +1,22 @@
  
+
+
+:root {
+    --primary-color: #c369bc;
+    --secondary-color: #f5bcff;
+  }
+  /*green:
+      --primary-color: rgb(38 187 34);
+    --secondary-color: rgb(218, 255, 217);
+  default
+  #c369bc
+  tabs
+  #b657af
+  calendar background
+  #f5bcff;
+  logo
+  #ca6fc3*/
+  
 body{
     margin: 0px;
    /* font-family: "Brush Script MT","Kalam", "Nunito","candara","arial";*/
@@ -53,7 +71,7 @@ body{
 .countdown-button{
     width: 47px;
     height: 22px;
-    fill: #b657af;
+    fill: var(--primary-color,#c369bc);
     margin-left: 18px;
     cursor: pointer;
 }
@@ -61,7 +79,7 @@ body{
     display: none;
 }
 .earlier-button, .later-button{
-    background: #b657af;
+    background: var(--primary-color,#c369bc);
     color: white;
     text-align: center;
     padding: 20px;
@@ -91,7 +109,7 @@ body{
     color:black;
 }
 .orange{
-    background:#b657af;
+    background:var(--primary-color,#c369bc);
     color:white;
 }
 #header{
@@ -135,8 +153,8 @@ body{
     text-align:center;
     padding-top:8px;
     padding-left: 7px;
-    background-color:#c369bc;
-    border-bottom: 1px solid #c369bc;
+    background-color:var(--primary-color,#c369bc);
+    border-bottom: 1px solid var(--primary-color,#c369bc);
     margin-bottom: -1px;
 }
 .horizontal-menu li.active{
@@ -171,7 +189,7 @@ body{
 }
 .horizontal-submenu li.selected-underline{
     float: left;
-    border-bottom: 4px solid #b657af;
+    border-bottom: 4px solid var(--primary-color,#c369bc);
 }
 .submenu-icon{
     margin-right: 8px;
@@ -229,7 +247,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
     border: 1px solid  lightgray;
 }
 .box.new-habit-focused{
-    border: 5px solid #c369bc;
+    border: 5px solid var(--primary-color,#c369bc);
 }
 
 .box.canva-wrapper{
@@ -262,7 +280,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
     background: #cb79c5;
 }
 .box.big-action-button{
-    background-color:#b657af;
+    background-color:var(--primary-color,#c369bc);
     display: flex;
     color: white;
     font-weight: bold;
@@ -273,13 +291,13 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
     align-items: center;
     cursor: pointer;
     order:500;
-    border: 1px solid #b657af;
+    border: 1px solid var(--primary-color,#c369bc);
     width:213px
 }
 .huge-button{
     width: 208px;
     height: 355px;
-    background-color: #b657af;
+    background-color: var(--primary-color,#c369bc);
     box-shadow: -1px 2px 14px 0px rgb(0 0 0 / 20%);
     color: white;
     font-size: 23px;
@@ -409,12 +427,12 @@ i{
     cursor:pointer;
 }
 .plus-button.normal, .minus-button.normal{
-    background: #b657af;
+    background: var(--primary-color,#c369bc);
     color: white;
 }
 
 .plus-button.inverted, .minus-button.inverted{
-    color: #b657af;
+    color: var(--primary-color,#c369bc);
     background: white;
 }
 
@@ -438,7 +456,7 @@ i{
 .add-button{
     font-size: 23px;
     clear: both;
-    background: #b657af;
+    background: var(--primary-color,#c369bc);
     color: white;
     text-align: center;
     padding: 10px;
@@ -463,7 +481,7 @@ i{
 }
 .weekday.selected{
     color:white;
-    background-color: #b657af;
+    background-color: var(--primary-color,#c369bc);
 }
 .weekday{
     color: #b5b5b5;
@@ -516,7 +534,7 @@ i{
     border-radius: 10px;
 }
 .positive-message{
-    background-color: #b657af;
+    background-color: var(--primary-color,#c369bc);
     z-index: 102;
     color: white;
 }  
@@ -579,7 +597,7 @@ i{
     text-align: center;
 }
 .positive-message-button{
-    color: #b657af;
+    color: var(--primary-color,#c369bc);
 }
 .super-positive-message-button{
     color: #0ae809;
@@ -593,11 +611,11 @@ i{
 }
 
 #date-filter{
-    border: 2px solid #b657af;
+    border: 2px solid var(--primary-color,#c369bc);
     border-radius: 6px;
     padding-left: 10px;
     padding-right: 10px;
-    background: #f5bcff;
+    background: var(--secondary-color,#c369bc);
 }
 input, textarea{
     border: 1px solid lightgrey;
@@ -780,7 +798,7 @@ td,.red,.fa-warning{
   
   /* When the checkbox is checked, add a blue background */
   .custom-checkbox-container input:checked ~ .checkmark {
-    background-color: #b657af;
+    background-color: var(--primary-color,#c369bc);
   }
   
   /* Create the checkmark/indicator (hidden when not checked) */
@@ -970,7 +988,7 @@ td,.red,.fa-warning{
         width:25px;
     }
     .plus-minus{
-        color:#b657af;
+        color:var(--primary-color,#c369bc);
     }
     .habit-description i,.task-icon-container{
         display: none;
