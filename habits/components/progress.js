@@ -3,31 +3,115 @@ var actionsWhenCountdownEnd = function(){
     giveCheers();
 ;}
 
-var addProgressDOMElement = function(elementToAdd){
+var updateProgressDOMProperties = function(division, elementToAdd){
 
-    const newProgressDivision = document.createElement("div");
+    division.setAttribute("id", elementToAdd.progressId );
+    division.setAttribute("remoteProgressId", elementToAdd.remoteProgressId );
+    division.setAttribute("habitDescription", elementToAdd.habitDescription);
+    division.setAttribute("target", elementToAdd.target);
+    division.setAttribute("progressDate", elementToAdd.progressDate );
+    division.setAttribute("class", "box habit-update");
+    division.setAttribute("isNew",elementToAdd.isNew);
+    division.setAttribute("habitId",elementToAdd.habitId);
+    division.setAttribute("isNegative", elementToAdd.isNegative);
+    division.setAttribute("isCritical", elementToAdd.isCritical);
+    division.setAttribute("isSuspendableDuringSickness", elementToAdd.isSuspendableDuringSickness);
+    division.setAttribute("isSuspendableDuringOtherCases", elementToAdd.isSuspendableDuringOtherCases);
+    division.setAttribute("isTimerNecessary", elementToAdd.isTimerNecessary);
+    division.setAttribute("timerInitialNumberOfMinutes", elementToAdd.timerInitialNumberOfMinutes);
+    var elementOrder = elementToAdd.order?elementToAdd.order:80;
+    division.setAttribute("order", elementOrder);
+    division.style.order = elementOrder;
+
+    return division;
+}
+var refreshProgressDOM = function(){
+
+    
+    getHabitProgressJournal().then(
+        value => {
+            dataArrays = value;
+            for (const progressElement of dataArrays.todaysProgressArray){
+                var DOMElementToUpdate = document.getElementById(progressElement.progressId);
+                updateProgressDOMElement(DOMElementToUpdate,progressElement);
+            }
+        },
+        reason => {
+            console.log(reason);
+            return;
+        }
+    );
+
+}
+
+
+var updateProgressDOMElement = function(newProgressDivision, elementToAdd){
 
     elementToAdd.remoteProgressId= elementToAdd._id?elementToAdd._id:0;
-    /*elementToAdd.habitId= elementToAdd.habitId?elementToAdd.habitId:0;^/
+    /*elementToAdd.habitId= elementToAdd.habitId?elementToAdd.habitId:0;*/
 
     /* Main Attributes */
-    newProgressDivision.setAttribute("id", elementToAdd.progressId );
-    newProgressDivision.setAttribute("remoteProgressId", elementToAdd.remoteProgressId );
-    newProgressDivision.setAttribute("habitDescription", elementToAdd.habitDescription);
-    newProgressDivision.setAttribute("target", elementToAdd.target);
-    newProgressDivision.setAttribute("progressDate", elementToAdd.progressDate );
-    newProgressDivision.setAttribute("class", "box habit-update");
-    newProgressDivision.setAttribute("isNew",elementToAdd.isNew);
-    newProgressDivision.setAttribute("habitId",elementToAdd.habitId);
-    newProgressDivision.setAttribute("isNegative", elementToAdd.isNegative);
-    newProgressDivision.setAttribute("isCritical", elementToAdd.isCritical);
-    newProgressDivision.setAttribute("isSuspendableDuringSickness", elementToAdd.isSuspendableDuringSickness);
-    newProgressDivision.setAttribute("isSuspendableDuringOtherCases", elementToAdd.isSuspendableDuringOtherCases);
-    newProgressDivision.setAttribute("isTimerNecessary", elementToAdd.isTimerNecessary);
-    newProgressDivision.setAttribute("timerInitialNumberOfMinutes", elementToAdd.timerInitialNumberOfMinutes);
-    var elementOrder = elementToAdd.order?elementToAdd.order:80;
-    newProgressDivision.setAttribute("order", elementOrder);
-    newProgressDivision.style.order = elementOrder;
+    newProgressDivision = updateProgressDOMProperties(newProgressDivision,elementToAdd);
+
+    var percentageCompletion = 0;
+    if ( elementToAdd.isNegative != null && elementToAdd.isNegative == "true"){
+            if ( elementToAdd.numberOfCompletions <= elementToAdd.target ){
+                percentageCompletion = 100;
+            }
+    } else {
+        percentageCompletion = Math.round(elementToAdd.numberOfCompletions * 100 / parseInt(elementToAdd.target)) ;
+    }
+
+    setDivAppearanceBasedOnCompletion(newProgressDivision,percentageCompletion);
+ 
+    var progressInput = newProgressDivision.getElementsByClassName('number-of-completion')[0]
+    var percentageCompletionInput = newProgressDivision.getElementsByClassName('percentage-completion')[0]
+
+    percentageCompletionInput.setAttribute("progressDate",elementToAdd.progressDate);
+    percentageCompletionInput.innerHTML = percentageCompletion.toString();
+
+    var progressInput = newProgressDivision.getElementsByClassName("number-of-completion")[0];
+
+    if (elementToAdd.target > 1){
+        progressInput.value = elementToAdd.numberOfCompletions;
+    } else {
+        if (elementToAdd.numberOfCompletions == 1){
+            progressInput.checked = true;
+            progressInput.setAttribute("value","1");
+        } else {
+            progressInput.checked = false;
+            progressInput.setAttribute("value","0");
+        }
+    }
+       
+}
+var addProgressDOMElement = function(elementToAdd){
+
+    var newProgressDivision = document.createElement("div");
+
+    elementToAdd.remoteProgressId= elementToAdd._id?elementToAdd._id:0;
+    /*elementToAdd.habitId= elementToAdd.habitId?elementToAdd.habitId:0;*/
+
+    /* Main Attributes */
+    // newProgressDivision.setAttribute("id", elementToAdd.progressId );
+    // newProgressDivision.setAttribute("remoteProgressId", elementToAdd.remoteProgressId );
+    // newProgressDivision.setAttribute("habitDescription", elementToAdd.habitDescription);
+    // newProgressDivision.setAttribute("target", elementToAdd.target);
+    // newProgressDivision.setAttribute("progressDate", elementToAdd.progressDate );
+    // newProgressDivision.setAttribute("class", "box habit-update");
+    // newProgressDivision.setAttribute("isNew",elementToAdd.isNew);
+    // newProgressDivision.setAttribute("habitId",elementToAdd.habitId);
+    // newProgressDivision.setAttribute("isNegative", elementToAdd.isNegative);
+    // newProgressDivision.setAttribute("isCritical", elementToAdd.isCritical);
+    // newProgressDivision.setAttribute("isSuspendableDuringSickness", elementToAdd.isSuspendableDuringSickness);
+    // newProgressDivision.setAttribute("isSuspendableDuringOtherCases", elementToAdd.isSuspendableDuringOtherCases);
+    // newProgressDivision.setAttribute("isTimerNecessary", elementToAdd.isTimerNecessary);
+    // newProgressDivision.setAttribute("timerInitialNumberOfMinutes", elementToAdd.timerInitialNumberOfMinutes);
+    // var elementOrder = elementToAdd.order?elementToAdd.order:80;
+    // newProgressDivision.setAttribute("order", elementOrder);
+    // newProgressDivision.style.order = elementOrder;
+
+    newProgressDivision = updateProgressDOMProperties(newProgressDivision,elementToAdd);
 
     const habitDescriptionText = document.createTextNode(elementToAdd.habitDescription);
     const targetValue = document.createElement("input");
