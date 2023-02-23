@@ -430,8 +430,18 @@ var habitDOMToJson = function(elementToRead){
     outputJson.isSuspendableDuringOtherCases = document.getElementById("is-suspendable-in-other-cases-"+outputJson.habitId.toString()).checked;
     outputJson.isSuspendableDuringSickness = document.getElementById("is-suspendable-during-sickness-"+outputJson.habitId.toString()).checked;
     outputJson.isCritical = document.getElementById("is-critical-"+outputJson.habitId.toString()).checked;
-
-    outputJson.timerInitialNumberOfMinutes = document.getElementById("initial-time"+outputJson.habitId.toString()).value;
+    var timerInitialNumberOfMinutes = document.getElementById("initial-time"+outputJson.habitId.toString()).value;
+    try {
+        timerInitialNumberOfMinutes = parseInt(timerInitialNumberOfMinutes)
+        if (timerInitialNumberOfMinutes >=0 ){
+            outputJson.timerInitialNumberOfMinutes = timerInitialNumberOfMinutes;
+        } else {
+            outputJson.timerInitialNumberOfMinutes = 0;
+        }
+    } catch(e){
+        outputJson.timerInitialNumberOfMinutes = 0;
+    }
+    
     return outputJson;
 };
 
@@ -449,7 +459,20 @@ var progressDOMToJson = function(elementToRead){
     outputJson.isCritical = elementToRead.getAttribute("isCritical");
     outputJson.isSuspendableDuringSickness = elementToRead.getAttribute("isSuspendableDuringSickness");
     outputJson.isSuspendableDuringOtherCases = elementToRead.getAttribute("isSuspendableDuringOtherCases");
+    
     outputJson.timerInitialNumberOfMinutes = elementToRead.getAttribute("timerInitialNumberOfMinutes");
+    /*todo: duplicate with function above*/
+    try {
+        timerInitialNumberOfMinutes = parseInt(timerInitialNumberOfMinutes)
+        if (timerInitialNumberOfMinutes >=0 ){
+            outputJson.timerInitialNumberOfMinutes = timerInitialNumberOfMinutes;
+        } else {
+            outputJson.timerInitialNumberOfMinutes = 0;
+        }
+    } catch(e){
+        outputJson.timerInitialNumberOfMinutes = 0;
+    }
+    
     outputJson.order = elementToRead.getAttribute("order")?elementToRead.getAttribute("order"):80;
     outputJson.numberOfCompletions = parseInt(elementToRead.getElementsByClassName("number-of-completion")[0].value);
 
