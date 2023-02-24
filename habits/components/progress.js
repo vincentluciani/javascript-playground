@@ -25,24 +25,7 @@ var updateProgressDOMProperties = function(division, elementToAdd){
 
     return division;
 }
-var refreshProgressDOM = function(){
 
-    
-    getHabitProgressJournal().then(
-        value => {
-            dataArrays = value;
-            for (const progressElement of dataArrays.todaysProgressArray){
-                var DOMElementToUpdate = document.getElementById(progressElement.progressId);
-                updateProgressDOMElement(DOMElementToUpdate,progressElement);
-            }
-        },
-        reason => {
-            console.log(reason);
-            return;
-        }
-    );
-
-}
 
 
 var updateProgressDOMElement = function(newProgressDivision, elementToAdd){
@@ -72,6 +55,7 @@ var updateProgressDOMElement = function(newProgressDivision, elementToAdd){
 
     var progressInput = newProgressDivision.getElementsByClassName("number-of-completion")[0];
 
+    /* todo code duplication here */
     if (elementToAdd.target > 1){
         progressInput.value = elementToAdd.numberOfCompletions;
     } else {

@@ -1,25 +1,82 @@
-var addHabitDOMElement = function(elementToAdd){
-    const newHabitDivision = document.createElement("div");
+var refreshDOM = function(){
+
+    
+    getHabitProgressJournal().then(
+        value => {
+            dataArrays = value;
+            for (const habitsElement of dataArrays.habitsArray){
+                var DOMElementToUpdate = document.getElementById(habitsElement.habitId);
+                updateHabitDOMElement(DOMElementToUpdate,habitsElement);
+            }
+            for (const progressElement of dataArrays.progressArray){
+                var DOMElementToUpdate = document.getElementById(progressElement.progressId);
+                updateProgressDOMElement(DOMElementToUpdate,progressElement);
+            }
+        },
+        reason => {
+            console.log(reason);
+            return;
+        }
+    );
+
+}
+
+var updateHabitDOMElement = function(division, elementToAdd){
+
+    division = updateHabitDOMProperties (division,elementToAdd);
+
+    var habitDescriptionDiv = division.getElementsByClassName('habit-description-definition')[0]; 
+    habitDescriptionDiv.innerHTML = elementToAdd.habitDescription; 
+    var targetDefinitionDiv = division.getElementsByClassName('habit-target-definition')[0];   
+    targetDefinitionDiv.value = elementToAdd.target;
+    var weekDaySelectionDiv = division.getElementsByClassName('week-day-selection')[0];
+    weekDaySelectionDiv.setAttribute('weekDay',elementToAdd.weekDay);
+    /*PROBLEM: SAME CLASS AS DAILY TARGET - does it cause other problems?????? */
+    var priorityDiv= division.getElementsByClassName('habit-target-definition')[1];   
+    priorityDiv.value = elementToAdd.order + 80;
+    var isTimerDiv= document.getElementById('is-timer-necessary-'+ elementToAdd.habitId);  
+    isTimerDiv.value = elementToAdd.isTimerNecessary.toString();
+    var initialTimeDiv = document.getElementById('initial-time'+ elementToAdd.habitId);   
+    initialTimeDiv.value =  elementToAdd.timerInitialNumberOfMinutes?elementToAdd.timerInitialNumberOfMinutes.toString():"0";
+    var isCriticalDiv = document.getElementById('is-critical-'+ elementToAdd.habitId);   
+    isCriticalDiv.value = elementToAdd.isCritical.toString();
+    var isSuspendableSicknessDiv = document.getElementById('is-suspendable-during-sickness-'+ elementToAdd.habitId);     
+    isSuspendableSicknessDiv.value = elementToAdd.isSuspendableDuringSickness.toString();
+    var isSuspendableOtherCasesDiv = document.getElementById('is-suspendable-in-other-cases-'+ elementToAdd.habitId);  
+    isSuspendableOtherCasesDiv.value = elementToAdd.isSuspendableDuringOtherCases.toString();   
+
+}
+
+var updateHabitDOMProperties = function(habitDivision, elementToAdd){
     elementToAdd.remoteHabitId= elementToAdd._id?elementToAdd._id:0;
     elementToAdd.habitId= elementToAdd.habitId?elementToAdd.habitId:0;
 
-    newHabitDivision.setAttribute("habitDescription", elementToAdd.habitDescription);
-    newHabitDivision.setAttribute("target", elementToAdd.target);
-    newHabitDivision.setAttribute("class", "box habit-setting");
-    newHabitDivision.setAttribute("id",elementToAdd.habitId.toString());
-    newHabitDivision.setAttribute("habitId",elementToAdd.habitId);
-    newHabitDivision.setAttribute("remoteHabitId",elementToAdd.remoteHabitId);   
-    newHabitDivision.setAttribute("weekDay",elementToAdd.weekDay);
-    newHabitDivision.setAttribute("isNegative",false);
-    newHabitDivision.setAttribute("isCritical",elementToAdd.isCritical);
-    newHabitDivision.setAttribute("isSuspendableDuringSickness",elementToAdd.isSuspendableDuringSickness);
-    newHabitDivision.setAttribute("isSuspendableDuringOtherCases",elementToAdd.isSuspendableDuringOtherCases);
-    newHabitDivision.setAttribute("isTimerNecessary",elementToAdd.isTimerNecessary);
-    newHabitDivision.setAttribute("timerInitialNumberOfMinutes",elementToAdd.timerInitialNumberOfMinutes);
+    habitDivision.setAttribute("habitDescription", elementToAdd.habitDescription);
+    habitDivision.setAttribute("target", elementToAdd.target);
+    habitDivision.setAttribute("class", "box habit-setting");
+    habitDivision.setAttribute("id",elementToAdd.habitId.toString());
+    habitDivision.setAttribute("habitId",elementToAdd.habitId);
+    habitDivision.setAttribute("remoteHabitId",elementToAdd.remoteHabitId);   
+    habitDivision.setAttribute("weekDay",elementToAdd.weekDay);
+    habitDivision.setAttribute("isNegative",false);
+    habitDivision.setAttribute("isCritical",elementToAdd.isCritical);
+    habitDivision.setAttribute("isSuspendableDuringSickness",elementToAdd.isSuspendableDuringSickness);
+    habitDivision.setAttribute("isSuspendableDuringOtherCases",elementToAdd.isSuspendableDuringOtherCases);
+    habitDivision.setAttribute("isTimerNecessary",elementToAdd.isTimerNecessary);
+    habitDivision.setAttribute("timerInitialNumberOfMinutes",elementToAdd.timerInitialNumberOfMinutes);
+
+    var habitOrder = elementToAdd.order?elementToAdd.order:minOrder;
+    habitDivision.style.order = habitOrder
+    habitDivision.setAttribute("order",habitOrder);
+
+    return habitDivision
+}
+
+var addHabitDOMElement = function(elementToAdd){
+    let newHabitDivision = document.createElement("div");
     var minOrder = 80;
     var habitOrder = elementToAdd.order?elementToAdd.order:minOrder;
-    newHabitDivision.style.order = habitOrder
-    newHabitDivision.setAttribute("order",habitOrder);
+    newHabitDivision = updateHabitDOMProperties (newHabitDivision,elementToAdd);
 
     const titleText = document.createTextNode("Update habit:");
     var taskIconContainer = document.createElement("div");

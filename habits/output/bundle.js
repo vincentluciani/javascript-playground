@@ -1,4 +1,46 @@
 
+
+const reactOnLogin = function(apiResponse) {
+    document.getElementById("login-text").innerHTML = "Hi "+apiResponse.givenName+", how are you doing today?";
+    document.getElementById("google-image").setAttribute("src", apiResponse.picture);
+    document.getElementById("signout_button").style.display= 'block';
+
+    var listOfButtons = document.getElementsByClassName("g_id_signin");
+
+    for (var i=0; i< listOfButtons.length;i++){
+        listOfButtons[i].style.display = 'none';
+    }
+
+    document.getElementById("google-container").classList.add("new-habit");
+    document.getElementById("google-container").classList.remove("new-habit-focused");
+    document.getElementById("new-habit").classList.remove("new-habit");
+    document.getElementById("new-habit").classList.add("new-habit-focused");
+    document.getElementById("google-image").style.display="block";
+   
+     
+}
+
+
+const reactOnLogout = function() {
+    document.getElementById("login-text").innerHTML = "Being logged in, you can use the application on all devices and keep an unlimited number of days.";
+    document.getElementById("google-image").setAttribute("src", "");
+    document.getElementById("google-image").style.display = 'none';
+    document.getElementById("signout_button").style.display= 'none';
+
+    var listOfButtons = document.getElementsByClassName("g_id_signin");
+
+    for (var i=0; i< listOfButtons.length;i++){
+        listOfButtons[i].style.display = 'block';
+    }
+
+    document.getElementById("google-container").classList.remove("new-habit");
+    document.getElementById("google-container").classList.add("new-habit-focused");
+    document.getElementById("new-habit").classList.add("new-habit");
+    document.getElementById("new-habit").classList.remove("new-habit-focused");
+    document.getElementById("google-image").style.display="none";
+
+}
+
 var checkboxWithTitle = function(title,variable,divId){
 
     const divContainer = document.createElement("div");
@@ -13,7 +55,7 @@ var checkboxWithTitle = function(title,variable,divId){
     const newInput = document.createElement("input");
     newInput.setAttribute("id",divId);
     newInput.setAttribute("class","simple-checkbox");
-    if (variable!=null && variable == "true") {
+    if (variable!=null && variable == true) {
         newInput.checked = true;  
     } else if (variable == "false"){
         newInput.checked = false;
@@ -518,25 +560,83 @@ var checkIfChartLoaded = function(resolve, reject,totalWaitingTime){
 }
 
 
-var addHabitDOMElement = function(elementToAdd){
-    const newHabitDivision = document.createElement("div");
+var refreshDOM = function(){
 
-    newHabitDivision.setAttribute("habitDescription", elementToAdd.habitDescription);
-    newHabitDivision.setAttribute("target", elementToAdd.target);
-    newHabitDivision.setAttribute("class", "box habit-setting");
-    newHabitDivision.setAttribute("id",elementToAdd.habitId.toString());
-    newHabitDivision.setAttribute("habitId",elementToAdd.habitId);
-    newHabitDivision.setAttribute("weekDay",elementToAdd.weekDay);
-    newHabitDivision.setAttribute("isNegative",elementToAdd.isNegative);
-    newHabitDivision.setAttribute("isCritical",elementToAdd.isCritical);
-    newHabitDivision.setAttribute("isSuspendableDuringSickness",elementToAdd.isSuspendableDuringSickness);
-    newHabitDivision.setAttribute("isSuspendableDuringOtherCases",elementToAdd.isSuspendableDuringOtherCases);
-    newHabitDivision.setAttribute("isTimerNecessary",elementToAdd.isTimerNecessary);
-    newHabitDivision.setAttribute("timerInitialNumberOfMinutes",elementToAdd.timerInitialNumberOfMinutes);
+    
+    getHabitProgressJournal().then(
+        value => {
+            dataArrays = value;
+            for (const habitsElement of dataArrays.habitsArray){
+                updateHabitDOMElement(habitsElement);
+            }
+            for (const progressElement of dataArrays.progressArray){
+                var DOMElementToUpdate = document.getElementById(progressElement.progressId);
+                updateProgressDOMElement(DOMElementToUpdate,progressElement);
+            }
+        },
+        reason => {
+            console.log(reason);
+            return;
+        }
+    );
+
+}
+
+var updateHabitDOMElement = function(division, elementToAdd){
+
+    division = updateHabitDOMProperties (newHabitDivision,elementToAdd);
+
+    var habitDescriptionDiv = division.getElementsByClassName('habit-description-definition')[0]; 
+    habitDescriptionDiv.innerHTML = elementToAdd.habitDescription; 
+    var targetDefinitionDiv = division.getElementsByClassName('habit-target-definition')[0];   
+    targetDefinitionDiv.value = elementToAdd.target;
+    var weekDaySelectionDiv = division.getElementsByClassName('week-day-selection')[0];
+    weekDaySelectionDiv.setProperties(elementToAdd.weekDay);
+    /*PROBLEM: SAME CLASS AS DAILY TARGET - does it cause other problems?????? */
+    var priorityDiv= division.getElementsByClassName('habit-target-definition')[1];   
+    priorityDiv.value = elementToAdd.order + 80;
+    var isTimerDiv= division.getElementsById('is-timer-necessary-'+ elementToAdd.habitId);  
+    isTimerDiv.value = elementToAdd.isTimerNecessary.toString();
+    var initialTimeDiv = division.getElementsById('initial-time'+ elementToAdd.habitId);   
+    initialTimeDiv.value = elementToAdd.timerInitialNumberOfMinutes.toString();
+    var isCriticalDiv = division.getElementsById('is-critical-'+ elementToAdd.habitId);   
+    isCriticalDiv.value = elementToAdd.isCritical.toString();
+    var isSuspendableSicknessDiv = division.getElementsById('is-suspendable-during-sickness-'+ elementToAdd.habitId);     
+    isSuspendableSicknessDiv.value = elementToAdd.isSuspendableDuringSickness.toString();
+    var isSuspendableOtherCasesDiv = division.getElementsById('is-suspendable-in-other-cases-'+ elementToAdd.habitId);  
+    isSuspendableOtherCasesDiv.value = elementToAdd.isSuspendableDuringOtherCases.toString();   
+
+}
+
+var updateHabitDOMProperties = function(habitDivision, elementToAdd){
+    elementToAdd.remoteHabitId= elementToAdd._id?elementToAdd._id:0;
+    elementToAdd.habitId= elementToAdd.habitId?elementToAdd.habitId:0;
+
+    habitDivision.setAttribute("habitDescription", elementToAdd.habitDescription);
+    habitDivision.setAttribute("target", elementToAdd.target);
+    habitDivision.setAttribute("class", "box habit-setting");
+    habitDivision.setAttribute("id",elementToAdd.habitId.toString());
+    habitDivision.setAttribute("habitId",elementToAdd.habitId);
+    habitDivision.setAttribute("remoteHabitId",elementToAdd.remoteHabitId);   
+    habitDivision.setAttribute("weekDay",elementToAdd.weekDay);
+    habitDivision.setAttribute("isNegative",false);
+    habitDivision.setAttribute("isCritical",elementToAdd.isCritical);
+    habitDivision.setAttribute("isSuspendableDuringSickness",elementToAdd.isSuspendableDuringSickness);
+    habitDivision.setAttribute("isSuspendableDuringOtherCases",elementToAdd.isSuspendableDuringOtherCases);
+    habitDivision.setAttribute("isTimerNecessary",elementToAdd.isTimerNecessary);
+    habitDivision.setAttribute("timerInitialNumberOfMinutes",elementToAdd.timerInitialNumberOfMinutes);
     var minOrder = 80;
     var habitOrder = elementToAdd.order?elementToAdd.order:minOrder;
-    newHabitDivision.style.order = habitOrder
-    newHabitDivision.setAttribute("order",habitOrder);
+    habitDivision.style.order = habitOrder
+    habitDivision.setAttribute("order",habitOrder);
+
+    return habitDivision
+}
+
+var addHabitDOMElement = function(elementToAdd){
+    let newHabitDivision = document.createElement("div");
+   
+    newHabitDivision = updateHabitDOMProperties (newHabitDivision,elementToAdd);
 
     const titleText = document.createTextNode("Update habit:");
     var taskIconContainer = document.createElement("div");
@@ -643,7 +743,7 @@ var addHabitDOMElement = function(elementToAdd){
     /* end priority */
 
     /* Timer */
-    var checkBoxContainerIsTimerNecessary = checkboxWithTitle("Do you need a timer:",elementToAdd.isCritical,"is-timer-necessary-"+elementToAdd.habitId.toString());
+    var checkBoxContainerIsTimerNecessary = checkboxWithTitle("Do you need a timer:",elementToAdd.isTimerNecessary,"is-timer-necessary-"+elementToAdd.habitId.toString());
     newHabitDivision.appendChild(checkBoxContainerIsTimerNecessary);
     const timerTimeTextDiv = document.createTextNode("Time in minutes:");
     const timerTimeInput = document.createElement("input");
@@ -782,19 +882,20 @@ var addNewHabitFromForm = function(){
 
     var elementToAdd={};
     var newId = Date.now();
-    elementToAdd.id = newId.toString();
+    elementToAdd.progressId = newId.toString();
     elementToAdd.habitId = (newId * 10).toString();
+    /*elementToAdd.id = elementToAdd.habitId;*/
     elementToAdd.habitDescription = document.getElementById('new-description').value;
     elementToAdd.target = parseInt(document.getElementById('new-target').value);
     elementToAdd.isNegative = document.getElementById('new-is-negative-flag').checked;
     elementToAdd.progressDate = currentDate;
     elementToAdd.numberOfCompletions = 0;
     elementToAdd.isNew = true;
-    elementToAdd.isCritical = "false";
-    elementToAdd.isTimerNecessary = "false";
+    elementToAdd.isCritical = false;
+    elementToAdd.isTimerNecessary = false;
     elementToAdd.timerInitialNumberOfMinutes = 0;
-    elementToAdd.isSuspendableDuringSickness = "false";
-    elementToAdd.isSuspendableDuringOtherCases = "false";
+    elementToAdd.isSuspendableDuringSickness = false;
+    elementToAdd.isSuspendableDuringOtherCases = false;
     elementToAdd.order=81;
 
     var weekDaySelector = document.getElementById('week-day-selection');
@@ -841,13 +942,13 @@ var saveChangesInHabit = function(habitId){
 var setHabitAsCritical = function(habitId){
     var habitDiv = document.getElementById(habitId);
     var habitJSON = habitDOMToJson(habitDiv);
-    habitJSON.isCritical="true";
+    habitJSON.isCritical=true;
     pushHabitArrayToQueue(habitJSON);
 };
 var unsetHabitAsCritical = function(habitId){
     var habitDiv = document.getElementById(habitId);
     var habitJSON = habitDOMToJson(habitDiv);
-    habitJSON.isCritical="false";
+    habitJSON.isCritical=false;
     pushHabitArrayToQueue(habitJSON);
 };
 
@@ -917,8 +1018,9 @@ var displayJournalEditBoxAsync = async function(){
 
     var currentText = await getCurrentDateJournal(progressDate);
     editBoxTextBox.value = "";
-    if (currentText && currentText.length>0){
-        editBoxTextBox.value = JSON.parse(currentText);
+    if (currentText && currentText.text && currentText.text.length>0){
+       /* editBoxTextBox.value = JSON.parse(currentText.text);*/
+       editBoxTextBox.value = currentText.text;
     }
 
     editBox.setAttribute("progressDate",progressDate);
@@ -937,16 +1039,22 @@ var displayJournalEditBox = function(){
 var getCurrentDateJournal = async function(journalDate){
 
     var journal = await getItemByKey("journal-"+journalDate);
-    return journal;
+    return journal[0];
 }
 var closeJournal = function(){
     var editBox = document.getElementById("journal-edit-box");
     var journalDate = editBox.getAttribute("progressDate");
     var editBoxText = document.getElementById("daily-journal").value;
 
+    var journalEntry = {
+        text: editBoxText,
+        journalDate: journalDate
+    }
+
     var objectToSave = {
-        id: "journal-" + journalDate.toString(),
-        value: JSON.stringify(editBoxText)
+        'id': "journal-" + journalDate.toString(),
+        'value': JSON.stringify(journalEntry),
+
     }
 
     executePushToQueue(objectToSave);
@@ -956,7 +1064,7 @@ var closeJournal = function(){
 
 
 var convertJournalKeyToDateInt = function(journalKey){
-    var resultString = journalKey.substring(8,12) + journalKey.substring(13,15)  + journalKey.substring(16,19)   
+    var resultString = journalKey.substring(0,4) + journalKey.substring(5,7) +journalKey.substring(8,10)   
     return parseInt(resultString);
 }
 var readJournal = function(journalArray){
@@ -965,7 +1073,7 @@ var readJournal = function(journalArray){
         return 0;
     }
     journalArray.sort(function(a, b){
-		return ( convertJournalKeyToDateInt(b.key) - convertJournalKeyToDateInt(a.key))
+		return ( convertJournalKeyToDateInt(b.journalDate) - convertJournalKeyToDateInt(a.journalDate))
 		});	
 
     document.getElementById("journal-container").innerHTML  = "";
@@ -977,7 +1085,7 @@ var readJournal = function(journalArray){
             var journalDiv = document.createElement("div");
             journalDiv.setAttribute("class","journal-container-day");
             var dateDiv = document.createElement("div");
-            dateDiv.innerHTML = journalEntry.key.substr(8);
+            dateDiv.innerHTML = journalEntry.journalDate;
             dateDiv.setAttribute("class","date-label");
             var textDiv = document.createElement("div");
             textDiv.innerHTML = journalText;
@@ -997,27 +1105,99 @@ var actionsWhenCountdownEnd = function(){
     giveCheers();
 ;}
 
-var addProgressDOMElement = function(elementToAdd){
+var updateProgressDOMProperties = function(division, elementToAdd){
 
-    const newProgressDivision = document.createElement("div");
+    division.setAttribute("id", elementToAdd.progressId );
+    division.setAttribute("remoteProgressId", elementToAdd.remoteProgressId );
+    division.setAttribute("habitDescription", elementToAdd.habitDescription);
+    division.setAttribute("target", elementToAdd.target);
+    division.setAttribute("progressDate", elementToAdd.progressDate );
+    division.setAttribute("class", "box habit-update");
+    division.setAttribute("isNew",elementToAdd.isNew);
+    division.setAttribute("habitId",elementToAdd.habitId);
+    division.setAttribute("isNegative", elementToAdd.isNegative);
+    division.setAttribute("isCritical", elementToAdd.isCritical);
+    division.setAttribute("isSuspendableDuringSickness", elementToAdd.isSuspendableDuringSickness);
+    division.setAttribute("isSuspendableDuringOtherCases", elementToAdd.isSuspendableDuringOtherCases);
+    division.setAttribute("isTimerNecessary", elementToAdd.isTimerNecessary);
+    division.setAttribute("timerInitialNumberOfMinutes", elementToAdd.timerInitialNumberOfMinutes);
+    var elementOrder = elementToAdd.order?elementToAdd.order:80;
+    division.setAttribute("order", elementOrder);
+    division.style.order = elementOrder;
+
+    return division;
+}
+
+
+
+var updateProgressDOMElement = function(newProgressDivision, elementToAdd){
+
+    elementToAdd.remoteProgressId= elementToAdd._id?elementToAdd._id:0;
+    /*elementToAdd.habitId= elementToAdd.habitId?elementToAdd.habitId:0;*/
 
     /* Main Attributes */
-    newProgressDivision.setAttribute("id", elementToAdd.id );
-    newProgressDivision.setAttribute("habitDescription", elementToAdd.habitDescription);
-    newProgressDivision.setAttribute("target", elementToAdd.target);
-    newProgressDivision.setAttribute("progressDate", elementToAdd.progressDate );
-    newProgressDivision.setAttribute("class", "box habit-update");
-    newProgressDivision.setAttribute("isNew",elementToAdd.isNew);
-    newProgressDivision.setAttribute("habitId",elementToAdd.habitId);
-    newProgressDivision.setAttribute("isNegative", elementToAdd.isNegative);
-    newProgressDivision.setAttribute("isCritical", elementToAdd.isCritical);
-    newProgressDivision.setAttribute("isSuspendableDuringSickness", elementToAdd.isSuspendableDuringSickness);
-    newProgressDivision.setAttribute("isSuspendableDuringOtherCases", elementToAdd.isSuspendableDuringOtherCases);
-    newProgressDivision.setAttribute("isTimerNecessary", elementToAdd.isTimerNecessary);
-    newProgressDivision.setAttribute("timerInitialNumberOfMinutes", elementToAdd.timerInitialNumberOfMinutes);
-    var elementOrder = elementToAdd.order?elementToAdd.order:80;
-    newProgressDivision.setAttribute("order", elementOrder);
-    newProgressDivision.style.order = elementOrder;
+    newProgressDivision = updateProgressDOMProperties(newProgressDivision,elementToAdd);
+
+    var percentageCompletion = 0;
+    if ( elementToAdd.isNegative != null && elementToAdd.isNegative == "true"){
+            if ( elementToAdd.numberOfCompletions <= elementToAdd.target ){
+                percentageCompletion = 100;
+            }
+    } else {
+        percentageCompletion = Math.round(elementToAdd.numberOfCompletions * 100 / parseInt(elementToAdd.target)) ;
+    }
+
+    setDivAppearanceBasedOnCompletion(newProgressDivision,percentageCompletion);
+ 
+    var progressInput = newProgressDivision.getElementsByClassName('number-of-completion')[0]
+    var percentageCompletionInput = newProgressDivision.getElementsByClassName('percentage-completion')[0]
+
+    percentageCompletionInput.setAttribute("progressDate",elementToAdd.progressDate);
+    percentageCompletionInput.innerHTML = percentageCompletion.toString();
+
+    var progressInput = newProgressDivision.getElementsByClassName("number-of-completion")[0];
+
+    /* todo code duplication here */
+    if (elementToAdd.target > 1){
+        progressInput.value = elementToAdd.numberOfCompletions;
+    } else {
+        if (elementToAdd.numberOfCompletions == 1){
+            progressInput.checked = true;
+            progressInput.setAttribute("value","1");
+        } else {
+            progressInput.checked = false;
+            progressInput.setAttribute("value","0");
+        }
+    }
+       
+}
+var addProgressDOMElement = function(elementToAdd){
+
+    var newProgressDivision = document.createElement("div");
+
+    elementToAdd.remoteProgressId= elementToAdd._id?elementToAdd._id:0;
+    /*elementToAdd.habitId= elementToAdd.habitId?elementToAdd.habitId:0;*/
+
+    /* Main Attributes */
+    // newProgressDivision.setAttribute("id", elementToAdd.progressId );
+    // newProgressDivision.setAttribute("remoteProgressId", elementToAdd.remoteProgressId );
+    // newProgressDivision.setAttribute("habitDescription", elementToAdd.habitDescription);
+    // newProgressDivision.setAttribute("target", elementToAdd.target);
+    // newProgressDivision.setAttribute("progressDate", elementToAdd.progressDate );
+    // newProgressDivision.setAttribute("class", "box habit-update");
+    // newProgressDivision.setAttribute("isNew",elementToAdd.isNew);
+    // newProgressDivision.setAttribute("habitId",elementToAdd.habitId);
+    // newProgressDivision.setAttribute("isNegative", elementToAdd.isNegative);
+    // newProgressDivision.setAttribute("isCritical", elementToAdd.isCritical);
+    // newProgressDivision.setAttribute("isSuspendableDuringSickness", elementToAdd.isSuspendableDuringSickness);
+    // newProgressDivision.setAttribute("isSuspendableDuringOtherCases", elementToAdd.isSuspendableDuringOtherCases);
+    // newProgressDivision.setAttribute("isTimerNecessary", elementToAdd.isTimerNecessary);
+    // newProgressDivision.setAttribute("timerInitialNumberOfMinutes", elementToAdd.timerInitialNumberOfMinutes);
+    // var elementOrder = elementToAdd.order?elementToAdd.order:80;
+    // newProgressDivision.setAttribute("order", elementOrder);
+    // newProgressDivision.style.order = elementOrder;
+
+    newProgressDivision = updateProgressDOMProperties(newProgressDivision,elementToAdd);
 
     const habitDescriptionText = document.createTextNode(elementToAdd.habitDescription);
     const targetValue = document.createElement("input");
@@ -1038,7 +1218,7 @@ var addProgressDOMElement = function(elementToAdd){
                 percentageCompletion = 100;
             }
     } else {
-        percentageCompletion = Math.round(elementToAdd.numberOfCompletions * 100 / elementToAdd.target) ;
+        percentageCompletion = Math.round(elementToAdd.numberOfCompletions * 100 / parseInt(elementToAdd.target)) ;
     }
  
 
@@ -1157,7 +1337,7 @@ var addProgressDOMElement = function(elementToAdd){
     }
 
     /* Countdown */
-    if (elementToAdd.isTimerNecessary == "true"){
+    if (elementToAdd.isTimerNecessary == true){
         var countDownTitle = document.createElement("div");
         countDownTitle.innerHTML = "Countdown:";
         countDownTitle.setAttribute("class","progress-container");
@@ -1165,7 +1345,7 @@ var addProgressDOMElement = function(elementToAdd){
         detailsArea.appendChild(countDownTitle);
 
         var countDownContainer = document.createElement("div");
-        var countDownContainerId = "countdown-container-"+elementToAdd.id
+        var countDownContainerId = "countdown-container-"+elementToAdd.progressId
 
         countDownContainer.setAttribute("id",countDownContainerId);
         detailsArea.appendChild(countDownContainer);
@@ -1203,8 +1383,8 @@ var addProgressDOMElement = function(elementToAdd){
         }
      }(expandButtonWrapper,detailsArea));
 
-     if (elementToAdd.isTimerNecessary == "true"){
-        var newCounterDiv = new DigitalCounter(elementToAdd.timerInitialNumberOfMinutes,countDownContainerId,"new-counter-"+elementToAdd.id,false,actionsWhenCountdownEnd);
+     if (elementToAdd.isTimerNecessary == true){
+        var newCounterDiv = new DigitalCounter(elementToAdd.timerInitialNumberOfMinutes,countDownContainerId,"new-counter-"+elementToAdd.progressId,false,actionsWhenCountdownEnd);
      }
      refreshProgress(newProgressDivision);
 
@@ -1256,7 +1436,7 @@ var refreshProgress = function(currentDiv){
     var newCompletionPercentage = 0;
 
     var isNegative = currentDiv.getAttribute("isNegative"); 
-    if (isNegative != null && isNegative == "true"){
+    if (isNegative != null && isNegative == true){
         if ( newCompletion.value <= parseInt(currentDiv.getAttribute("target")) ){
             newCompletionPercentage = 100;
         } 
@@ -1291,7 +1471,7 @@ var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletio
         currentDiv.style.order=currentDiv.getAttribute('order');
         /*currentDiv.style.order="80";*/
     }
-    if (currentDiv.id && currentDiv.id == "daily-summary-container"){
+    if (currentDiv.progressId && currentDiv.progressId == "daily-summary-container"){
         currentDiv.style.order = "179";
     }
 
@@ -1351,6 +1531,9 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
     var progressElements = document.getElementsByClassName('habit-update');
     var habitsElements = document.getElementsByClassName('habit-setting');
 
+    if (progressElements.length == 0 && habitsElements.length >0){
+        showProgressTab();
+    }
     var habitsElementsLength = habitsElements.length;
     for (var i=0; i<habitsElementsLength ;i++){
 
@@ -1378,19 +1561,21 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
                 isDayOK = true;
             }
             if (isDayOK != null && isDayOK) {
+                let newId = Date.now()*100+i;
                 let newProgressObject = {
-                    id: Date.now()*100+i,
+                    id:newId ,
+                    progressId: newId,
                     habitId: habitsElements[i].getAttribute("habitId"),
                     habitDescription: habitsElements[i].getAttribute("habitDescription"),
-                    target: habitsElements[i].getAttribute("target"),
+                    target: parseInt(habitsElements[i].getAttribute("target")),
                     progressDate: inputDate,
                     isNew: true,
-                    isCritical: habitsElements[i].getAttribute("iscritical"),
-                    isSuspendableDuringSickness: habitsElements[i].getAttribute("isSuspendableDuringSickness"),
-                    isSuspendableDuringOtherCases: habitsElements[i].getAttribute("isSuspendableDuringOtherCases"),
-                    isTimerNecessary: habitsElements[i].getAttribute("isTimerNecessary"),
-                    timerInitialNumberOfMinutes: habitsElements[i].getAttribute("timerInitialNumberOfMinutes"),
-                    order: habitsElements[i].getAttribute("order")?habitsElements[i].getAttribute("order"):80,
+                    isCritical: (habitsElements[i].getAttribute("iscritical")==='true'),
+                    isSuspendableDuringSickness: (habitsElements[i].getAttribute("isSuspendableDuringSickness")==='true'),
+                    isSuspendableDuringOtherCases: (habitsElements[i].getAttribute("isSuspendableDuringOtherCases")==='true'),
+                    isTimerNecessary: (habitsElements[i].getAttribute("isTimerNecessary")==='true'),
+                    timerInitialNumberOfMinutes: parseInt(habitsElements[i].getAttribute("timerInitialNumberOfMinutes")),
+                    order: habitsElements[i].getAttribute("order")?parseInt(habitsElements[i].getAttribute("order")):80,
                     numberOfCompletions:0,
                 }
                 addProgressDOMElement(newProgressObject);
@@ -1818,7 +2003,7 @@ var buildWeekTableBox = function(weekTableObject,habitObject){
     const markAsCriticalDiv = document.createElement("div");
 
     markAsCriticalDiv.setAttribute("class","critical-link");
-    if (habitObject.isCritical && habitObject.isCritical=="true"){
+    if (habitObject.isCritical && habitObject.isCritical==true){
         markAsCriticalDiv.innerHTML = "Unmark as critical";
         markAsCriticalDiv.setAttribute("onclick","unsetHabitAsCritical("+ habitObject.habitId +");");
     } else {
@@ -1965,7 +2150,7 @@ var pushProgressToQueue = function(divToAnalyze) {
     encourageIfPassedTarget(progressArray.numberOfCompletions, progressArray.target, progressArray.isCritical);
 
     var elementToAdd = {
-        'id': 'progress-'+progressArray.id,
+        'id': 'progress-'+progressArray.progressId,
         'value': JSON.stringify(progressArray)
     }
 
@@ -1976,7 +2161,7 @@ var pushProgressToQueue = function(divToAnalyze) {
 var pushProgressArrayToQueue = function(objectToPush){
 
     var elementToAdd = {
-        'id': 'progress-'+objectToPush.id,
+        'id': 'progress-'+objectToPush.progressId,
         'value': JSON.stringify(objectToPush)
     }
 
@@ -2065,10 +2250,11 @@ var getHabitProgressJournal = async function() {
 
 
     if (loggedIn){
-        var url = `https://www.vince.com/api/discipline/habits/get`;
+        var url = `https://www.vince.com/api/discipline/habits/getall`;
         var response;
         var input = {
-            token: googleToken
+            token: applicationToken,
+            requestDate: currentDate
         }
         try {
             response = await fetch
@@ -2083,7 +2269,8 @@ var getHabitProgressJournal = async function() {
             return getHabitProgressJournalFromStorage();
         } 
         if (response.status == '200'){
-            return response.json();
+            var apiResponse = await response.json();
+            return apiResponse;
         } else {
             console.log('status of the api call:'+response.status);
             return getHabitProgressJournalFromStorage();
@@ -2126,40 +2313,73 @@ var getHabitProgressJournalFromStorage = function(){
 var removeItemByKey = async function(keyName) {
 
         window.localStorage.removeItem(keyName);
+        var keyNameParts = keyName.split("-");
+        
+        var storageType = keyNameParts[0];
+        if (storageType=='habit'){
+            storageType='habits';
+        }
+        var url=`https://www.vince.com/api/discipline/${storageType}/delete`;
+        var id = keyNameParts[1];
 
         if (loggedIn){
-            var APIcallParameters = {
-                method: "GET",
-                url: `http://localhost:5000/removeItemByKey?keyName=${keyName}&user="${apiUser}"`
-            };
-
             var response;
-            try {
-                response = await APICall(APIcallParameters);
-            } catch (e) {
-                console.log(e);
-            } 
+        var input = {
+            token: applicationToken,
+            id: id
+        }
+        try {
+            response = await fetch
+            (url,{
+                method: "POST",
+                headers:{'Content-Type': 'application/json'},
+                body: JSON.stringify(input)
+                });
+        } catch (e) {
+            console.log('could not connect to the server');
+            console.log(e);
+            return false;
+        }
+        if (response.status == '200'){
+            var apiResponse = await response.json();
+            return apiResponse;
+        } else {
+            console.log('status of the api call:'+response.status);
+        }
         }
         console.log('item removed');
         return response
 
 }
 var getItemByKey = async function(keyName) {
-
+/* todo handle case where item is not journal */
+    var keyNameParts = keyName.split("-");
     if (loggedIn){
-        var APIcallParameters = {
-            method: "GET",
-            url: `http://localhost:5000/getItemByKey?keyName=${keyName}&user="${apiUser}"`
-        };
-
+        var url = `https://www.vince.com/api/discipline/journal/get`;
         var response;
+        var input = {
+            token: applicationToken,
+            requestDate: keyNameParts[1]+"-"+keyNameParts[2]+"-"+keyNameParts[3]
+        }
         try {
-            response = await APICall(APIcallParameters);
+            response = await fetch
+            (url,{
+                method: "POST",
+                headers:{'Content-Type': 'application/json'},
+                body: JSON.stringify(input)
+                });
         } catch (e) {
+            console.log('could not connect to the server');
             console.log(e);
             return window.localStorage.getItem(keyName);
-        } 
-        return response
+        }
+        if (response.status == '200'){
+            var apiResponse = await response.json();
+            return apiResponse;
+        } else {
+            console.log('status of the api call:'+response.status);
+            return window.localStorage.getItem(keyName);
+        }
 
     } else {
         var itemValue = window.localStorage.getItem(keyName);
@@ -2169,20 +2389,39 @@ var getItemByKey = async function(keyName) {
 
 }
 var setItem = async function(keyName, value) {
-    window.localStorage.setItem(keyName, value)
+    var url=""
+    window.localStorage.setItem(keyName, value);
+    var jsonValue = JSON.parse(value);
+    jsonValue.token = applicationToken;
 
     if (loggedIn){
-        var APIcallParameters = {
-            method: "GET",
-            url: `http://localhost:5000/setItemValue?keyName=${keyName}&value=${value}&user="${apiUser}"`
-        };
-
-        var response;
-        try {
-            response = await APICall(APIcallParameters);
-        } catch (e) {
-            console.log(e);
-        } 
+        var keyNameParts = keyName.split("-")
+        if (keyNameParts[0] == "progress"){
+            url = "https://www.vince.com/api/discipline/progress/add";
+        } else if  (keyNameParts[0] == "habit"){
+            url = "https://www.vince.com/api/discipline/habits/add";
+        } else if (keyNameParts[0] == "journal"){
+            url = "https://www.vince.com/api/discipline/journal/add";
+        }
+        try{
+            var response = await fetch
+                (url,{
+                    method: "POST",
+                    headers:{'Content-Type': 'application/json'},
+                    body: JSON.stringify(jsonValue)
+                    });
+            } catch (e) {
+                console.log('could not connect to the server');
+                console.log(e);
+                response = null;
+            } 
+        if (response.status == '200'){
+            var apiResponse = await response.json();
+            /* todo : apiResponse._id must update the id of the element if it is has been created from scratch*/
+            return apiResponse;
+        } else {
+            console.log('status of the api call:'+response.status);
+        }
     }
     console.log('item set:'+keyName+":"+value);
     return response
@@ -2230,6 +2469,7 @@ var updateParameterInItemValue = async function(keyName, parameterName, value){
 
 var dataArrays = {};
 var googleToken = '';
+var applicationToken = '';
 var loggedIn = true;
 var maxForNonLoggedIn = 2000;
 var updateQueue = [];
@@ -2264,23 +2504,69 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 function handleCredentialResponse(response) {
-    document.getElementById('signin_status').innerHTML = "Signed in";
+
     console.log("Encoded JWT ID token: " + response.credential);
     googleToken=response.credential;
-    sendToken(response.credential);
+   
+    sendToken(response.credential).then(value => {
+        applicationToken = value.applicationJwtToken
+        renderApplication()
+        .then(value => {
+            setTimeout(placeSVGIcons,5);
+            setTimeout(renderPastProgressBoxes,10); 
+            setTimeout(showSummariesTab,15); 
+            
+            /*setTimeout(prepareSummaries,20);*/
+          }, reason => {
+            console.log(reason );
+          })
+        document.getElementById("date-filter").value=currentDate;
+        createRadialProgressBar(radialProgressParameters);
+        
+    }, reason => {
+        console.log(reason );
+      })
+
+
+    
+
 }
 
-function sendToken(token) {
+async function sendToken(token) {
 
-    var xhr = new XMLHttpRequest();
+   /* var xhr = new XMLHttpRequest();
     xhr.open('POST', 'https://www.vince.com/api/discipline/auth');
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onload = function() {
       console.log('Signed in information: ' + xhr.responseText);
       document.getElementById("google-image").setAttribute("src", xhr.responseText);
-
+      return xhr.responseText
     };
-    xhr.send('token=' + token);
+    xhr.send('token=' + token);*/
+
+    try{
+        var response = await fetch
+            ('https://www.vince.com/api/discipline/auth',{
+                method: "POST",
+                headers:{'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'token=' + token
+                });
+        } catch (e) {
+            console.log('could not connect to the server');
+            console.log(e);
+            response = null;
+        } 
+    if (response.status == '200'){
+        var apiResponse = await response.json();
+
+        reactOnLogin(apiResponse);
+
+
+        /* todo : apiResponse._id must update the id of the element if it is has been created from scratch*/
+        return apiResponse;
+    } else {
+        console.log('status of the api call:'+response.status);
+    }
 
 }
 
@@ -2290,6 +2576,7 @@ onload = function(){
 /*var runAppRendering = function(){*/
     "use strict";
 /* tests of service worker must be done on http://localhost:5000/ */
+
 
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -2303,18 +2590,7 @@ onload = function(){
     }
 
     hideStartProgressButtonOnHabits();
-    renderApplication()
-    .then(value => {
-        setTimeout(placeSVGIcons,5);
-        setTimeout(renderPastProgressBoxes,10); 
-        setTimeout(showSummariesTab,15); 
-        
-        /*setTimeout(prepareSummaries,20);*/
-      }, reason => {
-        console.log(reason );
-      })
-    document.getElementById("date-filter").value=currentDate;
-    createRadialProgressBar(radialProgressParameters);
+
     setTimeout(loadAudio,1);
 
     
@@ -2526,7 +2802,7 @@ var setDivAppearanceBasedOnCompletion = function(currentDiv,newCompletionPercent
 
     putBorderBackgroundOrderBasedOnCompletion(currentDiv,newCompletionPercentage);
 
-    if ( currentDiv.getAttribute("iscritical") !=null && currentDiv.getAttribute("iscritical") == "true"){
+    if ( currentDiv.getAttribute("iscritical") !=null && currentDiv.getAttribute("iscritical") == 'true'){
         setDivAppearanceForCritical(currentDiv,newCompletionPercentage);
     }
 }
@@ -2618,12 +2894,22 @@ var habitDOMToJson = function(elementToRead){
     // outputJson.isSuspendableDuringSickness = elementToRead.getElementsByClassName("simple-checkbox")[2].checked.toString();
     // outputJson.isSuspendableDuringOtherCases = elementToRead.getElementsByClassName("simple-checkbox")[3].checked.toString();
     // outputJson.isTimerNecessary = elementToRead.getElementsByClassName("simple-checkbox")[0].checked.toString();
-    outputJson.isTimerNecessary = document.getElementById("is-timer-necessary-"+outputJson.habitId.toString()).checked.toString();;
-    outputJson.isSuspendableDuringOtherCases = document.getElementById("is-suspendable-in-other-cases-"+outputJson.habitId.toString()).checked.toString();;
-    outputJson.isSuspendableDuringSickness = document.getElementById("is-suspendable-during-sickness-"+outputJson.habitId.toString()).checked.toString();;
-    outputJson.isCritical = document.getElementById("is-critical-"+outputJson.habitId.toString()).checked.toString();
-
-    outputJson.timerInitialNumberOfMinutes = document.getElementById("initial-time"+outputJson.habitId.toString()).value;
+    outputJson.isTimerNecessary = document.getElementById("is-timer-necessary-"+outputJson.habitId.toString()).checked;
+    outputJson.isSuspendableDuringOtherCases = document.getElementById("is-suspendable-in-other-cases-"+outputJson.habitId.toString()).checked;
+    outputJson.isSuspendableDuringSickness = document.getElementById("is-suspendable-during-sickness-"+outputJson.habitId.toString()).checked;
+    outputJson.isCritical = document.getElementById("is-critical-"+outputJson.habitId.toString()).checked;
+    var timerInitialNumberOfMinutes = document.getElementById("initial-time"+outputJson.habitId.toString()).value;
+    try {
+        timerInitialNumberOfMinutes = parseInt(timerInitialNumberOfMinutes)
+        if (timerInitialNumberOfMinutes >=0 ){
+            outputJson.timerInitialNumberOfMinutes = timerInitialNumberOfMinutes;
+        } else {
+            outputJson.timerInitialNumberOfMinutes = 0;
+        }
+    } catch(e){
+        outputJson.timerInitialNumberOfMinutes = 0;
+    }
+    
     return outputJson;
 };
 
@@ -2631,6 +2917,7 @@ var habitDOMToJson = function(elementToRead){
 var progressDOMToJson = function(elementToRead){
     var outputJson = {};
     outputJson.id = elementToRead.getAttribute("id");
+    outputJson.progressId = elementToRead.getAttribute("id");
     outputJson.habitId = elementToRead.getAttribute("habitId");
     outputJson.habitDescription = elementToRead.getAttribute("habitDescription");
     outputJson.target = parseInt(elementToRead.getAttribute("target"));
@@ -2640,6 +2927,20 @@ var progressDOMToJson = function(elementToRead){
     outputJson.isCritical = elementToRead.getAttribute("isCritical");
     outputJson.isSuspendableDuringSickness = elementToRead.getAttribute("isSuspendableDuringSickness");
     outputJson.isSuspendableDuringOtherCases = elementToRead.getAttribute("isSuspendableDuringOtherCases");
+    
+    outputJson.timerInitialNumberOfMinutes = elementToRead.getAttribute("timerInitialNumberOfMinutes");
+    /*todo: duplicate with function above*/
+    try {
+        timerInitialNumberOfMinutes = parseInt(timerInitialNumberOfMinutes)
+        if (timerInitialNumberOfMinutes >=0 ){
+            outputJson.timerInitialNumberOfMinutes = timerInitialNumberOfMinutes;
+        } else {
+            outputJson.timerInitialNumberOfMinutes = 0;
+        }
+    } catch(e){
+        outputJson.timerInitialNumberOfMinutes = 0;
+    }
+    
     outputJson.order = elementToRead.getAttribute("order")?elementToRead.getAttribute("order"):80;
     outputJson.numberOfCompletions = parseInt(elementToRead.getElementsByClassName("number-of-completion")[0].value);
 
