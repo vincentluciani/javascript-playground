@@ -381,7 +381,7 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
 
     if (newCompletionPercentage <100 ){
         /*currentDiv.style.order = "60";*/
-        currentDiv.style.borderColor="red"; 
+        currentDiv.style.borderColor="#ffa6a6"; 
         currentDiv.style.background="#fff1f1";
 
         taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
