@@ -5,6 +5,7 @@ var applicationToken = '';
 var loggedIn = true;
 var maxForNonLoggedIn = 2000;
 var updateQueue = [];
+var updateAPIQueue = [];
 var apiUser;
 var radialProgressParameters = {    
     strokeWidth : 6,
@@ -172,7 +173,8 @@ function showGraphsTabIfGoodLength(){
 }
 var saveLoop = function(){
 
-    setInterval(readQueueProgress, 1000);
+    setInterval(readQueueStorage, 1000);
+    setInterval(readQueueAPI, 4000);
 
 }
 

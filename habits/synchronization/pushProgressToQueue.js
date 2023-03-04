@@ -9,7 +9,8 @@ var pushProgressToQueue = function(divToAnalyze) {
         'value': JSON.stringify(progressArray)
     }
 
-    executePushToQueue(elementToAdd);
+    executePushToQueue(updateQueue,elementToAdd);
+    executePushToQueue(updateAPIQueue,elementToAdd);
 
 }
 
@@ -20,7 +21,8 @@ var pushProgressArrayToQueue = function(objectToPush){
         'value': JSON.stringify(objectToPush)
     }
 
-    executePushToQueue(elementToAdd);
+    executePushToQueue(updateQueue,elementToAdd);
+    executePushToQueue(updateAPIQueue,elementToAdd);
 
 }
 
@@ -36,25 +38,25 @@ var pushHabitArrayToQueue = function(objectToPush){
 }
 
 
-var executePushToQueue = function(newObject){
+var executePushToQueue = function(queue,newObject){
     console.log("pushing to queue:");
     console.log(newObject);
-    var sizeBeforePush = updateQueue.length;
+    var sizeBeforePush = queue.length;
 
-    var lastElement = updateQueue.pop();
+    var lastElement = queue.pop();
 
     if (lastElement != null &&  lastElement.id != newObject.id) {
         console.log("putting back previous");
-        updateQueue.push(lastElement);
+        queue.push(lastElement);
     } else {
         console.log("did not put back previous:");
         console.log(lastElement);
     }
 
-    updateQueue.push(newObject);
+    queue.push(newObject);
     
-    console.log(updateQueue);
-    console.log("size before push:"+sizeBeforePush.toString()+" size after push:"+ updateQueue.length.toString())
+    console.log(queue);
+    console.log("size before push:"+sizeBeforePush.toString()+" size after push:"+ queue.length.toString())
 }
 
 var pushItemInQueue = function(newItem){

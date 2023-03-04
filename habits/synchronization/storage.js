@@ -145,9 +145,9 @@ var getItemByKey = async function(keyName) {
     }
 
 }
-var setItem = async function(keyName, value) {
+var setItemWithAPI = async function(keyName, value) {
     var url=""
-    window.localStorage.setItem(keyName, value);
+    
     var jsonValue = JSON.parse(value);
     jsonValue.token = applicationToken;
 
@@ -184,41 +184,83 @@ var setItem = async function(keyName, value) {
     return response
 
 }
-var updateParameterInItemValue = async function(keyName, parameterName, value){
+// var updateParameterInItemValue = async function(keyName, parameterName, value){
 
-    var jsonValue;
-    var objectValue;
+//     var jsonValue;
+//     var objectValue;
 
-    var response = await getItemByKey(keyName);
+//     var response = await getItemByKey(keyName);
 
-    if (typeof response === 'string' || response instanceof String){
-        jsonValue = JSON.parse(response);
-    } else {
-        jsonValue = response;
-    }
-    jsonValue[parameterName]=value;
+//     if (typeof response === 'string' || response instanceof String){
+//         jsonValue = JSON.parse(response);
+//     } else {
+//         jsonValue = response;
+//     }
+//     jsonValue[parameterName]=value;
 
-    objectValue = JSON.stringify(jsonValue);
-    console.log("object got from memory before update");
-    console.log(objectValue);
-    var status = await setItem(keyName,objectValue);
-    console.log("update executed");
+//     objectValue = JSON.stringify(jsonValue);
+//     console.log("object got from memory before update");
+//     console.log(objectValue);
+//     var status = await setItem(keyName,objectValue);
+//     console.log("update executed");
        
-    if (loggedIn){
-        var APIcallParameters = {
-        method: "GET",
-        url: `https://www.vince.com/api/discipline/habits/get?keyName=${keyName}&parameterName=${parameterName}&value=${value}&user="${apiUser}"`
-        };
+//     if (loggedIn){
+//         var APIcallParameters = {
+//         method: "GET",
+//         url: `https://www.vince.com/api/discipline/habits/get?keyName=${keyName}&parameterName=${parameterName}&value=${value}&user="${apiUser}"`
+//         };
 
-        response='';
-        try {
-            response = await APICall(APIcallParameters);
-        } catch (e) {
-            console.log(e);
+//         response='';
+//         try {
+//             response = await APICall(APIcallParameters);
+//         } catch (e) {
+//             console.log(e);
+//         } 
+//     }
+//      console.log('item set:'+keyName+":"+value);
+//      return response
+
+// }
+
+var resetStorage = function(){
+    window.localStorage.clear();
+}
+/*
+var resetMemory = function(){
+    resetHabits();
+    resetProgress();
+}
+
+
+var resetElement = function(elementType){
+    for (var i = 0; i < localStorage.length; i++){
+        var currentKey = localStorage.key(i);
+        if ( currentKey.indexOf(elementType+"-") >= 0){
+            window.localStorage.removeItem(currentKey);
         } 
     }
-     console.log('item set:'+keyName+":"+value);
-     return response
+}
+
+var resetProgress = function(){
+    var progressElements = document.getElementsByClassName("habit-update");
+
+    for ( var progressElement of progressElements){
+        progressElement.parentNode.removeChild(progressElement);
+    }
+
+    resetElement("progress");
 
 }
 
+var resetHabits = function(){
+    var progressElements = document.getElementsByClassName("habit-setting");
+
+    for ( var progressElement of progressElements){
+        progressElement.parentNode.removeChild(progressElement);
+    }
+
+    resetElement("habit");
+
+}
+
+*/

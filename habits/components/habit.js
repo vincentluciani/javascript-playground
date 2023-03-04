@@ -1,16 +1,25 @@
+/*  Refresh DOM based on fresh data from the API 
+    Delete the local storage and put also the data from the API
+    */
 var refreshDOM = function(){
-
     
     getHabitProgressJournal().then(
         value => {
             dataArrays = value;
+            resetStorage();
+
             for (const habitsElement of dataArrays.habitsArray){
+                putInStorage('habit-'+ habitsElement.habitId.toString(), habitsElement);
                 var DOMElementToUpdate = document.getElementById(habitsElement.habitId);
                 updateHabitDOMElement(DOMElementToUpdate,habitsElement);
             }
             for (const progressElement of dataArrays.progressArray){
+                putInStorage('progress-'+ progressElement.progressId, progressElement);
                 var DOMElementToUpdate = document.getElementById(progressElement.progressId);
                 updateProgressDOMElement(DOMElementToUpdate,progressElement);
+            }
+            for (const progressElement of dataArrays.journalArray){
+                putInStorage('journal-'+progressElement.journalDate, progressElement);
             }
         },
         reason => {
@@ -35,15 +44,15 @@ var updateHabitDOMElement = function(division, elementToAdd){
     var priorityDiv= division.getElementsByClassName('habit-target-definition')[1];   
     priorityDiv.value = elementToAdd.order + 80;
     var isTimerDiv= document.getElementById('is-timer-necessary-'+ elementToAdd.habitId);  
-    isTimerDiv.value = elementToAdd.isTimerNecessary.toString();
+    isTimerDiv.checked = elementToAdd.isTimerNecessary;
     var initialTimeDiv = document.getElementById('initial-time'+ elementToAdd.habitId);   
     initialTimeDiv.value =  elementToAdd.timerInitialNumberOfMinutes?elementToAdd.timerInitialNumberOfMinutes.toString():"0";
     var isCriticalDiv = document.getElementById('is-critical-'+ elementToAdd.habitId);   
-    isCriticalDiv.value = elementToAdd.isCritical.toString();
+    isCriticalDiv.checked = elementToAdd.isCritical;
     var isSuspendableSicknessDiv = document.getElementById('is-suspendable-during-sickness-'+ elementToAdd.habitId);     
-    isSuspendableSicknessDiv.value = elementToAdd.isSuspendableDuringSickness.toString();
+    isSuspendableSicknessDiv.checked = elementToAdd.isSuspendableDuringSickness;
     var isSuspendableOtherCasesDiv = document.getElementById('is-suspendable-in-other-cases-'+ elementToAdd.habitId);  
-    isSuspendableOtherCasesDiv.value = elementToAdd.isSuspendableDuringOtherCases.toString();   
+    isSuspendableOtherCasesDiv.checked = elementToAdd.isSuspendableDuringOtherCases;   
 
 }
 

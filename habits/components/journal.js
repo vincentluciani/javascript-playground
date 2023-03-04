@@ -44,8 +44,8 @@ var closeJournal = function(){
 
     }
 
-    executePushToQueue(objectToSave);
-
+    executePushToQueue(updateQueue,objectToSave);
+    executePushToQueue(updateAPIQueue,objectToSave);
     editBox.style.display="none";
 }
 
