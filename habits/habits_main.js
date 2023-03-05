@@ -208,6 +208,7 @@ var placeSVGIcons = function(){
     }
     document.getElementById('week-table-icon').innerHTML = calendarIconBig;
     document.getElementById('plus-icon-button').innerHTML = plusIconBig;
+    document.getElementById('refresh-icon').innerHTML = refreshIconBig;
     
     
 
