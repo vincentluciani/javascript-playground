@@ -95,7 +95,7 @@ var addProgressDOMElement = function(elementToAdd){
     // newProgressDivision.setAttribute("order", elementOrder);
     // newProgressDivision.style.order = elementOrder;
 
-    newProgressDivision = updateProgressDOMProperties(newProgressDivision,elementToAdd);
+    updateProgressDOMProperties(newProgressDivision,elementToAdd);
 
     const habitDescriptionText = document.createTextNode(elementToAdd.habitDescription);
     const targetValue = document.createElement("input");

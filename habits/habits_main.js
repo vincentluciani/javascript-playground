@@ -42,7 +42,7 @@ function handleCredentialResponse(response) {
     googleToken=response.credential;
    
     sendToken(response.credential).then(value => {
-        applicationToken = value.applicationJwtToken
+        applicationToken = value.applicationJwtToken;
         renderApplication()
         .then(value => {
             setTimeout(placeSVGIcons,5);
