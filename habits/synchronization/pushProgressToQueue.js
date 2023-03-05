@@ -33,7 +33,8 @@ var pushHabitArrayToQueue = function(objectToPush){
         'value': JSON.stringify(objectToPush)
     }
 
-    executePushToQueue(elementToAdd);
+    executePushToQueue(updateQueue,elementToAdd);
+    executePushToQueue(updateAPIQueue,elementToAdd);
 
 }
 

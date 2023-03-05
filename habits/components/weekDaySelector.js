@@ -114,6 +114,44 @@ var isDayOfWeekInHabitWeeks = function(currentDate, stringOfWeekDays){
     return (index > -1);
 }
 
+var refreshWeekDaySelector = function(weekDaySelector,weekDay){
+
+    weekDaySelector.innerHTML = "";
+    weekDaySelector.setAttribute("weekday", weekDay);
+
+    const descriptionTextLabel = document.createElement("label");
+
+    const descriptionText = document.createTextNode("Applies to the following days of the week:");
+    descriptionTextLabel.appendChild(descriptionText);
+
+    var mondayDiv = dayOfWeek("monday","M",weekDay);
+    var tuesdayDiv = dayOfWeek("tuesday","T",weekDay);
+    var wednesdayDiv = dayOfWeek("wednesday","W",weekDay);
+    var thursdayDiv = dayOfWeek("thursday","T",weekDay);
+    var fridayDiv = dayOfWeek("friday","F",weekDay);
+    var saturdayDiv = dayOfWeek("saturday","S",weekDay);
+    var sundayDiv = dayOfWeek("sunday","S",weekDay);
+
+
+    addWeekDayListener(weekDaySelector,mondayDiv,'monday');
+    addWeekDayListener(weekDaySelector,tuesdayDiv,'tuesday');
+    addWeekDayListener(weekDaySelector,wednesdayDiv,'wednesday');
+    addWeekDayListener(weekDaySelector,thursdayDiv,'thursday');
+    addWeekDayListener(weekDaySelector,fridayDiv,'friday');
+    addWeekDayListener(weekDaySelector,saturdayDiv,'saturday');
+    addWeekDayListener(weekDaySelector,sundayDiv,'sunday');
+
+    weekDaySelector.appendChild(descriptionTextLabel);
+    weekDaySelector.appendChild(mondayDiv);
+    weekDaySelector.appendChild(tuesdayDiv);
+    weekDaySelector.appendChild(wednesdayDiv);
+    weekDaySelector.appendChild(thursdayDiv);
+    weekDaySelector.appendChild(fridayDiv);
+    weekDaySelector.appendChild(saturdayDiv);
+    weekDaySelector.appendChild(sundayDiv);
+
+}
+
 var dynamicWeekDaySelector = function(weekDay){
 
     var weekDaySelector = document.createElement("div");

@@ -11,12 +11,20 @@ var refreshDOM = function(){
             for (const habitsElement of dataArrays.habitsArray){
                 putInStorage('habit-'+ habitsElement.habitId.toString(), habitsElement);
                 var DOMElementToUpdate = document.getElementById(habitsElement.habitId);
-                updateHabitDOMElement(DOMElementToUpdate,habitsElement);
+                if (null != DOMElementToUpdate){
+                    updateHabitDOMElement(DOMElementToUpdate,habitsElement);
+                } else {
+                    addHabitDOMElement(habitsElement);
+                }
             }
             for (const progressElement of dataArrays.progressArray){
                 putInStorage('progress-'+ progressElement.progressId, progressElement);
                 var DOMElementToUpdate = document.getElementById(progressElement.progressId);
-                updateProgressDOMElement(DOMElementToUpdate,progressElement);
+                if (null != DOMElementToUpdate){
+                    updateProgressDOMElement(DOMElementToUpdate,progressElement);
+                } else {
+                    addProgressDOMElement(progressElement);
+                }
             }
             for (const progressElement of dataArrays.journalArray){
                 putInStorage('journal-'+progressElement.journalDate, progressElement);
@@ -39,10 +47,12 @@ var updateHabitDOMElement = function(division, elementToAdd){
     var targetDefinitionDiv = division.getElementsByClassName('habit-target-definition')[0];   
     targetDefinitionDiv.value = elementToAdd.target;
     var weekDaySelectionDiv = division.getElementsByClassName('week-day-selection')[0];
-    weekDaySelectionDiv.setAttribute('weekDay',elementToAdd.weekDay);
+
+    refreshWeekDaySelector(weekDaySelectionDiv,elementToAdd.weekDay);
+
     /*PROBLEM: SAME CLASS AS DAILY TARGET - does it cause other problems?????? */
     var priorityDiv= division.getElementsByClassName('habit-target-definition')[1];   
-    priorityDiv.value = elementToAdd.order + 80;
+    priorityDiv.value = elementToAdd.order-80;
     var isTimerDiv= document.getElementById('is-timer-necessary-'+ elementToAdd.habitId);  
     isTimerDiv.checked = elementToAdd.isTimerNecessary;
     var initialTimeDiv = document.getElementById('initial-time'+ elementToAdd.habitId);   
