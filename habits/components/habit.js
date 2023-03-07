@@ -67,6 +67,7 @@ var updateHabitDOMElement = function(division, elementToAdd){
 }
 
 var updateHabitDOMProperties = function(habitDivision, elementToAdd){
+    var minOrder=80;
     elementToAdd.remoteHabitId= elementToAdd._id?elementToAdd._id:0;
     elementToAdd.habitId= elementToAdd.habitId?elementToAdd.habitId:0;
 

@@ -40,7 +40,7 @@ var closeJournal = function(){
 
     var objectToSave = {
         'id': "journal-" + journalDate.toString(),
-        'value': JSON.stringify(journalEntry),
+        'value': journalEntry,
 
     }
 
