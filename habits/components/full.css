@@ -25,8 +25,18 @@ body{
     background: #fafafa;
 }
 
-
-#signout_button{
+#google-login-container{
+    position: fixed;
+    z-index: 9999;
+    border: none;
+    position: fixed;
+    right: 20px;
+    top: 20px;
+}
+#google-container-progress .bold{
+    font-size:19px;
+}
+#signout_button,#signout_button_progress{
     font-size: 12px;
     text-decoration: underline;
     color: #464691;
@@ -34,7 +44,7 @@ body{
     cursor: pointer;
     clear:both;
 }
-#google-image{
+#google-image,#google-image-progress{
     width: 48px;
     border-radius: 9px;
     margin-bottom: 10px;
@@ -43,7 +53,7 @@ body{
     margin-top:10px;
     display: none;
 }
-#login-text{
+#login-text,#login-text-progress{
     margin-top:13px;
 }
 #new-version-notification{
@@ -261,12 +271,12 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
 .box.canva-wrapper.streak-box{
     height: 260px;
 }
-.box.habit-update,.box.big-action-button,.daily-summary{
+.box.habit-update,.box.big-action-button,.daily-summary,#google-container-progress{
     width:200px;
     height: 190px;
     padding: 20px;
 }
-.box.habit-update{
+.box.habit-update,#google-container-progress{
     background-color: #fcfbfb;
     order: 80;
 }
@@ -899,7 +909,7 @@ td,.red,.fa-warning{
         font-size: 18px;
     }
 
-    .box.habit-update, .box.daily-summary, .box.big-action-button{
+    .box.habit-update, .box.daily-summary, .box.big-action-button,#google-container-progress{
         width: 321px;
         border-width: 1px;
     }
@@ -915,7 +925,7 @@ td,.red,.fa-warning{
         margin-top: 15px;
     }
 
-    .box.habit-update {
+    .box.habit-update,#google-container-progress {
         height: max-content;
     }
     .plus-button, .minus-button{
@@ -996,7 +1006,7 @@ td,.red,.fa-warning{
     .progress-details{
         display: none;
     }
-    .box.habit-update, .box.big-action-button, .daily-summary{
+    .box.habit-update, .box.big-action-button, .daily-summary, #google-container-progress{
         padding: 10px;
     }
 }
@@ -1030,12 +1040,12 @@ td,.red,.fa-warning{
     .box.habit-update i.fa.fa-plus,.box.habit-update i.fa.fa-minus,.plus-minus{
         display: none;
     }
-    .box.habit-update,#daily-summary-container{
+    .box.habit-update,#daily-summary-container,#google-container-progress{
         padding: 10px 15px 10px 15px;
         width: 225px;
         height: 206px;
     }
-    .box.habit-update, .box.daily-summary, .box.big-action-button, .box.big-action-button:hover{
+    .box.habit-update, #google-container-progress,.box.daily-summary, .box.big-action-button, .box.big-action-button:hover{
         border-width: 1px;
     }
     .habit-description{

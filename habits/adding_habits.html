@@ -15,6 +15,15 @@
         <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito"></noscript>
     </head>
     <body>
+        <div id="google-login-container">
+            <div id="g_id_onload"
+            data-client_id="YOUR_GOOGLE_CLIENT_ID"
+            data-callback="handleCredentialResponse"
+            data-itp_support="false"
+            data-auto_select="true"
+            data-prompt_parent_id="g_id_onload"
+            ></div>
+        </div>
         <div id="new-version-notification" class="positive-message">
             <div class="action-icon-container" id="trophy-icon-new-version"></div>
             <div class="title" id="new-version-message-title">New Version Available</div>
@@ -80,6 +89,28 @@
             
             <div id="habits-container" class="habits-container">
                
+                <div id="google-container-progress" class="box first daily-summary">
+                    <div class="bold"><span id="small-task-icon" class="submenu-icon"></span>Login</div>
+                    <img id="google-image-progress" />   
+                    <div id="login-text-progress">Being logged in, you can use the application on all devices and keep an unlimited number of days.</div><br>
+                    <div class="g_id_signin"
+                    data-type="standard"
+                    data-shape="rectangular"
+                    data-theme="outline"
+                    data-text="sign_in_with"
+                    data-size="large"
+                    data-logo_alignment="left">
+                </div> 
+                   <div id="signout_button_progress">Sign Out</div>
+                    <script>
+                          const signOutButtonInProgress = document.getElementById('signout_button_progress');
+                          signOutButtonInProgress.onclick = () => {
+                                    google.accounts.id.disableAutoSelect();
+                                    reactOnLogout();
+                                }
+                    </script>
+                </div>
+
                 <div id="daily-summary-container" class="box first daily-summary">
                     <div class="habit-description"><div class="task-icon-container trophy-icon icon"></div>Daily Summary</div>
                     <div class="progress-container">Daily Completion Percentage:</div>
@@ -121,13 +152,7 @@
                 <div><h2>Add a new habit, update your entered habit</h2></div>
                 <label id="last-saved-information-habits"></label>
             </div>
-            <div id="g_id_onload"
-            data-client_id="YOUR_GOOGLE_CLIENT_ID"
-            data-callback="handleCredentialResponse"
-            data-itp_support="false"
-            data-auto_select="true"
-            data-prompt_parent_id="g_id_onload"
-            ></div>
+
             <div id="habits-definition-container" class="habits-definition-container">
 
                 <div id="google-container" class="box new-habit-focused">
@@ -144,8 +169,8 @@
                     </div>   
                    <div id="signout_button">Sign Out</div>
                     <script>
-                          const button = document.getElementById('signout_button');
-                                button.onclick = () => {
+                          const signOutButton = document.getElementById('signout_button');
+                                    signOutButton.onclick = () => {
                                     google.accounts.id.disableAutoSelect();
                                     reactOnLogout();
                                 }
