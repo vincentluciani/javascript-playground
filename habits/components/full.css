@@ -64,7 +64,7 @@ body{
     display: none;
 }
 #habits-section{
-    display: block;
+    display: none;
 }
 #new-version-notification.show{
     display: flex;

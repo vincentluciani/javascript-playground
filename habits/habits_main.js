@@ -2,7 +2,7 @@
 var dataArrays = {};
 var googleToken = '';
 var applicationToken = '';
-var loggedIn = true;
+var loggedIn = false;
 var maxForNonLoggedIn = 2000;
 var updateQueue = [];
 var updateAPIQueue = [];
@@ -42,20 +42,9 @@ function handleCredentialResponse(response) {
     googleToken=response.credential;
    
     sendToken(response.credential).then(value => {
+        loggedIn = true;
         applicationToken = value.applicationJwtToken;
-        renderApplication()
-        .then(value => {
-            setTimeout(placeSVGIcons,5);
-            setTimeout(renderPastProgressBoxes,10); 
-            setTimeout(showSummariesTab,15); 
-            
-            /*setTimeout(prepareSummaries,20);*/
-          }, reason => {
-            console.log(reason );
-          })
-        document.getElementById("date-filter").value=currentDate;
-        createRadialProgressBar(radialProgressParameters);
-        
+        refreshDOM();      
     }, reason => {
         console.log(reason );
       })
@@ -124,7 +113,19 @@ onload = function(){
 
     hideStartProgressButtonOnHabits();
 
-    setTimeout(loadAudio,1);
+    document.getElementById("date-filter").value=currentDate;
+    createRadialProgressBar(radialProgressParameters);
+
+    renderApplication()
+    .then(value => {
+        setTimeout(placeSVGIcons,5);
+        setTimeout(renderPastProgressBoxes,10); 
+        setTimeout(showSummariesTab,15); 
+        setTimeout(loadAudio,25);
+      }, reason => {
+        console.log(reason );
+      })
+
 
     
 };

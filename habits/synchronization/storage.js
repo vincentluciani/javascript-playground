@@ -50,8 +50,11 @@ var getHabitProgressJournalFromStorage = function(){
 
     for (var i = 0; i < localStorageLength; i++){
         var currentKey = localStorage.key(i);
+        var progressValueString = localStorage.getItem(currentKey);
+        var progressValue = JSON.parse(progressValueString);
+
         if ( currentKey.indexOf("progress-") >= 0){
-            var progressValue = localStorage.getItem(currentKey);
+
             if ( progressValue.progressDate == formattedTodaysDate()){
                 todaysProgressArray.push(progressValue);
             } else if (daysSinceToday(progressValue.progressDate)<=30) {
@@ -59,9 +62,9 @@ var getHabitProgressJournalFromStorage = function(){
             }
             progressArray.push(progressValue);
         } else if ( currentKey.indexOf("habit-") >= 0){
-            habitsArray.push(localStorage.getItem(currentKey));
+            habitsArray.push(progressValue);
         } else if ( currentKey.indexOf("journal-") >= 0){
-            journalArray.push({'key':currentKey,'text':localStorage.getItem(currentKey)});
+            journalArray.push({'key':currentKey,'text':progressValue.text});
         }
     }
     return {progressArray,habitsArray,journalArray,todaysProgressArray,pastProgressArray};
