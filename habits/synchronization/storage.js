@@ -183,7 +183,7 @@ var setItemWithAPI = async function(keyName, jsonValue) {
             console.log('status of the api call:'+response.status);
         }
     }
-    console.log('item set:'+keyName+":"+value);
+    console.log('item set:'+keyName+":"+jsonValue.toString());
     return response
 
 }

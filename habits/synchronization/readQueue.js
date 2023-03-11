@@ -17,17 +17,21 @@ var readQueueStorage = function() {
 
 var readQueueAPI = function() {
 
-  while (updateAPIQueue.length > 0) {
+  if (updateAPIQueue.length > 0) {
       var elementToProcess = updateAPIQueue.shift();
       console.log("reading from API queue");
       console.log(elementToProcess);
-      
-      var response = setItemWithAPI(elementToProcess.id, elementToProcess.value); 
-      
-      if (response == null){
+          
+      setItemWithAPI(elementToProcess.id, elementToProcess.value).then(value=>{
+        if (value == null){
+          updateAPIQueue.unshift(elementToProcess);
+        } else if (updateAPIQueue.length > 0) {
+          readQueueAPI();
+        }
+      }, reason=>{
         updateAPIQueue.unshift(elementToProcess);
-        break;
-      }
+      })
+
    }
   
 }

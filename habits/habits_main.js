@@ -174,8 +174,8 @@ function showGraphsTabIfGoodLength(){
 }
 var saveLoop = function(){
 
-    setInterval(readQueueStorage, 1000);
-    setInterval(readQueueAPI, 4000);
+    var firstInterval = setInterval(readQueueStorage, 1000);
+    var secondInterval = setInterval(readQueueAPI, 4000);
 
 }
 
