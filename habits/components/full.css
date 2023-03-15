@@ -277,7 +277,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
     padding: 20px;
 }
 .box.habit-update,#google-container-progress{
-    background-color: #fcfbfb;
+    background-color: white;
     order: 80;
 }
 

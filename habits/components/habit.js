@@ -52,7 +52,7 @@ var updateHabitDOMElement = function(division, elementToAdd){
 
     /*PROBLEM: SAME CLASS AS DAILY TARGET - does it cause other problems?????? */
     var priorityDiv= division.getElementsByClassName('habit-target-definition')[1];   
-    priorityDiv.value = elementToAdd.order-80;
+    priorityDiv.value = elementToAdd.order?elementToAdd.order-80:80;
     var isTimerDiv= document.getElementById('is-timer-necessary-'+ elementToAdd.habitId);  
     isTimerDiv.checked = elementToAdd.isTimerNecessary;
     var initialTimeDiv = document.getElementById('initial-time'+ elementToAdd.habitId);   
