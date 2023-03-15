@@ -44,6 +44,7 @@ function handleCredentialResponse(response) {
     sendToken(response.credential).then(value => {
         loggedIn = true;
         applicationToken = value.applicationJwtToken;
+        readQueueAPI();
         refreshDOM();      
     }, reason => {
         console.log(reason );
