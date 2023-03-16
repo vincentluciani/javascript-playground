@@ -1,8 +1,9 @@
 
 
 const reactOnLogin = function(apiResponse) {
-    document.getElementById("login-text").innerHTML = "Hi "+apiResponse.givenName+", how are you doing today?";
-    document.getElementById("login-text-progress").innerHTML = "Hi "+apiResponse.givenName+", how are you doing today?";
+    var message="give your maximum every day!"
+    document.getElementById("login-text").innerHTML = "Hi "+apiResponse.givenName+", "+message;
+    document.getElementById("login-text-progress").innerHTML = "Hi "+apiResponse.givenName+", "+message;
     
     document.getElementById("google-image").setAttribute("src", apiResponse.picture);
     document.getElementById("google-image-progress").setAttribute("src", apiResponse.picture);

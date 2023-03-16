@@ -193,12 +193,13 @@ var placeSVGIcons = function(){
     document.getElementById('week-link-icon').innerHTML=calendarIcon;
     document.getElementById('small-graph-icon').innerHTML=graphIconSmall;
     document.getElementById('small-graph-journal').innerHTML=writeIconSmall;
-    document.getElementById('small-task-icon').innerHTML=taskIcon;
     document.getElementById('save-icon').innerHTML=saveIcon;
     document.getElementById('start-icon').innerHTML=startIcon;
     document.getElementById('trophy-icon-positive').innerHTML=trophyIconBig;
     document.getElementById('trophy-icon-super-positive').innerHTML=trophyIconBig;
     document.getElementById('start-icon').innerHTML=startIcon; 
+    document.getElementById('login-icon').innerHTML=personIcon; 
+    document.getElementById('login-icon-progress').innerHTML=personIcon; 
     
     var trophyIconDivs = document.getElementsByClassName('trophy-icon');
     for ( var iconDiv of trophyIconDivs){
