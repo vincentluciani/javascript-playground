@@ -24,7 +24,9 @@ body{
     overflow-wrap: break-word;
     background: #fafafa;
 }
-
+#api-refresh{
+    display: none;
+}
 #google-login-container{
     position: fixed;
     z-index: 9999;
@@ -33,8 +35,11 @@ body{
     right: 20px;
     top: 20px;
 }
-#google-container-progress,#google-container-progress {
+#google-container-progress {
     height: max-content;
+    display: none;
+    background-color: white;
+    /*order: 500;*/
 }
 #google-container-progress .bold,#google-container .bold{
     font-size:19px;
@@ -290,7 +295,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
     height: 190px;
     padding: 20px;
 }
-.box.habit-update,#google-container-progress,#google-container{
+.box.habit-update{
     background-color: white;
     order: 80;
 }
@@ -1061,7 +1066,7 @@ td,.red,.fa-warning{
         padding: 10px 15px 10px 15px;
         width: 225px;
     }
-    .box.habit-update, #google-container-progress,#google-container,.box.daily-summary, .box.big-action-button, .box.big-action-button:hover{
+    .box.habit-update, #google-container-progress,.box.daily-summary, .box.big-action-button, .box.big-action-button:hover{
         border-width: 1px;
     }
     .habit-description{

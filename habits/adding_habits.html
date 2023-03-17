@@ -88,7 +88,37 @@
             </div>
             
             <div id="habits-container" class="habits-container">
-               
+                <div id="daily-summary-container" class="box first daily-summary">
+                    <div class="habit-description"><div class="task-icon-container trophy-icon icon"></div>Daily Summary</div>
+                    <div class="progress-container">Daily Completion Percentage:</div>
+                    <div id="daily-summary"></div>
+                    <div id="daily-summary-comment"></div>
+                </div>
+                <div class="box big-action-button" onclick="displayJournalEditBox();window.scrollTo(0, 0);">
+                    <div>Daily Journal</div>
+                    <div class="action-icon-container" id="daily-journal-icon">
+                      <!--  <i class="fa fa-edit"></i> -->
+                    </div>
+                </div>
+                <div class="box big-action-button" onclick="changeTabToHabits();window.scrollTo(0, 0);document.getElementById('new-description').focus();">
+                    <div>New Habit</div>
+                    <div class="action-icon-container" id="plus-icon-button">
+                       <!-- <i class="fa fa-plus"></i>-->
+                    </div>
+
+                </div>
+                <div id="go-to-summaries-button" class="box big-action-button" onclick="changeTabToSummaries();window.scrollTo(0, 0);">
+                    <div>Summaries</div>
+                    <div class="action-icon-container" id="week-table-icon">
+                       <!--<i class="fa fa-bar-chart"></i> -->
+                    </div>
+                </div>
+                <div id="api-refresh" class="box big-action-button" onclick="refreshDOM();window.scrollTo(0, 0);">
+                    <div>Refresh</div>
+                    <div class="action-icon-container" id="refresh-icon">
+                        <!--  <i class="fa fa-edit"></i> -->
+                      </div>
+                </div>
                 <div id="google-container-progress" class="box first daily-summary">
                     <div class="bold"><span id="login-icon-progress" class="task-icon-container login"></span>Login</div>
                     <div class="image-text-box">
@@ -111,38 +141,6 @@
                                     reactOnLogout();
                                 }
                     </script>
-                </div>
-
-                <div id="daily-summary-container" class="box first daily-summary">
-                    <div class="habit-description"><div class="task-icon-container trophy-icon icon"></div>Daily Summary</div>
-                    <div class="progress-container">Daily Completion Percentage:</div>
-                    <div id="daily-summary"></div>
-                    <div id="daily-summary-comment"></div>
-                </div>
-                <div class="box big-action-button" onclick="refreshDOM();window.scrollTo(0, 0);">
-                    <div>Refresh</div>
-                    <div class="action-icon-container" id="refresh-icon">
-                        <!--  <i class="fa fa-edit"></i> -->
-                      </div>
-                </div>
-                <div class="box big-action-button" onclick="displayJournalEditBox();window.scrollTo(0, 0);">
-                    <div>Daily Journal</div>
-                    <div class="action-icon-container" id="daily-journal-icon">
-                      <!--  <i class="fa fa-edit"></i> -->
-                    </div>
-                </div>
-                <div class="box big-action-button" onclick="changeTabToHabits();window.scrollTo(0, 0);document.getElementById('new-description').focus();">
-                    <div>New Habit</div>
-                    <div class="action-icon-container" id="plus-icon-button">
-                       <!-- <i class="fa fa-plus"></i>-->
-                    </div>
-
-                </div>
-                <div id="go-to-summaries-button" class="box big-action-button" onclick="changeTabToSummaries();window.scrollTo(0, 0);">
-                    <div>Summaries</div>
-                    <div class="action-icon-container" id="week-table-icon">
-                       <!--<i class="fa fa-bar-chart"></i> -->
-                    </div>
                 </div>
             </div>
 
