@@ -217,6 +217,8 @@ var placeSVGIcons = function(){
     document.getElementById('week-table-icon').innerHTML = calendarIconBig;
     document.getElementById('plus-icon-button').innerHTML = plusIconBig;
     document.getElementById('refresh-icon').innerHTML = refreshIconBig;
+    document.getElementById('sick-icon').innerHTML = sickIconBig;
+    document.getElementById('special-day-icon').innerHTML = specialDayIconBig;
     
     
 
@@ -430,6 +432,7 @@ var habitDOMToJson = function(elementToRead){
     outputJson.habitId = elementToRead.getAttribute("habitId");
     outputJson.isNegative = elementToRead.getAttribute("isNegative");
     outputJson.order = elementToRead.getAttribute("order");
+    outputJson.status = elementToRead.getAttribute("status");
     outputJson.habitDescription = elementToRead.getElementsByClassName('habit-description-definition')[0].value;
     outputJson.target = parseInt(elementToRead.getElementsByClassName('habit-target-definition')[0].value);
     outputJson.weekDay = elementToRead.getElementsByClassName("week-day-selection")[0].getAttribute("weekDay");
@@ -462,6 +465,7 @@ var progressDOMToJson = function(elementToRead){
     outputJson.id = elementToRead.getAttribute("id");
     outputJson.progressId = elementToRead.getAttribute("id");
     outputJson.habitId = elementToRead.getAttribute("habitId");
+    outputJson.status = elementToRead.getAttribute("status");
     outputJson.habitDescription = elementToRead.getAttribute("habitDescription");
     outputJson.target = parseInt(elementToRead.getAttribute("target"));
     outputJson.progressDate = elementToRead.getAttribute("progressDate");

@@ -64,3 +64,5 @@ var pushItemInQueue = function(newItem){
     updateQueue.push(newItem);
 }
 
+
+

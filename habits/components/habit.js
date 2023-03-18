@@ -373,8 +373,11 @@ var addNewHabitFromForm = function(){
     }
     if (isDayOK != null && isDayOK)
     {
+        elementToAdd['status'] = 'active';
+
         addProgressDOMElement(elementToAdd);
         pushProgressArrayToQueue(elementToAdd);
+        dataArrays.todaysProgressArray.push(elementToAdd);
     }
     addHabitDOMElement(elementToAdd);
     

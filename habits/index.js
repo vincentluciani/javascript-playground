@@ -83,7 +83,10 @@ app.get('/', function (req, res, next) {
   var isImage = 0, contentType, fileToLoad;
   var extension = pathname.split('.').pop();
   var file = "." + pathname;
-  var dirs = pathname.split('/');*/
+  var dirs = pathname.split('/');
+  
+  output/index.html
+  */
     fs.readFile('adding_habits_transformed.html', 'utf8', function (err,data) {
         var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
 

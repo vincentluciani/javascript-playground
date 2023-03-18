@@ -1,7 +1,7 @@
 
 var actionsWhenCountdownEnd = function(){
     giveCheers();
-;}
+};
 
 var updateProgressDOMProperties = function(division, elementToAdd){
 
@@ -15,6 +15,7 @@ var updateProgressDOMProperties = function(division, elementToAdd){
     division.setAttribute("habitId",elementToAdd.habitId);
     division.setAttribute("isNegative", elementToAdd.isNegative);
     division.setAttribute("isCritical", elementToAdd.isCritical);
+    division.setAttribute("status",elementToAdd.status);
     division.setAttribute("isSuspendableDuringSickness", elementToAdd.isSuspendableDuringSickness);
     division.setAttribute("isSuspendableDuringOtherCases", elementToAdd.isSuspendableDuringOtherCases);
     division.setAttribute("isTimerNecessary", elementToAdd.isTimerNecessary);
@@ -290,31 +291,31 @@ var addProgressDOMElement = function(elementToAdd){
 };
 
 var toggleExpandCollapse = function(toggleButton,divToTransform){
-/*
-    const targetIsPlus = toggleButton.classList.toggle("fa-plus");
-    const targetIsMinus = toggleButton.classList.toggle("fa-minus");
+    /*
+        const targetIsPlus = toggleButton.classList.toggle("fa-plus");
+        const targetIsMinus = toggleButton.classList.toggle("fa-minus");
 
-    if (targetIsPlus && !targetIsMinus){
+        if (targetIsPlus && !targetIsMinus){
+            divToTransform.style.display = 'none';
+            toggleButton.innerHTML = expandIcon;
+        } else {
+            divToTransform.style.display = 'block';
+            toggleButton.innerHTML = collapseIcon;
+        }
+    */
+    var currentFill = toggleButton.firstChild.getAttribute("fill");
+    var currentStroke = toggleButton.firstChild.getAttribute("stroke");
+
+    if (divToTransform.style.display=='block'){
         divToTransform.style.display = 'none';
         toggleButton.innerHTML = expandIcon;
     } else {
         divToTransform.style.display = 'block';
         toggleButton.innerHTML = collapseIcon;
     }
-*/
-var currentFill = toggleButton.firstChild.getAttribute("fill");
-var currentStroke = toggleButton.firstChild.getAttribute("stroke");
-
-if (divToTransform.style.display=='block'){
-    divToTransform.style.display = 'none';
-    toggleButton.innerHTML = expandIcon;
-} else {
-    divToTransform.style.display = 'block';
-    toggleButton.innerHTML = collapseIcon;
-}
-toggleButton.firstChild.setAttribute("fill",currentFill);
-toggleButton.firstChild.setAttribute("stroke",currentStroke);
-}
+    toggleButton.firstChild.setAttribute("fill",currentFill);
+    toggleButton.firstChild.setAttribute("stroke",currentStroke);
+};
 
 
 function renderPastProgressBoxes(){
@@ -372,6 +373,13 @@ var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletio
     if (currentDiv.progressId && currentDiv.progressId == "daily-summary-container"){
         currentDiv.style.order = "179";
     }
+    if (currentDiv.getAttribute('status') == 'inactive'){
+        currentDiv.style.borderColor="lightgrey";
+        currentDiv.style.background="#f4f4f4";
+        currentDiv.style.order="180";
+        /*currentDiv.style.order="80";*/
+    }
+
 
 }
 
@@ -468,6 +476,7 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
                     target: parseInt(habitsElements[i].getAttribute("target")),
                     progressDate: inputDate,
                     isNew: true,
+                    status: 'active',
                     isCritical: (habitsElements[i].getAttribute("iscritical")==='true'),
                     isSuspendableDuringSickness: (habitsElements[i].getAttribute("isSuspendableDuringSickness")==='true'),
                     isSuspendableDuringOtherCases: (habitsElements[i].getAttribute("isSuspendableDuringOtherCases")==='true'),
@@ -480,8 +489,52 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
                 console.log("added progress");
                 console.log(newProgressObject);
                 pushProgressArrayToQueue(newProgressObject);
+                if (dataArrays && dataArrays.todaysProgressArray){
+                    dataArrays.todaysProgressArray.push(newProgressObject);
+                }
             }
         }
     }
     /* go through all elements, if nothing with today's date, go through all habits and add new element with this habit id*/
 }
+
+var actOnSickNess = function(){
+    actOnDay('sick');
+}
+
+var actOnSpecialDay = function(){
+    actOnDay('special');
+}
+var actOnDay = function(typeOfDay){
+
+    var selectedDate = document.getElementById('date-filter').value;
+    var arrayToAnalyze = []
+
+    if (selectedDate==currentDate){
+        arrayToAnalyze = dataArrays.todaysProgressArray
+    }
+    else {
+        arrayToAnalyze = dataArrays.pastProgressArray
+    }
+    for (var i=0;i<arrayToAnalyze.length;i++){
+            if ((arrayToAnalyze[i].isSuspendableDuringSickness==true && typeOfDay == 'sick') || (arrayToAnalyze[i].isSuspendableDuringOtherCases==true && typeOfDay == 'special')) {
+                updateProgressStatus(arrayToAnalyze[i],'inactive');
+            }
+    }
+};
+
+var updateProgressStatus = function(progressElement,newStatus){
+
+    progressElement['status']=newStatus;
+
+    var elementToAdd = {
+        'id': 'progress-'+progressElement.progressId,
+        'value': (progressElement)
+    }
+
+    executePushToQueue(updateQueue,elementToAdd);
+    executePushToQueue(updateAPIQueue,elementToAdd);
+
+    document.getElementById(progressElement.progressId).setAttribute('status',newStatus);
+
+};
