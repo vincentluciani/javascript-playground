@@ -518,12 +518,14 @@ var actOnDay = function(typeOfDay){
     }
     for (var i=0;i<arrayToAnalyze.length;i++){
             if ((arrayToAnalyze[i].isSuspendableDuringSickness==true && typeOfDay == 'sick') || (arrayToAnalyze[i].isSuspendableDuringOtherCases==true && typeOfDay == 'special')) {
-                updateProgressStatus(arrayToAnalyze[i],'inactive');
+                var divToUpdate =  document.getElementById(arrayToAnalyze[i].progressId);
+                updateProgressStatus(divToUpdate,arrayToAnalyze[i],'inactive');
+                putBorderBackgroundOrderBasedOnCompletion(divToUpdate,0);
             }
     }
 };
 
-var updateProgressStatus = function(progressElement,newStatus){
+var updateProgressStatus = function(divToUpdate,progressElement,newStatus){
 
     progressElement['status']=newStatus;
 
@@ -535,6 +537,6 @@ var updateProgressStatus = function(progressElement,newStatus){
     executePushToQueue(updateQueue,elementToAdd);
     executePushToQueue(updateAPIQueue,elementToAdd);
 
-    document.getElementById(progressElement.progressId).setAttribute('status',newStatus);
+    divToUpdate.setAttribute('status',newStatus)
 
 };

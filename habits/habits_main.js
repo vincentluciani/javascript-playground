@@ -620,7 +620,7 @@ var prepareDataForHabitGraph = function(fullData,habitObject){
     var unitAccumulation = 0;
 
     for ( var dataItem of fullData){
-        if (dataItem.habitId == habitObject.habitId){
+        if (dataItem.habitId == habitObject.habitId && habitObject.status=='active'){
             unitAccumulation+=dataItem.numberOfCompletions;
             dataToShow.push({
                 x: new Date(dataItem.progressDate),y:dataItem.numberOfCompletions
