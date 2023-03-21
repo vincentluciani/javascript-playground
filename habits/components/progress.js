@@ -370,7 +370,7 @@ var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletio
         currentDiv.style.order=currentDiv.getAttribute('order');
         /*currentDiv.style.order="80";*/
     }
-    if (currentDiv.progressId && currentDiv.progressId == "daily-summary-container"){
+    if (currentDiv.getAttribute('id') && currentDiv.getAttribute('id') == "daily-summary-container"){
         currentDiv.style.order = "179";
     }
     if (currentDiv.getAttribute('status') == 'inactive'){
