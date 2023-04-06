@@ -45,8 +45,10 @@ function handleCredentialResponse(response) {
         loggedIn = true;
         applicationToken = value.applicationJwtToken;
         readQueueAPI();
-        refreshDOM();  
         document.getElementById('api-refresh').style.display='flex';
+        setTimeout(renderPastProgressBoxes,10); 
+        refreshDOM();
+        
         /*showLoginBoxes();   */ 
     }, reason => {
         console.log(reason );
@@ -125,7 +127,6 @@ onload = function(){
     .then(value => {
         setTimeout(placeSVGIcons,5);
         setTimeout(showLoginBoxes,7000);
-        setTimeout(renderPastProgressBoxes,10); 
         setTimeout(showSummariesTab,15); 
         setTimeout(loadAudio,25);
       }, reason => {
@@ -151,18 +152,29 @@ var renderApplication = async function(){
         hideJournalBox();
     }
 
-    if (dataArrays.todaysProgressArray){
-        for (const progressElement of dataArrays.todaysProgressArray){
-            addProgressDOMElement(progressElement);
-        }
-    }
- 
+    var domAdditions = [];
+    var i = 0;
+
     if (dataArrays.habitsArray){
+
         for (const habitsElement of dataArrays.habitsArray){
-            addHabitDOMElement(habitsElement);
+            domAdditions[i] = await addHabitDOMElementAsync(habitsElement);
+            i++;
         }
     }
+
+    if (dataArrays.todaysProgressArray){
+
+        for (const progressElement of dataArrays.todaysProgressArray){
+            domAdditions[i] = await addProgressDOMElementAsync(progressElement);
+            i++;
+        }
+    }
+
+
     /* TODO : should be based on arrays and not on DOM */
+    var finalResult = await Promise.all(domAdditions);
+
     addEmptyProgressBoxesOnNewDay(currentDate, currentDateTime);
 }
 
@@ -444,6 +456,10 @@ var habitDOMToJson = function(elementToRead){
     outputJson.isSuspendableDuringOtherCases = document.getElementById("is-suspendable-in-other-cases-"+outputJson.habitId.toString()).checked;
     outputJson.isSuspendableDuringSickness = document.getElementById("is-suspendable-during-sickness-"+outputJson.habitId.toString()).checked;
     outputJson.isCritical = document.getElementById("is-critical-"+outputJson.habitId.toString()).checked;
+    outputJson.whatUpdated = "habitDOMToJson";
+    outputJson.whenUpdated =  (new Date()).toString();
+    outputJson.whatCreated = elementToRead.getAttribute("whatCreated");
+    outputJson.whenCreated = elementToRead.getAttribute("whenCreated");
     var timerInitialNumberOfMinutes = document.getElementById("initial-time"+outputJson.habitId.toString()).value;
     try {
         timerInitialNumberOfMinutes = parseInt(timerInitialNumberOfMinutes)
@@ -460,7 +476,7 @@ var habitDOMToJson = function(elementToRead){
 };
 
 /* Read progress from the dom and put it in json ( then it can be saved ) */
-var progressDOMToJson = function(elementToRead){
+var progressDOMToJson = function(elementToRead,label){
     var outputJson = {};
     outputJson.id = elementToRead.getAttribute("id");
     outputJson.progressId = elementToRead.getAttribute("id");
@@ -474,7 +490,11 @@ var progressDOMToJson = function(elementToRead){
     outputJson.isCritical = elementToRead.getAttribute("isCritical");
     outputJson.isSuspendableDuringSickness = elementToRead.getAttribute("isSuspendableDuringSickness");
     outputJson.isSuspendableDuringOtherCases = elementToRead.getAttribute("isSuspendableDuringOtherCases");
-    
+    outputJson.whatUpdated = label;
+    outputJson.whenUpdated =  (new Date()).toString();
+    outputJson.whenCreated = elementToRead.getAttribute("whenCreated");
+    outputJson.whatCreated = elementToRead.getAttribute("whatCreated");
+
     outputJson.timerInitialNumberOfMinutes = elementToRead.getAttribute("timerInitialNumberOfMinutes");
     /*todo: duplicate with function above*/
     try {

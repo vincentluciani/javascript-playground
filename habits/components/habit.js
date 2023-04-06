@@ -19,9 +19,9 @@ var refreshDOM = function(){
             }
             for (const progressElement of dataArrays.progressArray){
                 putInStorage('progress-'+ progressElement.progressId, progressElement);
-                var DOMElementToUpdate = document.getElementById(progressElement.progressId);
-                if (null != DOMElementToUpdate){
-                    updateProgressDOMElement(DOMElementToUpdate,progressElement);
+                var DOMProgressElementToUpdate = document.getElementById(progressElement.progressId);
+                if (null != DOMProgressElementToUpdate){
+                    updateProgressDOMElement(DOMProgressElementToUpdate,progressElement);
                 } else {
                     addProgressDOMElement(progressElement);
                 }
@@ -29,13 +29,15 @@ var refreshDOM = function(){
             for (const progressElement of dataArrays.journalArray){
                 putInStorage('journal-'+progressElement.journalDate, progressElement);
             }
+            /*refreshDOM(); */
+            applyFilters(); 
         },
         reason => {
             console.log(reason);
             return;
         }
     );
-
+    
 }
 
 var updateHabitDOMElement = function(division, elementToAdd){
@@ -84,6 +86,8 @@ var updateHabitDOMProperties = function(habitDivision, elementToAdd){
     habitDivision.setAttribute("isSuspendableDuringOtherCases",elementToAdd.isSuspendableDuringOtherCases);
     habitDivision.setAttribute("isTimerNecessary",elementToAdd.isTimerNecessary);
     habitDivision.setAttribute("timerInitialNumberOfMinutes",elementToAdd.timerInitialNumberOfMinutes);
+    habitDivision.setAttribute("whatCreated",elementToAdd.whatCreated);
+    habitDivision.setAttribute("whoCreated",elementToAdd.whoCreated);
 
     var habitOrder = elementToAdd.order?elementToAdd.order:minOrder;
     habitDivision.style.order = habitOrder
@@ -92,6 +96,14 @@ var updateHabitDOMProperties = function(habitDivision, elementToAdd){
     return habitDivision
 }
 
+var addHabitDOMElementAsync = async function(elementToAdd){
+
+    addHabitDOMElement(elementToAdd);
+
+    var result = await waitForElement(elementToAdd.habitId);
+
+    return result;
+}
 var addHabitDOMElement = function(elementToAdd){
     let newHabitDivision = document.createElement("div");
     var minOrder = 80;
@@ -357,6 +369,10 @@ var addNewHabitFromForm = function(){
     elementToAdd.isSuspendableDuringSickness = false;
     elementToAdd.isSuspendableDuringOtherCases = false;
     elementToAdd.order=81;
+    elementToAdd.whatUpdated = "addNewHabitFromForm";
+    elementToAdd.whatCreated = "addNewHabitFromForm";
+    elementToAdd.whenUpdated =  (new Date()).toString();
+    elementToAdd.whenCreated =  (new Date()).toString();
 
     var weekDaySelector = document.getElementById('week-day-selection');
     

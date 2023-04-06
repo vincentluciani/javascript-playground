@@ -52,6 +52,7 @@ gulp.task('process-html', function () {
         .pipe(replace('<script type="text/javascript" src="libraries/date.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="libraries/random.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="libraries/http.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="libraries/loadDOMAndWait.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="habits_main.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/checkboxWithTitle.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/weekTable.js"></script>',''))

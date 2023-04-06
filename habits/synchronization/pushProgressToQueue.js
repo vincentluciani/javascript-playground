@@ -1,6 +1,6 @@
 var pushProgressToQueue = function(divToAnalyze) {
 
-    var progressArray = progressDOMToJson(divToAnalyze);
+    var progressArray = progressDOMToJson(divToAnalyze,'pushToQueue');
 
     encourageIfPassedTarget(progressArray.numberOfCompletions, progressArray.target, progressArray.isCritical);
 

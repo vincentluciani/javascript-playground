@@ -20,6 +20,8 @@ var updateProgressDOMProperties = function(division, elementToAdd){
     division.setAttribute("isSuspendableDuringOtherCases", elementToAdd.isSuspendableDuringOtherCases);
     division.setAttribute("isTimerNecessary", elementToAdd.isTimerNecessary);
     division.setAttribute("timerInitialNumberOfMinutes", elementToAdd.timerInitialNumberOfMinutes);
+    division.setAttribute("whatCreated",elementToAdd.whatCreated);
+    division.setAttribute("whenCreated",elementToAdd.whenCreated);
     var elementOrder = elementToAdd.order?elementToAdd.order:80;
     division.setAttribute("order", elementOrder);
     division.style.order = elementOrder;
@@ -69,6 +71,15 @@ var updateProgressDOMElement = function(newProgressDivision, elementToAdd){
         }
     }
        
+}
+
+var addProgressDOMElementAsync = async function(elementToAdd){
+
+    addProgressDOMElement(elementToAdd);
+    var result = await waitForElement(elementToAdd.progressId);
+
+    return result;
+
 }
 var addProgressDOMElement = function(elementToAdd){
 
@@ -287,7 +298,6 @@ var addProgressDOMElement = function(elementToAdd){
      }
      refreshProgress(newProgressDivision);
 
-
 };
 
 var toggleExpandCollapse = function(toggleButton,divToTransform){
@@ -375,6 +385,7 @@ var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletio
     }
     if (currentDiv.getAttribute('status') == 'inactive'){
         currentDiv.style.borderColor="lightgrey";
+        currentDiv.style.color="lightgrey";
         currentDiv.style.background="#f4f4f4";
         currentDiv.style.order="180";
         /*currentDiv.style.order="80";*/
@@ -446,8 +457,9 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
         var isHabitProgressExisting = false;
 
         for (var progressElement of progressElements){
-            if ( habitsElements[i].getAttribute("habitId") == progressElement.getAttribute("habitId") && progressElement.getAttribute("progressdate") == inputDate){
+            if ( (habitsElements[i].getAttribute("habitid") == progressElement.getAttribute("habitid")) && (progressElement.getAttribute("progressdate") == inputDate)){
                 isHabitProgressExisting = true;
+                break;
             }
         }
 
@@ -484,14 +496,18 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
                     timerInitialNumberOfMinutes: parseInt(habitsElements[i].getAttribute("timerInitialNumberOfMinutes")),
                     order: habitsElements[i].getAttribute("order")?parseInt(habitsElements[i].getAttribute("order")):80,
                     numberOfCompletions:0,
+                    whatUpdated: "addEmptyProgressBoxesOnNewDay",
+                    whatCreated: "addEmptyProgressBoxesOnNewDay",
+                    whenUpdated: (new Date()).toString(),
+                    whenCreated: (new Date()).toString()
                 }
                 addProgressDOMElement(newProgressObject);
                 console.log("added progress");
                 console.log(newProgressObject);
                 pushProgressArrayToQueue(newProgressObject);
-                if (dataArrays && dataArrays.todaysProgressArray){
+                /*if (dataArrays && dataArrays.todaysProgressArray){
                     dataArrays.todaysProgressArray.push(newProgressObject);
-                }
+                }*/
             }
         }
     }
@@ -510,25 +526,45 @@ var actOnDay = function(typeOfDay){
     var selectedDate = document.getElementById('date-filter').value;
     var arrayToAnalyze = []
 
-    if (selectedDate==currentDate){
+    /*if (selectedDate==currentDate){
         arrayToAnalyze = dataArrays.todaysProgressArray
     }
     else {
         arrayToAnalyze = dataArrays.pastProgressArray
+    }*/
+    var listOfProgressDOMs = document.getElementsByClassName('box habit-update');
+
+    for (var i=0; i< listOfProgressDOMs.length; i++){
+        var isSuspendableDuringSickness = listOfProgressDOMs[i].getAttribute('isSuspendableDuringSickness');
+        var isSuspendableDuringOtherCases = listOfProgressDOMs[i].getAttribute('isSuspendableDuringOtherCases');
+        var progressDate = listOfProgressDOMs[i].getAttribute('progressDate');
+        if ( progressDate != selectedDate){
+            continue;
+        }
+        if ((isSuspendableDuringSickness=="true" && typeOfDay == 'sick') || (isSuspendableDuringOtherCases=="true" && typeOfDay == 'special')) {
+            /*var divToUpdate =  document.getElementById(arrayToAnalyze[i].progressId);*/
+            divToUpdate = document.getElementById(listOfProgressDOMs[i].getAttribute('id'));
+            var progressArray = progressDOMToJson(divToUpdate,'actonday');
+            updateProgressStatus(divToUpdate,progressArray,'inactive');
+            putBorderBackgroundOrderBasedOnCompletion(divToUpdate,0);
+        }
     }
-    for (var i=0;i<arrayToAnalyze.length;i++){
+
+
+    /*for (var i=0;i<arrayToAnalyze.length;i++){
             if ((arrayToAnalyze[i].isSuspendableDuringSickness==true && typeOfDay == 'sick') || (arrayToAnalyze[i].isSuspendableDuringOtherCases==true && typeOfDay == 'special')) {
                 var divToUpdate =  document.getElementById(arrayToAnalyze[i].progressId);
                 updateProgressStatus(divToUpdate,arrayToAnalyze[i],'inactive');
                 putBorderBackgroundOrderBasedOnCompletion(divToUpdate,0);
             }
-    }
+    }*/
 };
 
 var updateProgressStatus = function(divToUpdate,progressElement,newStatus){
 
     progressElement['status']=newStatus;
-
+    progressElement['whatUpdated']="updateProgressStatus";
+    progressElement['whenUpdated']= (new Date()).toString();
     var elementToAdd = {
         'id': 'progress-'+progressElement.progressId,
         'value': (progressElement)
