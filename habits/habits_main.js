@@ -38,22 +38,37 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 function handleCredentialResponse(response) {
 
+    
     /*console.log("Encoded JWT ID token: " + response.credential);*/
     googleToken=response.credential;
-   
+
+    var elementToAdd = {
+        'id': 'login',
+        'value': {'token':googleToken}
+    }
+
+    executePushToQueue(updateAPIQueue,elementToAdd);
+
+    readQueueAPI();
+    setTimeout(renderPastProgressBoxes,10);
+   /*
     sendToken(response.credential).then(value => {
         loggedIn = true;
-        applicationToken = value.applicationJwtToken;
-        readQueueAPI();
-        document.getElementById('api-refresh').style.display='flex';
+        if ( null != value && null != value.applicationJwtToken){
+            applicationToken = value.applicationJwtToken;
+            readQueueAPI();
+            document.getElementById('api-refresh').style.display='flex';
+            refreshDOM();
+        }
+  
         setTimeout(renderPastProgressBoxes,10); 
-        refreshDOM();
         
-        /*showLoginBoxes();   */ 
+       
     }, reason => {
         console.log(reason );
       })
-
+*/
+       /*showLoginBoxes();   */ 
 }
 
 function showLoginBoxes(){

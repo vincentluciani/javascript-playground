@@ -400,8 +400,10 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
 
     if (newCompletionPercentage <100 ){
         /*currentDiv.style.order = "60";*/
-        currentDiv.style.borderColor="#ffa6a6"; 
-        currentDiv.style.background="#fff1f1";
+        /*currentDiv.style.borderColor="#ffa6a6"; 
+        currentDiv.style.background="#fff1f1";*/
+        currentDiv.style.borderColor = "rgb(249 194 194)";
+        currentDiv.style.background = "rgb(255 244 244)";
 
         taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
         if (taskIconDiv && plusMinusDiv){
@@ -409,12 +411,14 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
             /*taskIconDiv.setAttribute("stroke","red");
             taskIconDiv.setAttribute("fill","red");      */     
             /*currentDiv.getElementsByClassName("fa")[0].classList.add("fa-warning");*/
-            currentDiv.getElementsByClassName("habit-description")[0].classList.add("red");
+
+            /*currentDiv.getElementsByClassName("habit-description")[0].classList.add("red");*/
+            
             /*plusMinusDiv.style.color="red";*/
      
         }
-        plusMinusDiv.firstChild.setAttribute("stroke","red");
-        plusMinusDiv.firstChild.setAttribute("fill","red");
+        /*plusMinusDiv.firstChild.setAttribute("stroke","red");
+        plusMinusDiv.firstChild.setAttribute("fill","red");*/
 
     } else if (newCompletionPercentage >=100){
         currentDiv.style.borderColor="rgb(167 211 162)"; 

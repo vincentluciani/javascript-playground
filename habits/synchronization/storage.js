@@ -1,6 +1,7 @@
 "use strict";
 
 
+
 /* TODO PUT FAILED UPDATES THROUGH APIS IN A QUEUE ON LOCAL STORAGE OR COOKIES */
 
 var getHabitProgressJournal = async function() {
@@ -149,19 +150,32 @@ var getItemByKey = async function(keyName) {
 
 }
 var setItemWithAPI = async function(keyName, jsonValue) {
-    var url=""
+    var url="";
     
     /*var jsonValue = JSON.parse(value);*/
-    jsonValue.token = applicationToken;
+    if ( null == jsonValue.token || jsonValue.token == ""){
+        jsonValue.token = applicationToken;
+    }
+    var keyNameParts = keyName.split("-");
 
-    if (loggedIn){
-        var keyNameParts = keyName.split("-")
+    if (loggedIn || keyNameParts[0] == "login"){
+        
         if (keyNameParts[0] == "progress"){
             url = "https://www.vince.com/api/discipline/progress/add";
         } else if  (keyNameParts[0] == "habit"){
             url = "https://www.vince.com/api/discipline/habits/add";
         } else if (keyNameParts[0] == "journal"){
             url = "https://www.vince.com/api/discipline/journal/add";
+        } else if (keyNameParts[0] == "login"){
+            var response = await sendToken(jsonValue.token);
+            if ( null != response && null != response.applicationJwtToken){
+                applicationToken = response.applicationJwtToken;
+                readQueueAPI();
+                document.getElementById('api-refresh').style.display='flex';
+                refreshDOM();
+                return response;
+            }
+             
         }
         try{
             var response = await fetch
@@ -184,7 +198,7 @@ var setItemWithAPI = async function(keyName, jsonValue) {
         }
     }
     console.log('item set:'+keyName+":"+jsonValue.toString());
-    return response
+    return response;
 
 }
 // var updateParameterInItemValue = async function(keyName, parameterName, value){

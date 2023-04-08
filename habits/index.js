@@ -9,8 +9,9 @@ let options = {}
 fs = require('fs')
 
 
-var keyFile = fs.readFileSync('C:\\software\\certificate\\vince.com.key');
-var certFile = fs.readFileSync('C:\\software\\certificate\\vince.com.crt');
+var keyFile = fs.readFileSync('/private/etc/apache2/vince.com.key');
+var certFile = fs.readFileSync('/private/etc/apache2/vince.com.crt');
+
 
 options = {
     key: keyFile,
