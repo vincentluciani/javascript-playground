@@ -47,7 +47,7 @@ function handleCredentialResponse(response) {
         'value': {'token':googleToken}
     }
 
-    executePushToQueue(updateAPIQueue,elementToAdd);
+    pushLoginToQueue(updateAPIQueue,elementToAdd);
 
     readQueueAPI();
     setTimeout(renderPastProgressBoxes,10);
@@ -374,7 +374,7 @@ var setDivAppearanceBasedOnCompletion = function(currentDiv,newCompletionPercent
 
     putBorderBackgroundOrderBasedOnCompletion(currentDiv,newCompletionPercentage);
 
-    if ( currentDiv.getAttribute("iscritical") !=null && currentDiv.getAttribute("iscritical") == 'true'){
+    if ( currentDiv.getAttribute("iscritical") !=null && currentDiv.getAttribute("iscritical") == 'true' && currentDiv.getAttribute('status') && currentDiv.getAttribute('status') != 'inactive'){
         setDivAppearanceForCritical(currentDiv,newCompletionPercentage);
     }
 }
@@ -681,7 +681,11 @@ var prepareDataForHabitWeekTable = function(fullData,habitObject){
 
     for ( var dataItem of fullData){
         if (dataItem.habitId == habitObject.habitId){
-            progressByDay[dataItem.progressDate]=dataItem.numberOfCompletions-dataItem.target;
+            if (dataItem.status=="inactive"){
+                progressByDay[dataItem.progressDate]=-9999;
+            } else {
+                progressByDay[dataItem.progressDate]=dataItem.numberOfCompletions-dataItem.target;
+            }
         }
     }
 

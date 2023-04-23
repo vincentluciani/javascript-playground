@@ -38,7 +38,9 @@ var pushHabitArrayToQueue = function(objectToPush){
 
 }
 
-
+var pushLoginToQueue = function(queue,newObject){
+    queue.unshift(newObject);
+}
 var executePushToQueue = function(queue,newObject){
     console.log("pushing to queue:");
     console.log(newObject);

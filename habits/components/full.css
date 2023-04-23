@@ -44,6 +44,9 @@ body{
 #google-container-progress .bold,#google-container .bold{
     font-size:19px;
 }
+#google-container,#google-container-progress{
+    border-radius: 31px 7px 31px 7px;
+}
 .g_id_signin{
     margin-top: 13px;
     margin-bottom: 11px;
@@ -73,7 +76,9 @@ body{
     display: none;
 }
 #login-text,#login-text-progress{
-    margin-top:13px;
+    margin-top:8px;
+    padding-right: 2px;
+    padding-left: 6px;
 }
 #new-version-notification{
     display: none;
@@ -89,6 +94,9 @@ body{
     display: flex;
 }
 
+#new-habit,.box.habit-setting{
+    border-radius: 31px 7px 31px 7px;
+}
 .countdown-container{
     clear: both;
     display: flex;
@@ -254,9 +262,14 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
 }
 .box{
     padding: 19px;   
-    border-radius: 12px;
+    border-radius:  31px 7px 80px 16px;
 }
-
+.box.streak-box{
+    border-radius: 7px 84px 7px 75px;
+}
+.box.with-countdown{
+    border-radius: 31px 7px 23px 16px;
+}
 .input-title{
     padding-top: 15px;
 }
@@ -1028,7 +1041,7 @@ td,.red,.fa-warning{
         display: none;
     }
     .box.habit-update, .box.big-action-button, .daily-summary, #google-container-progress, #google-container{
-        padding: 10px;
+        padding: 10px 10px 4px 10px;
     }
 }
 @media (min-width: 650px){

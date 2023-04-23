@@ -12,7 +12,11 @@ var weekTable = function(progressByDay){
         var date = listOfDays[i];
         var result = progressByDay[date];
         var iconCode="";
-        if (result != null){
+        /* code for skipped days because status is inactive*/
+        if (result == -9999){
+            iconCode=minusIconGreen;
+        }
+        else if (result != null){
             if (result>=0){
                 iconCode=fullCirclePast;
             } else if (result<0){

@@ -10,7 +10,7 @@ var updateProgressDOMProperties = function(division, elementToAdd){
     division.setAttribute("habitDescription", elementToAdd.habitDescription);
     division.setAttribute("target", elementToAdd.target);
     division.setAttribute("progressDate", elementToAdd.progressDate );
-    division.setAttribute("class", "box habit-update");
+
     division.setAttribute("isNew",elementToAdd.isNew);
     division.setAttribute("habitId",elementToAdd.habitId);
     division.setAttribute("isNegative", elementToAdd.isNegative);
@@ -19,6 +19,11 @@ var updateProgressDOMProperties = function(division, elementToAdd){
     division.setAttribute("isSuspendableDuringSickness", elementToAdd.isSuspendableDuringSickness);
     division.setAttribute("isSuspendableDuringOtherCases", elementToAdd.isSuspendableDuringOtherCases);
     division.setAttribute("isTimerNecessary", elementToAdd.isTimerNecessary);
+    if (elementToAdd.isTimerNecessary == true || elementToAdd.isTimerNecessary == "true"){
+        division.setAttribute("class", "box habit-update with-countdown");
+    } else {
+        division.setAttribute("class", "box habit-update");
+    }
     division.setAttribute("timerInitialNumberOfMinutes", elementToAdd.timerInitialNumberOfMinutes);
     division.setAttribute("whatCreated",elementToAdd.whatCreated);
     division.setAttribute("whenCreated",elementToAdd.whenCreated);
@@ -295,7 +300,9 @@ var addProgressDOMElement = function(elementToAdd){
 
      if (elementToAdd.isTimerNecessary == true){
         var newCounterDiv = new DigitalCounter(elementToAdd.timerInitialNumberOfMinutes,countDownContainerId,"new-counter-"+elementToAdd.progressId,false,actionsWhenCountdownEnd);
-     }
+        newProgressDivision.setAttribute("className", "box habit-update with-countdown");
+        newProgressDivision.classList.add("with-countdown");
+    }
      refreshProgress(newProgressDivision);
 
 };
@@ -369,6 +376,7 @@ var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletio
         currentDiv.style.order=newOrder.toString();
         currentDiv.setAttribute('order',newOrder.toString());
         currentDiv.style.background="#daffd9";
+        /*currentDiv.style.background="rgb(238 255 237)"; */ 
     } else if (newCompletionPercentage>=50){
         currentDiv.style.borderColor="rgb(246 223 35)";
         currentDiv.style.background="rgb(255 251 234)";
@@ -440,6 +448,8 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
 
 var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
 
+    refreshDOM();
+
     var newCurrentDateTime = new Date();
 
     var currentDateTimeMidnight = newCurrentDateTime.setHours(0,0,0,0);
@@ -465,6 +475,20 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
                 isHabitProgressExisting = true;
                 break;
             }
+            
+            var matchingArray = dataArrays.progressArray.filter( function(currentObject){
+                if ( (progressElement.getAttribute("habitid") == currentObject.habitId) && (currentObject.progressDate == inputDate)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+
+            if (matchingArray.length > 0){
+                isHabitProgressExisting = true;
+            }
+
+            
         }
 
         if ( !isHabitProgressExisting){
@@ -487,8 +511,8 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
                 let newProgressObject = {
                     id:newId ,
                     progressId: newId,
-                    habitId: habitsElements[i].getAttribute("habitId"),
-                    habitDescription: habitsElements[i].getAttribute("habitDescription"),
+                    habitId: habitsElements[i].getAttribute("habitid"),
+                    habitDescription: habitsElements[i].getAttribute("habitdescription"),
                     target: parseInt(habitsElements[i].getAttribute("target")),
                     progressDate: inputDate,
                     isNew: true,

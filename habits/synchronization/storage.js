@@ -65,7 +65,7 @@ var getHabitProgressJournalFromStorage = function(){
         } else if ( currentKey.indexOf("habit-") >= 0){
             habitsArray.push(progressValue);
         } else if ( currentKey.indexOf("journal-") >= 0){
-            journalArray.push({'key':currentKey,'text':progressValue.text});
+            journalArray.push({'key':currentKey,'text':progressValue.text, 'journalDate':progressValue.journalDate});
         }
     }
     return {progressArray,habitsArray,journalArray,todaysProgressArray,pastProgressArray};
@@ -170,6 +170,7 @@ var setItemWithAPI = async function(keyName, jsonValue) {
             var response = await sendToken(jsonValue.token);
             if ( null != response && null != response.applicationJwtToken){
                 applicationToken = response.applicationJwtToken;
+                loggedIn = true;
                 readQueueAPI();
                 document.getElementById('api-refresh').style.display='flex';
                 refreshDOM();
