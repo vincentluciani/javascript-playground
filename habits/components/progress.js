@@ -448,9 +448,15 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
 
 var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
 
-    refreshDOM();
-
     var newCurrentDateTime = new Date();
+
+    var newCurrentDate = formatDate(currentDateTime);
+
+    /* Desktop: change date for first time to today - computer online since yesterday */
+    if (newCurrentDate > currentDate){
+        refreshDOM();
+        currentDate = newCurrentDate;
+    }
 
     var currentDateTimeMidnight = newCurrentDateTime.setHours(0,0,0,0);
     var inputDateTimeMidnight = inputDateTime.setHours(0,0,0,0);
