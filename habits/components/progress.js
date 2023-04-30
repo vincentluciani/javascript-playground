@@ -450,12 +450,14 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
 
     var newCurrentDateTime = new Date();
 
-    var newCurrentDate = formatDate(currentDateTime);
-
+    var newCurrentDate = formatDate(newCurrentDateTime);
+    var oldCurrentDate = formatDate(currentDateTime);
     /* Desktop: change date for first time to today - computer online since yesterday */
-    if (newCurrentDate > currentDate){
-        refreshDOM();
-        currentDate = newCurrentDate;
+    if (newCurrentDate > oldCurrentDate){
+        // refreshDOM();
+        // currentDate = newCurrentDate;
+        location.reload();
+        return;
     }
 
     var currentDateTimeMidnight = newCurrentDateTime.setHours(0,0,0,0);
@@ -480,21 +482,19 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
             if ( (habitsElements[i].getAttribute("habitid") == progressElement.getAttribute("habitid")) && (progressElement.getAttribute("progressdate") == inputDate)){
                 isHabitProgressExisting = true;
                 break;
-            }
-            
-            var matchingArray = dataArrays.progressArray.filter( function(currentObject){
-                if ( (progressElement.getAttribute("habitid") == currentObject.habitId) && (currentObject.progressDate == inputDate)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            });
+            }        
+        }
 
-            if (matchingArray.length > 0){
-                isHabitProgressExisting = true;
+        var matchingArray = dataArrays.progressArray.filter( function(currentObject){
+            if ( (habitsElements[i].getAttribute("habitid") == currentObject.habitId) && (currentObject.progressDate == inputDate)) {
+                return true;
+            } else {
+                return false;
             }
+        });
 
-            
+        if (matchingArray.length > 0){
+            isHabitProgressExisting = true;
         }
 
         if ( !isHabitProgressExisting){
