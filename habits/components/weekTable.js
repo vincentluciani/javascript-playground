@@ -28,7 +28,7 @@ var weekTable = function(progressByDay){
                 }
             }
         } else {
-            if (i<=todaysDateDayNum){
+            if (i<todaysDateDayNum){
                 iconCode=minusIconGreen;
             }
         }
@@ -47,11 +47,10 @@ var buildListOfDays = function(){
 
     var currentDateTime = new Date();
     var currentWeekDay = currentDateTime.getDay();
-    listOfDays[currentWeekDay] = formatDate(currentDateTime);
 
-    if (currentWeekDay == 0){
-        return listOfDays;
-    }
+    // if (currentWeekDay > 0){
+    //     listOfDays[currentWeekDay] = formatDate(currentDateTime);
+    // }
 
     var weekDay, dateTime=currentDateTime;
     do{
@@ -59,6 +58,9 @@ var buildListOfDays = function(){
         weekDay = dateTime.getDay();
         listOfDays[weekDay] = formatDate(dateTime); 
     } while ( weekDay != 0)
+
+    // dateTime.setDate(dateTime.getDate() - 1);
+    // listOfDays[0] = formatDate(dateTime); 
 
     return listOfDays;
 

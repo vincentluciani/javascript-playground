@@ -43,18 +43,23 @@ var updateDailyProgress = function(){
 }
 
 var getDailyProgress=function(){
-    var progressDivs = document.getElementsByClassName("percentage-completion");
+    var progressPercentageCompletionDivs = document.getElementsByClassName("percentage-completion");
     currentDate = document.getElementById("date-filter").value;
 
     var fullScore = 0;
     var numberOfDivs = 0;
-    for (const progressDiv of progressDivs){
-        var progressDate = progressDiv.getAttribute("progressDate");
+    for (const progressPercentageCompletionDiv of progressPercentageCompletionDivs){
+        var progressDate = progressPercentageCompletionDiv.getAttribute("progressDate");
+        var progressDetailsDiv = progressPercentageCompletionDiv.parentNode;
+        var progressDiv = progressDetailsDiv.parentNode
+        var status = progressDiv.getAttribute("status")?progressDiv.getAttribute("status"):"active";
         if (progressDate==currentDate){
-            var currentScore = parseInt(progressDiv.innerHTML);
-            currentScore = (currentScore > 100) ? 100 : currentScore;
-            fullScore += currentScore;
-            numberOfDivs++;
+            if (status=="active"){
+                var currentScore = parseInt(progressPercentageCompletionDiv.innerHTML);
+                currentScore = (currentScore > 100) ? 100 : currentScore;
+                fullScore += currentScore;
+                numberOfDivs++;
+            }
         }
     }
 
