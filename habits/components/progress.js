@@ -458,6 +458,9 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
         // currentDate = newCurrentDate;
         location.reload();
         return;
+    } 
+    else {
+        refreshDOM();
     }
 
     var currentDateTimeMidnight = newCurrentDateTime.setHours(0,0,0,0);
@@ -513,7 +516,8 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
                 isDayOK = true;
             }
             if (isDayOK != null && isDayOK) {
-                let newId = Date.now()*100+i;
+                /*let newId = Date.now()*100+i;*/
+                let newId = habitsElements[i].getAttribute("habitid") + "_"+ newCurrentDate;
                 let newProgressObject = {
                     id:newId ,
                     progressId: newId,
@@ -538,7 +542,7 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
                 addProgressDOMElement(newProgressObject);
                 console.log("added progress");
                 console.log(newProgressObject);
-                pushProgressArrayToQueue(newProgressObject);
+                /*pushProgressArrayToQueue(newProgressObject);*/
                 /*if (dataArrays && dataArrays.todaysProgressArray){
                     dataArrays.todaysProgressArray.push(newProgressObject);
                 }*/
