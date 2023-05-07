@@ -20,15 +20,15 @@ var weekTable = function(progressByDay){
             if (result>=0){
                 iconCode=fullCirclePast;
             } else if (result<0){
-                if (i<todaysDateDayNum){
+                if (i<=todaysDateDayNum){
                     iconCode=fullCircleRed;
                     numberOfMissesInWeek++;
-                } else if (i==todaysDateDayNum){
+                } /*else if (i==todaysDateDayNum){
                     iconCode=emptyCircleToday;
-                }
+                }*/
             }
         } else {
-            if (i<todaysDateDayNum){
+            if (i<=todaysDateDayNum){
                 iconCode=minusIconGreen;
             }
         }

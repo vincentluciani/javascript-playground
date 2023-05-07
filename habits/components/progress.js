@@ -542,7 +542,7 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
                 addProgressDOMElement(newProgressObject);
                 console.log("added progress");
                 console.log(newProgressObject);
-                /*pushProgressArrayToQueue(newProgressObject);*/
+                pushProgressArrayToQueue(newProgressObject);
                 /*if (dataArrays && dataArrays.todaysProgressArray){
                     dataArrays.todaysProgressArray.push(newProgressObject);
                 }*/
