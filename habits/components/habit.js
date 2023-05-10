@@ -1,42 +1,48 @@
 /*  Refresh DOM based on fresh data from the API 
     Delete the local storage and put also the data from the API
     */
-var refreshDOM = function(){
-    
-    getHabitProgressJournal().then(
-        value => {
-            dataArrays = value;
-            resetStorage();
 
-            for (const habitsElement of dataArrays.habitsArray){
-                putInStorage('habit-'+ habitsElement.habitId.toString(), habitsElement);
-                var DOMElementToUpdate = document.getElementById(habitsElement.habitId);
-                if (null != DOMElementToUpdate){
-                    updateHabitDOMElement(DOMElementToUpdate,habitsElement);
-                } else {
-                    addHabitDOMElement(habitsElement);
-                }
-            }
-            for (const progressElement of dataArrays.progressArray){
-                putInStorage('progress-'+ progressElement.progressId, progressElement);
-                var DOMProgressElementToUpdate = document.getElementById(progressElement.progressId);
-                if (null != DOMProgressElementToUpdate){
-                    updateProgressDOMElement(DOMProgressElementToUpdate,progressElement);
-                } else {
-                    addProgressDOMElement(progressElement);
-                }
-            }
-            for (const progressElement of dataArrays.journalArray){
-                putInStorage('journal-'+progressElement.journalDate, progressElement);
-            }
-            /*refreshDOM(); */
-            applyFilters(); 
+
+var refreshDOM =  function(){
+    refreshDOMAsync().then(
+        value => {
+            console.log("finished refreshing the DOM");
         },
         reason => {
             console.log(reason);
-            return;
         }
-    );
+    )
+}
+var refreshDOMAsync = async function(){
+    
+    var result = await getHabitProgressJournal()
+
+    dataArrays = result;
+    resetStorage();
+
+    for (const habitsElement of dataArrays.habitsArray){
+        putInStorage('habit-'+ habitsElement.habitId.toString(), habitsElement);
+        var DOMElementToUpdate = document.getElementById(habitsElement.habitId);
+        if (null != DOMElementToUpdate){
+            updateHabitDOMElement(DOMElementToUpdate,habitsElement);
+        } else {
+            await addHabitDOMElementAsync(habitsElement);
+        }
+    }
+    for (const progressElement of dataArrays.progressArray){
+        putInStorage('progress-'+ progressElement.progressId, progressElement);
+        var DOMProgressElementToUpdate = document.getElementById(progressElement.progressId);
+        if (null != DOMProgressElementToUpdate){
+            updateProgressDOMElement(DOMProgressElementToUpdate,progressElement);
+        } else {
+            await addProgressDOMElementAsync(progressElement);
+        }
+    }
+    for (const progressElement of dataArrays.journalArray){
+        putInStorage('journal-'+progressElement.journalDate, progressElement);
+    }
+    /*refreshDOM(); */
+    applyFilters(); 
     
 }
 

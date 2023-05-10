@@ -899,7 +899,7 @@ td,.red,.fa-warning{
         margin-bottom: 2px;
     }
     .box{
-        border-radius: 12px;
+        border-radius: 24px 12px 27px 12px;
     }
     .habits-container,.habits-definition-container,.filter-bar,.week-summary-container,.main-action-bar,#footer{
         justify-content: space-around;
@@ -1041,7 +1041,10 @@ td,.red,.fa-warning{
         display: none;
     }
     .box.habit-update, .box.big-action-button, .daily-summary, #google-container-progress, #google-container{
-        padding: 10px 10px 4px 10px;
+        padding: 10px 17px 23px 18px;
+    }
+    #daily-summary-container{
+        padding-bottom: 17px;
     }
 }
 @media (min-width: 650px){
