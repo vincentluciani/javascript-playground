@@ -3,46 +3,76 @@
     */
 
 
-var refreshDOM =  function(){
-    refreshDOMAsync().then(
+// var refreshDOM =  function(){
+//     console.log("starting the refresh");    
+//     refreshDOMAsync().then(
+//         value => {
+//             console.log("finished refreshing the DOM");
+//         },
+//         reason => {
+//             console.log(reason);
+//         }
+//     )
+// }
+
+
+
+var refreshDOM = function(){
+    
+    let dataArrays = {};
+    dataArrays.habitsArray=[];
+    dataArrays.progressArray=[];
+    dataArrays.journalArray=[];
+
+    getHabitProgressJournal().then(
         value => {
-            console.log("finished refreshing the DOM");
+            dataArrays = value;
+
+            if (dataArrays.habitsArray == []){
+                return;
+            }
+            resetStorage();
+            var progressBoxes = document.getElementsByClassName("habit-update");
+            var numberOfBoxes = progressBoxes.length;
+
+            for ( var i=0; i < numberOfBoxes; i++){
+                progressBoxes[0].parentNode.removeChild(progressBoxes[0]);
+            }
+            
+            for (const habitsElement of dataArrays.habitsArray){
+                putInStorage('habit-'+ habitsElement.habitId.toString(), habitsElement);
+                var DOMElementToUpdate = document.getElementById(habitsElement.habitId);
+                if (null != DOMElementToUpdate){
+                    updateHabitDOMElement(DOMElementToUpdate,habitsElement);
+                } else {
+                    addHabitDOMElement(habitsElement);
+                }
+            }
+            for (const progressElement of dataArrays.progressArray){
+                putInStorage('progress-'+ progressElement.progressId, progressElement);
+                /*var DOMProgressElementToUpdate = document.getElementById(progressElement.progressId);
+                if (null != DOMProgressElementToUpdate){
+                    updateProgressDOMElement(DOMProgressElementToUpdate,progressElement);
+                } else {*/
+                    addProgressDOMElement(progressElement);
+                /*}*/
+            }
+            for (const progressElement of dataArrays.journalArray){
+                putInStorage('journal-'+progressElement.journalDate, progressElement);
+            }
+            /*refreshDOM(); */
+            applyFilters(); 
+            if (dataArrays.progressArray && dataArrays.progressArray.length >= 1){
+                changeTabToProgress();
+                showProgressTab();
+            }
         },
         reason => {
-            console.log(reason);
+            console.error(reason);
         }
     )
-}
-var refreshDOMAsync = async function(){
+
     
-    var result = await getHabitProgressJournal()
-
-    dataArrays = result;
-    resetStorage();
-
-    for (const habitsElement of dataArrays.habitsArray){
-        putInStorage('habit-'+ habitsElement.habitId.toString(), habitsElement);
-        var DOMElementToUpdate = document.getElementById(habitsElement.habitId);
-        if (null != DOMElementToUpdate){
-            updateHabitDOMElement(DOMElementToUpdate,habitsElement);
-        } else {
-            await addHabitDOMElementAsync(habitsElement);
-        }
-    }
-    for (const progressElement of dataArrays.progressArray){
-        putInStorage('progress-'+ progressElement.progressId, progressElement);
-        var DOMProgressElementToUpdate = document.getElementById(progressElement.progressId);
-        if (null != DOMProgressElementToUpdate){
-            updateProgressDOMElement(DOMProgressElementToUpdate,progressElement);
-        } else {
-            await addProgressDOMElementAsync(progressElement);
-        }
-    }
-    for (const progressElement of dataArrays.journalArray){
-        putInStorage('journal-'+progressElement.journalDate, progressElement);
-    }
-    /*refreshDOM(); */
-    applyFilters(); 
     
 }
 
@@ -106,9 +136,14 @@ var addHabitDOMElementAsync = async function(elementToAdd){
 
     addHabitDOMElement(elementToAdd);
 
-    var result = await waitForElement(elementToAdd.habitId);
-
-    return result;
+    try{
+        var result = await waitForElement(elementToAdd.habitId);
+        return result;
+    } catch(e){
+        console.error("Error looking for element of id"+elementToAdd.habitId);
+        console.error(e);
+        return -1;
+    }
 }
 var addHabitDOMElement = function(elementToAdd){
     let newHabitDivision = document.createElement("div");

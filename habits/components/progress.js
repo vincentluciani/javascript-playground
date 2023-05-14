@@ -81,9 +81,15 @@ var updateProgressDOMElement = function(newProgressDivision, elementToAdd){
 var addProgressDOMElementAsync = async function(elementToAdd){
 
     addProgressDOMElement(elementToAdd);
-    var result = await waitForElement(elementToAdd.progressId);
-
-    return result;
+    try{
+        var result = await waitForElement(elementToAdd.progressId);
+        return result;
+    } catch(e){
+        console.error("Error looking for element of id"+elementToAdd.habitId);
+        console.error(e);
+        return -1;
+    }
+    
 
 }
 var addProgressDOMElement = function(elementToAdd){
@@ -459,9 +465,6 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
         location.reload();
         return;
     } 
-    else {
-        refreshDOM();
-    }
 
     var currentDateTimeMidnight = newCurrentDateTime.setHours(0,0,0,0);
     var inputDateTimeMidnight = inputDateTime.setHours(0,0,0,0);
@@ -517,7 +520,7 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
             }
             if (isDayOK != null && isDayOK) {
                 /*let newId = Date.now()*100+i;*/
-                let newId = habitsElements[i].getAttribute("habitid") + "_"+ newCurrentDate;
+                let newId = habitsElements[i].getAttribute("habitid") + "_"+ inputDate;
                 let newProgressObject = {
                     id:newId ,
                     progressId: newId,

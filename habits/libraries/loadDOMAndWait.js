@@ -3,9 +3,9 @@ var waitForElement = async function(selector) {
     return new Promise( function(resolve,reject){
         setTimeout(function()
         {
-            console.error("Could not find any element with id:"+selector);
+            console.error("Could not find any element with id after 4 seconds:"+selector);
             return null;
-        },2000)
+        },4000)
 
         if (document.getElementById(selector)) {
             return resolve(document.getElementById(selector));

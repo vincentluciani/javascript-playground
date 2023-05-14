@@ -173,7 +173,9 @@ var setItemWithAPI = async function(keyName, jsonValue) {
                 loggedIn = true;
                 readQueueAPI();
                 document.getElementById('api-refresh').style.display='flex';
+                console.log("refreshing dom upon login");
                 refreshDOM();
+                addEmptyProgressBoxesOnNewDay(currentDate,currentDateTime);
                 return response;
             }
              
