@@ -20,7 +20,7 @@ var weekTable = function(progressByDay){
             if (result>=0){
                 iconCode=fullCirclePast;
             } else if (result<0){
-                if (i<=todaysDateDayNum){
+                if (i<=todaysDateDayNum || todaysDateDayNum ==0 ){
                     iconCode=fullCircleRed;
                     numberOfMissesInWeek++;
                 } /*else if (i==todaysDateDayNum){
@@ -72,7 +72,7 @@ var weekTableHeader = function(currentDayNumber){
     switch(currentDayNumber){
 
         case 0:
-            headerString+="<th class='today'>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>"
+            headerString+="<th class='past'>S</th><th class='past'>M</th><th class='past'>T</th><th class='past'>W</th><th class='past'>T</th><th class='past'>F</th><th class='past'>S</th>"
             break;
         case 1:
             headerString+="<th class='past'>S</th><th class='today'>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th>"
