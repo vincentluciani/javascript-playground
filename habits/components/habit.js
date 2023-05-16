@@ -1,23 +1,4 @@
-/*  Refresh DOM based on fresh data from the API 
-    Delete the local storage and put also the data from the API
-    */
-
-
-// var refreshDOM =  function(){
-//     console.log("starting the refresh");    
-//     refreshDOMAsync().then(
-//         value => {
-//             console.log("finished refreshing the DOM");
-//         },
-//         reason => {
-//             console.log(reason);
-//         }
-//     )
-// }
-
-
-
-var refreshDOM = function(){
+var refreshDOM = function(callback){
     
     let dataArrays = {};
     dataArrays.habitsArray=[];
@@ -60,11 +41,15 @@ var refreshDOM = function(){
             for (const progressElement of dataArrays.journalArray){
                 putInStorage('journal-'+progressElement.journalDate, progressElement);
             }
-            /*refreshDOM(); */
+            
             applyFilters(); 
             if (dataArrays.progressArray && dataArrays.progressArray.length >= 1){
                 changeTabToProgress();
                 showProgressTab();
+            }
+
+            if (callback){
+                callback();
             }
         },
         reason => {

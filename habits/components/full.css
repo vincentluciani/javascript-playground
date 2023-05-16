@@ -1039,9 +1039,10 @@ td,.red,.fa-warning{
     }
     .progress-details{
         display: none;
+        padding-bottom: 12px;
     }
     .box.habit-update, .box.big-action-button, .daily-summary, #google-container-progress, #google-container{
-        padding: 10px 17px 23px 18px;
+        padding: 10px 17px 5px 18px;
     }
     #daily-summary-container{
         padding-bottom: 17px;

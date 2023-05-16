@@ -51,24 +51,7 @@ function handleCredentialResponse(response) {
 
     readQueueAPI();
     setTimeout(renderPastProgressBoxes,10);
-   /*
-    sendToken(response.credential).then(value => {
-        loggedIn = true;
-        if ( null != value && null != value.applicationJwtToken){
-            applicationToken = value.applicationJwtToken;
-            readQueueAPI();
-            document.getElementById('api-refresh').style.display='flex';
-            refreshDOM();
-        }
-  
-        setTimeout(renderPastProgressBoxes,10); 
-        
-       
-    }, reason => {
-        console.log(reason );
-      })
-*/
-       /*showLoginBoxes();   */ 
+   
 }
 
 function showLoginBoxes(){

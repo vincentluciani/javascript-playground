@@ -460,8 +460,6 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
     var oldCurrentDate = formatDate(currentDateTime);
     /* Desktop: change date for first time to today - computer online since yesterday */
     if (newCurrentDate > oldCurrentDate){
-        // refreshDOM();
-        // currentDate = newCurrentDate;
         location.reload();
         return;
     } 
