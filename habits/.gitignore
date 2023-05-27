@@ -5,6 +5,7 @@ output/index.html
 output/bundle.js
 output/bundle.css
 output/bundle-min.css
+output
 googleclientid.txt
 secret.js
 adding_habits_transformed.html

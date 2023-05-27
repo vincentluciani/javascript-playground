@@ -28,7 +28,7 @@ var weekTable = function(progressByDay){
                 }*/
             }
         } else {
-            if (i<=todaysDateDayNum){
+            if (i<todaysDateDayNum){
                 iconCode=minusIconGreen;
             }
         }

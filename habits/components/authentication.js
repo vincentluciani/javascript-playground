@@ -52,4 +52,7 @@ const reactOnLogout = function() {
     document.getElementById("google-image").style.display="none";
     document.getElementById("google-image-progress").style.display="none";
 
+    googleToken = '';
+    applicationToken = '';
+    loggedIn = false;
 }
