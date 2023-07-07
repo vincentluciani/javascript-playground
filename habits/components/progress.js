@@ -489,13 +489,17 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
             }        
         }
 
-        var matchingArray = dataArrays.progressArray.filter( function(currentObject){
-            if ( (habitsElements[i].getAttribute("habitid") == currentObject.habitId) && (currentObject.progressDate == inputDate)) {
-                return true;
-            } else {
-                return false;
-            }
-        });
+        var matchingArray = []
+        
+        if (matchingArray.progressArray){
+            matchingArray = dataArrays.progressArray.filter( function(currentObject){
+                if ( (habitsElements[i].getAttribute("habitid") == currentObject.habitId) && (currentObject.progressDate == inputDate)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        }
 
         if (matchingArray.length > 0){
             isHabitProgressExisting = true;

@@ -51,6 +51,13 @@ var getHabitProgressJournalFromStorage = function(){
 
     for (var i = 0; i < localStorageLength; i++){
         var currentKey = localStorage.key(i);
+
+        if (    currentKey.indexOf("progress-") < 0 && 
+                currentKey.indexOf("habit-") < 0 &&
+                currentKey.indexOf("journal-") < 0){
+                    continue
+        }
+
         var progressValueString = localStorage.getItem(currentKey);
         var progressValue = JSON.parse(progressValueString);
 
@@ -171,15 +178,8 @@ var setItemWithAPI = async function(keyName, jsonValue) {
             if ( null != response && null != response.applicationJwtToken){
                 applicationToken = response.applicationJwtToken;
                 loggedIn = true;
-                readQueueAPI();
+                /*readQueueAPI();*/
                 document.getElementById('api-refresh').style.display='flex';
-                console.log("refreshing dom upon login");
-
-                const addEmptyProgressBoxesToday = function(){
-                    addEmptyProgressBoxesOnNewDay(currentDate,currentDateTime);
-                }
-
-                refreshDOM(addEmptyProgressBoxesToday);
                 
                 return response;
             }

@@ -17,7 +17,7 @@ gulp.task('put-client-id-html', function(){
 
 })
 gulp.task('pack-js', function () {    
-    return gulp.src(['components/*.js', 'libraries/random.js', 'libraries/date.js','language/general.js','language/english.js', 'synchronization/*.js','habits_main.js'])
+    return gulp.src(['components/*.js', 'libraries/random.js', 'libraries/loadDOMAndWait.js','libraries/date.js','language/general.js','language/english.js', 'synchronization/*.js','habits_main.js'])
         .pipe(concat('bundle.js'))
         .pipe(minify())
         .pipe(gulp.dest('output'));
@@ -72,6 +72,8 @@ gulp.task('process-html', function () {
         .pipe(replace('<script type="text/javascript" src="components/icons.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/authentication.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="synchronization/readQueue.js"></script>','<script>'+fs.readFileSync('output/bundle-min.js', 'utf8')+'</script>'))   
+        .pipe(replace('vince.com', 'vincent-luciani.com'))   
+    
         .pipe(htmlmin({ collapseWhitespace: true }))
         .pipe(rename('index.html'))
         .pipe(gulp.dest('output'));

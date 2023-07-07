@@ -24,6 +24,18 @@ body{
     overflow-wrap: break-word;
     background: #fafafa;
 }
+#daily-journal{
+    width: 966px;
+    font-family: Comic Sans MS;
+    font-size: 21px;
+}
+.text-label,.date-label{
+    font-family: 'Comic sans MS';
+}
+.text-label{
+    font-size: 19px;
+    margin-top: 11px;
+}
 #api-refresh{
     display: none;
 }
@@ -944,7 +956,7 @@ td,.red,.fa-warning{
     }
 
     .box.habit-update, .box.daily-summary, .box.big-action-button,#google-container-progress,#google-container{
-        width: 321px;
+        width: 297px;
         border-width: 1px;
     }
     .box.big-action-button{

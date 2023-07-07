@@ -9,6 +9,7 @@ const reactOnLogin = function(apiResponse) {
     document.getElementById("google-image-progress").setAttribute("src", apiResponse.picture);
     document.getElementById("signout_button").style.display= 'block';
     document.getElementById("signout_button_progress").style.display= 'block';
+    document.getElementById("login-title-box").style.display='none';
 
     var listOfButtons = document.getElementsByClassName("g_id_signin");
 
@@ -38,6 +39,8 @@ const reactOnLogout = function() {
     document.getElementById("google-image-progress").setAttribute("src", "");
     document.getElementById("google-image-progress").style.display = 'none';
     document.getElementById("signout_button_progress").style.display= 'none';
+
+    document.getElementById("login-title-box").style.display='block';
 
     var listOfButtons = document.getElementsByClassName("g_id_signin");
 

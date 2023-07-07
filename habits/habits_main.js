@@ -50,7 +50,19 @@ function handleCredentialResponse(response) {
     pushLoginToQueue(updateAPIQueue,elementToAdd);
 
     readQueueAPI();
-    setTimeout(renderPastProgressBoxes,10);
+    /*
+    not sure useful, because setItemWithAPI is doing it 
+    setTimeout(refreshDOM,40);*/
+
+    console.log("refreshing dom upon login");
+
+    const addEmptyProgressBoxesToday = function(){
+        addEmptyProgressBoxesOnNewDay(currentDate,currentDateTime);
+    }
+
+    /*refreshDOM(addEmptyProgressBoxesToday);*/
+    setTimeout(refreshDOM,500);
+    setTimeout(renderPastProgressBoxes,600);
    
 }
 
@@ -136,7 +148,10 @@ onload = function(){
 };
 
 var renderApplication = async function(){
-    dataArrays=await getHabitProgressJournal(); /* todo: this function should only extract and not also create divs */
+    /*dataArrays=await getHabitProgressJournal();*/
+    dataArrays = await getHabitProgressJournalFromStorage();
+
+    /* todo: this function should only extract and not also create divs */
  
     if (dataArrays.progressArray && dataArrays.progressArray.length >= 1){
         changeTabToProgress();
