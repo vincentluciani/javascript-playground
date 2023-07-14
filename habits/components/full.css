@@ -63,14 +63,16 @@ body{
     margin-top: 13px;
     margin-bottom: 11px;
 }
-#signout_button,#signout_button_progress{
+#signout_button{
     font-size: 15px;
     text-decoration: underline;
     color: #464691;
     display: none;
     cursor: pointer;
-    clear:both;
-    margin-bottom: 7px;
+    /* clear:both;
+    margin-bottom: 7px; */
+    margin-left: 4px;
+    margin-top: 10px;
 }
 .image-text-box{
     display: flex;
@@ -88,7 +90,6 @@ body{
     display: none;
 }
 #login-text,#login-text-progress{
-    margin-top:8px;
     padding-right: 2px;
     padding-left: 6px;
 }
@@ -887,10 +888,13 @@ td,.red,.fa-warning{
     .main-title-only{
         width:100%;
     }
+
 }
-
+/* mobile phone */
 @media (max-width: 649px){
-
+    #login-text,#login-text-progress{
+        margin-top:8px;
+    }
     .number-of-minutes,.minutes-second-separator,.number-of-seconds{
         margin-top:9px;
     }
@@ -1061,7 +1065,9 @@ td,.red,.fa-warning{
     }
 }
 @media (min-width: 650px){
-
+    #login-text,#login-text-progress{
+        margin-top:-1px;
+    }
     #text-filter{
         margin-top: 3px;
     }
@@ -1114,7 +1120,11 @@ td,.red,.fa-warning{
         text-decoration-thickness: from-font;
     }
 }
+/*galaxy folder*/
 @media (max-width:346px){
+    #login-text,#login-text-progress{
+        margin-top:8px;
+    }
     .navbar-brand{
         display:none;
     }

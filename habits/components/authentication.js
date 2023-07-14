@@ -1,15 +1,16 @@
 
 
 const reactOnLogin = function(apiResponse) {
-    var message="give your maximum every day!"
-    document.getElementById("login-text").innerHTML = "Hi "+apiResponse.givenName+", "+message;
-    document.getElementById("login-text-progress").innerHTML = "Hi "+apiResponse.givenName+", "+message;
+    var message="Discipline pumps strength in your body and mind!"
+    document.getElementById("login-text").innerHTML = "Hi "+apiResponse.givenName+". "+message;
+    document.getElementById("login-text-progress").innerHTML = "Hi "+apiResponse.givenName+". "+message;
     
     document.getElementById("google-image").setAttribute("src", apiResponse.picture);
     document.getElementById("google-image-progress").setAttribute("src", apiResponse.picture);
     document.getElementById("signout_button").style.display= 'block';
-    document.getElementById("signout_button_progress").style.display= 'block';
+    // document.getElementById("signout_button_progress").style.display= 'block';
     document.getElementById("login-title-box").style.display='none';
+    document.getElementById("login-title-box-habits").style.display='none';
 
     var listOfButtons = document.getElementsByClassName("g_id_signin");
 
@@ -38,7 +39,7 @@ const reactOnLogout = function() {
 
     document.getElementById("google-image-progress").setAttribute("src", "");
     document.getElementById("google-image-progress").style.display = 'none';
-    document.getElementById("signout_button_progress").style.display= 'none';
+    // document.getElementById("signout_button_progress").style.display= 'none';
 
     document.getElementById("login-title-box").style.display='block';
 

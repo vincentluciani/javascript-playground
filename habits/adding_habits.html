@@ -85,6 +85,7 @@
                     <input id="text-filter" class="action-input" type="text" ></input> 
                 </div>
                 <label id="last-saved-information"></label>
+                <div id="signout_button">Sign Out</div>
             </div>
             
             <div id="habits-container" class="habits-container">
@@ -145,13 +146,13 @@
                     data-size="large"
                     data-logo_alignment="left">
                 </div> 
-                   <div id="signout_button_progress">Sign Out</div>
+                   <!-- <div id="signout_button_progress">Sign Out</div> -->
                     <script>
-                          const signOutButtonInProgress = document.getElementById('signout_button_progress');
-                          signOutButtonInProgress.onclick = () => {
-                                    google.accounts.id.disableAutoSelect();
-                                    reactOnLogout();
-                                }
+                        //   const signOutButtonInProgress = document.getElementById('signout_button_progress');
+                        //   signOutButtonInProgress.onclick = () => {
+                        //             google.accounts.id.disableAutoSelect();
+                        //             reactOnLogout();
+                        //         }
                     </script>
                 </div>
             </div>
@@ -169,7 +170,7 @@
             <div id="habits-definition-container" class="habits-definition-container">
 
                 <div id="google-container" class="box new-habit-focused">
-                    <div class="bold"><span id="login-icon" class="task-icon-container login"></span>Login</div>
+                    <div class="bold" id="login-title-box-habits"><span id="login-icon" class="task-icon-container login"></span>Login</div>
                     <div class="image-text-box">
                         <div class="user-image"><img id="google-image" /></div>
                         <div id="login-text">Being logged in, you can use the application on all devices and keep an unlimited number of days.</div><br>
@@ -182,7 +183,6 @@
                         data-size="large"
                         data-logo_alignment="left">
                     </div>   
-                   <div id="signout_button">Sign Out</div>
                     <script>
                           const signOutButton = document.getElementById('signout_button');
                                     signOutButton.onclick = () => {

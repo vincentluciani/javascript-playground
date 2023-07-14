@@ -61,8 +61,8 @@ function handleCredentialResponse(response) {
     }
 
     /*refreshDOM(addEmptyProgressBoxesToday);*/
-    setTimeout(refreshDOM,500);
-    setTimeout(renderPastProgressBoxes,600);
+    setTimeout(refreshDOM,1300);
+    setTimeout(renderPastProgressBoxes,17000);
    
 }
 
