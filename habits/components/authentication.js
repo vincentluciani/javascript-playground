@@ -3,7 +3,7 @@
 const reactOnLogin = function(apiResponse) {
     var message="Discipline pumps strength in your body and mind!"
     document.getElementById("login-text").innerHTML = "Hi "+apiResponse.givenName+". "+message;
-    document.getElementById("login-text-progress").innerHTML = "Hi "+apiResponse.givenName+". "+message;
+    document.getElementById("login-text-progress").innerHTML = "Hi "+apiResponse.givenName+"! "+message;
     
     document.getElementById("google-image").setAttribute("src", apiResponse.picture);
     document.getElementById("google-image-progress").setAttribute("src", apiResponse.picture);

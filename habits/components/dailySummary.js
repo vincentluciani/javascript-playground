@@ -6,6 +6,7 @@ var updateDailyProgress = function(){
     var dailySummaryDiv = document.getElementById("daily-summary");
     var dailySummaryBox = document.getElementById("daily-summary-container");
     var dailyCommentBox = document.getElementById("daily-summary-comment");
+    var personalBox = document.getElementById("google-container-progress");
 
     if (dailyPercentage && dailyPercentage>0){
         if (dailyPercentage >= 100){
@@ -39,6 +40,7 @@ var updateDailyProgress = function(){
         dailySummaryBox.style.display = "none";
     }
     setDivAppearanceBasedOnCompletion(dailySummaryDiv.parentNode,dailyPercentage);
+    setDivAppearanceBasedOnCompletion(personalBox,dailyPercentage);
 
 }
 

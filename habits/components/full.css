@@ -24,8 +24,15 @@ body{
     overflow-wrap: break-word;
     background: #fafafa;
 }
+/* #progress-title{
+    box-shadow: 0px -2px 20px 0px rgb(0 0 0 / 20%);
+} */
+.day-of-week-journal{
+    color: #c369bc;
+    font-weight: bold;
+}
 #daily-journal{
-    width: 966px;
+    /* width: 966px; */
     font-family: Comic Sans MS;
     font-size: 21px;
 }
@@ -301,6 +308,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
 
 .box{
     border: 1px solid  lightgray;
+    /* box-shadow: -1px 20px 20px 0px rgb(0 0 0 / 20%); */
 }
 .box.new-habit-focused{
     border: 5px solid var(--primary-color,#c369bc);
@@ -663,9 +671,7 @@ i{
 .positive-message .icon,.super-positive-message .icon{
     font-size:88px;
 }
-#daily-journal{
-    width:100%;
-}
+
 
 #date-filter{
     border: 2px solid var(--primary-color,#c369bc);
@@ -892,6 +898,9 @@ td,.red,.fa-warning{
 }
 /* mobile phone */
 @media (max-width: 649px){
+    #daily-journal{
+        width:95.7%;
+    }
     #login-text,#login-text-progress{
         margin-top:8px;
     }
@@ -1065,6 +1074,9 @@ td,.red,.fa-warning{
     }
 }
 @media (min-width: 650px){
+    #daily-journal{
+        width:98.7%;
+    }
     #login-text,#login-text-progress{
         margin-top:-1px;
     }

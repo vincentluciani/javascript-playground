@@ -391,7 +391,7 @@ var applyFilters = function(){
 var dateFilter = document.getElementById('date-filter');
 dateFilter.addEventListener('input', function () {
     applyFilters();
-    createMissingElementsForDate(this.value);
+    /*createMissingElementsForDate(this.value);*/
 });
 
 var textFilter = document.getElementById('text-filter')

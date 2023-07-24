@@ -72,7 +72,9 @@ var readJournal = function(journalArray){
             var journalDiv = document.createElement("div");
             journalDiv.setAttribute("class","journal-container-day");
             var dateDiv = document.createElement("div");
-            dateDiv.innerHTML = new Date(journalEntry.journalDate).toLocaleString('default', { month: 'long',weekday: "long",month: "long",day: "numeric", year: "numeric" });
+            var formattedDate = new Date(journalEntry.journalDate).toLocaleString('default', { month: 'long',weekday: "long",month: "long",day: "numeric", year: "numeric" });
+            var formattedDateParts = formattedDate.split(',')
+            dateDiv.innerHTML = "<span class='day-of-week-journal'>"+formattedDateParts[0]+"</span>"+formattedDateParts[1]
             dateDiv.setAttribute("class","date-label");
             var textDiv = document.createElement("div");
             textDiv.innerHTML = journalText;
