@@ -48,6 +48,9 @@ var refreshDOM = function(callback){
                 showProgressTab();
             }
 
+            var numberOfStreaks = getNumberOfDailyStreaks();
+            document.getElementById('number-of-streaks').innerHTML = numberOfStreaks;
+            
             if (callback){
                 callback();
             }
@@ -59,6 +62,57 @@ var refreshDOM = function(callback){
 
     
     
+}
+
+
+var getNumberOfDailyStreaks = function(){
+    var currentProcessingDate = ''
+    var currentProcessingArray = [];
+    var numberOfStreaks = 0;
+    var dataToProcess = dataArrays.progressArray;
+    dataToProcess = dataToProcess.sort(sortByDate);
+
+    for (var currentData of dataToProcess){
+        if (currentProcessingDate != '' && currentProcessingDate != currentData.progressDate){    
+            var currentProcessingDateResult = evaluateDay(currentProcessingArray);
+            currentProcessingArray = [];
+            if (currentProcessingDateResult == 1){
+                numberOfStreaks++;
+            } else if (currentProcessingDate != currentDate){
+                return numberOfStreaks;
+            }
+            currentProcessingDate = currentData.progressDate;
+        }
+        if (currentProcessingDate == ''){
+            currentProcessingDate = currentData.progressDate;
+        }
+        currentProcessingArray.push(currentData);
+    }
+    return numberOfStreaks;
+}
+
+var sortByDate = function(x,y){
+    var firstDate = new Date(x.progressDateISO);
+    var secondDate = new Date(y.progressDateISO);
+
+    if (firstDate > secondDate){
+        return -1;
+    } else if (firstDate == secondDate){
+        return 0;
+    } else {
+        return 1;
+    }
+}
+var evaluateDay = function(dataArray){
+    for (var progressData of dataArray){
+        if (progressData.status != 'active'){
+            continue;
+        }
+        if (progressData.numberOfCompletions < progressData.target){
+            return 0;
+        }
+    }
+    return 1;
 }
 
 var updateHabitDOMElement = function(division, elementToAdd){

@@ -390,6 +390,15 @@ var applyFilters = function(){
 
 var dateFilter = document.getElementById('date-filter');
 dateFilter.addEventListener('input', function () {
+    var newCurrentDateTime = new Date();
+
+    var newCurrentDate = formatDate(newCurrentDateTime);
+    var oldCurrentDate = formatDate(currentDateTime);
+    /* Desktop: change date for first time to today - computer online since yesterday */
+    if (newCurrentDate > oldCurrentDate){
+        location.reload();
+        return;
+    } 
     applyFilters();
     /*createMissingElementsForDate(this.value);*/
 });
