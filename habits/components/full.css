@@ -28,8 +28,14 @@ body{
     box-shadow: 0px -2px 20px 0px rgb(0 0 0 / 20%);
 } */
 #streak-box{
-    margin-top: 10px;
+    margin-top: 15px;
     display: flex;
+}
+#streak-text{
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--primary-color,#c369bc);
+    text-decoration-thickness: 2.5px;
 }
 #number-of-streaks{
     margin-right: 5px;
@@ -44,11 +50,11 @@ body{
 }
 #daily-journal{
     /* width: 966px; */
-    font-family: Comic Sans MS;
+    font-family: "Comic Sans", "Comic Sans MS", "Chalkboard", "ChalkboardSE-Regular", sans-serif;;
     font-size: 21px;
 }
 .text-label,.date-label{
-    font-family: 'Comic sans MS';
+    font-family: "Comic Sans", "Comic Sans MS", "Chalkboard", "ChalkboardSE-Regular", sans-serif;;
 }
 .text-label{
     font-size: 19px;
@@ -110,6 +116,9 @@ body{
 #login-text,#login-text-progress{
     padding-right: 2px;
     padding-left: 6px;
+}
+#login-text-progress{
+    font-size: 1.1em;
 }
 #new-version-notification{
     display: none;
@@ -214,7 +223,7 @@ body{
 }
 .horizontal-menu li{
     height: 30px;
-    width: 86px;
+    width: 90px;
     border-radius: 10px 10px 0px 0px;
     float: left;
     margin-right: 7px;
@@ -565,6 +574,7 @@ i{
 .week-day-selection{
     margin-top: 13px;
     margin-bottom: 10px;
+    max-width: 305px;
 }
 .habit-description-definition{
     margin-bottom: 10px;
@@ -968,7 +978,7 @@ td,.red,.fa-warning{
     }
 
     .habit-description{
-        font-size: 20px;
+        font-size: 21px;
         float: left;
         width: 225px;
         margin-bottom: 6px;
@@ -980,8 +990,10 @@ td,.red,.fa-warning{
     }
 
     .box.habit-update, .box.daily-summary, .box.big-action-button,#google-container-progress,#google-container{
-        width: 297px;
+        /* width: 297px; */
+        width: calc(100% - 10px);
         border-width: 1px;
+        margin: 15px 15px 0px 15px;
     }
     .box.big-action-button{
         margin:13px;
@@ -1023,27 +1035,30 @@ td,.red,.fa-warning{
     }
 
     .box.new-habit,.habit-setting,.new-habit-focused{
-        width: 281px;
+        width: calc(100% - 10px);
         padding: 20px;
+        margin: 15px 15px 0px 15px;
     }
 
     .week-day-selection{
         clear: left;
     }
     .target-container{
-        width: 180px;
+        width: 208px;
     }
 
     .number-of-completion[type=number] {
         width: 62px;
-        height: 54px;
+        height: 55.5px;
         margin-bottom: 13px;
         margin-top: 15px;
+        padding-bottom:0px;
+        padding-top:0px;
     }
 
     #new-description, .habit-description-definition {
         margin-top: 12px;
-        width: 272px;
+        width: calc(100% - 20px);
     }
     
     .weekday{
@@ -1136,17 +1151,11 @@ td,.red,.fa-warning{
     .daily-summary{
         height: 190px;
     }
-    .habit-description,#streak-text{
+    .habit-description{
         text-decoration: underline;
         text-underline-offset: 3px;
-    }
-    .habit-description{
         text-decoration-color: #c4c4c4;
         text-decoration-thickness: from-font;  
-    }
-    #streak-text{
-        text-decoration-color: var(--primary-color,#c369bc);
-        text-decoration-thickness: auto;
     }
 }
 /*galaxy folder*/
@@ -1162,7 +1171,7 @@ td,.red,.fa-warning{
     }
     .horizontal-menu li{
         margin-right:0px;
-        padding-left:5px;
+        padding-left:0px;
     }
     .horizontal-submenu li{
         margin-right: 15px;
@@ -1184,5 +1193,12 @@ td,.red,.fa-warning{
     }
     td, th, td i {
         width: 20px;
+    }
+    .box.habit-update, .box.big-action-button, .daily-summary, #google-container-progress, #google-container,#daily-summary-container,.box.habit-settings{
+        margin-left:0px;
+        margin-right:0px;
+    }
+    .habit-description-definition{
+        width:198px;
     }
 }
