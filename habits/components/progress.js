@@ -395,10 +395,10 @@ var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletio
         /*currentDiv.style.order="80";*/
     }
     if (currentDiv.getAttribute('id') && currentDiv.getAttribute('id') == "daily-summary-container"){
-        currentDiv.style.order = "179";
+        currentDiv.style.order = "178";
     }
     if (currentDiv.getAttribute('id') && currentDiv.getAttribute('id') == "google-container-progress"){
-        currentDiv.style.order = "80";
+        currentDiv.style.order = "179";
     }
     if (currentDiv.getAttribute('status') == 'inactive'){
         currentDiv.style.borderColor="lightgrey";

@@ -24,6 +24,14 @@ body{
     overflow-wrap: break-word;
     background: #fafafa;
 }
+.unmute-icon{
+    position: fixed;
+    z-index: 132;
+    opacity: 0.5;
+    background: #fed8fe;
+    border-radius: 100px;
+    cursor: pointer;
+}
 /* #progress-title{
     box-shadow: 0px -2px 20px 0px rgb(0 0 0 / 20%);
 } */
@@ -919,6 +927,16 @@ td,.red,.fa-warning{
 }
 /* mobile phone */
 @media (max-width: 649px){
+    .unmute-icon svg{
+        width: 79px;
+        height: 83px;
+    }
+    .unmute-icon{
+        width: 80px;
+        height: 80px;
+        bottom: 5px;
+        left:1px;
+    }
     #daily-journal{
         width:95.7%;
     }
@@ -1100,6 +1118,17 @@ td,.red,.fa-warning{
     }
 }
 @media (min-width: 650px){
+    .unmute-icon svg{
+        width: 142px;
+        height: 122px;
+        margin-top: 11px;
+    }
+    .unmute-icon{
+        width: 150px;
+        height: 150px;
+        bottom: 25px;
+        left:10px;
+    }
     #daily-journal{
         width:98.7%;
     }

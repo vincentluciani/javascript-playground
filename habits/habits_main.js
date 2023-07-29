@@ -61,8 +61,8 @@ function handleCredentialResponse(response) {
     }
 
     /*refreshDOM(addEmptyProgressBoxesToday);*/
-    setTimeout(refreshDOM,1300);
-    setTimeout(renderPastProgressBoxes,17000);
+    setTimeout(refreshDOM,3000);
+    setTimeout(renderPastProgressBoxes,10000);
    
 }
 
@@ -138,7 +138,7 @@ onload = function(){
         setTimeout(placeSVGIcons,5);
         setTimeout(showLoginBoxes,7000);
         setTimeout(showSummariesTab,15); 
-        setTimeout(loadAudio,25);
+        setTimeout(loadAudio,25); 
       }, reason => {
         console.log(reason );
       })
@@ -230,6 +230,7 @@ var placeSVGIcons = function(){
     document.getElementById('start-icon').innerHTML=startIcon; 
     document.getElementById('login-icon').innerHTML=personIcon; 
     document.getElementById('login-icon-progress').innerHTML=personIcon; 
+    document.getElementById('unmute-icon').innerHTML=unMuteIcon; 
     
     var trophyIconDivs = document.getElementsByClassName('trophy-icon');
     for ( var iconDiv of trophyIconDivs){
@@ -308,16 +309,22 @@ https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio
   <audio  src="resources/crowd_cheering.wav" id="cheering-audio"></audio>
     */
 
+
+    addAudioDiv();
+}
+var addAudioDiv = function(){
+
     const audioDiv = document.createElement("audio");
     audioDiv.setAttribute('src','resources/crowd_cheering_6seconds.mp3');
     audioDiv.setAttribute('id','cheering-audio');
     document.body.appendChild(audioDiv);
-
 }
-
 var playCheers = function(){
-    var audioDiv = document.getElementById("cheering-audio");
-    audioDiv.play();
+    var isSound = window.localStorage.getItem("sound");
+    if (isSound && isSound == "on"){
+        var audioDiv = document.getElementById("cheering-audio");
+        audioDiv.play();
+    }
 }
 var hideJournalBox = function(){
     document.getElementById("journal-container").innerHTML = "<div class='journal-container-day'>No journal entry yet.</div>";
@@ -767,6 +774,27 @@ var subMenuGo = function( targetLink){
           break;
       }
 
+}
+
+var setMute = function(){
+
+    var currentSound = window.localStorage.getItem("sound");
+    if (currentSound && currentSound == "on"){
+        window.localStorage.setItem("sound",  "off");
+        document.getElementById('unmute-icon').innerHTML=unMuteIcon;
+        var audioDiv = document.getElementById("cheering-audio");
+        //audioDiv.parentNode.remove(audioDiv);
+        audioDiv.pause();
+        audioDiv.currentTime = 0;
+        // audioDiv.remove(); 
+    } else {
+        window.localStorage.setItem("sound",  "on");
+        document.getElementById('unmute-icon').innerHTML=muteIcon;
+        var audioDiv = document.getElementById("cheering-audio");
+        if (!audioDiv){
+            addAudioDiv(); 
+        }
+    }
 }
 
 /*runApp();*/
