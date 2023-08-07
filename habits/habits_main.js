@@ -1,5 +1,6 @@
 
 var dataArrays = {};
+
 var googleToken = '';
 var applicationToken = '';
 var loggedIn = false;
@@ -23,6 +24,7 @@ var currentDateTime = new Date();
 console.log("starting javascript:"+currentDateTime.toString());
 
 var currentDate = formatDate(currentDateTime);
+var todaysDate = currentDate;
   
 /*
 runApp = function(){
@@ -56,13 +58,9 @@ function handleCredentialResponse(response) {
 
     console.log("refreshing dom upon login");
 
-    const addEmptyProgressBoxesToday = function(){
-        addEmptyProgressBoxesOnNewDay(currentDate,currentDateTime);
-    }
-
     /*refreshDOM(addEmptyProgressBoxesToday);*/
     setTimeout(refreshDOM,3000);
-    setTimeout(renderPastProgressBoxes,10000);
+    setTimeout(renderPastProgressBoxes,4000);
    
 }
 
@@ -133,23 +131,16 @@ onload = function(){
     document.getElementById("date-filter").value=currentDate;
     createRadialProgressBar(radialProgressParameters);
 
-    renderApplication()
-    .then(value => {
-        setTimeout(placeSVGIcons,5);
-        setTimeout(showLoginBoxes,7000);
-        setTimeout(showSummariesTab,15); 
-        setTimeout(loadAudio,25); 
-      }, reason => {
-        console.log(reason );
-      })
+    renderApplicationWithLocalStorage();
 
-
-    
+    setTimeout(placeSVGIcons,5);
+    setTimeout(showLoginBoxes,7000);
+    setTimeout(loadAudio,25);     
 };
 
-var renderApplication = async function(){
+var renderApplicationWithLocalStorage = function(){
     /*dataArrays=await getHabitProgressJournal();*/
-    dataArrays = await getHabitProgressJournalFromStorage();
+    dataArrays = getHabitProgressJournalFromStorage();
 
     /* todo: this function should only extract and not also create divs */
  
@@ -171,7 +162,7 @@ var renderApplication = async function(){
     if (dataArrays.habitsArray){
 
         for (const habitsElement of dataArrays.habitsArray){
-            domAdditions[i] = await addHabitDOMElementAsync(habitsElement);
+            domAdditions[i] = addHabitDOMElement(habitsElement);
             i++;
         }
     }
@@ -179,14 +170,14 @@ var renderApplication = async function(){
     if (dataArrays.todaysProgressArray){
 
         for (const progressElement of dataArrays.todaysProgressArray){
-            domAdditions[i] = await addProgressDOMElementAsync(progressElement);
+            domAdditions[i] = addProgressDOMElement(progressElement);
             i++;
         }
     }
 
 
     /* TODO : should be based on arrays and not on DOM */
-    var finalResult = await Promise.all(domAdditions);
+    // var finalResult = await Promise.all(domAdditions);
 
     addEmptyProgressBoxesOnNewDay(currentDate, currentDateTime);
 }
@@ -231,6 +222,7 @@ var placeSVGIcons = function(){
     document.getElementById('login-icon').innerHTML=personIcon; 
     document.getElementById('login-icon-progress').innerHTML=personIcon; 
     document.getElementById('unmute-icon').innerHTML=unMuteIcon; 
+    document.getElementById('unmute-icon').style.display="block";
     
     var trophyIconDivs = document.getElementsByClassName('trophy-icon');
     for ( var iconDiv of trophyIconDivs){
@@ -587,9 +579,9 @@ var changeTabToHabits = function(){
 
 var changeTabToSummaries = function(){
  
-    reloadHabitProgressJournal().then(value => {
+    // reloadHabitProgressJournal().then(value => {
         prepareSummaries();
-        launchAllWeekTables(dataArrays.progressArray,dataArrays.habitsArray);
+        launchAllWeekTables(dataArrays.pastProgressArray,dataArrays.habitsArray);
         document.getElementById("habits-section").style.display = "none";
         document.getElementById("progress-section").style.display = "none";
         document.getElementById("graphs-section").style.display = "block";
@@ -597,9 +589,9 @@ var changeTabToSummaries = function(){
         document.getElementById("habits-menu").classList.remove("active");
         document.getElementById("graphs-menu").classList.add("active");
         subMenuGo('week-link');
-        }, reason => {
-        console.log(reason );
-        })
+        // }, reason => {
+        // console.log(reason );
+        // })
     
     
 }
@@ -756,7 +748,7 @@ var subMenuGo = function( targetLink){
             journalContainer.style.display='none';
           break;
         case 'streaks-link':
-            launchAllCharts(dataArrays.progressArray,dataArrays.habitsArray);
+            launchAllCharts(dataArrays.pastProgressArray,dataArrays.habitsArray);
             weekLink.classList.remove("selected-underline");
             journalLink.classList.remove("selected-underline");
             streaksLink.classList.add("selected-underline");
@@ -795,6 +787,7 @@ var setMute = function(){
             addAudioDiv(); 
         }
     }
+    document.getElementById('unmute-icon').style.display="block";
 }
 
 /*runApp();*/

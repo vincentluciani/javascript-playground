@@ -1,18 +1,48 @@
 "use strict";
 
-
-
 /* TODO PUT FAILED UPDATES THROUGH APIS IN A QUEUE ON LOCAL STORAGE OR COOKIES */
-
-var getHabitProgressJournal = async function() {
-
-
+var getPreviousElements = async function(){
     if (loggedIn){
         var url = `https://www.vince.com/api/discipline/habits/getall`;
         var response;
         var input = {
             token: applicationToken,
-            requestDate: currentDate
+            requestDate: todaysDate
+        }
+        try {
+            response = await fetch
+            (url,{
+                method: "POST",
+                headers:{'Content-Type': 'application/json'},
+                body: JSON.stringify(input)
+                });
+        } catch (e) {
+            console.log('could not connect to the server');
+            console.log(e);
+            return getHabitProgressJournalFromStorage();
+        } 
+        if (response.status == '200'){
+            var apiResponse = await response.json();
+            return apiResponse;
+        } else {
+            console.log('status of the api call:'+response.status);
+            return getHabitProgressJournalFromStorage();
+        }
+ 
+    } else {
+
+        return getHabitProgressJournalFromStorage();
+    }
+}
+var getHabitProgressJournal = async function() {
+
+
+    if (loggedIn){
+        var url = `https://www.vince.com/api/discipline/habits/getalltoday`;
+        var response;
+        var input = {
+            token: applicationToken,
+            requestDate: todaysDate
         }
         try {
             response = await fetch

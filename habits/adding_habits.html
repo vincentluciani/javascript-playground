@@ -88,6 +88,7 @@
                 </div>
                 <label id="last-saved-information"></label>
                 <div id="signout_button">Sign Out</div>
+                <div id="number-of-streaks-bubble"><span id="number-of-streaks-2"></span><div class="trophy-icon icon"></div></div>
             </div>
             
             <div id="habits-container" class="habits-container">
@@ -116,7 +117,7 @@
                        <!--<i class="fa fa-bar-chart"></i> -->
                     </div>
                 </div>
-                <div id="api-refresh" class="box big-action-button" onclick="refreshDOM();window.scrollTo(0, 0);">
+                <div id="api-refresh" class="box big-action-button" onclick="refreshDOM();setTimeout(renderPastProgressBoxes,1000);window.scrollTo(0, 0);">
                     <div>Refresh</div>
                     <div class="action-icon-container" id="refresh-icon">
                         <!--  <i class="fa fa-edit"></i> -->

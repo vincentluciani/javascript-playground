@@ -29,7 +29,7 @@ var refreshDOM = function(callback){
                     addHabitDOMElement(habitsElement);
                 }
             }
-            for (const progressElement of dataArrays.progressArray){
+            for (const progressElement of dataArrays.todaysProgressArray){
                 putInStorage('progress-'+ progressElement.progressId, progressElement);
                 /*var DOMProgressElementToUpdate = document.getElementById(progressElement.progressId);
                 if (null != DOMProgressElementToUpdate){
@@ -43,14 +43,11 @@ var refreshDOM = function(callback){
             }
             
             applyFilters(); 
-            if (dataArrays.progressArray && dataArrays.progressArray.length >= 1){
+            if (dataArrays.todaysProgressArray && dataArrays.todaysProgressArray.length >= 1){
                 changeTabToProgress();
                 showProgressTab();
             }
 
-            var numberOfStreaks = getNumberOfDailyStreaks();
-            document.getElementById('number-of-streaks').innerHTML = numberOfStreaks;
-            
             if (callback){
                 callback();
             }
@@ -69,8 +66,8 @@ var getNumberOfDailyStreaks = function(){
     var currentProcessingDate = ''
     var currentProcessingArray = [];
     var numberOfStreaks = 0;
-    var dataToProcess = dataArrays.progressArray;
-    dataToProcess = dataToProcess.sort(sortByDate);
+    var dataToProcess = dataArrays.pastProgressArray;
+    // dataToProcess = dataToProcess.sort(sortByDate);
 
     for (var currentData of dataToProcess){
         if (currentProcessingDate != '' && currentProcessingDate != currentData.progressDate){    

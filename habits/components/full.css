@@ -24,11 +24,32 @@ body{
     overflow-wrap: break-word;
     background: #fafafa;
 }
+#number-of-streaks-bubble{
+    display: none;
+    margin: 6px 0px 0px 13px;
+    border-radius: 14px;
+    border: 2px solid var(--primary-color,#c369bc);
+    padding: 3px 5px 3px 6px;
+    height: 21px;
+    color: var(--primary-color,#c369bc);
+}
+
+#number-of-streaks-2{
+    margin-right: 3px;
+}
+#number-of-streaks-bubble .trophy-icon{
+    margin-top: 2px;
+    width: 16px;
+    fill: var(--primary-color,#c369bc);
+}
+#unmute-icon{
+    display: none;
+}
 .unmute-icon{
     position: fixed;
     z-index: 132;
-    opacity: 0.5;
-    background: #fed8fe;
+    opacity: 0.8;
+    background: var(--primary-color,#c369bc);
     border-radius: 100px;
     cursor: pointer;
 }
@@ -98,7 +119,7 @@ body{
 #signout_button{
     font-size: 15px;
     text-decoration: underline;
-    color: #464691;
+    color: #bbbbbd;
     display: none;
     cursor: pointer;
     /* clear:both;
@@ -633,7 +654,7 @@ i{
     color: white;
 }  
 .super-positive-message{
-    background-color: #05c704;
+    background-color: var(--primary-color,#c369bc);
     z-index: 102;
     color: white;
 }
@@ -694,7 +715,7 @@ i{
     color: var(--primary-color,#c369bc);
 }
 .super-positive-message-button{
-    color: #0ae809;
+    color: var(--primary-color,#c369bc);
 }
 
 .positive-message .icon,.super-positive-message .icon{
@@ -928,13 +949,14 @@ td,.red,.fa-warning{
 /* mobile phone */
 @media (max-width: 649px){
     .unmute-icon svg{
-        width: 79px;
-        height: 83px;
+        width: 47px;
+        height: 75px;
+        margin-left: 9px;
     }
     .unmute-icon{
-        width: 80px;
-        height: 80px;
-        bottom: 5px;
+        width: 75px;
+        height: 75px;
+        bottom: 6px;
         left:1px;
     }
     #daily-journal{
@@ -1119,13 +1141,14 @@ td,.red,.fa-warning{
 }
 @media (min-width: 650px){
     .unmute-icon svg{
-        width: 142px;
-        height: 122px;
+        width: 77px;
+        height: 67px;
         margin-top: 11px;
+        margin-left: 5px;
     }
     .unmute-icon{
-        width: 150px;
-        height: 150px;
+        width: 89px;
+        height: 91px;
         bottom: 25px;
         left:10px;
     }
@@ -1189,6 +1212,12 @@ td,.red,.fa-warning{
 }
 /*galaxy folder*/
 @media (max-width:346px){
+    #number-of-streaks-bubble{
+        margin: 6px 0px 0px 4px;
+    }
+    #signout_button{
+        margin-left: 0px;
+    }
     #login-text,#login-text-progress{
         margin-top:8px;
     }

@@ -342,11 +342,30 @@ var toggleExpandCollapse = function(toggleButton,divToTransform){
 
 
 function renderPastProgressBoxes(){
-    if (dataArrays.pastProgressArray){
-        for (const habitsElement of dataArrays.pastProgressArray){
-            addProgressDOMElement(habitsElement);
+    var pastDataArrays = {}
+    getPreviousElements().then(
+        value=>{
+            pastDataArrays = value;
+            dataArrays.pastProgressArray = pastDataArrays.pastProgressArray;
+            dataArrays.journalArray = pastDataArrays.journalArray;
+            if (pastDataArrays.pastProgressArray){
+                for (const habitsElement of pastDataArrays.pastProgressArray){
+                    addProgressDOMElement(habitsElement);
+                }
+                applyFilters(); 
+                showSummariesTab(); 
+                var numberOfStreaks = getNumberOfDailyStreaks();
+                document.getElementById('number-of-streaks').innerHTML = numberOfStreaks;
+                document.getElementById('number-of-streaks-bubble').style.display = "flex";
+                document.getElementById('number-of-streaks-2').innerHTML = numberOfStreaks;
+            }
+        },
+        reason=>{
+            console.log(reason);
         }
-    }
+    )
+
+    
 
     applyFilters();
     saveLoop();
@@ -380,7 +399,7 @@ var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletio
         currentDiv.style.borderColor="rgb(167 211 162)";
         var newOrder = 180;/*parseInt(currentDiv.getAttribute('order'))+100;*/
         currentDiv.style.order=newOrder.toString();
-        currentDiv.setAttribute('order',newOrder.toString());
+        // currentDiv.setAttribute('order',newOrder.toString());
         currentDiv.style.background="#daffd9";
         /*currentDiv.style.background="rgb(238 255 237)"; */ 
     } else if (newCompletionPercentage>=50){
@@ -474,8 +493,11 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
         return;
     }
 
-    var progressElements = document.getElementsByClassName('habit-update');
-    var habitsElements = document.getElementsByClassName('habit-setting');
+    // var progressElements = document.getElementsByClassName('habit-update');
+    // var habitsElements = document.getElementsByClassName('habit-setting');
+
+    var progressElements = dataArrays.todaysProgressArray;
+    var habitsElements = dataArrays.habitsArray;
 
     if (progressElements.length == 0 && habitsElements.length >0){
         showProgressTab();
@@ -486,17 +508,17 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
         var isHabitProgressExisting = false;
 
         for (var progressElement of progressElements){
-            if ( (habitsElements[i].getAttribute("habitid") == progressElement.getAttribute("habitid")) && (progressElement.getAttribute("progressdate") == inputDate)){
+            if ( (habitsElements[i].habitId == progressElement.habitId) && (progressElement.progressDate == inputDate)){
                 isHabitProgressExisting = true;
                 break;
             }        
         }
 
-        var matchingArray = []
+       /* var matchingArray = []
         
         if (matchingArray.progressArray){
             matchingArray = dataArrays.progressArray.filter( function(currentObject){
-                if ( (habitsElements[i].getAttribute("habitid") == currentObject.habitId) && (currentObject.progressDate == inputDate)) {
+                if ( (habitsElements[i].habitid == currentObject.habitId) && (currentObject.progressDate == inputDate)) {
                     return true;
                 } else {
                     return false;
@@ -506,41 +528,41 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
 
         if (matchingArray.length > 0){
             isHabitProgressExisting = true;
-        }
+        }*/
 
         if ( !isHabitProgressExisting){
             var isDayOK;
-            if (habitsElements[i].getAttribute("weekDay")){
+            if (habitsElements[i].weekDay){
                 debugWrite("Comparing current date time with habit week day");
                 debugWrite("Current date time:");
                 debugWrite(inputDateTime);
                 debugWrite("Habit week day:");
-                debugWrite(habitsElements[i].getAttribute("weekDay"));
+                debugWrite(habitsElements[i].weekDay);
                 debugWrite("Is critical?:");
-                debugWrite(habitsElements[i].getAttribute("iscritical"));
+                debugWrite(habitsElements[i].iscritical);
                 
-                isDayOK = isDayOfWeekInHabitWeeks(inputDateTime, habitsElements[i].getAttribute("weekDay"));
+                isDayOK = isDayOfWeekInHabitWeeks(inputDateTime, habitsElements[i].weekDay);
             } else {
                 isDayOK = true;
             }
             if (isDayOK != null && isDayOK) {
                 /*let newId = Date.now()*100+i;*/
-                let newId = habitsElements[i].getAttribute("habitid") + "_"+ inputDate;
+                let newId = habitsElements[i].habitId + "_"+ inputDate;
                 let newProgressObject = {
                     id:newId ,
                     progressId: newId,
-                    habitId: habitsElements[i].getAttribute("habitid"),
-                    habitDescription: habitsElements[i].getAttribute("habitdescription"),
-                    target: parseInt(habitsElements[i].getAttribute("target")),
+                    habitId: habitsElements[i].habitId,
+                    habitDescription: habitsElements[i].habitDescription,
+                    target: parseInt(habitsElements[i].target),
                     progressDate: inputDate,
                     isNew: true,
                     status: 'active',
-                    isCritical: (habitsElements[i].getAttribute("iscritical")==='true'),
-                    isSuspendableDuringSickness: (habitsElements[i].getAttribute("isSuspendableDuringSickness")==='true'),
-                    isSuspendableDuringOtherCases: (habitsElements[i].getAttribute("isSuspendableDuringOtherCases")==='true'),
-                    isTimerNecessary: (habitsElements[i].getAttribute("isTimerNecessary")==='true'),
-                    timerInitialNumberOfMinutes: parseInt(habitsElements[i].getAttribute("timerInitialNumberOfMinutes")),
-                    order: habitsElements[i].getAttribute("order")?parseInt(habitsElements[i].getAttribute("order")):80,
+                    isCritical: (habitsElements[i].iscritical==='true'),
+                    isSuspendableDuringSickness: (habitsElements[i].isSuspendableDuringSickness==='true'),
+                    isSuspendableDuringOtherCases: (habitsElements[i].isSuspendableDuringOtherCases==='true'),
+                    isTimerNecessary: (habitsElements[i].isTimerNecessary==='true'),
+                    timerInitialNumberOfMinutes: parseInt(habitsElements[i].timerInitialNumberOfMinutes),
+                    order: habitsElements[i].order?parseInt(habitsElements[i].order):80,
                     numberOfCompletions:0,
                     whatUpdated: "addEmptyProgressBoxesOnNewDay",
                     whatCreated: "addEmptyProgressBoxesOnNewDay",
@@ -550,7 +572,7 @@ var addEmptyProgressBoxesOnNewDay = function(inputDate, inputDateTime){
                 addProgressDOMElement(newProgressObject);
                 console.log("added progress");
                 console.log(newProgressObject);
-                pushProgressArrayToQueue(newProgressObject);
+                /*pushProgressArrayToQueue(newProgressObject);*/
                 /*if (dataArrays && dataArrays.todaysProgressArray){
                     dataArrays.todaysProgressArray.push(newProgressObject);
                 }*/
