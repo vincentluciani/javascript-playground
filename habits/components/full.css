@@ -26,19 +26,18 @@ body{
 }
 #number-of-streaks-bubble{
     display: none;
-    margin: 6px 0px 0px 13px;
     border-radius: 14px;
-    border: 2px solid var(--primary-color,#c369bc);
+    border: 2px solid #ae49a6;
     padding: 3px 5px 3px 6px;
     height: 21px;
-    color: var(--primary-color,#c369bc);
+    color: #ae49a6;
 }
 
 #number-of-streaks-2{
     margin-right: 3px;
 }
 #number-of-streaks-bubble .trophy-icon{
-    margin-top: 2px;
+    margin-top: 3.5px;
     width: 16px;
     fill: var(--primary-color,#c369bc);
 }
@@ -141,6 +140,7 @@ body{
     margin-right: 10px;
     margin-top:10px;
     display: none;
+    border: 1px solid lightgrey;
 }
 #login-text,#login-text-progress{
     padding-right: 2px;
@@ -389,7 +389,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
     border: 1px solid #cb79c5;
 }
 
-.plus-button:hover, .minus-button:hover,.plus-button.normal:hover, .minus-button.normal:hover, #date-filter:hover{
+.plus-button:hover, .minus-button:hover,.plus-button.normal:hover, .minus-button.normal:hover{
     background: #cb79c5;
 }
 .box.big-action-button{
@@ -724,11 +724,19 @@ i{
 
 
 #date-filter{
-    border: 2px solid var(--primary-color,#c369bc);
+    /* border: 2px solid var(--primary-color,#c369bc);
     border-radius: 6px;
     padding-left: 10px;
     padding-right: 10px;
-    background: var(--secondary-color,#c369bc);
+    background: var(--secondary-color,#c369bc); */
+    
+    border: 2px solid #ae49a6;
+    border-radius: 22px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #ae49a6;
+    width: 94px;
+    height: 27px;
 }
 input, textarea{
     border: 1px solid lightgrey;
@@ -854,7 +862,7 @@ td,.red,.fa-warning{
     font-weight: bold;  
 }
 #daily-summary{
-    margin-top:10px;
+    margin-top:6px;
     float:left;
 }
 #no-week-summary,#no-streak{
@@ -948,6 +956,12 @@ td,.red,.fa-warning{
 }
 /* mobile phone */
 @media (max-width: 649px){
+    #number-of-streaks-bubble{
+        margin: 6px 0px 0px 13px;
+    }
+    .main-title-only{
+        width: 100%;
+    }
     .unmute-icon svg{
         width: 47px;
         height: 75px;
@@ -956,8 +970,8 @@ td,.red,.fa-warning{
     .unmute-icon{
         width: 75px;
         height: 75px;
-        bottom: 6px;
-        left:1px;
+        bottom: 7px;
+        left:7px;
     }
     #daily-journal{
         width:95.7%;
@@ -977,7 +991,7 @@ td,.red,.fa-warning{
     #daily-summary-comment{
         width: 150px;
         font-size: 20px;
-        margin-top:18px;
+        margin-top:14px;
         padding-left:27px;
     }
 
@@ -1002,7 +1016,7 @@ td,.red,.fa-warning{
     margin:13px 0px 0px 0px;
     }
     #date-filter{
-        margin: 10px 0px 0px 0px;
+        margin: 6px 0px 0px 0px;
 
     }
     .positive-message .sub-title,.super-positive-message .sub-title,.super-positive-message .title, .positive-message .title{
@@ -1139,7 +1153,11 @@ td,.red,.fa-warning{
         padding-bottom: 17px;
     }
 }
+/* desktop */
 @media (min-width: 650px){
+    #number-of-streaks-bubble{
+        margin: 4px 0px 0px 13px;
+    }
     .unmute-icon svg{
         width: 77px;
         height: 67px;
@@ -1149,8 +1167,8 @@ td,.red,.fa-warning{
     .unmute-icon{
         width: 89px;
         height: 91px;
-        bottom: 25px;
-        left:10px;
+        bottom: 12px;
+        left:12px;
     }
     #daily-journal{
         width:98.7%;
@@ -1175,7 +1193,7 @@ td,.red,.fa-warning{
     .action-input{
         margin-left: 16px;
         margin-right: 16px;
-        margin-top: 7px;
+        margin-top: 4px;
     }
     .positive-message .title,.super-positive-message .title{
     font-size:69px;
@@ -1213,7 +1231,7 @@ td,.red,.fa-warning{
 /*galaxy folder*/
 @media (max-width:346px){
     #number-of-streaks-bubble{
-        margin: 6px 0px 0px 4px;
+        margin: 6px 0px 0px 8px;
     }
     #signout_button{
         margin-left: 0px;

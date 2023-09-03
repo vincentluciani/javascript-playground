@@ -3,11 +3,25 @@
 /* TODO PUT FAILED UPDATES THROUGH APIS IN A QUEUE ON LOCAL STORAGE OR COOKIES */
 var getPreviousElements = async function(){
     if (loggedIn){
+        var currentDateTime = new Date();
+
+        const localDateTimeObject = {
+            year: currentDateTime.getFullYear(),
+            month: currentDateTime.getMonth() + 1,
+            day: currentDateTime.getDate(),
+            dayOfWeek: currentDateTime.getDay(),
+            hours: currentDateTime.getHours(),
+            minutes: currentDateTime.getMinutes(),
+            seconds: currentDateTime.getSeconds(),
+            milliseconds: currentDateTime.getMilliseconds(),
+            timeZoneOffset: currentDateTime.getTimezoneOffset,
+          };
+
         var url = `https://www.vince.com/api/discipline/habits/getall`;
         var response;
         var input = {
             token: applicationToken,
-            requestDate: todaysDate
+            requestDateTime: localDateTimeObject
         }
         try {
             response = await fetch
@@ -36,13 +50,27 @@ var getPreviousElements = async function(){
 }
 var getHabitProgressJournal = async function() {
 
-
     if (loggedIn){
+
+        var currentDateTime = new Date();
+
+        const localDateTimeObject = {
+            year: currentDateTime.getFullYear(),
+            month: currentDateTime.getMonth() + 1,
+            day: currentDateTime.getDate(),
+            dayOfWeek: currentDateTime.getDay(),
+            hours: currentDateTime.getHours(),
+            minutes: currentDateTime.getMinutes(),
+            seconds: currentDateTime.getSeconds(),
+            milliseconds: currentDateTime.getMilliseconds(),
+            timeZoneOffset: currentDateTime.getTimezoneOffset()
+          };
+
         var url = `https://www.vince.com/api/discipline/habits/getalltoday`;
         var response;
         var input = {
             token: applicationToken,
-            requestDate: todaysDate
+            requestDateTime: localDateTimeObject
         }
         try {
             response = await fetch

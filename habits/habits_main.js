@@ -144,7 +144,7 @@ var renderApplicationWithLocalStorage = function(){
 
     /* todo: this function should only extract and not also create divs */
  
-    if (dataArrays.progressArray && dataArrays.progressArray.length >= 1){
+    if (dataArrays.habitsArray && dataArrays.habitsArray.length >= 1){
         changeTabToProgress();
         showProgressTab();
     }
