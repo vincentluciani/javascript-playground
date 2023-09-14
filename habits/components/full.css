@@ -26,20 +26,29 @@ body{
 }
 #number-of-streaks-bubble{
     display: none;
-    border-radius: 14px;
-    border: 2px solid #ae49a6;
+    border-radius: 22px;
+    /* border: 4px solid rgb(255 167 209); */
+    border: 4px solid rgb(255 136 193);
     padding: 3px 5px 3px 6px;
     height: 21px;
     color: #ae49a6;
+    background-color: #fcffe6;
 }
 
 #number-of-streaks-2{
     margin-right: 3px;
+    font-size: 14px;
+    margin-top: 1px;
+    font-weight: bold;
 }
 #number-of-streaks-bubble .trophy-icon{
     margin-top: 3.5px;
     width: 16px;
     fill: var(--primary-color,#c369bc);
+}
+#number-of-streaks-bubble .trophy-icon svg{
+    height: 20px;
+    margin-top: 2px;
 }
 #unmute-icon{
     display: none;
@@ -62,7 +71,7 @@ body{
 #streak-text{
     text-decoration: underline;
     text-underline-offset: 3px;
-    text-decoration-color: var(--primary-color,#c369bc);
+    text-decoration-color: rgb(255 136 193);
     text-decoration-thickness: 2.5px;
 }
 #number-of-streaks{
@@ -730,13 +739,17 @@ i{
     padding-right: 10px;
     background: var(--secondary-color,#c369bc); */
     
-    border: 2px solid #ae49a6;
+    /* border: 4px solid rgb(255 167 209); */
+    border: 4px solid rgb(255 136 193);
     border-radius: 22px;
     padding-left: 10px;
     padding-right: 10px;
     color: #ae49a6;
+    background-color: #fcffe6;
     width: 94px;
     height: 27px;
+    font-size: 13px;
+    font-weight: bold;
 }
 input, textarea{
     border: 1px solid lightgrey;
@@ -853,6 +866,7 @@ td,.red,.fa-warning{
 #daily-summary-container{
     order:179;
     display:none;
+    border: 4px dashed rgb(255 167 209);
 }
 #daily-summary-comment{
     margin-top: 25px;
@@ -957,7 +971,7 @@ td,.red,.fa-warning{
 /* mobile phone */
 @media (max-width: 649px){
     #number-of-streaks-bubble{
-        margin: 6px 0px 0px 13px;
+        margin: 5px 0px 0px 13px;
     }
     .main-title-only{
         width: 100%;
@@ -1156,7 +1170,7 @@ td,.red,.fa-warning{
 /* desktop */
 @media (min-width: 650px){
     #number-of-streaks-bubble{
-        margin: 4px 0px 0px 13px;
+        margin: 1px 0px 0px 13px;
     }
     .unmute-icon svg{
         width: 77px;
@@ -1193,7 +1207,7 @@ td,.red,.fa-warning{
     .action-input{
         margin-left: 16px;
         margin-right: 16px;
-        margin-top: 4px;
+        margin-top: 1px;
     }
     .positive-message .title,.super-positive-message .title{
     font-size:69px;

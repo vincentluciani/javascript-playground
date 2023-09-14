@@ -117,7 +117,7 @@ var updateHabitDOMElement = function(division, elementToAdd){
     division = updateHabitDOMProperties (division,elementToAdd);
 
     var habitDescriptionDiv = division.getElementsByClassName('habit-description-definition')[0]; 
-    habitDescriptionDiv.innerHTML = elementToAdd.habitDescription; 
+    habitDescriptionDiv.value = elementToAdd.habitDescription; 
     var targetDefinitionDiv = division.getElementsByClassName('habit-target-definition')[0];   
     targetDefinitionDiv.value = elementToAdd.target;
     var weekDaySelectionDiv = division.getElementsByClassName('week-day-selection')[0];
@@ -145,21 +145,21 @@ var updateHabitDOMProperties = function(habitDivision, elementToAdd){
     elementToAdd.remoteHabitId= elementToAdd._id?elementToAdd._id:0;
     elementToAdd.habitId= elementToAdd.habitId?elementToAdd.habitId:0;
 
-    habitDivision.setAttribute("habitDescription", elementToAdd.habitDescription);
+    habitDivision.setAttribute("habitdescription", elementToAdd.habitDescription);
     habitDivision.setAttribute("target", elementToAdd.target);
     habitDivision.setAttribute("class", "box habit-setting");
     habitDivision.setAttribute("id",elementToAdd.habitId.toString());
     habitDivision.setAttribute("habitId",elementToAdd.habitId);
-    habitDivision.setAttribute("remoteHabitId",elementToAdd.remoteHabitId);   
+    habitDivision.setAttribute("remotehabitid",elementToAdd.remoteHabitId);   
     habitDivision.setAttribute("weekDay",elementToAdd.weekDay);
-    habitDivision.setAttribute("isNegative",false);
-    habitDivision.setAttribute("isCritical",elementToAdd.isCritical);
-    habitDivision.setAttribute("isSuspendableDuringSickness",elementToAdd.isSuspendableDuringSickness);
-    habitDivision.setAttribute("isSuspendableDuringOtherCases",elementToAdd.isSuspendableDuringOtherCases);
-    habitDivision.setAttribute("isTimerNecessary",elementToAdd.isTimerNecessary);
-    habitDivision.setAttribute("timerInitialNumberOfMinutes",elementToAdd.timerInitialNumberOfMinutes);
-    habitDivision.setAttribute("whatCreated",elementToAdd.whatCreated);
-    habitDivision.setAttribute("whoCreated",elementToAdd.whoCreated);
+    habitDivision.setAttribute("isnegative",false);
+    habitDivision.setAttribute("iscritical",elementToAdd.isCritical);
+    habitDivision.setAttribute("issuspendableduringsickness",elementToAdd.isSuspendableDuringSickness);
+    habitDivision.setAttribute("issuspendableduringothercases",elementToAdd.isSuspendableDuringOtherCases);
+    habitDivision.setAttribute("istimernecessary",elementToAdd.isTimerNecessary);
+    habitDivision.setAttribute("timerinitialnumberofminutes",elementToAdd.timerInitialNumberOfMinutes);
+    habitDivision.setAttribute("whatcreated",elementToAdd.whatCreated);
+    habitDivision.setAttribute("whocreated",elementToAdd.whoCreated);
 
     var habitOrder = elementToAdd.order?elementToAdd.order:minOrder;
     habitDivision.style.order = habitOrder

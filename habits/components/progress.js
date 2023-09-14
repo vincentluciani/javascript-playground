@@ -365,8 +365,6 @@ function renderPastProgressBoxes(){
         }
     )
 
-    
-
     applyFilters();
     saveLoop();
 }
