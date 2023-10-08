@@ -1,6 +1,6 @@
 var refreshDOM = function(callback){
     
-    let dataArrays = {};
+    /*let dataArrays = {};*/
     dataArrays.habitsArray=[];
     dataArrays.progressArray=[];
     dataArrays.journalArray=[];

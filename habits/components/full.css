@@ -66,7 +66,7 @@ body{
 } */
 #streak-box{
     margin-top: 15px;
-    display: flex;
+    display: none;
 }
 #streak-text{
     text-decoration: underline;
@@ -111,8 +111,9 @@ body{
 #google-container-progress {
     height: max-content;
     display: none;
-    background-color: white;
-    /*order: 500;*/
+    background-color: #fffceb;
+    order: 1;
+    border: 5px solid #c369bc;
 }
 #google-container-progress .bold,#google-container .bold{
     font-size:19px;
@@ -153,10 +154,10 @@ body{
 }
 #login-text,#login-text-progress{
     padding-right: 2px;
-    padding-left: 6px;
+    padding-left: 1px;
 }
 #login-text-progress{
-    font-size: 1.1em;
+    font-size: 1em;
 }
 #new-version-notification{
     display: none;
@@ -489,7 +490,7 @@ h2{
     margin-top: 3px;
     clear: both;
     padding-top: 10px;
-    margin-bottom: 6px;
+    margin-bottom: 0px;
 }
 .number-of-completion[type=number]{
     width: 69px;
@@ -518,7 +519,12 @@ h2{
 .habit-description{
     font-weight: bold;
     color:#404040;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: #c4c4c4;
+    text-decoration-thickness: from-font; 
 }
+
 i{
     margin-right: 6px;  
 }
@@ -1188,7 +1194,7 @@ td,.red,.fa-warning{
         width:98.7%;
     }
     #login-text,#login-text-progress{
-        margin-top:-1px;
+        margin-top: 5px;
     }
     #text-filter{
         margin-top: 3px;
@@ -1235,12 +1241,7 @@ td,.red,.fa-warning{
     .daily-summary{
         height: 190px;
     }
-    .habit-description{
-        text-decoration: underline;
-        text-underline-offset: 3px;
-        text-decoration-color: #c4c4c4;
-        text-decoration-thickness: from-font;  
-    }
+
 }
 /*galaxy folder*/
 @media (max-width:346px){

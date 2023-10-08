@@ -20,12 +20,17 @@ const reactOnLogin = function(apiResponse) {
 
     document.getElementById("google-container").classList.add("new-habit");
     document.getElementById("google-container").classList.remove("new-habit-focused");
+
+    document.getElementById("google-container-progress").style.borderColor = "lightgrey";
+    document.getElementById("google-container-progress").style.borderWidth = "1px";
+    document.getElementById("google-container-progress").style.background = "white";
+
     document.getElementById("new-habit").classList.remove("new-habit");
     document.getElementById("new-habit").classList.add("new-habit-focused");
     document.getElementById("google-image").style.display="block";
     document.getElementById("google-image-progress").style.display="block";
-   
-     
+    document.getElementById("google-container-progress").style.display="block"; 
+    document.getElementById("streak-box").style.display="flex"; 
 }
 
 
@@ -51,12 +56,27 @@ const reactOnLogout = function() {
 
     document.getElementById("google-container").classList.remove("new-habit");
     document.getElementById("google-container").classList.add("new-habit-focused");
+
+    document.getElementById("google-container-progress").style.borderColor = "#c369bc";
+    document.getElementById("google-container-progress").style.borderWidth = "5px";
+    document.getElementById("google-container-progress").style.background = "#fffceb";
+
     document.getElementById("new-habit").classList.add("new-habit");
     document.getElementById("new-habit").classList.remove("new-habit-focused");
     document.getElementById("google-image").style.display="none";
     document.getElementById("google-image-progress").style.display="none";
+    document.getElementById("streak-box").style.display="none";
+    
 
     googleToken = '';
     applicationToken = '';
     loggedIn = false;
+
+    deleteEntry("retain").then(value=>{
+        console.log("entry deleted");
+    }, reason=>{
+        console.log(reason);
+    })
+
 }
+

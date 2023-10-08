@@ -25,7 +25,8 @@ console.log("starting javascript:"+currentDateTime.toString());
 
 var currentDate = formatDate(currentDateTime);
 var todaysDate = currentDate;
-  
+
+var tokenExpiry;
 /*
 runApp = function(){
 
@@ -51,7 +52,7 @@ function handleCredentialResponse(response) {
 
     pushLoginToQueue(updateAPIQueue,elementToAdd);
 
-    readQueueAPI();
+ 
     /*
     not sure useful, because setItemWithAPI is doing it 
     setTimeout(refreshDOM,40);*/
@@ -59,9 +60,28 @@ function handleCredentialResponse(response) {
     console.log("refreshing dom upon login");
 
     /*refreshDOM(addEmptyProgressBoxesToday);*/
-    setTimeout(refreshDOM,3000);
-    setTimeout(renderPastProgressBoxes,4000);
-   
+
+    var elementToAdd = {
+        'id': 'refreshDOMuponlogin',
+        'function':refreshDOM,
+        'type':'function'
+    }
+
+    executePushToQueue(updateAPIQueue,elementToAdd);
+    elementToAdd = {
+        'id':'renderpastprogressboxes',
+        'function':renderPastProgressBoxes,
+        'type':'function'
+    }
+    executePushToQueue(updateAPIQueue,elementToAdd);
+   /* setTimeout(refreshDOM,100);
+    setTimeout(renderPastProgressBoxes,1000);*/
+    readQueueAPI();
+}
+
+var handleReLogin = async function() {
+    var userInformation = await getDataById("retain");
+    return userInformation
 }
 
 function showLoginBoxes(){
@@ -107,6 +127,66 @@ async function sendToken(token) {
 
 }
 
+async function refreshToken() {
+
+    /* find the information from the db, put the image and update the refresh token variable */
+    /* !!! THIS MUST BE DONE AT THE BEGINNING ???*/
+    var currentDateTime = new Date();
+    var userInformation = await getDataById("retain");
+    console.log("calling refresh api:")
+    console.log(currentDateTime)
+    if ( null == userInformation || null == userInformation.tokenExpiry ){
+        document.getElementById("google-container-progress").style.display="block"; 
+        reactOnLogout();
+        return null
+    }
+     try{
+         var response = await fetch
+             ('https://www.vince.com/api/discipline/auth/refresh',{
+                 method: "POST",
+                 headers:{'Content-Type': 'application/x-www-form-urlencoded'}
+                 });
+         } catch (e) {
+             console.log('could not connect to the server');
+             console.log(e);
+             response = null;
+         } 
+     if (response.status == '200'){
+         apiResponse = await response.json();
+         console.log("Received refresh api response:");
+         currentDateTime = new Date();
+         console.log(currentDateTime);
+        /* reactOnLogin(apiResponse);*/
+        userInformation.tokenExpiry = apiResponse.tokenExpiry
+        userInformation.refreshTokenExpiry = apiResponse.refreshTokenExpiry
+        tokenExpiry = apiResponse.tokenExpiry;
+
+        /* MERGE INFORMATION FROM API AND INFORMATION FROM DB */
+        var insertResult = await storeUserInformation(userInformation);
+        console.log("Store user information, will start react on login:");
+        currentDateTime = new Date();
+        console.log(currentDateTime);
+
+        if ( null != apiResponse && null != apiResponse.authenticated){
+            /*applicationToken = response.applicationJwtToken;*/
+            reactOnLogin(userInformation);
+            console.log("Login box should appear now:");
+            currentDateTime = new Date();
+            console.log(currentDateTime);
+            
+            loggedIn = true;
+            /*readQueueAPI();*/
+            document.getElementById('api-refresh').style.display='flex';
+            
+            return apiResponse;
+        }
+
+         return apiResponse;
+     } else {
+         console.log('status of the api call:'+response.status);
+     }
+ 
+ }
 
 
 onload = function(){
@@ -114,8 +194,21 @@ onload = function(){
     "use strict";
 /* tests of service worker must be done on http://localhost:5000/ */
 
+    /* Get the image from local storage is there 
+    if there is something go and fetch a new token */ 
 
-
+    refreshToken().then(value=>{
+        console.log(value);
+        if (null != value && null != value.tokenExpiry){
+            setUpRegularRefresh(value.tokenExpiry);
+            refreshDOM();
+            setTimeout(renderPastProgressBoxes,500);
+        } else {
+                renderApplicationWithLocalStorage();
+        }  
+    }, reason=>{
+        console.error(reason);
+    })
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('debug') == "true"){
         document.getElementById("debug-section").style.display = "block";
@@ -131,7 +224,6 @@ onload = function(){
     document.getElementById("date-filter").value=currentDate;
     createRadialProgressBar(radialProgressParameters);
 
-    renderApplicationWithLocalStorage();
 
     setTimeout(placeSVGIcons,5);
     setTimeout(showLoginBoxes,7000);
@@ -332,7 +424,8 @@ var hideSummariesTab = function(){
     document.getElementById("go-to-summaries-button").style.display = "none";
 }
 var showSummariesTab = function(){
-    if (dataArrays.habitsArray && dataArrays.habitsArray.length >= 1){
+    /*if (dataArrays.habitsArray && dataArrays.habitsArray.length >= 1){*/
+    if (dataArrays.pastProgressArray && dataArrays.pastProgressArray.length >= 1){
         document.getElementById("graphs-menu").style.display = "block"; 
         document.getElementById("go-to-summaries-button").style.display = "flex";
     }
@@ -501,22 +594,22 @@ var progressDOMToJson = function(elementToRead,label){
     var outputJson = {};
     outputJson.id = elementToRead.getAttribute("id");
     outputJson.progressId = elementToRead.getAttribute("id");
-    outputJson.habitId = elementToRead.getAttribute("habitId");
+    outputJson.habitId = elementToRead.getAttribute("habitid");
     outputJson.status = elementToRead.getAttribute("status");
-    outputJson.habitDescription = elementToRead.getAttribute("habitDescription");
+    outputJson.habitDescription = elementToRead.getAttribute("habitdescription");
     outputJson.target = parseInt(elementToRead.getAttribute("target"));
-    outputJson.progressDate = elementToRead.getAttribute("progressDate");
-    outputJson.isNew = elementToRead.getAttribute("isNew");
-    outputJson.isNegative = elementToRead.getAttribute("isNegative");
-    outputJson.isCritical = elementToRead.getAttribute("isCritical");
-    outputJson.isSuspendableDuringSickness = elementToRead.getAttribute("isSuspendableDuringSickness");
-    outputJson.isSuspendableDuringOtherCases = elementToRead.getAttribute("isSuspendableDuringOtherCases");
+    outputJson.progressDate = elementToRead.getAttribute("progressdate");
+    outputJson.isNew = elementToRead.getAttribute("isnew");
+    outputJson.isNegative = elementToRead.getAttribute("isnegative");
+    outputJson.isCritical = elementToRead.getAttribute("iscritical");
+    outputJson.isSuspendableDuringSickness = elementToRead.getAttribute("issuspendableduringsickness");
+    outputJson.isSuspendableDuringOtherCases = elementToRead.getAttribute("issuspendableduringothercases");
     outputJson.whatUpdated = label;
     outputJson.whenUpdated =  (new Date()).toString();
-    outputJson.whenCreated = elementToRead.getAttribute("whenCreated");
-    outputJson.whatCreated = elementToRead.getAttribute("whatCreated");
+    outputJson.whenCreated = elementToRead.getAttribute("whencreated");
+    outputJson.whatCreated = elementToRead.getAttribute("whatcreated");
 
-    outputJson.timerInitialNumberOfMinutes = elementToRead.getAttribute("timerInitialNumberOfMinutes");
+    outputJson.timerInitialNumberOfMinutes = elementToRead.getAttribute("timerinitialnumberofminutes");
     /*todo: duplicate with function above*/
     try {
         timerInitialNumberOfMinutes = parseInt(timerInitialNumberOfMinutes)

@@ -20,7 +20,7 @@ var getPreviousElements = async function(){
         var url = `https://www.vince.com/api/discipline/habits/getall`;
         var response;
         var input = {
-            token: applicationToken,
+            /*token: applicationToken,*/
             requestDateTime: localDateTimeObject
         }
         try {
@@ -69,7 +69,7 @@ var getHabitProgressJournal = async function() {
         var url = `https://www.vince.com/api/discipline/habits/getalltoday`;
         var response;
         var input = {
-            token: applicationToken,
+            /*token: applicationToken,*/
             requestDateTime: localDateTimeObject
         }
         try {
@@ -151,7 +151,7 @@ var removeItemByKey = async function(keyName) {
         if (loggedIn){
             var response;
         var input = {
-            token: applicationToken,
+            /*token: applicationToken,*/
             id: id
         }
         try {
@@ -184,7 +184,7 @@ var getItemByKey = async function(keyName) {
         var url = `https://www.vince.com/api/discipline/journal/get`;
         var response;
         var input = {
-            token: applicationToken,
+            /*token: applicationToken*/
             requestDate: keyNameParts[1]+"-"+keyNameParts[2]+"-"+keyNameParts[3]
         }
         try {
@@ -215,11 +215,20 @@ var getItemByKey = async function(keyName) {
 
 }
 var setItemWithAPI = async function(keyName, jsonValue) {
+
     var url="";
+    var refreshResponse;
     
     /*var jsonValue = JSON.parse(value);*/
     if ( null == jsonValue.token || jsonValue.token == ""){
         jsonValue.token = applicationToken;
+
+        var currentDateObject = new Date();
+        var expiryDateObject = new Date(tokenExpiry);
+        var differenceInMillisecond = expiryDateObject.getTime() - currentDateObject.getTime();
+        if (!differenceInMillisecond || differenceInMillisecond <= 500){
+            refreshResponse = await refreshToken();
+        }
     }
     var keyNameParts = keyName.split("-");
 
@@ -233,8 +242,16 @@ var setItemWithAPI = async function(keyName, jsonValue) {
             url = "https://www.vince.com/api/discipline/journal/add";
         } else if (keyNameParts[0] == "login"){
             var response = await sendToken(jsonValue.token);
-            if ( null != response && null != response.applicationJwtToken){
-                applicationToken = response.applicationJwtToken;
+
+            tokenExpiry = response.tokenExpiry;
+
+            await storeUserInformation(response);
+
+
+
+            if ( null != response && null != response.authenticated){
+                /*applicationToken = response.applicationJwtToken;*/
+                setUpRegularRefresh(tokenExpiry);
                 loggedIn = true;
                 /*readQueueAPI();*/
                 document.getElementById('api-refresh').style.display='flex';
@@ -267,6 +284,158 @@ var setItemWithAPI = async function(keyName, jsonValue) {
     return response;
 
 }
+
+async function setUpRegularRefresh(expiryDate) {
+    var currentDateObject = new Date();
+    var expiryDateObject = new Date(expiryDate);
+    var differenceInMillisecond = expiryDateObject.getTime() - currentDateObject.getTime();
+    if (differenceInMillisecond && differenceInMillisecond > 0){
+        var interval = setInterval(launchRefresh, differenceInMillisecond - 1000);
+    } else {
+        await refreshToken();
+    }
+}
+var launchRefresh = function(){
+    refreshToken().then(value=>{
+        console.log(value);
+    }, reason=>{
+        console.error(reason);
+    })
+}
+
+
+async function getDataById(id) {
+    try {
+      /* Open a database connection.*/
+      const db = await openDB();
+  
+      /* Create a transaction and get the object store.*/
+      const transaction = db.transaction(["informationStore"], "readonly");
+      const objectStore = transaction.objectStore("informationStore");
+  
+      /* Use the get method to retrieve data by key (id).*/
+      const request = objectStore.get(id);
+  
+      /* Handle the result or error using await.*/
+      const data = await new Promise((resolve, reject) => {
+        request.onsuccess = () => {
+            resolve(request.result);
+        };
+        request.onerror = () => {
+            reject(request.error);
+        }
+      });
+  
+      /* Close the database connection. */
+      db.close();
+  
+      if (data) {
+        console.log("Data found:", data);
+        return data
+      } else {
+        console.log("Data not found for id:", id);
+        return null
+      }
+    } catch (error) {
+      console.error("Error retrieving data:", error);
+      return null
+    }
+  }
+  
+  async function deleteEntry(id) {
+    try {
+      /* Open a database connection.*/
+      const db = await openDB();
+  
+      /* Create a transaction and get the object store.*/
+      const transaction = db.transaction(["informationStore"], "readwrite");
+      const objectStore = transaction.objectStore("informationStore");
+  
+      /* Use the get method to retrieve data by key (id).*/
+      const request = objectStore.delete(id);
+  
+      /* Handle the result or error using await.*/
+      await new Promise((resolve, reject) => {
+        request.onsuccess = () => {
+            resolve(id);
+        };
+        request.onerror = () => {
+            reject(request.error);
+        }
+      });
+  
+      /* Close the database connection. */
+      db.close();
+  
+    } catch (error) {
+      console.error("Error deleting data:", error);
+      return null
+    }
+  }
+
+var storeUserInformation = async function(information) {
+
+    try {
+        /* Open a database connection.*/
+        var db = await openDB();
+    
+        /* Create a transaction and get the object store.*/
+        var transaction = db.transaction(["informationStore"], "readwrite");
+
+        var objectStore = transaction.objectStore("informationStore");
+    
+        /* Define the data you want to insert.*/
+        var data = {    "key": "retain",
+                        "picture": information.picture, 
+                        "givenName": information.givenName,
+                        "refreshTokenExpiry": information.refreshTokenExpiry,
+                        "tokenExpiry": information.tokenExpiry };
+    
+        /* Use the add method to insert the data.*/
+        await new Promise((resolve, reject) => {
+        var request = objectStore.put(data);
+        request.onsuccess = () => {
+            resolve();
+        }
+        request.onerror = () => {
+            reject(request.error);
+        }
+        });
+    
+        /* Close the database connection.*/
+        db.close();
+    
+        console.log("Data inserted successfully");
+    } catch(e){
+        console.error(e);
+    }
+  }
+  
+  function openDB() {
+    return new Promise((resolve, reject) => {
+      const request = window.indexedDB.open("myDatabase", 7); 
+      /* Specify the database name and version */
+  
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        if (!db.objectStoreNames.contains("informationStore")) {
+          db.createObjectStore("informationStore", { keyPath: "key" });
+        }
+      };
+  
+      request.onsuccess = (event) => {
+        const db = event.target.result;
+        resolve(db);
+      };
+  
+      request.onerror = (event) => {
+        reject(event.target.error);
+      };
+    });
+  }
+  
+
+    
 // var updateParameterInItemValue = async function(keyName, parameterName, value){
 
 //     var jsonValue;
@@ -308,6 +477,8 @@ var setItemWithAPI = async function(keyName, jsonValue) {
 var resetStorage = function(){
     window.localStorage.clear();
 }
+
+
 /*
 var resetMemory = function(){
     resetHabits();

@@ -40,8 +40,10 @@ var updateDailyProgress = function(){
         dailySummaryBox.style.display = "none";
     }
     setDivAppearanceBasedOnCompletion(dailySummaryDiv.parentNode,dailyPercentage);
-    setDivAppearanceBasedOnCompletion(personalBox,dailyPercentage);
 
+    if (loggedIn){
+        setDivAppearanceBasedOnCompletion(personalBox,dailyPercentage);
+    }
 }
 
 var getDailyProgress=function(){

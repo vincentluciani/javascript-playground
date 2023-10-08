@@ -18,10 +18,15 @@ var readQueueStorage = function() {
 var readQueueAPI = function() {
 
   if (updateAPIQueue.length > 0) {
-      var elementToProcess = updateAPIQueue.shift();
-      console.log("reading from API queue");
-      console.log(elementToProcess);
-          
+    var elementToProcess = updateAPIQueue.shift();
+    console.log("reading from API queue");
+    console.log(elementToProcess);
+        
+    if (elementToProcess.type && elementToProcess.type == 'function' && elementToProcess.function){
+      let functionToExecute = elementToProcess.function;
+      functionToExecute();
+      readQueueAPI();
+    } else {
       setItemWithAPI(elementToProcess.id, elementToProcess.value).then(value=>{
         if (value == null || (null != value.ok && value.ok == false)){
           updateAPIQueue.unshift(elementToProcess);
@@ -31,6 +36,7 @@ var readQueueAPI = function() {
       }, reason=>{
         updateAPIQueue.unshift(elementToProcess);
       })
+    }
 
    }
   

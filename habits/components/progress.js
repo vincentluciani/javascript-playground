@@ -348,6 +348,7 @@ function renderPastProgressBoxes(){
             pastDataArrays = value;
             dataArrays.pastProgressArray = pastDataArrays.pastProgressArray;
             dataArrays.journalArray = pastDataArrays.journalArray;
+            
             if (pastDataArrays.pastProgressArray){
                 for (const habitsElement of pastDataArrays.pastProgressArray){
                     addProgressDOMElement(habitsElement);
@@ -415,7 +416,7 @@ var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletio
         currentDiv.style.order = "178";
     }
     if (currentDiv.getAttribute('id') && currentDiv.getAttribute('id') == "google-container-progress"){
-        currentDiv.style.order = "179";
+        currentDiv.style.order = "1";
     }
     if (currentDiv.getAttribute('status') == 'inactive'){
         currentDiv.style.borderColor="lightgrey";
@@ -436,10 +437,18 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
         /*currentDiv.style.order = "60";*/
         /*currentDiv.style.borderColor="#ffa6a6"; 
         currentDiv.style.background="#fff1f1";*/
+        /*
         currentDiv.style.borderColor = "rgb(249 194 194)";
-        currentDiv.style.background = "rgb(255 244 244)";
+        currentDiv.style.background = "rgb(255 244 244)";*/
 
-        taskIconDiv = currentDiv.getElementsByClassName("task-icon-container")[0];
+
+        habitDescriptionDiv = currentDiv.getElementsByClassName("habit-description")[0];
+        taskIconDiv = habitDescriptionDiv.getElementsByClassName("task-icon-container")[0];
+
+        if (habitDescriptionDiv) {
+            habitDescriptionDiv.style.textDecorationColor = "rgb(255 136 193)";
+            habitDescriptionDiv.style.textDecorationThickness = "2.5px";
+        }
         if (taskIconDiv && plusMinusDiv){
             taskIconDiv.innerHTML=warningIcon;
             /*taskIconDiv.setAttribute("stroke","red");
@@ -463,7 +472,7 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
             taskIconDiv.innerHTML=taskIcon;
            /* taskIconDiv.setAttribute("stroke","black");
             taskIconDiv.setAttribute("fill","black");  */
-            currentDiv.getElementsByClassName("habit-description")[0].classList.remove("red");
+           /* currentDiv.getElementsByClassName("habit-description")[0].classList.remove("red");*/
             /*plusMinusDiv.style.color="#b657af";*/
             
         }    
