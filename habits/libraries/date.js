@@ -18,6 +18,16 @@ var todaysDateDayNumber = function(){
 
 };
 
+function getYesterdayFormatted() {
+    var currentDateTime = new Date();
+  
+    var yesterdayDateTimeUNIX = currentDateTime.setDate(currentDateTime.getDate() - 1);
+  
+    var yesterdayDateTime = new Date(yesterdayDateTimeUNIX);
+
+    return formatDate(yesterdayDateTime);
+  }
+
 var formattedTodaysDate = function(){
     var todaysDateTime = new Date();
     return formatDate(todaysDateTime);

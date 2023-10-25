@@ -79,4 +79,37 @@ gulp.task('process-html', function () {
         .pipe(gulp.dest('output'));
 });
 
-gulp.task('default', gulp.series(['put-client-id-html','pack-js','pack-css','process-html','pack-service-worker']));
+gulp.task('process-uat-html', function () {    
+    return gulp.src(['adding_habits_transformed.html'])
+        .pipe(replace('<link rel="stylesheet" href="components/full.css">', '<style>'+fs.readFileSync('output/bundle.css', 'utf8')+'</style>'))  
+        .pipe(replace('<script type="text/javascript" src="language/general.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="language/english.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="libraries/date.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="libraries/random.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="libraries/http.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="libraries/loadDOMAndWait.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="habits_main.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/checkboxWithTitle.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/weekTable.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/weekDaySelector.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/habit.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/journal.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/progress.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/graph.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/dailySummary.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/radialprogress.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/encourage.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/countdown.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="synchronization/pushProgressToQueue.js"></script>','')) 
+        .pipe(replace('<script type="text/javascript" src="synchronization/storage.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="synchronization/sendPost.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="synchronization/debugTools.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/icons.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="components/authentication.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="synchronization/readQueue.js"></script>','<script>'+fs.readFileSync('output/bundle-min.js', 'utf8')+'</script>'))    
+    
+        .pipe(htmlmin({ collapseWhitespace: true }))
+        .pipe(rename('index_uat.html'))
+        .pipe(gulp.dest('output'));
+});
+gulp.task('default', gulp.series(['put-client-id-html','pack-js','pack-css','process-html','process-uat-html','pack-service-worker']));

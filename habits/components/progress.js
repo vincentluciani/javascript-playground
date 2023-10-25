@@ -348,7 +348,7 @@ function renderPastProgressBoxes(){
             pastDataArrays = value;
             dataArrays.pastProgressArray = pastDataArrays.pastProgressArray;
             dataArrays.journalArray = pastDataArrays.journalArray;
-            
+
             if (pastDataArrays.pastProgressArray){
                 for (const habitsElement of pastDataArrays.pastProgressArray){
                     addProgressDOMElement(habitsElement);
@@ -359,6 +359,7 @@ function renderPastProgressBoxes(){
                 document.getElementById('number-of-streaks').innerHTML = numberOfStreaks;
                 document.getElementById('number-of-streaks-bubble').style.display = "flex";
                 document.getElementById('number-of-streaks-2').innerHTML = numberOfStreaks;
+                setupToggleTodayYesterday();
             }
         },
         reason=>{
@@ -446,6 +447,8 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
         taskIconDiv = habitDescriptionDiv.getElementsByClassName("task-icon-container")[0];
 
         if (habitDescriptionDiv) {
+            habitDescriptionDiv.style.textDecoration = "underline";
+            habitDescriptionDiv.style.textUnderlineOffset = "3px";
             habitDescriptionDiv.style.textDecorationColor = "rgb(255 136 193)";
             habitDescriptionDiv.style.textDecorationThickness = "2.5px";
         }

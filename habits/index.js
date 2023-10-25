@@ -28,7 +28,7 @@ app.get('/uat', function (req, res, next) {
   var extension = pathname.split('.').pop();
   var file = "." + pathname;
   var dirs = pathname.split('/');*/
-    fs.readFile('output/index.html', 'utf8', function (err,data) {
+    fs.readFile('output/index_uat.html', 'utf8', function (err,data) {
         var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
 
         if (err) {

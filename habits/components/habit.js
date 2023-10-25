@@ -9,7 +9,8 @@ var refreshDOM = function(callback){
         value => {
             dataArrays = value;
 
-            if (dataArrays.habitsArray == []){
+            if (null == dataArrays.habitsArray || dataArrays.habitsArray.length == 0){
+                changeTabToHabits();
                 return;
             }
             resetStorage();

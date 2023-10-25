@@ -35,6 +35,15 @@ body{
     background-color: #fcffe6;
 }
 
+#back-to-today,#back-to-yesterday{
+    color: #00359e;
+    cursor: pointer;
+    margin-bottom: 9px;
+}
+#back-to-yesterday{
+    display: none;
+}
+
 #number-of-streaks-2{
     margin-right: 3px;
     font-size: 14px;
@@ -65,7 +74,6 @@ body{
     box-shadow: 0px -2px 20px 0px rgb(0 0 0 / 20%);
 } */
 #streak-box{
-    margin-top: 15px;
     display: none;
 }
 #streak-text{
@@ -519,10 +527,6 @@ h2{
 .habit-description{
     font-weight: bold;
     color:#404040;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    text-decoration-color: #c4c4c4;
-    text-decoration-thickness: from-font; 
 }
 
 i{
@@ -682,18 +686,19 @@ i{
 #positive-message-title,#super-positive-message-title
 {
     opacity: 0;
-    animation-duration: 0.25s;
+    animation-duration: 0.15s;
     animation-name: appearWithColor;
-    animation-delay: 0.25s;
+    animation-delay: 0s;
     animation-fill-mode: forwards;
 }
 #positive-message-subtitle,#super-positive-message-subtitle
 {
     opacity: 0;
-    animation-duration: 0.5s;
+    animation-duration: 0.25s;
     animation-name: appearWithColor;
-    animation-delay: 0.5s;
+    animation-delay: 0s;
     animation-fill-mode: forwards;
+    animation-iteration-count: 3;
 }
 @keyframes arriveFromLeft {
     from {
@@ -752,7 +757,7 @@ i{
     padding-right: 10px;
     color: #ae49a6;
     background-color: #fcffe6;
-    width: 94px;
+    width: 100px;
     height: 27px;
     font-size: 13px;
     font-weight: bold;
@@ -1067,7 +1072,7 @@ td,.red,.fa-warning{
         /* width: 297px; */
         width: calc(100% - 10px);
         border-width: 1px;
-        margin: 15px 15px 0px 15px;
+        margin: 12px 15px 0px 15px;
     }
     .box.big-action-button{
         margin:13px;
@@ -1175,6 +1180,18 @@ td,.red,.fa-warning{
 }
 /* desktop */
 @media (min-width: 650px){
+
+    #streak-box{
+        margin-top: 15px;
+    }
+
+    .habit-description{
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        text-decoration-color: #c4c4c4;
+        text-decoration-thickness: from-font; 
+    }
+
     #number-of-streaks-bubble{
         margin: 1px 0px 0px 13px;
     }

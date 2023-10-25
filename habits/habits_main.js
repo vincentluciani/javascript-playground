@@ -188,47 +188,49 @@ async function refreshToken() {
  
  }
 
+ /*onload = function(){*/
+ window.addEventListener('DOMContentLoaded', function() {
+    /*var runAppRendering = function(){*/
+        "use strict";
+    /* tests of service worker must be done on http://localhost:5000/ */
+    
+        /* Get the image from local storage is there 
+        if there is something go and fetch a new token */ 
+    
+        refreshToken().then(value=>{
+            console.log(value);
+            if (null != value && null != value.tokenExpiry){
+                setUpRegularRefresh(value.tokenExpiry);
+                refreshDOM();
+                setTimeout(renderPastProgressBoxes,500);
+            } else {
+                    renderApplicationWithLocalStorage();
+            }  
+        }, reason=>{
+            renderApplicationWithLocalStorage();
+            console.error(reason);
+        })
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('debug') == "true"){
+            document.getElementById("debug-section").style.display = "block";
+        }
+        apiUser = urlParams.get('user');
+        console.log('user:'+apiUser);
+        if (urlParams.get('nouser') == 'true'){
+            loggedIn=false;
+        }
+    
+        hideStartProgressButtonOnHabits();
+    
+        document.getElementById("date-filter").value=currentDate;
+        createRadialProgressBar(radialProgressParameters);
+    
+        setTimeout(placeSVGIcons,5);
+        setTimeout(showLoginBoxes,7000);
+        setTimeout(loadAudio,25);  
 
-onload = function(){
-/*var runAppRendering = function(){*/
-    "use strict";
-/* tests of service worker must be done on http://localhost:5000/ */
-
-    /* Get the image from local storage is there 
-    if there is something go and fetch a new token */ 
-
-    refreshToken().then(value=>{
-        console.log(value);
-        if (null != value && null != value.tokenExpiry){
-            setUpRegularRefresh(value.tokenExpiry);
-            refreshDOM();
-            setTimeout(renderPastProgressBoxes,500);
-        } else {
-                renderApplicationWithLocalStorage();
-        }  
-    }, reason=>{
-        console.error(reason);
-    })
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('debug') == "true"){
-        document.getElementById("debug-section").style.display = "block";
-    }
-    apiUser = urlParams.get('user');
-    console.log('user:'+apiUser);
-    if (urlParams.get('nouser') == 'true'){
-        loggedIn=false;
-    }
-
-    hideStartProgressButtonOnHabits();
-
-    document.getElementById("date-filter").value=currentDate;
-    createRadialProgressBar(radialProgressParameters);
-
-
-    setTimeout(placeSVGIcons,5);
-    setTimeout(showLoginBoxes,7000);
-    setTimeout(loadAudio,25);     
-};
+        initializeTogglesTodayYesterday();
+    });
 
 var renderApplicationWithLocalStorage = function(){
     /*dataArrays=await getHabitProgressJournal();*/
@@ -479,21 +481,68 @@ var applyFilters = function(){
     filterDivs(testElements,"habitDescription",filterTitle,false);
 };
 
+var goToDate = function(newFormattedDate) {
+    var selectedDateDiv = document.getElementById('date-filter');
+    selectedDateDiv.value = newFormattedDate;
+    actOnDateChange();
+}
 
-var dateFilter = document.getElementById('date-filter');
-dateFilter.addEventListener('input', function () {
+var goToToday = function(){
+    var newCurrentDateTime = new Date();
+    var newCurrentDate = formatDate(newCurrentDateTime);
+    goToDate(newCurrentDate);
+}
+var goToYesterday = function(){
+    goToDate(getYesterdayFormatted());
+}
+
+
+var initializeTogglesTodayYesterday = function(){
+    document.getElementById('back-to-today').addEventListener('click',goToToday);
+    document.getElementById('back-to-yesterday').addEventListener('click',goToYesterday);
+}
+
+var setupToggleTodayYesterday = function(){
+    var newCurrentDateTime = new Date();
+    var newCurrentDate = formatDate(newCurrentDateTime);
+    var selectedDateDiv = document.getElementById('date-filter');
+    var selectedDate = selectedDateDiv.value;
+    var yesterdayFormatted = getYesterdayFormatted();
+
+    if (newCurrentDate == selectedDate){
+        document.getElementById('back-to-today').style.display = 'none';
+        document.getElementById('back-to-yesterday').style.display = 'block';
+     } else if (selectedDate==yesterdayFormatted){
+        document.getElementById('back-to-today').style.display = 'block';
+        document.getElementById('back-to-yesterday').style.display = 'none';
+     } else {
+        document.getElementById('back-to-today').style.display = 'none';
+        document.getElementById('back-to-yesterday').style.display = 'none';
+     }
+    
+}
+
+
+var actOnDateChange = function(){
     var newCurrentDateTime = new Date();
 
     var newCurrentDate = formatDate(newCurrentDateTime);
     var oldCurrentDate = formatDate(currentDateTime);
     /* Desktop: change date for first time to today - computer online since yesterday */
+    
+    setupToggleTodayYesterday();
+
     if (newCurrentDate > oldCurrentDate){
         location.reload();
         return;
     } 
     applyFilters();
     /*createMissingElementsForDate(this.value);*/
-});
+}
+
+var dateFilter = document.getElementById('date-filter');
+dateFilter.addEventListener('input', actOnDateChange);
+
 
 var textFilter = document.getElementById('text-filter')
 textFilter.addEventListener('input', function () {
