@@ -1,0 +1,78 @@
+<html>
+<head>
+<style>
+
+</style>
+
+</head>
+
+<body>
+    <canvas id="confetti-container"></canvas>
+
+
+
+</body>
+<script>
+    var canvaWidth = 0;
+    var canvaHeight = 0;
+
+    var sizeCanva = function(canvaDiv){
+        canvaDiv.width = window.innerWidth;
+        canvaDiv.height = window.innerHeight;
+        canvaWidth = canvaDiv.width;
+        canvaHeight = canvaDiv.height;
+
+    }
+    var confetti = function(x,y,h,w,colorArray,opacity,context){
+
+        this.x=x;
+        this.y=y;
+        this.h=h;
+        this.w=w;
+        this.colorArray = colorArray;
+        this.opacity = opacity;
+        this.context = context;
+
+        this.draw = function(){
+ 
+            var color = "rgba("+ colorArray.join(',')+","+opacity.toString()+")";
+            context.fillStyle = color;
+            context.strokeStyle=context.fillStyle;
+            context.fillRect(this.x,this.y,this.h,this.w);
+
+        }
+        this.move = function(speedVector){
+            this.x = this.x + speedVector.xSpeed;
+            this.y = this.y + speedVector.ySpeed;
+            this.draw();
+        }
+    }
+
+    var myDrawingFunction = function(confettis){
+        context.clearRect(0,0,canvaWidth,canvaHeight);
+        for (var confetti of confettis){
+            confetti.move({xSpeed:5,ySpeed:8})
+        }
+    }
+
+    color = [167, 211, 162];
+    canvas = document.getElementById("confetti-container");
+    context = canvas.getContext("2d");
+    sizeCanva(canvas);
+
+    var confetti_1 = new confetti(30,100,20,15,color,0.8,context);
+    var confetti_2 = new confetti(100,300,20,13,color,0.5,context);
+    var confetti_3 = new confetti(140,120,15,7,color,0.9,context);
+
+    confetti_1.draw();
+    confetti_2.draw();
+    confetti_3.draw();
+
+    confettis = [confetti_1,confetti_2,confetti_3];
+
+    var myTimer=setInterval(myDrawingFunction, 50,confettis);
+
+
+
+</script>
+</html>

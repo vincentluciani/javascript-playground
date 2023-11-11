@@ -8,9 +8,12 @@ const reactOnLogin = function(apiResponse) {
     document.getElementById("google-image").setAttribute("src", apiResponse.picture);
     document.getElementById("google-image-progress").setAttribute("src", apiResponse.picture);
     document.getElementById("signout_button").style.display= 'block';
+    document.getElementById("signout_button_habits").style.display= 'block';
+    document.getElementById('account-link').style.display='list-item';
     // document.getElementById("signout_button_progress").style.display= 'block';
     document.getElementById("login-title-box").style.display='none';
     document.getElementById("login-title-box-habits").style.display='none';
+    document.getElementById("assure-login").style.display='none';
 
     var listOfButtons = document.getElementsByClassName("g_id_signin");
 
@@ -41,10 +44,13 @@ const reactOnLogout = function() {
     document.getElementById("google-image").setAttribute("src", "");
     document.getElementById("google-image").style.display = 'none';
     document.getElementById("signout_button").style.display= 'none';
+    document.getElementById("signout_button_habits").style.display= 'none';
+    document.getElementById('account-link').style.display='none';
 
     document.getElementById("google-image-progress").setAttribute("src", "");
     document.getElementById("google-image-progress").style.display = 'none';
     // document.getElementById("signout_button_progress").style.display= 'none';
+    document.getElementById("assure-login").style.display='block';
 
     document.getElementById("login-title-box").style.display='block';
 

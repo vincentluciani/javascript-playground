@@ -112,6 +112,9 @@ async function sendToken(token) {
             console.log('could not connect to the server');
             console.log(e);
             response = null;
+            if (null!=google && null!=google.accounts & null!= google.accounts.id){
+                google.accounts.id.disableAutoSelect();
+            }
         } 
     if (response.status == '200'){
         var apiResponse = await response.json();
@@ -122,6 +125,9 @@ async function sendToken(token) {
         /* todo : apiResponse._id must update the id of the element if it is has been created from scratch*/
         return apiResponse;
     } else {
+        if (null!=google && null!=google.accounts & null!= google.accounts.id){
+            google.accounts.id.disableAutoSelect();
+        }
         console.log('status of the api call:'+response.status);
     }
 
@@ -147,6 +153,10 @@ async function refreshToken() {
                  headers:{'Content-Type': 'application/x-www-form-urlencoded'}
                  });
          } catch (e) {
+            if (null!=google && null!=google.accounts & null!= google.accounts.id){
+                google.accounts.id.disableAutoSelect();
+            }
+            reactOnLogout();
              console.log('could not connect to the server');
              console.log(e);
              response = null;
@@ -183,6 +193,10 @@ async function refreshToken() {
 
          return apiResponse;
      } else {
+        if (null!=google && null!=google.accounts & null!= google.accounts.id){
+            google.accounts.id.disableAutoSelect();
+        }
+        reactOnLogout();
          console.log('status of the api call:'+response.status);
      }
  
@@ -204,12 +218,25 @@ async function refreshToken() {
                 refreshDOM();
                 setTimeout(renderPastProgressBoxes,500);
             } else {
+                    try {
+                    /*if (null!=google && null!=google.accounts & null!= google.accounts.id){*/
+                        google.accounts.id.disableAutoSelect();
+                    /*}*/
+                } catch(e){
+                    
+                }
+                    reactOnLogout();
                     renderApplicationWithLocalStorage();
+                    setTimeout(renderPastProgressBoxes,500);
             }  
         }, reason=>{
             renderApplicationWithLocalStorage();
+            setTimeout(renderPastProgressBoxes,500);
             console.error(reason);
         })
+
+        
+
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('debug') == "true"){
             document.getElementById("debug-section").style.display = "block";
@@ -314,9 +341,11 @@ var placeSVGIcons = function(){
     document.getElementById('trophy-icon-super-positive').innerHTML=trophyIconBig;
     document.getElementById('start-icon').innerHTML=startIcon; 
     document.getElementById('login-icon').innerHTML=personIcon; 
-    document.getElementById('login-icon-progress').innerHTML=personIcon; 
+    document.getElementById('login-icon-progress').innerHTML=personIcon;
+    document.getElementById('person-icon').innerHTML=personIcon;  
     document.getElementById('unmute-icon').innerHTML=unMuteIcon; 
     document.getElementById('unmute-icon').style.display="block";
+    document.getElementById('warning-icon').innerHTML=warningIcon;
     
     var trophyIconDivs = document.getElementsByClassName('trophy-icon');
     for ( var iconDiv of trophyIconDivs){
@@ -325,6 +354,10 @@ var placeSVGIcons = function(){
     var trophyIconBigDivs = document.getElementsByClassName('trophy-icon-big');
     for ( var iconBigDiv of trophyIconBigDivs){
         iconBigDiv.innerHTML = trophyIconBig;
+    }
+    var checkedIconDivs = document.getElementsByClassName('checked-icon');
+    for ( var iconDiv of checkedIconDivs){
+        iconDiv.innerHTML = checkedIcon;
     }
     document.getElementById('week-table-icon').innerHTML = calendarIconBig;
     document.getElementById('plus-icon-button').innerHTML = plusIconBig;
@@ -616,6 +649,7 @@ var habitDOMToJson = function(elementToRead){
     // outputJson.isSuspendableDuringOtherCases = elementToRead.getElementsByClassName("simple-checkbox")[3].checked.toString();
     // outputJson.isTimerNecessary = elementToRead.getElementsByClassName("simple-checkbox")[0].checked.toString();
     outputJson.isTimerNecessary = document.getElementById("is-timer-necessary-"+outputJson.habitId.toString()).checked;
+ 
     outputJson.isSuspendableDuringOtherCases = document.getElementById("is-suspendable-in-other-cases-"+outputJson.habitId.toString()).checked;
     outputJson.isSuspendableDuringSickness = document.getElementById("is-suspendable-during-sickness-"+outputJson.habitId.toString()).checked;
     outputJson.isCritical = document.getElementById("is-critical-"+outputJson.habitId.toString()).checked;
@@ -716,7 +750,7 @@ var changeTabToHabits = function(){
     document.getElementById("progress-menu").classList.remove("active");
     document.getElementById("habits-menu").classList.add("active");
     document.getElementById("graphs-menu").classList.remove("active");
-    /*document.getElementById('new-description').focus();*/
+    document.getElementById('new-description').focus();
 }
 
 var changeTabToSummaries = function(){
@@ -868,6 +902,32 @@ var getNumberOfStreaks = function(dataToShow,baseline){
     return completionAccumulation;
 }
 
+var subMenuGoHabits = function( targetLink){
+
+    window.scrollTo(0, 0);
+
+    var habitsLink = document.getElementById('habits-link');
+    var accountLink = document.getElementById('account-link');
+    var accountContainer = document.getElementById('account-container');
+    var habitsContainer = document.getElementById('habits-definition-container');
+ 
+
+    switch (targetLink) {
+        case 'habits-link':
+            habitsLink.classList.add("selected-underline");
+            accountLink.classList.remove("selected-underline");
+            habitsContainer.style.display='flex';
+            accountContainer.style.display='none';
+          break;
+        case 'account-link':
+            habitsLink.classList.remove("selected-underline");
+            accountLink.classList.add("selected-underline");
+            habitsContainer.style.display='none';
+            accountContainer.style.display='flex';
+          break;
+      }
+
+}
 
 var subMenuGo = function( targetLink){
 
@@ -879,6 +939,7 @@ var subMenuGo = function( targetLink){
     var graphContainer = document.getElementById('week-summary-container');
     var streaksContainer = document.getElementById('streaks-container');
     var journalContainer = document.getElementById('journal-container-wrapper');
+
 
     switch (targetLink) {
         case 'week-link':
@@ -932,4 +993,23 @@ var setMute = function(){
     document.getElementById('unmute-icon').style.display="block";
 }
 
+
+var toggleSection = function(idToToggle,idToggling){
+    var divToToggle = document.getElementById(idToToggle);
+    var divToggling = document.getElementById(idToggling);
+    var divTogglingText = divToggling.innerHTML.substring(5);
+    var display;
+
+    if (null == divToToggle.style.display || divToToggle.style.display == ""){
+        var styles = getComputedStyle(divToToggle);
+        display = styles.getPropertyValue('display')
+    }
+    if (divToToggle.style.display == 'none' || display == 'none'){
+        divToToggle.style.display = 'block';
+        divToggling.innerHTML = "&lt; " + divTogglingText;
+    } else {
+        divToToggle.style.display = 'none';
+        divToggling.innerHTML = "&gt; " + divTogglingText;
+    }
+}
 /*runApp();*/

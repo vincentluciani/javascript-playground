@@ -17,7 +17,7 @@ gulp.task('put-client-id-html', function(){
 
 })
 gulp.task('pack-js', function () {    
-    return gulp.src(['components/*.js', 'libraries/random.js', 'libraries/loadDOMAndWait.js','libraries/date.js','language/general.js','language/english.js', 'synchronization/*.js','habits_main.js'])
+    return gulp.src(['components/*.js', 'libraries/random.js', 'libraries/loadDOMAndWait.js','libraries/date.js','libraries/http.js','language/general.js','language/english.js', 'synchronization/*.js','habits_main.js'])
         .pipe(concat('bundle.js'))
         .pipe(minify())
         .pipe(gulp.dest('output'));
@@ -87,6 +87,7 @@ gulp.task('process-uat-html', function () {
         .pipe(replace('<script type="text/javascript" src="libraries/date.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="libraries/random.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="libraries/http.js"></script>',''))
+        .pipe(replace('<script type="text/javascript" src="libraries/components.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="libraries/loadDOMAndWait.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="habits_main.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/checkboxWithTitle.js"></script>',''))

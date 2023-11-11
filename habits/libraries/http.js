@@ -27,6 +27,37 @@ var APICall = async function(parameters){
 	
 }
 
+
+var fetchPost = async function(relativePath,payload) {
+
+  var url=`https://www.vince.com/api/discipline/${relativePath}`;
+        
+  var objectToSend = {
+      method: "POST",
+      headers:{'Content-Type': 'application/json'}
+  }
+
+  if (payload != ''){
+    objectToSend['body'] = JSON.stringify(payload);
+  }
+
+  try {
+    response = await fetch
+    (url,objectToSend);
+  } catch (e) {
+      console.log('could not connect to the server');
+      console.log(e);
+      return false;
+  }
+  if (response.status == '200'){
+      var apiResponse = await response.json();
+      return apiResponse;
+  } else {
+      console.log('status of the api call:'+response.status);
+      return false;
+  }
+
+}
 /*
 
 fetch("/post/data/here", {

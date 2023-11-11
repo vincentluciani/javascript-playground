@@ -17,32 +17,21 @@ var getPreviousElements = async function(){
             timeZoneOffset: currentDateTime.getTimezoneOffset,
           };
 
-        var url = `https://www.vince.com/api/discipline/habits/getall`;
+        var url = `habits/getall`;
         var response;
         var input = {
             /*token: applicationToken,*/
             requestDateTime: localDateTimeObject
         }
-        try {
-            response = await fetch
-            (url,{
-                method: "POST",
-                headers:{'Content-Type': 'application/json'},
-                body: JSON.stringify(input)
-                });
-        } catch (e) {
-            console.log('could not connect to the server');
-            console.log(e);
-            return getHabitProgressJournalFromStorage();
-        } 
-        if (response.status == '200'){
-            var apiResponse = await response.json();
-            return apiResponse;
+
+        response = await fetchPost(url,input);
+
+        if (null != response){
+            return response;
         } else {
-            console.log('status of the api call:'+response.status);
             return getHabitProgressJournalFromStorage();
         }
- 
+
     } else {
 
         return getHabitProgressJournalFromStorage();
@@ -66,29 +55,18 @@ var getHabitProgressJournal = async function() {
             timeZoneOffset: currentDateTime.getTimezoneOffset()
           };
 
-        var url = `https://www.vince.com/api/discipline/habits/getalltoday`;
+        var url = `habits/getalltoday`;
         var response;
         var input = {
             /*token: applicationToken,*/
             requestDateTime: localDateTimeObject
         }
-        try {
-            response = await fetch
-            (url,{
-                method: "POST",
-                headers:{'Content-Type': 'application/json'},
-                body: JSON.stringify(input)
-                });
-        } catch (e) {
-            console.log('could not connect to the server');
-            console.log(e);
-            return getHabitProgressJournalFromStorage();
-        } 
-        if (response.status == '200'){
-            var apiResponse = await response.json();
-            return apiResponse;
+
+        response = await fetchPost(url,input);
+
+        if (null != response){
+            return response;
         } else {
-            console.log('status of the api call:'+response.status);
             return getHabitProgressJournalFromStorage();
         }
  
@@ -145,65 +123,40 @@ var removeItemByKey = async function(keyName) {
         if (storageType=='habit'){
             storageType='habits';
         }
-        var url=`https://www.vince.com/api/discipline/${storageType}/delete`;
+        var url=`${storageType}/delete`;
         var id = keyNameParts[1];
 
         if (loggedIn){
             var response;
-        var input = {
-            /*token: applicationToken,*/
-            id: id
-        }
-        try {
-            response = await fetch
-            (url,{
-                method: "POST",
-                headers:{'Content-Type': 'application/json'},
-                body: JSON.stringify(input)
-                });
-        } catch (e) {
-            console.log('could not connect to the server');
-            console.log(e);
-            return false;
-        }
-        if (response.status == '200'){
-            var apiResponse = await response.json();
-            return apiResponse;
+                var input = {
+                    /*token: applicationToken,*/
+                    id: id
+                }
+        
+            response = await fetchPost(url,input);
+
+            return response
         } else {
-            console.log('status of the api call:'+response.status);
+            return null;
         }
-        }
-        console.log('item removed');
-        return response
 
 }
 var getItemByKey = async function(keyName) {
 /* todo handle case where item is not journal */
     var keyNameParts = keyName.split("-");
     if (loggedIn){
-        var url = `https://www.vince.com/api/discipline/journal/get`;
+        var url = `journal/get`;
         var response;
         var input = {
             /*token: applicationToken*/
             requestDate: keyNameParts[1]+"-"+keyNameParts[2]+"-"+keyNameParts[3]
         }
-        try {
-            response = await fetch
-            (url,{
-                method: "POST",
-                headers:{'Content-Type': 'application/json'},
-                body: JSON.stringify(input)
-                });
-        } catch (e) {
-            console.log('could not connect to the server');
-            console.log(e);
-            return window.localStorage.getItem(keyName);
-        }
-        if (response.status == '200'){
-            var apiResponse = await response.json();
-            return apiResponse;
+
+        response = await fetchPost(url,input);
+
+        if (null != response){
+            return response;
         } else {
-            console.log('status of the api call:'+response.status);
             return window.localStorage.getItem(keyName);
         }
 
@@ -220,19 +173,21 @@ var setItemWithAPI = async function(keyName, jsonValue) {
     var refreshResponse;
     
     /*var jsonValue = JSON.parse(value);*/
-    if ( null == jsonValue.token || jsonValue.token == ""){
-        jsonValue.token = applicationToken;
 
-        var currentDateObject = new Date();
-        var expiryDateObject = new Date(tokenExpiry);
-        var differenceInMillisecond = expiryDateObject.getTime() - currentDateObject.getTime();
-        if (!differenceInMillisecond || differenceInMillisecond <= 500){
-            refreshResponse = await refreshToken();
-        }
-    }
     var keyNameParts = keyName.split("-");
 
     if (loggedIn || keyNameParts[0] == "login"){
+        
+        if ( (null == jsonValue.token || jsonValue.token == "")){
+            jsonValue.token = applicationToken;
+    
+            var currentDateObject = new Date();
+            var expiryDateObject = new Date(tokenExpiry);
+            var differenceInMillisecond = expiryDateObject.getTime() - currentDateObject.getTime();
+            if (!differenceInMillisecond || differenceInMillisecond <= 500){
+                refreshResponse = await refreshToken();
+            }
+        }
         
         if (keyNameParts[0] == "progress"){
             url = "https://www.vince.com/api/discipline/progress/add";

@@ -24,6 +24,64 @@ body{
     overflow-wrap: break-word;
     background: #fafafa;
 }
+
+.assurance{
+    font-size:13px;
+    color: green;
+}
+.assurance>div{
+    margin-bottom: 7px; 
+}
+#assure-new-habit{
+    margin-top: 15px;
+}
+.checked-icon{
+    margin-top: 3px;
+    float: left;
+    margin-right: 5px;
+
+}
+
+.expand-collapse-link{
+    color: var(--primary-color,#c369bc);
+    margin-bottom: 6px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+.delete-account-text{
+    margin-top:14px;
+    margin-bottom: 14px;
+}
+
+.danger-title{
+    font-weight: bold;
+    color: red;
+}
+
+#warning-icon svg{
+    fill:red;
+    stroke: red;
+}
+
+.delete-button{
+    color:red;
+    margin-top: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+#danger-zone{
+    width: calc(100% - 10px);
+}
+.invisible{
+    display:none;
+}
+#account-container{
+    display: none;
+}
+.small-svg-icons{
+    width: 16px;
+    height: 16px
+}
 #number-of-streaks-bubble{
     display: none;
     border-radius: 22px;
@@ -121,7 +179,8 @@ body{
     display: none;
     background-color: #fffceb;
     order: 1;
-    border: 5px solid #c369bc;
+    /*border: 5px solid #c369bc;*/
+    border: none;
 }
 #google-container-progress .bold,#google-container .bold{
     font-size:19px;
@@ -133,16 +192,25 @@ body{
     margin-top: 13px;
     margin-bottom: 11px;
 }
-#signout_button{
+#signout_button,#signout_button_habits{
     font-size: 15px;
     text-decoration: underline;
     color: #bbbbbd;
     display: none;
     cursor: pointer;
+}
+#signout_button{
     /* clear:both;
     margin-bottom: 7px; */
     margin-left: 4px;
     margin-top: 10px;
+}
+#signout_button_habits{
+    /* clear:both;
+    margin-bottom: 7px; */
+    margin-left: 0px;
+    margin-top: 0px;
+    margin-bottom: 5px;
 }
 .image-text-box{
     display: flex;
@@ -358,7 +426,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
     border-radius: 31px 7px 23px 16px;
 }
 .input-title{
-    padding-top: 15px;
+    padding-top: 0px;
 }
 .main-section{
     margin-top:42px;
@@ -374,7 +442,9 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
 }
 
 .box{
-    border: 1px solid  lightgray;
+    /*border: 1px solid  lightgray;*/
+    box-shadow: 0 2px 10px rgba(0,0,0,.2);
+    border:none;
     /* box-shadow: -1px 20px 20px 0px rgb(0 0 0 / 20%); */
 }
 .box.new-habit-focused{
@@ -446,7 +516,8 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
 
 .main-title{
     padding: 14px 12px 13px 12px;
-    border-bottom: 1px solid lightgray  ;
+    border-bottom: 1px dashed lightgray;
+    /*box-shadow: 0px -2px 20px 0px rgb(0 0 0 / 20%);*/
     background: white;
 }
 
@@ -690,6 +761,7 @@ i{
     animation-name: appearWithColor;
     animation-delay: 0s;
     animation-fill-mode: forwards;
+    margin-bottom:0px;
 }
 #positive-message-subtitle,#super-positive-message-subtitle
 {
@@ -699,6 +771,7 @@ i{
     animation-delay: 0s;
     animation-fill-mode: forwards;
     animation-iteration-count: 3;
+    margin-top: 0px;
 }
 @keyframes arriveFromLeft {
     from {
@@ -767,9 +840,10 @@ input, textarea{
     font-family: "Nunito","candara","arial";
     background-color: white;
 }
-input[type="date"],textarea{
+input[type="date"],input[type='text'],textarea{
     border-radius: 5px;
 }
+
 textarea{
     padding:5px;
 }
@@ -878,6 +952,7 @@ td,.red,.fa-warning{
     order:179;
     display:none;
     border: 4px dashed rgb(255 167 209);
+    box-shadow: none;
 }
 #daily-summary-comment{
     margin-top: 25px;
@@ -911,9 +986,17 @@ td,.red,.fa-warning{
     margin-top: 13px;
   }
   
-.habit-setting .custom-checkbox-container{
+.habit-setting .custom-checkbox-container, .advanced-section .custom-checkbox-container{
     margin-top: 3px;
-    padding-bottom:14px;
+    padding-bottom:10px;
+}
+.habit-setting input, .advanced-section input{
+    margin-bottom: 12px;
+    font-size:18px;
+}
+
+.advanced-section{
+    display: none;
 }
   /* On mouse-over, add a grey background color */
 .custom-checkbox-container:hover input ~ .checkmark {
@@ -1023,8 +1106,8 @@ td,.red,.fa-warning{
     #progress-title{
         margin-bottom: 2px;
     }
-    .box{
-        border-radius: 24px 12px 27px 12px;
+    .box, .box.with-countdown{
+        border-radius: 12px;
     }
     .habits-container,.habits-definition-container,.filter-bar,.week-summary-container,.main-action-bar,#footer{
         justify-content: space-around;
@@ -1265,7 +1348,7 @@ td,.red,.fa-warning{
     #number-of-streaks-bubble{
         margin: 6px 0px 0px 8px;
     }
-    #signout_button{
+    #signout_button,#signout_button_habits{
         margin-left: 0px;
     }
     #login-text,#login-text-progress{

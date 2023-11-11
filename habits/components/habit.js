@@ -44,7 +44,7 @@ var refreshDOM = function(callback){
             }
             
             applyFilters(); 
-            if (dataArrays.todaysProgressArray && dataArrays.todaysProgressArray.length >= 1){
+            if (dataArrays.habitsArray && dataArrays.habitsArray.length >= 1){
                 changeTabToProgress();
                 showProgressTab();
             }
@@ -203,33 +203,102 @@ var addHabitDOMElement = function(elementToAdd){
 
     titleTextDiv.setAttribute("class", "habit-title");
 
-    const descriptionText = document.createTextNode("Habit description:");
+    const descriptionText = document.createTextNode("Habit title:");
     const descriptionTextDiv = document.createElement("div");
     descriptionTextDiv.appendChild(descriptionText);
 
-    const descriptionInput = document.createElement("textarea");
+    /*const descriptionInput = document.createElement("textarea");*/
+    const descriptionInput = document.createElement("input");
     descriptionInput.value = elementToAdd.habitDescription;
-    descriptionInput.setAttribute("class","habit-description-definition large");
-    descriptionInput.setAttribute("rows",3);
+    descriptionInput.setAttribute("class","habit-description-definition");
+    descriptionInput.setAttribute("type","text");
+    /*descriptionInput.setAttribute("class","habit-description-definition large");
+    descriptionInput.setAttribute("rows",3);*/
 
+    /* TARGET VALUE */
     const targetText = document.createTextNode("Daily Target:");
     const targetTextDiv = document.createElement("div");
     targetTextDiv.appendChild(targetText);
 
-    const targetValue = document.createElement("input");
-    
-    targetValue.setAttribute("class","habit-target-definition");
-    targetValue.setAttribute("type","number");
+    var targetArea = document.createElement("div");
+    targetArea.setAttribute("class","progress-details");
 
-    targetValue.value = elementToAdd.target;
+    var targetContainer = document.createElement("div");
+    targetContainer.setAttribute("class","target-container");
+
+    /*targetContainer.appendChild(targetText);*/
+
+    const targetInput = document.createElement("input");
+    /*targetValue.setAttribute("class","habit-target-definition");
+    targetValue.setAttribute("type","number");
+    targetValue.value = elementToAdd.target;*/
+    targetInput.setAttribute("class","number-of-completion habit-target-definition");
+
+    targetInput.setAttribute("type","number");
+    targetInput.setAttribute("value",elementToAdd.target);
+    /*targetContainer.appendChild(targetText);*/
+
+    var plusButtonText = document.createTextNode("+");
+    var plusButton = document.createElement("div");
+
+    plusButton.setAttribute("class","plus-button normal");
+    var minusButtonText = document.createTextNode("-");
+    var minusButton = document.createElement("div");
+    plusButton.appendChild(plusButtonText);
+    minusButton.setAttribute("class","minus-button normal");
+    minusButton.appendChild(minusButtonText);
+
+    plusButton.addEventListener('click', function(newHabitDivision) {
+        return function(){
+            var targetInput = newHabitDivision.getElementsByClassName("number-of-completion")[0];
+            var targetValue = targetInput.value?parseInt(targetInput.value):0;
+            targetValue+=1;
+            targetInput.value = targetValue;
+            newHabitDivision.setAttribute('target',targetValue.toString());
+
+        }
+    }(newHabitDivision));
+
+    minusButton.addEventListener('click', function(newProgressDivision) {
+        return function(){
+            var targetInput = newHabitDivision.getElementsByClassName("number-of-completion")[0];
+            var targetValue = targetInput.value?parseInt(targetInput.value):0;
+            targetValue-=1;
+            targetInput.value = targetValue;
+            newHabitDivision.setAttribute('target',targetValue.toString());
+        }
+    }(newHabitDivision));
+    
+
+    /*targetContainer.appendChild(targetContainer);*/
+    targetContainer.appendChild(minusButton);
+    targetContainer.appendChild(targetInput);
+    targetContainer.appendChild(plusButton);
+
     newHabitDivision.appendChild(titleTextDiv);
     newHabitDivision.appendChild(descriptionTextDiv);
     newHabitDivision.appendChild(descriptionInput);
     newHabitDivision.appendChild(targetTextDiv);
-    newHabitDivision.appendChild(targetValue);
+    newHabitDivision.appendChild(targetContainer);
+    /*newHabitDivision.appendChild(targetValue);*/
 
+      
     var weekDaySelector = dynamicWeekDaySelector(elementToAdd.weekDay);
     newHabitDivision.appendChild(weekDaySelector);
+
+    var advancedSectionToggle = document.createElement("div");
+    advancedSectionToggle.setAttribute('class','expand-collapse-link');
+    var advancedSectionId = 'new-habit-advanced-section-google-'+elementToAdd.habitId.toString();
+    var advancedSectionToggleId = 'new-habit-advanced-section-toggle-'+elementToAdd.habitId.toString();
+    advancedSectionToggle.setAttribute('id',advancedSectionToggleId);
+    advancedSectionToggle.setAttribute('onclick',"toggleSection('"+advancedSectionId+"','"+advancedSectionToggleId+"');");
+    advancedSectionToggle.innerHTML = "&gt; Advanced Options ...";
+
+    newHabitDivision.appendChild(advancedSectionToggle);
+
+    var advancedSection = document.createElement("div");
+    advancedSection.setAttribute('class','advanced-section');
+    advancedSection.setAttribute('id',advancedSectionId)
 
     /* PRIORITY */
     const priorityText = document.createTextNode("Priority (1 is highest):");
@@ -288,33 +357,35 @@ var addHabitDOMElement = function(elementToAdd){
     prioSetting.appendChild(laterButtonPrio);
     newHabitDivision.appendChild(prioSetting);
     */
-    newHabitDivision.appendChild(priorityTextDiv);
-    newHabitDivision.appendChild(priorityValue);
+    advancedSection.appendChild(priorityTextDiv);
+    advancedSection.appendChild(priorityValue);
     /* end priority */
 
     /* Timer */
     var checkBoxContainerIsTimerNecessary = checkboxWithTitle("Do you need a timer:",elementToAdd.isTimerNecessary,"is-timer-necessary-"+elementToAdd.habitId.toString());
-    newHabitDivision.appendChild(checkBoxContainerIsTimerNecessary);
+    advancedSection.appendChild(checkBoxContainerIsTimerNecessary);
     const timerTimeTextDiv = document.createTextNode("Time in minutes:");
     const timerTimeInput = document.createElement("input");
     timerTimeInput.setAttribute("type","number");
     timerTimeInput.setAttribute("id","initial-time"+elementToAdd.habitId.toString());
     timerTimeInput.value = elementToAdd.timerInitialNumberOfMinutes;
-    newHabitDivision.appendChild(timerTimeTextDiv);
-    newHabitDivision.appendChild(timerTimeInput)
+    advancedSection.appendChild(timerTimeTextDiv);
+    advancedSection.appendChild(timerTimeInput)
     /*timer-value*/
 
     /* IS CRITICAL */
     var checkBoxContainer = checkboxWithTitle("Critical:",elementToAdd.isCritical,"is-critical-"+elementToAdd.habitId.toString());
-    newHabitDivision.appendChild(checkBoxContainer);
+    advancedSection.appendChild(checkBoxContainer);
 
     /* IS SUSPENDABLE DURING SICKNESS */
     var checkBoxContainerSuspendableSickness = checkboxWithTitle("Suspendable during sickness:",elementToAdd.isSuspendableDuringSickness,"is-suspendable-during-sickness-"+elementToAdd.habitId.toString());
-    newHabitDivision.appendChild(checkBoxContainerSuspendableSickness);
+    advancedSection.appendChild(checkBoxContainerSuspendableSickness);
 
     /* IS SUSPENDABLE DURING other cases */
     var checkBoxContainerSuspendableOtherCases = checkboxWithTitle("Suspendable during other cases:",elementToAdd.isSuspendableDuringOtherCases,"is-suspendable-in-other-cases-"+elementToAdd.habitId.toString());
-    newHabitDivision.appendChild(checkBoxContainerSuspendableOtherCases);
+    advancedSection.appendChild(checkBoxContainerSuspendableOtherCases);
+
+    newHabitDivision.appendChild(advancedSection);
 
     const saveButton = document.createElement("div");
     var onClickSaveFunctionCall = "saveChangesInHabit(" + elementToAdd.habitId.toString()+ ")";
@@ -440,13 +511,14 @@ var addNewHabitFromForm = function(){
     elementToAdd.isNegative = document.getElementById('new-is-negative-flag').checked;
     elementToAdd.progressDate = currentDate;
     elementToAdd.numberOfCompletions = 0;
+
     elementToAdd.isNew = true;
-    elementToAdd.isCritical = false;
-    elementToAdd.isTimerNecessary = false;
-    elementToAdd.timerInitialNumberOfMinutes = 0;
-    elementToAdd.isSuspendableDuringSickness = false;
-    elementToAdd.isSuspendableDuringOtherCases = false;
-    elementToAdd.order=81;
+    elementToAdd.isCritical = document.getElementById('is-critical-new').checked;
+    elementToAdd.isTimerNecessary = document.getElementById('is-timer-necessary-new').checked;
+    elementToAdd.timerInitialNumberOfMinutes = document.getElementById('initial-time-new').value;
+    elementToAdd.isSuspendableDuringSickness = document.getElementById('is-suspendable-during-sickness-new').checked;
+    elementToAdd.isSuspendableDuringOtherCases = document.getElementById('is-suspendable-in-other-cases-new').checked;
+    elementToAdd.order=80+(document.getElementById('priority-new').value?parseInt(document.getElementById('priority-new').value):1);
     elementToAdd.whatUpdated = "addNewHabitFromForm";
     elementToAdd.whatCreated = "addNewHabitFromForm";
     elementToAdd.whenUpdated =  (new Date()).toString();
@@ -517,8 +589,42 @@ var saveChangesInHabitFromObject = function(habitElement){
     habitJSON.habitDescription = habitElement.habitDescription;
     habitJSON.target = habitElement.target;
     habitJSON.weekDay = habitElement.weekDay;
+    habitJSON.isCritical = habitElement.isCritical;
+    habitJSON.isSuspendableDuringOtherCases = habitElement.isSuspendableDuringOtherCases;
+    habitJSON.isSuspendableDuringSickness = habitElement.isSuspendableDuringSickness;
+    habitJSON.isTimerNecessary = habitElement.isTimerNecessary;
+    habitJSON.timerInitialNumberOfMinutes = habitElement.timerInitialNumberOfMinutes;
+    habitJSON.order = habitElement.order;
 
     pushHabitArrayToQueue(habitJSON);
     
 };
 
+var eraseAccount = function(){
+    var confirmationText = document.getElementById('erase-confirmation').value;
+    
+    if (confirmationText == 'delete account'){
+        var response = fetchPost('habits/deleteaccount','').then(
+            (value) => {
+                if (value){
+                    document.getElementById('deletion-answer').innerHTML = 'Deletion successful';
+                    try {
+                        google.accounts.id.disableAutoSelect();
+                    } catch(e){
+                        console.log('did not find google account to disable');
+                    }
+                    reactOnLogout();
+                } else {
+                    document.getElementById('deletion-answer').innerHTML = 'Problem deleting your account. Check your internet connection or try again later';
+             
+                }
+            },
+            (reason) => {
+                document.getElementById('deletion-answer').innerHTML = 'Problem deleting your account. Check your internet connection or try again later';
+            }
+        );
+
+    } else {
+        document.getElementById('deletion-answer').innerHTML = 'In order to delete your account, you need to enter the exact text "delete account" above';
+    }
+}
