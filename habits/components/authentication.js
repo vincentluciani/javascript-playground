@@ -1,12 +1,13 @@
 
 
 const reactOnLogin = function(apiResponse) {
-    var message="Discipline pumps strength in your body and mind!"
-    document.getElementById("login-text").innerHTML = "Hi "+apiResponse.givenName+". "+message;
-    document.getElementById("login-text-progress").innerHTML = "Hi "+apiResponse.givenName+"! "+message;
+    var message="Discipline pumps strength in your body and mind"
+    document.getElementById("login-text").innerHTML = message;
+    document.getElementById("login-text-progress").innerHTML = message;
     
     document.getElementById("google-image").setAttribute("src", apiResponse.picture);
-    document.getElementById("google-image-progress").setAttribute("src", apiResponse.picture);
+    /*document.getElementById("google-image-progress").setAttribute("src", apiResponse.picture);*/
+    document.getElementById('allegory').style.display='block';
     document.getElementById("signout_button").style.display= 'block';
     document.getElementById("signout_button_habits").style.display= 'block';
     document.getElementById('account-link').style.display='list-item';
@@ -31,9 +32,9 @@ const reactOnLogin = function(apiResponse) {
     document.getElementById("new-habit").classList.remove("new-habit");
     document.getElementById("new-habit").classList.add("new-habit-focused");
     document.getElementById("google-image").style.display="block";
-    document.getElementById("google-image-progress").style.display="block";
+   /* document.getElementById("google-image-progress").style.display="block";*/
     document.getElementById("google-container-progress").style.display="block"; 
-    document.getElementById("streak-box").style.display="flex"; 
+    /*document.getElementById("streak-box").style.display="flex"; */
 }
 
 
@@ -47,8 +48,9 @@ const reactOnLogout = function() {
     document.getElementById("signout_button_habits").style.display= 'none';
     document.getElementById('account-link').style.display='none';
 
-    document.getElementById("google-image-progress").setAttribute("src", "");
-    document.getElementById("google-image-progress").style.display = 'none';
+    /*document.getElementById("google-image-progress").setAttribute("src", "");
+    document.getElementById("google-image-progress").style.display = 'none';*/
+    document.getElementById('allegory').style.display='none';
     // document.getElementById("signout_button_progress").style.display= 'none';
     document.getElementById("assure-login").style.display='block';
 
@@ -70,8 +72,8 @@ const reactOnLogout = function() {
     document.getElementById("new-habit").classList.add("new-habit");
     document.getElementById("new-habit").classList.remove("new-habit-focused");
     document.getElementById("google-image").style.display="none";
-    document.getElementById("google-image-progress").style.display="none";
-    document.getElementById("streak-box").style.display="none";
+    /*document.getElementById("google-image-progress").style.display="none";*/
+    /*document.getElementById("streak-box").style.display="none";*/
     
 
     googleToken = '';

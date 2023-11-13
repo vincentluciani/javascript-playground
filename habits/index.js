@@ -265,6 +265,14 @@ app.get('/pwa-icon-256.png', function (req, res, next) {
   /* https://stackoverflow.com/questions/21235696/display-images-in-html-nodejs*/
 })
 
+app.get('/pwa-icon-256.png', function (req, res, next) {
+
+  var fileToLoad  = fs.readFileSync('output/pwa-icon-256.png')
+     
+  res.writeHead(200, {'Content-Type': 'image/png'});
+  res.end(fileToLoad, 'binary');
+  /* https://stackoverflow.com/questions/21235696/display-images-in-html-nodejs*/
+})
 
 app.get('/sw-min.js', function (req, res, next) {
 
@@ -286,6 +294,24 @@ app.get('/pwa-icon-512.png', function (req, res, next) {
   var fileToLoad  = fs.readFileSync('output/pwa-icon-512.png')
      
   res.writeHead(200, {'Content-Type': 'image/png'});
+  res.end(fileToLoad, 'binary');
+  /* https://stackoverflow.com/questions/21235696/display-images-in-html-nodejs*/
+})
+
+
+app.get('/:image.jpeg', function (req, res, next) {
+
+  var fileToLoad  = fs.readFileSync(req.params.image+'.jpeg')
+     
+  res.writeHead(200, {'Content-Type': 'image/jpeg'});
+  res.end(fileToLoad, 'binary');
+  /* https://stackoverflow.com/questions/21235696/display-images-in-html-nodejs*/
+})
+app.get('/uat/:image.jpeg', function (req, res, next) {
+
+  var fileToLoad  = fs.readFileSync('output/'+req.params.image+'.jpeg')
+     
+  res.writeHead(200, {'Content-Type': 'image/jpeg'});
   res.end(fileToLoad, 'binary');
   /* https://stackoverflow.com/questions/21235696/display-images-in-html-nodejs*/
 })

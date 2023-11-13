@@ -7,22 +7,30 @@ var updateDailyProgress = function(){
     var dailySummaryBox = document.getElementById("daily-summary-container");
     var dailyCommentBox = document.getElementById("daily-summary-comment");
     var personalBox = document.getElementById("google-container-progress");
+    var allegoryImage = document.getElementById("allegory");
+
+    var amount = 1;
 
     if (dailyPercentage && dailyPercentage>0){
         if (dailyPercentage >= 100){
             radialProgressParameters.progressColor = "rgb(167, 211, 162)";
             radialProgressParameters.emptyColor = "rgb(193 236 205)";
-            dailyCommentBox.innerHTML="Awesome Achievement !"
-        } else if ( dailyPercentage >= 50 ){
+            dailyCommentBox.innerHTML="Awesome Achievement !";
+            amount=1.15;
+            } else if ( dailyPercentage >= 50 ){
             radialProgressParameters.progressColor = "rgb(238 230 168)";
             radialProgressParameters.emptyColor = "rgb(228 228 228)";
             dailyCommentBox.innerHTML="You are almost there !"
+            amount=1;
         } else {
             radialProgressParameters.progressColor = "#b657af";
             radialProgressParameters.emptyColor = "rgb(255 217 235)";
             dailyCommentBox.innerHTML="Good Start<br>Keep it up !"
+            amount=1;
         }
 
+        allegoryImage.setAttribute('style', 'filter:brightness(' + amount + '); -webkit-filter:brightness(' + amount + '); -moz-filter:brightness(' + amount + ')');
+        
         if ( dailyPercentage >= 100){
             radialProgressParameters.textLeftAdjustment = -9;
         }

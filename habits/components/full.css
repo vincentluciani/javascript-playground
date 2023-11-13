@@ -186,7 +186,7 @@ body{
     font-size:19px;
 }
 #google-container,#google-container-progress{
-    border-radius: 31px 7px 31px 7px;
+    border-radius: 10px 10px 10px 10px;
 }
 .g_id_signin{
     margin-top: 13px;
@@ -232,9 +232,7 @@ body{
     padding-right: 2px;
     padding-left: 1px;
 }
-#login-text-progress{
-    font-size: 1em;
-}
+
 #new-version-notification{
     display: none;
 }
@@ -250,7 +248,7 @@ body{
 }
 
 #new-habit,.box.habit-setting{
-    border-radius: 31px 7px 31px 7px;
+    border-radius: 10px 10px 10px 10px;
 }
 .countdown-container{
     clear: both;
@@ -417,13 +415,13 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
 }
 .box{
     padding: 19px;   
-    border-radius:  31px 7px 80px 16px;
+    border-radius:  10px 10px 10px 10px;
 }
 .box.streak-box{
-    border-radius: 7px 84px 7px 75px;
+    border-radius: 20px;
 }
 .box.with-countdown{
-    border-radius: 31px 7px 23px 16px;
+    border-radius: 10px;
 }
 .input-title{
     padding-top: 0px;
@@ -920,6 +918,9 @@ td,.red,.fa-warning{
     margin-right:7px;
     padding-top:2px;
 }
+.task-icon-container{
+    display: none;
+}
 .task-icon-container.trophy-icon{
     padding-top:7px; 
 }
@@ -930,12 +931,13 @@ td,.red,.fa-warning{
     margin-bottom: 15px;
 }
 .journal-container-day{
-    padding: 33px 35px 35px 32px;
+    padding: 18px 35px 29px 32px;
     margin: 0px 20px 0px 20px;
     border: 1px solid  lightgray;
     border-radius: 12px;
     background: white;
     display: block;
+    box-shadow: 0 2px 10px rgba(0,0,0,.2);
 }
 .journal-container{
     margin: 84px 0px 0px 0px;
@@ -983,7 +985,7 @@ td,.red,.fa-warning{
     user-select: none;
     width: 26px;
     height: 15px;
-    margin-top: 13px;
+    margin-top: 6px;
   }
   
 .habit-setting .custom-checkbox-container, .advanced-section .custom-checkbox-container{
@@ -1064,6 +1066,16 @@ td,.red,.fa-warning{
 }
 /* mobile phone */
 @media (max-width: 649px){
+    #login-text-progress{
+        font-size: 21px;
+    }
+    #allegory{
+        width: calc(100% - 5px);
+        border-radius: 6px;
+        margin-top: 10px;
+        margin-bottom:2px;
+    }
+
     #number-of-streaks-bubble{
         margin: 5px 0px 0px 13px;
     }
@@ -1086,6 +1098,7 @@ td,.red,.fa-warning{
     }
     #login-text,#login-text-progress{
         margin-top:8px;
+        margin-bottom:11px;
     }
     .number-of-minutes,.minutes-second-separator,.number-of-seconds{
         margin-top:9px;
@@ -1142,7 +1155,7 @@ td,.red,.fa-warning{
     .habit-description{
         font-size: 21px;
         float: left;
-        width: 225px;
+        width: 268px;
         margin-bottom: 6px;
         margin-top:2px;
     }
@@ -1263,7 +1276,15 @@ td,.red,.fa-warning{
 }
 /* desktop */
 @media (min-width: 650px){
-
+    #login-text-progress{
+        font-size: 18px;
+    }
+    #allegory{
+        width: 225px;
+        border-radius: 6px;
+        margin-top: 5px;
+        margin-bottom:2px;
+    }
     #streak-box{
         margin-top: 15px;
     }
@@ -1295,6 +1316,7 @@ td,.red,.fa-warning{
     }
     #login-text,#login-text-progress{
         margin-top: 5px;
+        margin-bottom:12px;
     }
     #text-filter{
         margin-top: 3px;

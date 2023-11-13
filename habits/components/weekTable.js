@@ -138,10 +138,10 @@ var buildWeekTableBox = function(weekTableObject,habitObject){
     newCanvaWrapper.setAttribute("class","box canva-wrapper week-box");
     if (numberOfMissesInWeek==0){
         newCanvaWrapper.style.background="#daffd9";
-        newCanvaWrapper.style.border="1px solid rgb(167 211 162)"
+        /*newCanvaWrapper.style.border="1px solid rgb(167 211 162)"*/
     } else if (numberOfMissesInWeek==1){
         newCanvaWrapper.style.background="rgb(255 252 238)";
-        newCanvaWrapper.style.border="1px solid rgb(246 223 35)"
+        /*newCanvaWrapper.style.border="1px solid rgb(246 223 35)"*/
     } else if (numberOfMissesInWeek>1){
         newCanvaWrapper.style.background="white";
     }

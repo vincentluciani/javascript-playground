@@ -22,7 +22,12 @@ gulp.task('pack-js', function () {
         .pipe(minify())
         .pipe(gulp.dest('output'));
 });
- 
+
+gulp.task('send-images', function () {    
+    return gulp.src(['*.jpeg'])
+        .pipe(gulp.dest('output'));
+});
+
 gulp.task('pack-service-worker', function () {    
     return gulp.src(['sw.js'])
         .pipe(minify())
@@ -113,4 +118,4 @@ gulp.task('process-uat-html', function () {
         .pipe(rename('index_uat.html'))
         .pipe(gulp.dest('output'));
 });
-gulp.task('default', gulp.series(['put-client-id-html','pack-js','pack-css','process-html','process-uat-html','pack-service-worker']));
+gulp.task('default', gulp.series(['send-images','put-client-id-html','pack-js','pack-css','process-html','process-uat-html','pack-service-worker']));

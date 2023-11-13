@@ -356,7 +356,7 @@ function renderPastProgressBoxes(){
                 applyFilters(); 
                 showSummariesTab(); 
                 var numberOfStreaks = getNumberOfDailyStreaks();
-                document.getElementById('number-of-streaks').innerHTML = numberOfStreaks;
+               /* document.getElementById('number-of-streaks').innerHTML = numberOfStreaks;*/
                 document.getElementById('number-of-streaks-bubble').style.display = "flex";
                 document.getElementById('number-of-streaks-2').innerHTML = numberOfStreaks;
                 setupToggleTodayYesterday();
