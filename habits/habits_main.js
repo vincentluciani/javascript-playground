@@ -6,6 +6,7 @@ var applicationToken = '';
 var loggedIn = false;
 var maxForNonLoggedIn = 2000;
 var updateQueue = [];
+var refreshRetryNumber = 0;
 var updateAPIQueue = [];
 var apiUser;
 var radialProgressParameters = {    
@@ -116,7 +117,7 @@ async function sendToken(token) {
                 google.accounts.id.disableAutoSelect();
             }
         } 
-    if (response.status == '200'){
+    if (response && response.status == '200'){
         var apiResponse = await response.json();
 
         reactOnLogin(apiResponse);
@@ -141,9 +142,11 @@ async function refreshToken() {
     var userInformation = await getDataById("retain");
     console.log("calling refresh api:")
     console.log(currentDateTime)
-    if ( null == userInformation || null == userInformation.tokenExpiry ){
+    if ( null == userInformation ){
         document.getElementById("google-container-progress").style.display="block"; 
         reactOnLogout();
+        var errorDetails = "Did not get any information from indexedDB in refreshToken";
+        debugWrite(errorDetails);
         return null
     }
      try{
@@ -153,14 +156,33 @@ async function refreshToken() {
                  headers:{'Content-Type': 'application/x-www-form-urlencoded'}
                  });
          } catch (e) {
-            if (null!=google && null!=google.accounts & null!= google.accounts.id){
-                google.accounts.id.disableAutoSelect();
+            refreshRetryNumber+=1;
+            if (refreshRetryNumber > 3 ){
+                reactOnLogout();
+                refreshRetryNumber=0;
             }
-            reactOnLogout();
              console.log('could not connect to the server');
              console.log(e);
+             debugWrite("fetch failed:"+e.toString());
              response = null;
          } 
+
+     if (response == null || (response != null && response.status.toString().substring(0,1)=='5')){
+        refreshRetryNumber+=1;
+        if (refreshRetryNumber > 3 ){
+            reactOnLogout();
+            refreshRetryNumber=0;
+        }
+        if (response && response.status){
+            console.log("Fetch returned status : "+response.status);
+            debugWrite("Fetch returned status : "+response.status);
+        } else {
+            console.log("Refresh: no answer from the server");
+            debugWrite("No response from the fetch");
+        }
+
+        return null;
+     }
      if (response.status == '200'){
          apiResponse = await response.json();
          console.log("Received refresh api response:");
@@ -179,7 +201,8 @@ async function refreshToken() {
 
         if ( null != apiResponse && null != apiResponse.authenticated){
             /*applicationToken = response.applicationJwtToken;*/
-            reactOnLogin(userInformation);
+            /*reactOnLogin(userInformation);*/
+            reactOnLogin(apiResponse);
             console.log("Login box should appear now:");
             currentDateTime = new Date();
             console.log(currentDateTime);
@@ -193,9 +216,7 @@ async function refreshToken() {
 
          return apiResponse;
      } else {
-        if (null!=google && null!=google.accounts & null!= google.accounts.id){
-            google.accounts.id.disableAutoSelect();
-        }
+        debugWrite("status of the refresh api call is :"+response.status);
         reactOnLogout();
          console.log('status of the api call:'+response.status);
      }
@@ -213,18 +234,13 @@ async function refreshToken() {
     
         refreshToken().then(value=>{
             console.log(value);
-            if (null != value && null != value.tokenExpiry){
-                setUpRegularRefresh(value.tokenExpiry);
+            /*if (null != value && null != value.tokenExpiry){*/
+            if (null!=value){
+                /*setUpRegularRefresh(value.tokenExpiry);*/
+                setUpRegularRefresh();
                 refreshDOM();
                 setTimeout(renderPastProgressBoxes,500);
             } else {
-                    try {
-                    /*if (null!=google && null!=google.accounts & null!= google.accounts.id){*/
-                        google.accounts.id.disableAutoSelect();
-                    /*}*/
-                } catch(e){
-                    
-                }
                     reactOnLogout();
                     renderApplicationWithLocalStorage();
                     setTimeout(renderPastProgressBoxes,500);

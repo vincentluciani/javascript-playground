@@ -7,8 +7,7 @@ var updateDailyProgress = function(){
     var dailySummaryBox = document.getElementById("daily-summary-container");
     var dailyCommentBox = document.getElementById("daily-summary-comment");
     var personalBox = document.getElementById("google-container-progress");
-    var allegoryImage = document.getElementById("allegory");
-
+    
     var amount = 1;
 
     if (dailyPercentage && dailyPercentage>0){
@@ -29,8 +28,6 @@ var updateDailyProgress = function(){
             amount=1;
         }
 
-        allegoryImage.setAttribute('style', 'filter:brightness(' + amount + '); -webkit-filter:brightness(' + amount + '); -moz-filter:brightness(' + amount + ')');
-        
         if ( dailyPercentage >= 100){
             radialProgressParameters.textLeftAdjustment = -9;
         }
@@ -49,9 +46,9 @@ var updateDailyProgress = function(){
     }
     setDivAppearanceBasedOnCompletion(dailySummaryDiv.parentNode,dailyPercentage);
 
-    if (loggedIn){
+    /*if (loggedIn){*/
         setDivAppearanceBasedOnCompletion(personalBox,dailyPercentage);
-    }
+    /*}*/
 }
 
 var getDailyProgress=function(){

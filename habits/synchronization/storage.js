@@ -206,7 +206,8 @@ var setItemWithAPI = async function(keyName, jsonValue) {
 
             if ( null != response && null != response.authenticated){
                 /*applicationToken = response.applicationJwtToken;*/
-                setUpRegularRefresh(tokenExpiry);
+                /*setUpRegularRefresh(tokenExpiry);*/
+                setUpRegularRefresh();
                 loggedIn = true;
                 /*readQueueAPI();*/
                 document.getElementById('api-refresh').style.display='flex';
@@ -239,7 +240,7 @@ var setItemWithAPI = async function(keyName, jsonValue) {
     return response;
 
 }
-
+/*
 async function setUpRegularRefresh(expiryDate) {
     var currentDateObject = new Date();
     var expiryDateObject = new Date(expiryDate);
@@ -249,7 +250,13 @@ async function setUpRegularRefresh(expiryDate) {
     } else {
         await refreshToken();
     }
+}*/
+async function setUpRegularRefresh() {
+    var intervalTime = 10*60*1000;
+    setInterval(launchRefresh, intervalTime);
+
 }
+
 var launchRefresh = function(){
     refreshToken().then(value=>{
         console.log(value);
@@ -341,8 +348,8 @@ var storeUserInformation = async function(information) {
     
         /* Define the data you want to insert.*/
         var data = {    "key": "retain",
-                        "picture": information.picture, 
-                        "givenName": information.givenName,
+                        /*"picture": information.picture, 
+                        "givenName": information.givenName,*/
                         "refreshTokenExpiry": information.refreshTokenExpiry,
                         "tokenExpiry": information.tokenExpiry };
     

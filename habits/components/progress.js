@@ -402,16 +402,19 @@ var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletio
         // currentDiv.setAttribute('order',newOrder.toString());
         currentDiv.style.background="#daffd9";
         /*currentDiv.style.background="rgb(238 255 237)"; */ 
+        /*currentDiv.style.boxShadow = "0px 6px 10px rgba(0,0,0,.2)";*/
     } else if (newCompletionPercentage>=50){
         currentDiv.style.borderColor="rgb(246 223 35)";
         currentDiv.style.background="rgb(255 251 234)";
         currentDiv.style.order=currentDiv.getAttribute('order');
+        /*currentDiv.style.boxShadow = "0px 5px 10px rgba(0,0,0,.2)";*/
         /*currentDiv.style.order="80";*/
     } else if (newCompletionPercentage<50){
         currentDiv.style.borderColor="lightgrey";
         currentDiv.style.background="white";
         currentDiv.style.order=currentDiv.getAttribute('order');
         /*currentDiv.style.order="80";*/
+        /*currentDiv.style.boxShadow = "0px 4px 10px rgba(0,0,0,.2)";*/
     }
     if (currentDiv.getAttribute('id') && currentDiv.getAttribute('id') == "daily-summary-container"){
         currentDiv.style.order = "178";

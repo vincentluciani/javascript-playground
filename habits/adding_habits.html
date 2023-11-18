@@ -136,31 +136,33 @@
                       </div>
                 </div>
                 <div id="google-container-progress" class="box first daily-summary">
-                    <div class="bold" id="login-title-box"><span id="login-icon-progress" class="task-icon-container login"></span>Login</div>
-                    <!-- <div class="image-text-box"> -->
-                        <div class="allegory-container" ><img id="allegory" class="allegory" src="victory_big_2.jpeg" /></div>
-                        <!--<div class="user-image"><img id="google-image-progress" /></div>-->
-                        <div id="login-text-progress">Being logged in, you can use the application on all devices and keep an unlimited number of days.</div>
-                   <!-- </div> -->
-                  <!-- <div id="streak-box"><span id="streak-text">Number of streaks:</span> <span id="number-of-streaks"></span> <div class="trophy-icon icon"></div></div>-->
-                    <div class="g_id_signin"
-                    data-type="standard"
-                    data-shape="rectangular"
-                    data-theme="outline"
-                    data-text="sign_in_with"
-                    data-size="large"
-                    data-logo_alignment="left">
+                    <div class="allegory-container" ><img id="allegory" class="allegory" src="victory_big_2.jpeg" /></div>
+                    <div class="container-inner-wrapper">
+                        <div class="bold" id="login-title-box"><span id="login-icon-progress" class="task-icon-container login"></span>Login</div>
+                        <!-- <div class="image-text-box"> -->
+                            <!--<div class="user-image"><img id="google-image-progress" /></div>-->
+                            <div id="login-text-progress">Being logged in, you can use the application on all devices and keep an unlimited number of days.</div>
+                    <!-- </div> -->
+                    <!-- <div id="streak-box"><span id="streak-text">Number of streaks:</span> <span id="number-of-streaks"></span> <div class="trophy-icon icon"></div></div>-->
+                        <div class="g_id_signin"
+                        data-type="standard"
+                        data-shape="rectangular"
+                        data-theme="outline"
+                        data-text="sign_in_with"
+                        data-size="large"
+                        data-logo_alignment="left">
+                        </div>
+                        <div id="back-to-today">&gt; Back to today</div>
+                        <div id="back-to-yesterday">&lt; Back to yesterday</div> 
+                    <!-- <div id="signout_button_progress">Sign Out</div> -->
+                        <script>
+                            //   const signOutButtonInProgress = document.getElementById('signout_button_progress');
+                            //   signOutButtonInProgress.onclick = () => {
+                            //             google.accounts.id.disableAutoSelect();
+                            //             reactOnLogout();
+                            //         }
+                        </script>
                     </div>
-                    <div id="back-to-today">&gt; Back to today</div>
-                    <div id="back-to-yesterday">&lt; Back to yesterday</div> 
-                   <!-- <div id="signout_button_progress">Sign Out</div> -->
-                    <script>
-                        //   const signOutButtonInProgress = document.getElementById('signout_button_progress');
-                        //   signOutButtonInProgress.onclick = () => {
-                        //             google.accounts.id.disableAutoSelect();
-                        //             reactOnLogout();
-                        //         }
-                    </script>
                 </div>
             </div>
 
@@ -194,37 +196,38 @@
             <div id="habits-definition-container" class="habits-definition-container">
 
                 <div id="google-container" class="box new-habit-focused">
-                    <div class="bold" id="login-title-box-habits"><span id="login-icon" class="task-icon-container login"></span>Login</div>
-                    <div class="image-text-box">
-                        <div class="user-image"><img id="google-image" /></div>
-                        <div id="login-text">Being logged in, you can use the application on all devices and keep an unlimited number of days.<br></div><br>
-                    </div>  
-                    <div id="signout_button_habits">Sign Out</div>
-                    <div class="g_id_signin"
-                        data-type="standard"
-                        data-shape="rectangular"
-                        data-theme="outline"
-                        data-text="sign_in_with"
-                        data-size="large"
-                        data-logo_alignment="left">
-                    </div>  
-                    <div id="assure-login" class="assurance">
-                        <div><div class='checked-icon'></div>You can delete your account easily and at any time.</div>
-                        <div><div class='checked-icon'></div>We will not keep your email and will hash your identifier.</div>
-                        <div><div class='checked-icon'></div>No need to share any payment information.</div>
-                    </div> 
-                    <script>
-                          const signOutButton = document.getElementById('signout_button');
-                                    signOutButton.onclick = () => {
-                                    google.accounts.id.disableAutoSelect();
-                                    reactOnLogout();
-                                }
-                                const signOutButtonHabits = document.getElementById('signout_button_habits');
-                                    signOutButtonHabits.onclick = () => {
-                                    google.accounts.id.disableAutoSelect();
-                                    reactOnLogout();
-                                }
-                    </script>
+                    <div class="allegory-container-habit" ><img id="allegory-habit" class="allegory" src="victory_big_2.jpeg" /></div>
+                    <div class="container-inner-wrapper">
+                        <div class="bold" id="login-title-box-habits"><span id="login-icon" class="task-icon-container login"></span>Login</div>
+                        <div class="image-text-box">
+                            <!-- <div class="user-image"><img id="google-image" /></div>-->
+                            <div id="login-text">Being logged in, you can use the application on all devices and keep an unlimited number of days.</div>
+                        </div>  
+                        <div id="signout_button_habits">Sign Out</div>
+                        <div class="g_id_signin"
+                            data-type="standard"
+                            data-shape="rectangular"
+                            data-theme="outline"
+                            data-text="sign_in_with"
+                            data-size="large"
+                            data-logo_alignment="left">
+                        </div>  
+                        <div id="assure-login" class="assurance">
+                            <div><div class='checked-icon'></div>You can delete your account easily and at any time.</div>
+                            <div><div class='checked-icon'></div>We will not keep your email and will hash your identifier.</div>
+                            <div><div class='checked-icon'></div>No need to share any payment information.</div>
+                        </div> 
+                        <script>
+                            const signOutButton = document.getElementById('signout_button');
+                                        signOutButton.onclick = () => {
+                                        reactOnLogout();
+                                    }
+                                    const signOutButtonHabits = document.getElementById('signout_button_habits');
+                                        signOutButtonHabits.onclick = () => {
+                                        reactOnLogout();
+                                    }
+                        </script>
+                    </div>
                 </div>
                 <div id="new-habit" class="box new-habit">
                     <div class="bold"><div class="task-icon-container"><svg class="small-svg-icon" viewBox="0 0 16 16"><use xlink:href="#task-icon-svg"  /></svg></div>New Habit</div><br>

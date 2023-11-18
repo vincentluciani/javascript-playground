@@ -25,6 +25,9 @@ body{
     background: #fafafa;
 }
 
+#login-title-box,#login-title-box-habits{
+    margin-top: 7px;
+}
 .assurance{
     font-size:13px;
     color: green;
@@ -174,13 +177,17 @@ body{
     right: 20px;
     top: 20px;
 }
-#google-container-progress {
+#google-container-progress, #google-container-progress.box,#google-container, #google-container.box{
     height: max-content;
-    display: none;
+    display: block;
     background-color: #fffceb;
     order: 1;
     /*border: 5px solid #c369bc;*/
     border: none;
+    padding:0px;
+}
+.container-inner-wrapper{
+    padding: 2px 23px 5px 16px;
 }
 #google-container-progress .bold,#google-container .bold{
     font-size:19px;
@@ -189,7 +196,7 @@ body{
     border-radius: 10px 10px 10px 10px;
 }
 .g_id_signin{
-    margin-top: 13px;
+    margin-top: 0px;
     margin-bottom: 11px;
 }
 #signout_button,#signout_button_habits{
@@ -447,6 +454,10 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
 }
 .box.new-habit-focused{
     border: 5px solid var(--primary-color,#c369bc);
+}
+
+.new-habit,.new-habit-focused{
+    order:2;
 }
 
 .box.canva-wrapper{
@@ -1069,10 +1080,10 @@ td,.red,.fa-warning{
     #login-text-progress{
         font-size: 21px;
     }
-    #allegory{
-        width: calc(100% - 5px);
-        border-radius: 6px;
-        margin-top: 10px;
+    #allegory,#allegory-habit{
+        width: 100%;
+        border-radius: 10px 10px 0px 0px;
+        margin-top: 0px;
         margin-bottom:2px;
     }
 
@@ -1097,9 +1108,11 @@ td,.red,.fa-warning{
         width:95.7%;
     }
     #login-text,#login-text-progress{
-        margin-top:8px;
-        margin-bottom:11px;
+        margin-top: 13px;
+        margin-bottom: 12px
     }
+    margin-top: 16px;
+    margin-bottom: 9px;
     .number-of-minutes,.minutes-second-separator,.number-of-seconds{
         margin-top:9px;
     }
@@ -1170,6 +1183,7 @@ td,.red,.fa-warning{
         border-width: 1px;
         margin: 12px 15px 0px 15px;
     }
+
     .box.big-action-button{
         margin:13px;
     }
@@ -1279,10 +1293,10 @@ td,.red,.fa-warning{
     #login-text-progress{
         font-size: 18px;
     }
-    #allegory{
-        width: 225px;
-        border-radius: 6px;
-        margin-top: 5px;
+    #allegory,#allegory-habit{
+        width: 100%;
+        border-radius: 10px 10px 0px 0px;
+        margin-top: 0px;
         margin-bottom:2px;
     }
     #streak-box{
@@ -1290,10 +1304,11 @@ td,.red,.fa-warning{
     }
 
     .habit-description{
-        text-decoration: underline;
+        /*text-decoration: underline;
         text-underline-offset: 3px;
         text-decoration-color: #c4c4c4;
-        text-decoration-thickness: from-font; 
+        text-decoration-thickness: from-font; */
+        text-decoration: none;
     }
 
     #number-of-streaks-bubble{
@@ -1315,8 +1330,8 @@ td,.red,.fa-warning{
         width:98.7%;
     }
     #login-text,#login-text-progress{
-        margin-top: 5px;
-        margin-bottom:12px;
+        margin-top: 13px;
+        margin-bottom: 12px
     }
     #text-filter{
         margin-top: 3px;
@@ -1349,9 +1364,12 @@ td,.red,.fa-warning{
     .box.habit-update,#daily-summary-container{
         height: 206px;
     }
-    .box.habit-update,#daily-summary-container,#google-container-progress,#google-container{
+    .box.habit-update,#daily-summary-container,#google-container{
         padding: 10px 15px 10px 15px;
         width: 225px;
+    }
+    #google-container-progress,#google-container{
+        width: 255px;
     }
     .box.habit-update, #google-container-progress,.box.daily-summary, .box.big-action-button, .box.big-action-button:hover{
         border-width: 1px;

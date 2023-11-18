@@ -608,11 +608,6 @@ var eraseAccount = function(){
             (value) => {
                 if (value){
                     document.getElementById('deletion-answer').innerHTML = 'Deletion successful';
-                    try {
-                        google.accounts.id.disableAutoSelect();
-                    } catch(e){
-                        console.log('did not find google account to disable');
-                    }
                     reactOnLogout();
                 } else {
                     document.getElementById('deletion-answer').innerHTML = 'Problem deleting your account. Check your internet connection or try again later';
