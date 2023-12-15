@@ -1,0 +1,196 @@
+<html>
+<head>
+    <title>test app</title>
+    <style>
+    @font-face {
+    font-family: 'Nunito';
+    src:  url('https://fonts.gstatic.com/s/nunito/v26/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshdTQ3j6zbXWjgeg.woff2') format('woff2'),
+    }
+    #version{
+        font-size:40px;
+        font-family: "Nunito";
+    }
+    img{
+        width: 100%;
+    }
+    #new-version{
+        display: block;
+    }
+    button{
+        height: 100px;
+        max-width: 150px;
+        font-size: 17px;
+        margin: 5px;
+    }
+ </style>
+        <link rel="manifest" href="/pwa_test/manifest.json">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style content="black">
+        <meta name="apple-mobile-web-app-title content="apple title test">
+        <link rel="apple-touch-icon" href="/pwa_test/images/icons/apple-icon-76x76.png" sizes="76x76">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+<div id="version">application version 2023121511</div>
+<div id="time-debugging">
+    <div>Current time fresh info:<span id="current-time"></span></div>
+    Refresh should happen when the following two dates differ:
+    <div>Current date as of first load:<span id="last-current-date"></span></div>
+    <div>Current date based on time fresh info:<span id="new-current-date"></span></div>
+</div>
+<div id="new-version">new version<button onclick="refreshPage();">new version application</button></div>
+<button onclick="installApplication();">install application</button>
+<button onclick="uninstallSw();">uninstall sw</button>
+<img src="images/man_victory_stadium.jpeg" />
+<script>
+    /* execute if the browser supports service workers */
+// var refreshed = false;
+var currentDateTime = new Date();
+console.log("starting javascript:"+currentDateTime.toString());
+
+
+
+var onload = function(){
+    document.getElementById('last-current-date').innerHTML = formatDateHour(currentDateTime);
+    setInterval(checkForDay, 10 * 1000);
+}
+
+document.addEventListener('visibilitychange', function (event) {
+    if (document.hidden) {
+        console.log('not visible');
+    } else {
+        checkForDay();
+    }
+});
+
+window.addEventListener('focus', function (event) {
+    checkForDay();
+});
+
+var uninstallSw = function(){
+    if ('serviceWorker' in navigator){
+        navigator.serviceWorker.getRegistrations()
+        .then(function(registrations){
+            for (var i=0; i< registrations.length; i++){
+                registrations[i].unregister();
+            }
+        })
+    }
+};
+
+var installApplication=function(){
+    const promptEvent = window.deferredPrompt;
+    if (promptEvent){
+        promptEvent.prompt();
+        promptEvent.userChoice.then(function(choiceResult){
+        console.log(choiceResult.outcome);
+
+        if (choiceResult.outcome === 'dismissed'){
+            console.log('user cancelled the installation');
+        } else {
+            console.log('user added to home screen');
+        }
+        window.deferredPrompt = null;
+        })
+    }
+};
+
+var refreshPage = function() {
+    window.location.reload();
+    //document.getElementById('new-version').style.display="none";
+    // refreshed=true;
+}
+// if ('serviceWorker' in navigator){
+//     navigator.serviceWorker
+//     .register('sw.js')
+//     .then(function(){
+//         console.log('service worker registered');
+//     })
+//     .catch(function(err){
+//         console.log(err);
+//     });
+// };
+
+// if ('serviceWorker' in navigator) {
+//   navigator.serviceWorker.register('sw.js').then((registration) => {
+//     console.log('service worker registered');
+//     registration.addEventListener('updatefound', () => {
+//       const newWorker = registration.installing;
+//       newWorker.addEventListener('statechange', () => {
+//         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+//           // A new version is available
+//           // You can notify the user to reload the page
+//           console.log('New version available');
+//         //   if (confirm('A new version is available. Do you want to refresh the page?')) {
+//         //     window.location.reload();
+//         //   }
+//             document.getElementById('new-version').style.display="block";
+//         }
+//       });
+//     });
+//   })
+//   .catch(function(err){
+//         console.log(err);
+//     });
+// }
+var formatDateHour = function(dateToFormat){
+    return dateToFormat.getFullYear().toString().padStart(2,'0')+'-'+(dateToFormat.getMonth()+1).toString().padStart(2,'0')+'-'+dateToFormat.getDate().toString().padStart(2,'0')+':'+dateToFormat.getHours().toString().padStart(2,'0'); 
+};
+
+var checkForDay = function(){
+    var newCurrentDateTime = new Date();
+
+    var newCurrentDate = formatDateHour(newCurrentDateTime);
+    var oldCurrentDate = formatDateHour(currentDateTime);
+   
+    document.getElementById('current-time').innerHTML = newCurrentDateTime.toString();
+    document.getElementById('last-current-date').innerHTML = oldCurrentDate;
+    document.getElementById('new-current-date').innerHTML = newCurrentDate;
+
+    if (newCurrentDate > oldCurrentDate){
+        //location.reload();
+        window.location.reload();
+    } 
+
+}
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').then((registration) => {
+    const checkForUpdates = () => {
+      registration.update().then(() => {
+        const newWorker = registration.installing;
+        if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              // A new version is available
+              // You can notify the user to reload the page
+            //   if (!refreshed){
+                document.getElementById('new-version').style.display="block";
+            //   }
+            }
+          });
+        }
+      });
+    };
+
+    // Check for updates every day (adjust the interval as needed)
+    //setInterval(checkForUpdates, 12 * 3600 * 1000);
+    
+    // Initial check for updates when the app loads
+    //checkForDay();
+  });
+}
+
+window.addEventListener('beforeinstallprompt',function(event){
+    console.log('beforeinstallprompt fired');
+    event.preventDefault();
+    window.deferredPrompt=event;
+    //return false;
+});
+
+
+
+</script>
+</body>
+
+</html>
