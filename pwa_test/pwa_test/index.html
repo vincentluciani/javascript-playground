@@ -14,7 +14,7 @@
         width: 100%;
     }
     #new-version{
-        display: block;
+        display: none;
     }
     button{
         height: 100px;
@@ -24,6 +24,7 @@
     }
  </style>
         <link rel="manifest" href="/pwa_test/manifest.json">
+        <meta name="theme-color" content="#c369bc"/>
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style content="black">
         <meta name="apple-mobile-web-app-title content="apple title test">
@@ -31,29 +32,78 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 <body>
-<div id="version">application version 2023121511</div>
+<div id="application-version"></div>
 <div id="time-debugging">
     <div>Current time fresh info:<span id="current-time"></span></div>
     Refresh should happen when the following two dates differ:
     <div>Current date as of first load:<span id="last-current-date"></span></div>
     <div>Current date based on time fresh info:<span id="new-current-date"></span></div>
 </div>
-<div id="new-version">new version<button onclick="refreshPage();">new version application</button></div>
+<div id="new-version">A new version of the application is available. <div onclick="refreshPage();">Click here to get it</div> It takes around 2 seconds only to download.</div>
+<div id="sw-version"></div>
+<div id="new-version-message"></div>
+<div id="registrations"></div>
+<button onclick="clearBadge();">clear badge</button>
 <button onclick="installApplication();">install application</button>
+<button onclick="getListOfSw();">list service workers</button>
+<button onclick="deleteAllSw();">delete all service workers</button>
 <button onclick="uninstallSw();">uninstall sw</button>
+<button onclick="refreshPage();">new version</button>
+<button onclick="askForNotificationPermission();">ask for notification permission</button>
+<button onclick="sendNotification('test app','manual notification');">send notification</button>
+
 <img src="images/man_victory_stadium.jpeg" />
 <script>
-    /* execute if the browser supports service workers */
-// var refreshed = false;
+var currentApplicationVersion="2024010707_3";
 var currentDateTime = new Date();
 console.log("starting javascript:"+currentDateTime.toString());
 
 
-
 var onload = function(){
+    document.getElementById("application-version").innerHTML = "version: "+currentApplicationVersion;
     document.getElementById('last-current-date').innerHTML = formatDateHour(currentDateTime);
     setInterval(checkForDay, 10 * 1000);
-}
+
+    isNewVersion().then(
+        value => {
+            if (value){
+                document.getElementById('new-version').style.display="block";
+            }
+        }
+    ).catch(e=>{
+        document.getElementById('sw-version').innerHTML = e.toString();
+        console.error(e);
+    })
+
+    if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js?version='+currentApplicationVersion).then((registration) => {
+    navigator.serviceWorker.addEventListener('message', event => {
+                        if (event.data && event.data.message){
+                            document.getElementById('new-version-message').innerHTML = event.data.message.toString();
+                            console.log('Message from service worker:', event.data.message);
+                        }
+                    });
+    console.log('registerin');
+    const checkForUpdates = () => {
+      registration.update().then(() => {
+        const newWorker = registration.installing;
+        console.log('registration.installing');
+        /*if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                   document.getElementById('new-version').style.display="block";
+            }
+          });
+        }*/
+      });
+    };
+
+  });
+};
+
+};
+
+
 
 document.addEventListener('visibilitychange', function (event) {
     if (document.hidden) {
@@ -67,6 +117,12 @@ window.addEventListener('focus', function (event) {
     checkForDay();
 });
 
+var clearBadge = function(){
+    if (navigator.clearAppBadge) {
+        navigator.clearAppBadge();
+    }
+};
+
 var uninstallSw = function(){
     if ('serviceWorker' in navigator){
         navigator.serviceWorker.getRegistrations()
@@ -77,6 +133,43 @@ var uninstallSw = function(){
         })
     }
 };
+
+var uninstallSwAsync = async function() {
+    if ('serviceWorker' in navigator) {
+        try {
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            
+            for (let i = 0; i < registrations.length; i++) {
+                await registrations[i].unregister();
+            }
+        } catch (error) {
+            console.error('Error during service worker uninstallation:', error);
+        }
+    }
+};
+var getListOfSw = function(){
+    var debugDiv = document.getElementById('registrations');
+    debugDiv.innerHTML = "";
+    navigator.serviceWorker.getRegistrations()
+    .then(function(registrations){
+        registrations.forEach(function(registration){
+            debugDiv.innerHTML+=registration.active.scriptURL;
+        })
+    })
+};
+
+var deleteAllSw = function(){
+    var debugDiv = document.getElementById('registrations');
+    debugDiv.innerHTML = "";
+    navigator.serviceWorker.getRegistrations()
+    .then(function(registrations){
+        registrations.forEach(function(registration){
+            registration.unregister();
+        })
+    })
+};
+
+
 
 var installApplication=function(){
     const promptEvent = window.deferredPrompt;
@@ -96,43 +189,64 @@ var installApplication=function(){
 };
 
 var refreshPage = function() {
-    window.location.reload();
-    //document.getElementById('new-version').style.display="none";
-    // refreshed=true;
-}
-// if ('serviceWorker' in navigator){
-//     navigator.serviceWorker
-//     .register('sw.js')
-//     .then(function(){
-//         console.log('service worker registered');
-//     })
-//     .catch(function(err){
-//         console.log(err);
-//     });
-// };
 
-// if ('serviceWorker' in navigator) {
-//   navigator.serviceWorker.register('sw.js').then((registration) => {
-//     console.log('service worker registered');
-//     registration.addEventListener('updatefound', () => {
-//       const newWorker = registration.installing;
-//       newWorker.addEventListener('statechange', () => {
-//         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-//           // A new version is available
-//           // You can notify the user to reload the page
-//           console.log('New version available');
-//         //   if (confirm('A new version is available. Do you want to refresh the page?')) {
-//         //     window.location.reload();
-//         //   }
-//             document.getElementById('new-version').style.display="block";
-//         }
-//       });
-//     });
-//   })
-//   .catch(function(err){
-//         console.log(err);
-//     });
-// }
+    uninstallSwAsync().then(function(){
+        window.location.reload();
+    }
+    )
+    
+};
+
+/*
+if ('serviceWorker' in navigator){
+    navigator.serviceWorker
+    .register('sw.js')
+    .then(function(){
+        console.log('service worker registered');
+    })
+    .catch(function(err){
+        console.log(err);
+    });
+};
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').then((registration) => {
+    console.log('service worker registered');
+    registration.addEventListener('updatefound', () => {
+      const newWorker = registration.installing;
+      newWorker.addEventListener('statechange', () => {
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          // A new version is available
+          // You can notify the user to reload the page
+          console.log('New version available');
+        //   if (confirm('A new version is available. Do you want to refresh the page?')) {
+        //     window.location.reload();
+        //   }
+            document.getElementById('new-version').style.display="block";
+        }
+      });
+    });
+  })
+  .catch(function(err){
+        console.log(err);
+    });
+}
+*/
+var isNewVersion = async function(){
+    var versionFromServiceWorker = await getDataById("version");
+
+    if (versionFromServiceWorker && versionFromServiceWorker.version){
+        document.getElementById('sw-version').innerHTML = "sw version:"+versionFromServiceWorker.version;
+        
+        return (versionFromServiceWorker.version != currentApplicationVersion);
+    } else {
+        document.getElementById('sw-version').innerHTML = "could not find new version from db";
+        
+        return false;
+    }   
+    
+};
+
 var formatDateHour = function(dateToFormat){
     return dateToFormat.getFullYear().toString().padStart(2,'0')+'-'+(dateToFormat.getMonth()+1).toString().padStart(2,'0')+'-'+dateToFormat.getDate().toString().padStart(2,'0')+':'+dateToFormat.getHours().toString().padStart(2,'0'); 
 };
@@ -147,48 +261,207 @@ var checkForDay = function(){
     document.getElementById('last-current-date').innerHTML = oldCurrentDate;
     document.getElementById('new-current-date').innerHTML = newCurrentDate;
 
+    isNewVersion().then(
+        value => {
+            if (value){
+                document.getElementById('new-version').style.display="block";
+            } else {
+                document.getElementById('new-version').style.display="none";
+            }
+        }
+    ).catch(e=>{
+        console.error(e);
+    })
+
     if (newCurrentDate > oldCurrentDate){
         //location.reload();
-        window.location.reload();
+        /*sendNotification('automatic','new hour');*/
+        //window.location.reload();
+        refreshPage(); 
     } 
 
-}
+};
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').then((registration) => {
-    const checkForUpdates = () => {
-      registration.update().then(() => {
-        const newWorker = registration.installing;
-        if (newWorker) {
-            newWorker.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              // A new version is available
-              // You can notify the user to reload the page
-            //   if (!refreshed){
-                document.getElementById('new-version').style.display="block";
-            //   }
-            }
-          });
-        }
-      });
-    };
-
-    // Check for updates every day (adjust the interval as needed)
-    //setInterval(checkForUpdates, 12 * 3600 * 1000);
-    
-    // Initial check for updates when the app loads
-    //checkForDay();
-  });
-}
 
 window.addEventListener('beforeinstallprompt',function(event){
     console.log('beforeinstallprompt fired');
     event.preventDefault();
     window.deferredPrompt=event;
-    //return false;
 });
 
 
+var sendNotification = function(title,message){
+    if (navigator.setAppBadge) {
+        navigator.setAppBadge(2);
+    }
+    if ('serviceWorker' in navigator){
+        var options = {
+            body: message,
+            icon:'/pwa_test/images/icons/app-icon-96x96.png',
+            image: '/pwa_test/images/man_victory_stadium.jpg',/*big image*/
+            dir:'ltr',
+            lang:'en-US',
+            vibrate: [100,50,200],
+            badge: '/pwa_test/images/icons/app-icon-96x96.png',
+            tag: 'registration',/* two notifications with the same tag replace each other*/
+            renotify: true, /* do not vibrate if next notification of same tag*/
+            actions:[
+                {action:'confirm',title:'ok',icon:'/pwa_test/images/icons/app-icon-96x96.png'},
+                {action:'cancel',title:'cancel',icon:'/pwa_test/images/icons/app-icon-96x96.png'},
+            ]
+        }
+        navigator.serviceWorker.ready
+        .then(function(swreg){
+            swreg.showNotification(title,options);
+        })
+    }
+};
+
+var askForNotificationPermission = function(){
+    Notification.requestPermission(function(result){
+        console.log('User choice',result);
+        if (result !== 'granted'){
+            console.log('not allowed');
+        } else {
+            sendNotification('test message','permission granted');
+        }
+    });
+};
+
+
+
+/* INDEXED DB FUNCTION */
+
+async function getDataById(id) {
+    try {
+      /* Open a database connection.*/
+      const db = await openDB();
+  
+      /* Create a transaction and get the object store.*/
+      const transaction = db.transaction(["versionStore"], "readonly");
+      const objectStore = transaction.objectStore("versionStore");
+  
+      /* Use the get method to retrieve data by key (id).*/
+      const request = objectStore.get(id);
+  
+      /* Handle the result or error using await.*/
+      const data = await new Promise((resolve, reject) => {
+        request.onsuccess = () => {
+            resolve(request.result);
+        };
+        request.onerror = () => {
+            reject(request.error);
+        }
+      });
+  
+      /* Close the database connection. */
+      db.close();
+  
+      if (data) {
+        console.log("Data found:", data);
+        return data
+      } else {
+        console.log("Data not found for id:", id);
+        return null
+      }
+    } catch (error) {
+      console.error("Error retrieving data:", error);
+      return null
+    }
+  }
+  
+  async function deleteEntry(id) {
+    try {
+      /* Open a database connection.*/
+      const db = await openDB();
+  
+      /* Create a transaction and get the object store.*/
+      const transaction = db.transaction(["versionStore"], "readwrite");
+      const objectStore = transaction.objectStore("versionStore");
+  
+      /* Use the get method to retrieve data by key (id).*/
+      const request = objectStore.delete(id);
+  
+      /* Handle the result or error using await.*/
+      await new Promise((resolve, reject) => {
+        request.onsuccess = () => {
+            resolve(id);
+        };
+        request.onerror = () => {
+            reject(request.error);
+        }
+      });
+  
+      /* Close the database connection. */
+      db.close();
+  
+    } catch (error) {
+      console.error("Error deleting data:", error);
+      return null
+    }
+  }
+
+var storeVersion = async function() {
+
+    try {
+        /* Open a database connection.*/
+        var db = await openDB();
+    
+        /* Create a transaction and get the object store.*/
+        var transaction = db.transaction(["versionStore"], "readwrite");
+
+        var objectStore = transaction.objectStore("versionStore");
+    
+        /* Define the data you want to insert.*/
+        var data = {  
+            "key":"version",
+            "version":  versionNumber
+        };
+    
+        /* Use the add method to insert the data.*/
+        await new Promise((resolve, reject) => {
+        var request = objectStore.put(data);
+        request.onsuccess = () => {
+            resolve();
+        }
+        request.onerror = () => {
+            reject(request.error);
+        }
+        });
+    
+        /* Close the database connection.*/
+        db.close();
+    
+        console.log("Data inserted successfully");
+    } catch(e){
+        console.error(e);
+    }
+  }
+  
+  function openDB() {
+    return new Promise((resolve, reject) => {
+              /* increment the version number each time you change the schema*/
+      const request = indexedDB.open("myDatabase", 8); 
+      /* Specify the database name and version */
+  
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        if (!db.objectStoreNames.contains("versionStore")) {
+          db.createObjectStore("versionStore", { keyPath: "key" });
+        }
+      };
+  
+      request.onsuccess = (event) => {
+        const db = event.target.result;
+        resolve(db);
+      };
+  
+      request.onerror = (event) => {
+        reject(event.target.error);
+      };
+    });
+  }
+  
 
 </script>
 </body>

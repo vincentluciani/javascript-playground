@@ -375,6 +375,7 @@ var storeUserInformation = async function(information) {
   
   function openDB() {
     return new Promise((resolve, reject) => {
+        /* increment the version number each time you change the schema*/
       const request = window.indexedDB.open("myDatabase", 7); 
       /* Specify the database name and version */
   
@@ -383,7 +384,7 @@ var storeUserInformation = async function(information) {
         if (!db.objectStoreNames.contains("informationStore")) {
           db.createObjectStore("informationStore", { keyPath: "key" });
         }
-      };
+      };    
   
       request.onsuccess = (event) => {
         const db = event.target.result;
