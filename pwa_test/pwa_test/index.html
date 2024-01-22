@@ -22,6 +22,9 @@
         font-size: 17px;
         margin: 5px;
     }
+    .important{
+        border: 3px solid red;
+    }
  </style>
         <link rel="manifest" href="/pwa_test/manifest.json">
         <meta name="theme-color" content="#c369bc"/>
@@ -39,22 +42,23 @@
     <div>Current date as of first load:<span id="last-current-date"></span></div>
     <div>Current date based on time fresh info:<span id="new-current-date"></span></div>
 </div>
-<div id="new-version">A new version of the application is available. <div onclick="refreshPage();">Click here to get it</div> It takes around 2 seconds only to download.</div>
+<div id="new-version">A new version of the application is available. <div onclick="refreshPageIfNewVersion();">Click here to get it</div> It takes around 2 seconds only to download.</div>
 <div id="sw-version"></div>
 <div id="new-version-message"></div>
 <div id="registrations"></div>
+<div id="test-message"></div>
 <button onclick="clearBadge();">clear badge</button>
 <button onclick="installApplication();">install application</button>
 <button onclick="getListOfSw();">list service workers</button>
 <button onclick="deleteAllSw();">delete all service workers</button>
 <button onclick="uninstallSw();">uninstall sw</button>
-<button onclick="refreshPage();">new version</button>
+<button class="important" onclick="refreshPageIfNewVersion();">check if new version and reload</button>
 <button onclick="askForNotificationPermission();">ask for notification permission</button>
 <button onclick="sendNotification('test app','manual notification');">send notification</button>
 
 <img src="images/man_victory_stadium.jpeg" />
 <script>
-var currentApplicationVersion="2024010707_3";
+var currentApplicationVersion="2024012218";
 var currentDateTime = new Date();
 console.log("starting javascript:"+currentDateTime.toString());
 
@@ -64,6 +68,7 @@ var onload = function(){
     document.getElementById('last-current-date').innerHTML = formatDateHour(currentDateTime);
     setInterval(checkForDay, 10 * 1000);
 
+    /* this is in fact just in case */
     isNewVersion().then(
         value => {
             if (value){
@@ -77,12 +82,12 @@ var onload = function(){
 
     if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js?version='+currentApplicationVersion).then((registration) => {
-    navigator.serviceWorker.addEventListener('message', event => {
-                        if (event.data && event.data.message){
-                            document.getElementById('new-version-message').innerHTML = event.data.message.toString();
-                            console.log('Message from service worker:', event.data.message);
-                        }
-                    });
+    // navigator.serviceWorker.addEventListener('message', event => {
+    //                     if (event.data && event.data.message){
+    //                         document.getElementById('new-version-message').innerHTML = event.data.message.toString();
+    //                         console.log('Message from service worker:', event.data.message);
+    //                     }
+    //                 });
     console.log('registerin');
     const checkForUpdates = () => {
       registration.update().then(() => {
@@ -188,13 +193,23 @@ var installApplication=function(){
     }
 };
 
-var refreshPage = function() {
+var refreshPageIfNewVersion = function() {
 
-    uninstallSwAsync().then(function(){
+    isNewVersion().then(
+        value => {
+            if (value){
+                uninstallSwAsync().then(function(){
+                window.location.reload();
+                });
+            } else {
+                window.location.reload();
+            }
+        }
+    ).catch(e=>{
+        console.error(e);
         window.location.reload();
-    }
-    )
-    
+    })
+   
 };
 
 /*
@@ -233,14 +248,15 @@ if ('serviceWorker' in navigator) {
 }
 */
 var isNewVersion = async function(){
-    var versionFromServiceWorker = await getDataById("version");
+    /*var versionFromServiceWorker = await getDataById("version");*/
+    var versionFromServer = await getNewVersion();
 
-    if (versionFromServiceWorker && versionFromServiceWorker.version){
-        document.getElementById('sw-version').innerHTML = "sw version:"+versionFromServiceWorker.version;
+    if (versionFromServer && versionFromServer.version){
+        document.getElementById('sw-version').innerHTML = "software version:"+versionFromServer.version;
         
-        return (versionFromServiceWorker.version != currentApplicationVersion);
+        return (versionFromServer.version != currentApplicationVersion);
     } else {
-        document.getElementById('sw-version').innerHTML = "could not find new version from db";
+        document.getElementById('sw-version').innerHTML = "could not find new version from server";
         
         return false;
     }   
@@ -261,7 +277,7 @@ var checkForDay = function(){
     document.getElementById('last-current-date').innerHTML = oldCurrentDate;
     document.getElementById('new-current-date').innerHTML = newCurrentDate;
 
-    isNewVersion().then(
+    /*isNewVersion().then(
         value => {
             if (value){
                 document.getElementById('new-version').style.display="block";
@@ -271,18 +287,31 @@ var checkForDay = function(){
         }
     ).catch(e=>{
         console.error(e);
-    })
+    })*/
 
     if (newCurrentDate > oldCurrentDate){
         //location.reload();
         /*sendNotification('automatic','new hour');*/
         //window.location.reload();
-        refreshPage(); 
+        refreshPageIfNewVersion(); 
     } 
 
 };
 
+var getNewVersion = async function(){
+    try{
+        var response = await fetch('https://www.vincent-luciani.com/api/discipline/version')
+    } catch (e) {
+            console.log('could not connect to the server to check the current version');
+            console.log(e);
+            response = null;
+    } 
+    if (response && response.status == '200'){
+        var apiResponse = await response.json();
+        return apiResponse;
+    }
 
+}
 window.addEventListener('beforeinstallprompt',function(event){
     console.log('beforeinstallprompt fired');
     event.preventDefault();
@@ -312,6 +341,7 @@ var sendNotification = function(title,message){
         }
         navigator.serviceWorker.ready
         .then(function(swreg){
+            document.getElementById('test-message').innerHTML = "{"+title+"}"+"{"+options.body.toString()+"}";
             swreg.showNotification(title,options);
         })
     }
@@ -332,135 +362,135 @@ var askForNotificationPermission = function(){
 
 /* INDEXED DB FUNCTION */
 
-async function getDataById(id) {
-    try {
-      /* Open a database connection.*/
-      const db = await openDB();
+// async function getDataById(id) {
+//     try {
+//       /* Open a database connection.*/
+//       const db = await openDB();
   
-      /* Create a transaction and get the object store.*/
-      const transaction = db.transaction(["versionStore"], "readonly");
-      const objectStore = transaction.objectStore("versionStore");
+//       /* Create a transaction and get the object store.*/
+//       const transaction = db.transaction(["versionStore"], "readonly");
+//       const objectStore = transaction.objectStore("versionStore");
   
-      /* Use the get method to retrieve data by key (id).*/
-      const request = objectStore.get(id);
+//       /* Use the get method to retrieve data by key (id).*/
+//       const request = objectStore.get(id);
   
-      /* Handle the result or error using await.*/
-      const data = await new Promise((resolve, reject) => {
-        request.onsuccess = () => {
-            resolve(request.result);
-        };
-        request.onerror = () => {
-            reject(request.error);
-        }
-      });
+//       /* Handle the result or error using await.*/
+//       const data = await new Promise((resolve, reject) => {
+//         request.onsuccess = () => {
+//             resolve(request.result);
+//         };
+//         request.onerror = () => {
+//             reject(request.error);
+//         }
+//       });
   
-      /* Close the database connection. */
-      db.close();
+//       /* Close the database connection. */
+//       db.close();
   
-      if (data) {
-        console.log("Data found:", data);
-        return data
-      } else {
-        console.log("Data not found for id:", id);
-        return null
-      }
-    } catch (error) {
-      console.error("Error retrieving data:", error);
-      return null
-    }
-  }
+//       if (data) {
+//         console.log("Data found:", data);
+//         return data
+//       } else {
+//         console.log("Data not found for id:", id);
+//         return null
+//       }
+//     } catch (error) {
+//       console.error("Error retrieving data:", error);
+//       return null
+//     }
+//   }
   
-  async function deleteEntry(id) {
-    try {
-      /* Open a database connection.*/
-      const db = await openDB();
+//   async function deleteEntry(id) {
+//     try {
+//       /* Open a database connection.*/
+//       const db = await openDB();
   
-      /* Create a transaction and get the object store.*/
-      const transaction = db.transaction(["versionStore"], "readwrite");
-      const objectStore = transaction.objectStore("versionStore");
+//       /* Create a transaction and get the object store.*/
+//       const transaction = db.transaction(["versionStore"], "readwrite");
+//       const objectStore = transaction.objectStore("versionStore");
   
-      /* Use the get method to retrieve data by key (id).*/
-      const request = objectStore.delete(id);
+//       /* Use the get method to retrieve data by key (id).*/
+//       const request = objectStore.delete(id);
   
-      /* Handle the result or error using await.*/
-      await new Promise((resolve, reject) => {
-        request.onsuccess = () => {
-            resolve(id);
-        };
-        request.onerror = () => {
-            reject(request.error);
-        }
-      });
+//       /* Handle the result or error using await.*/
+//       await new Promise((resolve, reject) => {
+//         request.onsuccess = () => {
+//             resolve(id);
+//         };
+//         request.onerror = () => {
+//             reject(request.error);
+//         }
+//       });
   
-      /* Close the database connection. */
-      db.close();
+//       /* Close the database connection. */
+//       db.close();
   
-    } catch (error) {
-      console.error("Error deleting data:", error);
-      return null
-    }
-  }
+//     } catch (error) {
+//       console.error("Error deleting data:", error);
+//       return null
+//     }
+//   }
 
-var storeVersion = async function() {
+// var storeVersion = async function() {
 
-    try {
-        /* Open a database connection.*/
-        var db = await openDB();
+//     try {
+//         /* Open a database connection.*/
+//         var db = await openDB();
     
-        /* Create a transaction and get the object store.*/
-        var transaction = db.transaction(["versionStore"], "readwrite");
+//         /* Create a transaction and get the object store.*/
+//         var transaction = db.transaction(["versionStore"], "readwrite");
 
-        var objectStore = transaction.objectStore("versionStore");
+//         var objectStore = transaction.objectStore("versionStore");
     
-        /* Define the data you want to insert.*/
-        var data = {  
-            "key":"version",
-            "version":  versionNumber
-        };
+//         /* Define the data you want to insert.*/
+//         var data = {  
+//             "key":"version",
+//             "version":  versionNumber
+//         };
     
-        /* Use the add method to insert the data.*/
-        await new Promise((resolve, reject) => {
-        var request = objectStore.put(data);
-        request.onsuccess = () => {
-            resolve();
-        }
-        request.onerror = () => {
-            reject(request.error);
-        }
-        });
+//         /* Use the add method to insert the data.*/
+//         await new Promise((resolve, reject) => {
+//         var request = objectStore.put(data);
+//         request.onsuccess = () => {
+//             resolve();
+//         }
+//         request.onerror = () => {
+//             reject(request.error);
+//         }
+//         });
     
-        /* Close the database connection.*/
-        db.close();
+//         /* Close the database connection.*/
+//         db.close();
     
-        console.log("Data inserted successfully");
-    } catch(e){
-        console.error(e);
-    }
-  }
+//         console.log("Data inserted successfully");
+//     } catch(e){
+//         console.error(e);
+//     }
+//   }
   
-  function openDB() {
-    return new Promise((resolve, reject) => {
-              /* increment the version number each time you change the schema*/
-      const request = indexedDB.open("myDatabase", 8); 
-      /* Specify the database name and version */
+//   function openDB() {
+//     return new Promise((resolve, reject) => {
+//               /* increment the version number each time you change the schema*/
+//       const request = indexedDB.open("myDatabase", 8); 
+//       /* Specify the database name and version */
   
-      request.onupgradeneeded = (event) => {
-        const db = event.target.result;
-        if (!db.objectStoreNames.contains("versionStore")) {
-          db.createObjectStore("versionStore", { keyPath: "key" });
-        }
-      };
+//       request.onupgradeneeded = (event) => {
+//         const db = event.target.result;
+//         if (!db.objectStoreNames.contains("versionStore")) {
+//           db.createObjectStore("versionStore", { keyPath: "key" });
+//         }
+//       };
   
-      request.onsuccess = (event) => {
-        const db = event.target.result;
-        resolve(db);
-      };
+//       request.onsuccess = (event) => {
+//         const db = event.target.result;
+//         resolve(db);
+//       };
   
-      request.onerror = (event) => {
-        reject(event.target.error);
-      };
-    });
-  }
+//       request.onerror = (event) => {
+//         reject(event.target.error);
+//       };
+//     });
+//   }
   
 
 </script>

@@ -375,8 +375,9 @@ var storeUserInformation = async function(information) {
   
   function openDB() {
     return new Promise((resolve, reject) => {
-        /* increment the version number each time you change the schema*/
-      const request = window.indexedDB.open("myDatabase", 7); 
+        /* increment the version number each time you change the schema
+        if you open x while there is y > x in the user browser, it will crash */
+      const request = window.indexedDB.open("myDatabase", 8); 
       /* Specify the database name and version */
   
       request.onupgradeneeded = (event) => {

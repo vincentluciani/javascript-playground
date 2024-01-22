@@ -1,4 +1,4 @@
-var versionNumber = '2024010707_3';
+var versionNumber = '2024012218';
 
 var CACHE_STATIC = 'static_'+versionNumber;
 var CACHE_DYNAMIC = 'dynamic_'+versionNumber;
@@ -67,18 +67,18 @@ self.addEventListener('activate', function(event){
             return Promise.all(keyList.map(function(key){
                 if (key !== CACHE_STATIC && key !== CACHE_DYNAMIC){
                     console.log('{Service worker} removing old cache',key);
-                    self.clients.matchAll().then(clients => {
+                    // self.clients.matchAll().then(clients => {
                        
-                        clients.forEach(client => {
-                            client.postMessage({ action: 'sendInformation', information: 'new version arrived' });
-                        });
-                    });
+                    //     clients.forEach(client => {
+                    //         client.postMessage({ action: 'sendInformation', information: 'new version arrived' });
+                    //     });
+                    // });
                     
                     return caches.delete(key);
                 }
             }))
         })
-        .then(storeVersion)
+        /*.then(storeVersion)*/
     )
     return self.clients.claim(); /*makes stuff more robust...*/
 });
@@ -93,140 +93,140 @@ self.addEventListener('fetch',function(event){
 
 });
 
-async function getDataById(id) {
-    try {
-      /* Open a database connection.*/
-      const db = await openDB();
+// async function getDataById(id) {
+//     try {
+//       /* Open a database connection.*/
+//       const db = await openDB();
   
-      /* Create a transaction and get the object store.*/
-      const transaction = db.transaction(["versionStore"], "readonly");
-      const objectStore = transaction.objectStore("versionStore");
+//       /* Create a transaction and get the object store.*/
+//       const transaction = db.transaction(["versionStore"], "readonly");
+//       const objectStore = transaction.objectStore("versionStore");
   
-      /* Use the get method to retrieve data by key (id).*/
-      const request = objectStore.get(id);
+//       /* Use the get method to retrieve data by key (id).*/
+//       const request = objectStore.get(id);
   
-      /* Handle the result or error using await.*/
-      const data = await new Promise((resolve, reject) => {
-        request.onsuccess = () => {
-            resolve(request.result);
-        };
-        request.onerror = () => {
-            reject(request.error);
-        }
-      });
+//       /* Handle the result or error using await.*/
+//       const data = await new Promise((resolve, reject) => {
+//         request.onsuccess = () => {
+//             resolve(request.result);
+//         };
+//         request.onerror = () => {
+//             reject(request.error);
+//         }
+//       });
   
-      /* Close the database connection. */
-      db.close();
+//       /* Close the database connection. */
+//       db.close();
   
-      if (data) {
-        console.log("Data found:", data);
-        return data
-      } else {
-        console.log("Data not found for id:", id);
-        return null
-      }
-    } catch (error) {
-      console.error("Error retrieving data:", error);
-      return null
-    }
-  }
+//       if (data) {
+//         console.log("Data found:", data);
+//         return data
+//       } else {
+//         console.log("Data not found for id:", id);
+//         return null
+//       }
+//     } catch (error) {
+//       console.error("Error retrieving data:", error);
+//       return null
+//     }
+//   }
   
-  async function deleteEntry(id) {
-    try {
-      /* Open a database connection.*/
-      const db = await openDB();
+//   async function deleteEntry(id) {
+//     try {
+//       /* Open a database connection.*/
+//       const db = await openDB();
   
-      /* Create a transaction and get the object store.*/
-      const transaction = db.transaction(["versionStore"], "readwrite");
-      const objectStore = transaction.objectStore("versionStore");
+//       /* Create a transaction and get the object store.*/
+//       const transaction = db.transaction(["versionStore"], "readwrite");
+//       const objectStore = transaction.objectStore("versionStore");
   
-      /* Use the get method to retrieve data by key (id).*/
-      const request = objectStore.delete(id);
+//       /* Use the get method to retrieve data by key (id).*/
+//       const request = objectStore.delete(id);
   
-      /* Handle the result or error using await.*/
-      await new Promise((resolve, reject) => {
-        request.onsuccess = () => {
-            resolve(id);
-        };
-        request.onerror = () => {
-            reject(request.error);
-        }
-      });
+//       /* Handle the result or error using await.*/
+//       await new Promise((resolve, reject) => {
+//         request.onsuccess = () => {
+//             resolve(id);
+//         };
+//         request.onerror = () => {
+//             reject(request.error);
+//         }
+//       });
   
-      /* Close the database connection. */
-      db.close();
+//       /* Close the database connection. */
+//       db.close();
   
-    } catch (error) {
-      console.error("Error deleting data:", error);
-      return null
-    }
-  }
+//     } catch (error) {
+//       console.error("Error deleting data:", error);
+//       return null
+//     }
+//   }
 
-var storeVersion = async function() {
+// var storeVersion = async function() {
 
-    try {
+//     try {
       
     
-        var isValueFound = getDataById("version");
-        if (isValueFound){
-          await deleteEntry("version");
-        };
+//         var isValueFound = getDataById("version");
+//         if (isValueFound){
+//           await deleteEntry("version");
+//         };
 
-        /* Open a database connection.*/
-        var db = await openDB();
+//         /* Open a database connection.*/
+//         var db = await openDB();
   
-        /* Create a transaction and get the object store.*/
-        var transaction = db.transaction(["versionStore"], "readwrite");
+//         /* Create a transaction and get the object store.*/
+//         var transaction = db.transaction(["versionStore"], "readwrite");
 
-        var objectStore = transaction.objectStore("versionStore");
+//         var objectStore = transaction.objectStore("versionStore");
     
-        /* Define the data you want to insert.*/
-        var data = {  
-            "key":"version",
-            "version":  versionNumber
-        };
+//         /* Define the data you want to insert.*/
+//         var data = {  
+//             "key":"version",
+//             "version":  versionNumber
+//         };
 
-        /* Use the add method to insert the data.*/
-        await new Promise((resolve, reject) => {
-        var request = objectStore.put(data);
-        request.onsuccess = () => {
-            resolve();
-        }
-        request.onerror = () => {
-            reject(request.error);
-        }
-        });
+//         /* Use the add method to insert the data.*/
+//         await new Promise((resolve, reject) => {
+//         var request = objectStore.put(data);
+//         request.onsuccess = () => {
+//             resolve();
+//         }
+//         request.onerror = () => {
+//             reject(request.error);
+//         }
+//         });
     
-        /* Close the database connection.*/
-        db.close();
+//         /* Close the database connection.*/
+//         db.close();
     
-        console.log("Data inserted successfully");
-    } catch(e){
-        console.error(e);
-    }
-  }
+//         console.log("Data inserted successfully");
+//     } catch(e){
+//         console.error(e);
+//     }
+//   }
   
-  function openDB() {
-    return new Promise((resolve, reject) => {
-              /* increment the version number each time you change the schema*/
-      const request = indexedDB.open("myDatabase", 8); 
-      /* Specify the database name and version */
+//   function openDB() {
+//     return new Promise((resolve, reject) => {
+//               /* increment the version number each time you change the schema*/
+//       const request = indexedDB.open("myDatabase", 8); 
+//       /* Specify the database name and version */
   
-      request.onupgradeneeded = (event) => {
-        const db = event.target.result;
-        if (!db.objectStoreNames.contains("versionStore")) {
-          db.createObjectStore("versionStore", { keyPath: "key" });
-        }
-      };
+//       request.onupgradeneeded = (event) => {
+//         const db = event.target.result;
+//         if (!db.objectStoreNames.contains("versionStore")) {
+//           db.createObjectStore("versionStore", { keyPath: "key" });
+//         }
+//       };
   
-      request.onsuccess = (event) => {
-        const db = event.target.result;
-        resolve(db);
-      };
+//       request.onsuccess = (event) => {
+//         const db = event.target.result;
+//         resolve(db);
+//       };
   
-      request.onerror = (event) => {
-        reject(event.target.error);
-      };
-    });
-  }
+//       request.onerror = (event) => {
+//         reject(event.target.error);
+//       };
+//     });
+//   }
   
