@@ -37,18 +37,19 @@ var updateDailyProgress = function(){
             radialProgressParameters.textLeftAdjustment = -2;
         }
 
-       updateProgressOnRadial(dailyPercentage, radialProgressParameters);
+        updateProgressOnRadial(dailyPercentage, radialProgressParameters);
 
         dailySummaryBox.style.display = "block";
     } else {
         dailyPercentage = 0;
         dailySummaryBox.style.display = "none";
     }
+    
     setDivAppearanceBasedOnCompletion(dailySummaryDiv.parentNode,dailyPercentage);
 
-    /*if (loggedIn){*/
+    if (loggedIn){
         setDivAppearanceBasedOnCompletion(personalBox,dailyPercentage);
-    /*}*/
+    }
 }
 
 var getDailyProgress=function(){

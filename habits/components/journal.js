@@ -70,11 +70,15 @@ var readJournal = function(journalArray){
         if ( journalText.length > 0){
             var brDiv = document.createElement("br");
             var journalDiv = document.createElement("div");
-            journalDiv.setAttribute("class","journal-container-day");
+            journalDiv.setAttribute("class","journal-container-day box");
             var dateDiv = document.createElement("div");
             var formattedDate = new Date(journalEntry.journalDate).toLocaleString('default', { month: 'long',weekday: "long",month: "long",day: "numeric", year: "numeric" });
-            var formattedDateParts = formattedDate.split(',')
-            dateDiv.innerHTML = "<span class='day-of-week-journal'>"+formattedDateParts[0]+"</span>"+formattedDateParts[1]
+            var formattedDateParts = formattedDate.split(' ');
+            if (formattedDateParts.length == 4){
+                dateDiv.innerHTML = "<span class='day-of-week-journal'>"+formattedDateParts[0]+"</span> "+formattedDateParts[1]+" "+formattedDateParts[2]+" "+formattedDateParts[3];
+            } else {
+                dateDiv.innerHTML = "<span class='day-of-week-journal'>"+formattedDate.toString()+"</span>";
+            }
             dateDiv.setAttribute("class","date-label");
             var textDiv = document.createElement("div");
             textDiv.innerHTML = journalText;
@@ -82,7 +86,7 @@ var readJournal = function(journalArray){
             journalDiv.appendChild(dateDiv);
             journalDiv.appendChild(textDiv);   
             document.getElementById("journal-container").appendChild(journalDiv);
-            document.getElementById("journal-container").appendChild(brDiv);
+            /*document.getElementById("journal-container").appendChild(brDiv);*/
         }     
     }
 

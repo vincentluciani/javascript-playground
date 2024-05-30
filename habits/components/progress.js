@@ -349,13 +349,13 @@ function renderPastProgressBoxes(){
             dataArrays.pastProgressArray = pastDataArrays.pastProgressArray;
             dataArrays.journalArray = pastDataArrays.journalArray;
 
-            if (pastDataArrays.pastProgressArray){
+            if (pastDataArrays.pastProgressArray && pastDataArrays.pastProgressArray.length > 0){
                 for (const habitsElement of pastDataArrays.pastProgressArray){
                     addProgressDOMElement(habitsElement);
                 }
                 applyFilters(); 
                 showSummariesTab(); 
-                var numberOfStreaks = getNumberOfDailyStreaks();
+                var numberOfStreaks = getNumberOfFullDays()/*getNumberOfDailyStreaks()*/;
                /* document.getElementById('number-of-streaks').innerHTML = numberOfStreaks;*/
                 document.getElementById('number-of-streaks-bubble').style.display = "flex";
                 document.getElementById('number-of-streaks-2').innerHTML = numberOfStreaks;

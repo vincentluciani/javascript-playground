@@ -62,6 +62,29 @@ var refreshDOM = function(callback){
     
 }
 
+var getNumberOfFullDays = function(){
+    var currentProcessingDate = ''
+    var currentProcessingArray = [];
+    var numberOfStreaks = 0;
+    var dataToProcess = dataArrays.pastProgressArray;
+    // dataToProcess = dataToProcess.sort(sortByDate);
+
+    for (var currentData of dataToProcess){
+        if (currentProcessingDate != '' && currentProcessingDate != currentData.progressDate){    
+            var currentProcessingDateResult = evaluateDay(currentProcessingArray);
+            currentProcessingArray = [];
+            if (currentProcessingDateResult == 1){
+                numberOfStreaks++;
+            } 
+            currentProcessingDate = currentData.progressDate;
+        }
+        if (currentProcessingDate == ''){
+            currentProcessingDate = currentData.progressDate;
+        }
+        currentProcessingArray.push(currentData);
+    }
+    return numberOfStreaks;
+}
 
 var getNumberOfDailyStreaks = function(){
     var currentProcessingDate = ''

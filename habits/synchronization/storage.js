@@ -189,12 +189,16 @@ var setItemWithAPI = async function(keyName, jsonValue) {
             }
         }
         
+        /*var ulrStart = 'https://www.vince.com/api/discipline';*/
+        /*var urlStart = 'http://localhost:3000';*/
+
         if (keyNameParts[0] == "progress"){
-            url = "https://www.vince.com/api/discipline/progress/add";
+           url = "progress/add";
+
         } else if  (keyNameParts[0] == "habit"){
-            url = "https://www.vince.com/api/discipline/habits/add";
+            url = "habits/add";
         } else if (keyNameParts[0] == "journal"){
-            url = "https://www.vince.com/api/discipline/journal/add";
+            url = "journal/add";
         } else if (keyNameParts[0] == "login"){
             var response = await sendToken(jsonValue.token);
 
@@ -217,12 +221,14 @@ var setItemWithAPI = async function(keyName, jsonValue) {
              
         }
         try{
-            var response = await fetch
+            var response =  response = await fetchPost(url,jsonValue);
+            
+            /*await fetch
                 (url,{
                     method: "POST",
                     headers:{'Content-Type': 'application/json'},
                     body: JSON.stringify(jsonValue)
-                    });
+                    });*/
             } catch (e) {
                 console.log('could not connect to the server');
                 console.log(e);

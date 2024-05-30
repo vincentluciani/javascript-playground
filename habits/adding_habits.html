@@ -7,12 +7,24 @@
         <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" />     -->
         <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito">-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, maximum-scale=1">
-        <meta name="theme-color" content="white">
-        <link rel="apple-touch-icon" href="images/discipline-256.png">
+        
+        
+        <link rel="apple-touch-icon" href="/discipline/images/discipline-256.png">
         <script src="https://accounts.google.com/gsi/client" async defer></script>
         <link rel="stylesheet" href="components/full.css">
+        <!--
         <link rel="preload" href="https://fonts.googleapis.com/css?family=Nunito" as="style" onload="this.onload=null;this.rel='stylesheet'">
         <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito"></noscript>
+    -->
+       <!-- <link rel="preload" href="http://localhost:3000/resources/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshdTQ3j6zbXWjgeg.woff2" as="style" onload="this.onload=null;this.rel='stylesheet'">-->
+        <link rel="manifest" href="http://localhost:3000/manifest.json?version=23">
+
+        <meta name="theme-color" content="#fafaff"/>
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="Discipline">
+        <link rel="apple-touch-icon" href="/discipline/images/icons/apple-icon-76x76.png" sizes="76x76">
+    
     </head>
     <body>
         <svg xmlns="http://www.w3.org/2000/svg" class="invisible"><g id="task-icon-svg" viewBox="0 0 16 16"><path fill="#000000" d="M2,11 L4,11 C4.51283143,11 4.93550653,11.386027 4.9932722,11.8833761 L5,12 L5,14 C5,14.51285 4.61395571,14.9355092 4.11662025,14.9932725 L4,15 L2,15 C1.48716857,15 1.06449347,14.613973 1.0067278,14.1166239 L1,14 L1,12 C1,11.48715 1.38604429,11.0644908 1.88337975,11.0067275 L2,11 L4,11 L2,11 Z M14,12 C14.5523,12 15,12.4477 15,13 C15,13.5523 14.5523,14 14,14 L8,14 C7.44772,14 7,13.5523 7,13 C7,12.4477 7.44772,12 8,12 L14,12 Z M4,12 L2,12 L2,14 L4,14 L4,12 Z M4,6 C4.55228,6 5,6.44772 5,7 L5,9 C5,9.55228 4.55228,10 4,10 L2,10 C1.44772,10 1,9.55228 1,9 L1,7 C1,6.44772 1.44772,6 2,6 L4,6 Z M14,7 C14.5523,7 15,7.44772 15,8 C15,8.51283143 14.613973,8.93550653 14.1166239,8.9932722 L14,9 L8,9 C7.44772,9 7,8.55228 7,8 C7,7.48716857 7.38604429,7.06449347 7.88337975,7.0067278 L8,7 L14,7 Z M4,7 L2,7 L2,9 L4,9 L4,7 Z M4.77466,1.22614 C5.04092364,1.49240364 5.06512942,1.90907223 4.84727736,2.20268222 L4.77466,2.2868 L2.28033,4.78113 C2.13968,4.92179 1.94891,5.0008 1.75,5.0008 C1.590872,5.0008 1.4369536,4.9502336 1.30973856,4.85798912 L1.21967,4.78113 L0.21967,3.78113 C-0.0732233,3.48824 -0.0732233,3.01337 0.21967,2.72047 C0.485936364,2.45420636 0.902600248,2.43000058 1.19621162,2.64785264 L1.28033,2.72047 L1.75,3.19014 L3.714,1.22614 C4.00689,0.933247 4.48176,0.933246 4.77466,1.22614 Z M14,2 C14.5523,2 15,2.44772 15,3 C15,3.51283143 14.613973,3.93550653 14.1166239,3.9932722 L14,4 L8,4 C7.44772,4 7,3.55228 7,3 C7,2.48716857 7.38604429,2.06449347 7.88337975,2.0067278 L8,2 L14,2 Z"></path></g></svg>
@@ -98,7 +110,7 @@
                     <div id="daily-summary"></div>
                     <div id="daily-summary-comment"></div>
                 </div>
-                <div class="box big-action-button" onclick="displayJournalEditBox();window.scrollTo(0, 0);">
+                <div class="box big-action-button special-button" onclick="displayJournalEditBox();window.scrollTo(0, 0);">
                     <div>Daily Journal</div>
                     <div class="action-icon-container" id="daily-journal-icon">
                       <!--  <i class="fa fa-edit"></i> -->
@@ -136,7 +148,7 @@
                       </div>
                 </div>
                 <div id="google-container-progress" class="box first daily-summary">
-                    <div class="allegory-container" ><img id="allegory" class="allegory" src="victory_big_2.jpeg" /></div>
+                    <div class="allegory-container" ><img id="allegory" class="allegory" src="victory-big-2.webp" /></div>
                     <div class="container-inner-wrapper">
                         <div class="bold" id="login-title-box"><span id="login-icon-progress" class="task-icon-container login"></span>Login</div>
                         <!-- <div class="image-text-box"> -->
@@ -192,11 +204,34 @@
                     <div class="delete-button" onclick="eraseAccount();">&gt; Delete Account</div> 
                     <div class="red" id="deletion-answer"></div>
                 </div>
+                <div id="pwa-info" class="box new-habit-focused">
+                    <div id="application-version"></div>
+                    <div id="time-debugging">
+                        <div>Current time fresh info:<span id="current-time"></span></div>
+                        Refresh should happen when the following two dates differ:
+                        <div>Current date as of first load:<span id="last-current-date"></span></div>
+                        <div>Current date based on time fresh info:<span id="new-current-date"></span></div>
+                    </div>
+                    <div id="new-version">A new version of the application is available. <div onclick="refreshPageUnregisterIfNewVersion();">Click here to get it</div> It takes around 2 seconds only to download.</div>
+                    <div id="sw-version"></div>
+                    <div id="new-version-message"></div>
+                    <div id="registrations"></div>
+                    <div id="test-message"></div>
+                    <button onclick="clearBadge();">clear badge</button>
+                    <button onclick="installApplication();">install application</button>
+                    <button onclick="getListOfSw();">list service workers</button>
+                    <button onclick="deleteAllSw();">delete all service workers</button>
+                    <button onclick="uninstallSw();">uninstall sw</button>
+                    <button class="important" onclick="refreshPageUnregisterIfNewVersion();">check if new version and reload</button>
+                    <button onclick="askForNotificationPermission();">ask for notification permission</button>
+                    <button onclick="sendNotification('test app','manual notification');">send notification</button>
+
+                </div>
             </div>
             <div id="habits-definition-container" class="habits-definition-container">
 
                 <div id="google-container" class="box new-habit-focused">
-                    <div class="allegory-container-habit" ><img id="allegory-habit" class="allegory" src="victory_big_2.jpeg" /></div>
+                    <div class="allegory-container-habit" ><img id="allegory-habit" class="allegory" src="victory-big-2.webp" /></div>
                     <div class="container-inner-wrapper">
                         <div class="bold" id="login-title-box-habits"><span id="login-icon" class="task-icon-container login"></span>Login</div>
                         <div class="image-text-box">
@@ -292,7 +327,8 @@
             </div>
             <div id="week-summary-container" class="week-summary-container" ></div>
             <div id="streaks-container" class="week-summary-container" ></div>
-            <div id="journal-container-wrapper" class="journal-container-wrapper" ><div id="journal-container" class="journal-container" ></div></div>
+            <!--<div id="journal-container-wrapper" class="journal-container-wrapper" ><div id="journal-container" class="journal-container" ></div></div> -->
+            <div id="journal-container"></div>
         </div>
 
         <div class="overlay-for-message" id="journal-edit-box">
@@ -315,14 +351,17 @@
             MEMORY - HABITS:
             <div id="memory-habit"></div>
         </div>
-
+        <script>
+        var environment = "dev";
+        var apiURL = "http://localhost:5001";
+        </script>
         <script type="text/javascript" src="components/radialprogress.js"></script>
         <script type="text/javascript" src="language/general.js"></script>
         <script type="text/javascript" src="language/english.js"></script>
         <script type="text/javascript" src="libraries/random.js"></script>
         <script type="text/javascript" src="libraries/date.js"></script>
         <script type="text/javascript" src="libraries/http.js"></script>
-        <script type="text/javascript" src="libraries/components.js"></script>
+        <script type="text/javascript" src="libraries/pwa.js"></script>
         <script type="text/javascript" src="libraries/loadDOMAndWait.js"></script>
         <script type="text/javascript" src="components/icons.js"></script>
         <script type="text/javascript" src="components/authentication.js"></script>

@@ -4,6 +4,7 @@ var app = express()
 var url = require("url");
 var path = require("path");
 const https = require('https');
+const http = require('http');
 let options = {}
 
 fs = require('fs')
@@ -11,6 +12,8 @@ fs = require('fs')
 
 var keyFile = fs.readFileSync('/private/etc/apache2/vince.com.key');
 var certFile = fs.readFileSync('/private/etc/apache2/vince.com.crt');
+// var keyFile = fs.readFileSync('/private/etc/apache2/localhost.key');
+// var certFile = fs.readFileSync('/private/etc/apache2/localhost.crt');
 
 
 options = {
@@ -18,7 +21,8 @@ options = {
     cert: certFile
 };
 
-let httpServer = https.createServer(options,app);
+let httpsServer = https.createServer(options,app);
+let httpServer = http.createServer(options,app);
 
 app.use(cors())
 
@@ -53,7 +57,7 @@ app.get('/:directory(components|language|libraries|synchronization)/:component.:
         let componentType = "application/javascript"
         if (req.params.extension === "css"){
           componentType = "text/css"
-        }
+        } 
         res.writeHead(200, {'Content-Type': componentType});
         res.write(data);
         res.end();
@@ -167,7 +171,7 @@ app.get('/index.html', function (req, res, next) {
 
 app.get('/manifest.json', function (req, res, next) {
 
-  fs.readFile('output/manifest.json', 'utf8', function (err,data) {
+  fs.readFile('manifest.json', 'utf8', function (err,data) {
       if (err) {
         return console.log(err);
       }
@@ -265,6 +269,14 @@ app.get('/pwa-icon-256.png', function (req, res, next) {
   /* https://stackoverflow.com/questions/21235696/display-images-in-html-nodejs*/
 })
 
+app.get('/images/icons/:iconName.png', function (req, res, next) {
+
+  var fileToLoad  = fs.readFileSync('images/icons/'+req.params.iconName+'.png')
+     
+  res.writeHead(200, {'Content-Type': 'image/png'});
+  res.end(fileToLoad, 'binary');
+  })
+
 app.get('/pwa-icon-256.png', function (req, res, next) {
 
   var fileToLoad  = fs.readFileSync('output/pwa-icon-256.png')
@@ -274,9 +286,9 @@ app.get('/pwa-icon-256.png', function (req, res, next) {
   /* https://stackoverflow.com/questions/21235696/display-images-in-html-nodejs*/
 })
 
-app.get('/sw-min.js', function (req, res, next) {
+app.get('/sw.js', function (req, res, next) {
 
-  fs.readFile('output/sw-min.js', 'utf8', function (err,data) {
+  fs.readFile('sw.js', 'utf8', function (err,data) {
       if (err) {
         return console.log(err);
       }
@@ -315,13 +327,47 @@ app.get('/uat/:image.jpeg', function (req, res, next) {
   res.end(fileToLoad, 'binary');
   /* https://stackoverflow.com/questions/21235696/display-images-in-html-nodejs*/
 })
+app.get('/:image.webp', function (req, res, next) {
 
-app.get('/resources/crowd_cheering_6seconds.mp3', function (req, res, next) {
-
-  var fileToLoad  = fs.readFileSync('resources/crowd_cheering_6seconds.mp3')
+  var fileToLoad  = fs.readFileSync(req.params.image+'.webp')
      
-  res.writeHead(200, {'Content-Type': 'audio/mpeg'});
+  res.writeHead(200, {'Content-Type': 'image/webp'});
   res.end(fileToLoad, 'binary');
+  /* https://stackoverflow.com/questions/21235696/display-images-in-html-nodejs*/
+})
+app.get('/uat/:image.webp', function (req, res, next) {
+
+  var fileToLoad  = fs.readFileSync('output/'+req.params.image+'.webp')
+     
+  res.writeHead(200, {'Content-Type': 'image/webp'});
+  res.end(fileToLoad, 'binary');
+  /* https://stackoverflow.com/questions/21235696/display-images-in-html-nodejs*/
+})
+
+app.get('/images/icons/:image.png', function (req, res, next) {
+
+  var fileToLoad  = fs.readFileSync('output/'+req.params.image+'.png')
+     
+  res.writeHead(200, {'Content-Type': 'image/png'});
+  res.end(fileToLoad, 'binary');
+  /* https://stackoverflow.com/questions/21235696/display-images-in-html-nodejs*/
+})
+
+
+
+app.get('/resources/:resourcefile', function (req, res, next) {
+
+  var fileToLoad  = fs.readFileSync('resources/'+req.params.resourcefile);
+     
+  if (req.params.extension === 'woff2'){
+    res.writeHead(200, {'Content-Type': 'font/woff2'});
+    res.end(fileToLoad);
+  } else {
+    res.writeHead(200, {'Content-Type': 'audio/mpeg'});
+    res.end(fileToLoad, 'binary');
+  }
+
+
 
 })
 

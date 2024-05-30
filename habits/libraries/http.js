@@ -30,17 +30,37 @@ var APICall = async function(parameters){
 
 var fetchPost = async function(relativePath,payload) {
 
-  var url=`https://www.vince.com/api/discipline/${relativePath}`;
+  var url=`${apiURL}/${relativePath}`;
         
+  /*var formBody = [];
+  for (var property in payload.) {
+    var encodedKey = encodeURIComponent(property);
+    var encodedValue = encodeURIComponent(payload[property]);
+    formBody.push(encodedKey + "=" + encodedValue);
+  }
+  formBody = formBody.join("&");
+  */
   var objectToSend = {
       method: "POST",
-      headers:{'Content-Type': 'application/json'}
+      headers:{
+        /*'Content-Type': 'application/x-www-form-urlencoded',*/
+        'Content-Type': 'application/json',
+        },
+        credentials:'include'
   }
 
-  if (payload != ''){
+  /*if (environment == "dev"){
+    objectToSend.headers['authToken']= await getTestToken();
+    objectToSend.headers['refreshToken']= await getTestRefreshToken();
+  }*/
+
+ /* if (formBody.length > 0){
+    objectToSend['body'] = formBody;
+  }*/
+
+  if (null != payload){
     objectToSend['body'] = JSON.stringify(payload);
   }
-
   try {
     response = await fetch
     (url,objectToSend);

@@ -90,6 +90,13 @@ function showLoginBoxes(){
     document.getElementById('google-container').style.display = 'block';
 }
 
+async function getTestToken(){
+    return document.cookie.split('; ').find(row => row.startsWith('authToken')).split('=')[1];
+}
+
+async function getTestRefreshToken(){
+    return document.cookie.split('; ').find(row => row.startsWith('refreshToken')).split('=')[1];
+}
 async function sendToken(token) {
 
    /* var xhr = new XMLHttpRequest();
@@ -104,9 +111,10 @@ async function sendToken(token) {
 
     try{
         var response = await fetch
-            ('https://www.vince.com/api/discipline/auth',{
+            (apiURL+'/auth',{
                 method: "POST",
                 headers:{'Content-Type': 'application/x-www-form-urlencoded'},
+                credentials:'include',
                 body: 'token=' + token
                 });
         } catch (e) {
@@ -151,9 +159,10 @@ async function refreshToken() {
     }
      try{
          var response = await fetch
-             ('https://www.vince.com/api/discipline/auth/refresh',{
+             ('http://localhost:5001/auth/refresh',{
                  method: "POST",
-                 headers:{'Content-Type': 'application/x-www-form-urlencoded'}
+                 headers:{'Content-Type': 'application/x-www-form-urlencoded'},
+                 credentials:'include'
                  });
          } catch (e) {
             refreshRetryNumber+=1;
@@ -227,11 +236,14 @@ async function refreshToken() {
  window.addEventListener('DOMContentLoaded', function() {
     /*var runAppRendering = function(){*/
         "use strict";
+
+        checkPWA();
     /* tests of service worker must be done on http://localhost:5000/ */
     
         /* Get the image from local storage is there 
         if there is something go and fetch a new token */ 
-    
+      
+
         refreshToken().then(value=>{
             console.log(value);
             /*if (null != value && null != value.tokenExpiry){*/
@@ -335,6 +347,7 @@ var saveLoop = function(){
 
     var firstInterval = setInterval(readQueueStorage, 1000);
     var secondInterval = setInterval(readQueueAPI, 4000);
+    var thirdInterval = setInterval(checkForDay,10000);
 
 }
 
@@ -462,7 +475,7 @@ var playCheers = function(){
     }
 }
 var hideJournalBox = function(){
-    document.getElementById("journal-container").innerHTML = "<div class='journal-container-day'>No journal entry yet.</div>";
+    document.getElementById("journal-container").innerHTML = "<div class='journal-container-day box'>No journal entry yet.</div>";
 }
 var hideProgressTab = function(){
     document.getElementById("progress-menu").style.display = "none";
@@ -770,8 +783,12 @@ var changeTabToHabits = function(){
 }
 
 var changeTabToSummaries = function(){
- 
-    // reloadHabitProgressJournal().then(value => {
+    /*reloadHabitProgressJournal*/
+    getPreviousElements().then(value => {
+        pastDataArrays = value;
+        dataArrays.pastProgressArray = pastDataArrays.pastProgressArray;
+        dataArrays.journalArray = pastDataArrays.journalArray;
+
         prepareSummaries();
         launchAllWeekTables(dataArrays.pastProgressArray,dataArrays.habitsArray);
         document.getElementById("habits-section").style.display = "none";
@@ -781,9 +798,9 @@ var changeTabToSummaries = function(){
         document.getElementById("habits-menu").classList.remove("active");
         document.getElementById("graphs-menu").classList.add("active");
         subMenuGo('week-link');
-        // }, reason => {
-        // console.log(reason );
-        // })
+    }, reason => {
+        console.log(reason );
+    })
     
     
 }
@@ -954,7 +971,7 @@ var subMenuGo = function( targetLink){
     var weekLink = document.getElementById('week-link');
     var graphContainer = document.getElementById('week-summary-container');
     var streaksContainer = document.getElementById('streaks-container');
-    var journalContainer = document.getElementById('journal-container-wrapper');
+    var journalContainer = document.getElementById('journal-container');
 
 
     switch (targetLink) {

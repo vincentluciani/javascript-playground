@@ -3,7 +3,7 @@ let cacheName = "pwa-test-v"+version.toString();
 let mainCachedFile = "./poc_pwa.html";
 
 let filesToCache = [mainCachedFile,
-                    "https://fonts.googleapis.com/css?family=Nunito"];
+                    "http://localhost:3000/resources/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshdTQ3j6zbXWjgeg.woff2"];
 
 const broadcast = new BroadcastChannel('count-channel');
 
