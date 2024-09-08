@@ -1,4 +1,4 @@
-var currentApplicationVersion="24";
+var currentApplicationVersion="29";
 var versionFromServer;
 
 var currentDateTimePWA = new Date();

@@ -2,7 +2,7 @@ var readQueueStorage = function() {
 
     while (updateQueue.length > 0) {
         var elementToProcess = updateQueue.shift();
-        console.log("reading from queue");
+        console.log("reading from queue storage");
         console.log(elementToProcess);
         
         putInStorage(elementToProcess.id, elementToProcess.value); 

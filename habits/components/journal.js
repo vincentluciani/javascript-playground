@@ -3,11 +3,11 @@ var displayJournalEditBoxAsync = async function(){
     var editBox = document.getElementById("journal-edit-box");
     var editBoxTextBox = document.getElementById("daily-journal");
 
-    var currentText = await getCurrentDateJournal(progressDate);
+    var currentText = await getJournalText(progressDate);
     editBoxTextBox.value = "";
-    if (currentText && currentText.text && currentText.text.length>0){
+    if (currentText && currentText.length>0){
        /* editBoxTextBox.value = JSON.parse(currentText.text);*/
-       editBoxTextBox.value = currentText.text;
+       editBoxTextBox.value = currentText;
     }
 
     editBox.setAttribute("progressDate",progressDate);
@@ -23,10 +23,14 @@ var displayJournalEditBox = function(){
       })
 }
 
-var getCurrentDateJournal = async function(journalDate){
+var getJournalText = async function(journalDate){
 
     var journal = await getItemByKey("journal-"+journalDate);
-    return journal[0];
+    if (null!=journal && null !=journal.text){
+        return journal.text;
+    } else {
+        return "";
+    }
 }
 var closeJournal = function(){
     var editBox = document.getElementById("journal-edit-box");

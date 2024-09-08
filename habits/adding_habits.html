@@ -17,13 +17,13 @@
         <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito"></noscript>
     -->
        <!-- <link rel="preload" href="http://localhost:3000/resources/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshdTQ3j6zbXWjgeg.woff2" as="style" onload="this.onload=null;this.rel='stylesheet'">-->
-        <link rel="manifest" href="http://localhost:3000/manifest.json?version=23">
+        <link rel="manifest" href="http://localhost:3000/manifest.json?version=29">
 
         <meta name="theme-color" content="#fafaff"/>
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
         <meta name="apple-mobile-web-app-title" content="Discipline">
-        <link rel="apple-touch-icon" href="/discipline/images/icons/apple-icon-76x76.png" sizes="76x76">
+        <link rel="apple-touch-icon" href="http://localhost:3000/images/icons/apple-icon-76x76.png" sizes="76x76">
     
     </head>
     <body>
@@ -147,6 +147,7 @@
                         <!--  <i class="fa fa-edit"></i> -->
                       </div>
                 </div>
+                <button onclick="window.location.reload();">refresh page</button>
                 <div id="google-container-progress" class="box first daily-summary">
                     <div class="allegory-container" ><img id="allegory" class="allegory" src="victory-big-2.webp" /></div>
                     <div class="container-inner-wrapper">
@@ -222,6 +223,7 @@
                     <button onclick="getListOfSw();">list service workers</button>
                     <button onclick="deleteAllSw();">delete all service workers</button>
                     <button onclick="uninstallSw();">uninstall sw</button>
+                    <button onclick="window.location.reload();">refresh page</button>
                     <button class="important" onclick="refreshPageUnregisterIfNewVersion();">check if new version and reload</button>
                     <button onclick="askForNotificationPermission();">ask for notification permission</button>
                     <button onclick="sendNotification('test app','manual notification');">send notification</button>
@@ -315,6 +317,7 @@
                     </div>
 
             </div>
+
         </div>
 
         <div id="graphs-section" class="main-section" >

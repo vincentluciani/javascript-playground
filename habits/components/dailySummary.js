@@ -47,7 +47,7 @@ var updateDailyProgress = function(){
     
     setDivAppearanceBasedOnCompletion(dailySummaryDiv.parentNode,dailyPercentage);
 
-    if (loggedIn){
+    if (personalBox){
         setDivAppearanceBasedOnCompletion(personalBox,dailyPercentage);
     }
 }

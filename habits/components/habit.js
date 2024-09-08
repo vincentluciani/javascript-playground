@@ -39,8 +39,14 @@ var refreshDOM = function(callback){
                     addProgressDOMElement(progressElement);
                 /*}*/
             }
-            for (const progressElement of dataArrays.journalArray){
-                putInStorage('journal-'+progressElement.journalDate, progressElement);
+            if (null!=dataArrays.journalArray){
+                if (Array.isArray(dataArrays.journalArray)){
+                    for (const progressElement of dataArrays.journalArray){
+                        putInStorage('journal-'+progressElement.journalDate, progressElement);
+                    }
+                } else {
+                    putInStorage('journal-'+dataArrays.journalArray.journalDate, dataArrays.journalArray);
+                }
             }
             
             applyFilters(); 
@@ -64,53 +70,29 @@ var refreshDOM = function(callback){
 
 var getNumberOfFullDays = function(){
     var currentProcessingDate = ''
-    var currentProcessingArray = [];
+    var arrayOfProgressesToAnalyze = [];
     var numberOfStreaks = 0;
-    var dataToProcess = dataArrays.pastProgressArray;
-    // dataToProcess = dataToProcess.sort(sortByDate);
+    var arrayOfProgresses = dataArrays.pastProgressArray;
+    arrayOfProgresses = arrayOfProgresses.sort(sortByDate);
 
-    for (var currentData of dataToProcess){
-        if (currentProcessingDate != '' && currentProcessingDate != currentData.progressDate){    
-            var currentProcessingDateResult = evaluateDay(currentProcessingArray);
-            currentProcessingArray = [];
-            if (currentProcessingDateResult == 1){
+    for (var currentProgress of arrayOfProgresses){
+        /* Date is changing, means currentProcessingArray has all progresses of the day
+           so we can check if the day is full */
+        if (currentProcessingDate != '' && currentProcessingDate != currentProgress.progressDate){    
+            if (isDayFull(arrayOfProgressesToAnalyze)){
                 numberOfStreaks++;
             } 
-            currentProcessingDate = currentData.progressDate;
+            arrayOfProgressesToAnalyze = [];
+            currentProcessingDate = currentProgress.progressDate;
+        } else if (currentProcessingDate == ''){
+            currentProcessingDate = currentProgress.progressDate;
         }
-        if (currentProcessingDate == ''){
-            currentProcessingDate = currentData.progressDate;
-        }
-        currentProcessingArray.push(currentData);
+        /* Put the next progress in the array to analyze */
+        arrayOfProgressesToAnalyze.push(currentProgress);
     }
     return numberOfStreaks;
 }
 
-var getNumberOfDailyStreaks = function(){
-    var currentProcessingDate = ''
-    var currentProcessingArray = [];
-    var numberOfStreaks = 0;
-    var dataToProcess = dataArrays.pastProgressArray;
-    // dataToProcess = dataToProcess.sort(sortByDate);
-
-    for (var currentData of dataToProcess){
-        if (currentProcessingDate != '' && currentProcessingDate != currentData.progressDate){    
-            var currentProcessingDateResult = evaluateDay(currentProcessingArray);
-            currentProcessingArray = [];
-            if (currentProcessingDateResult == 1){
-                numberOfStreaks++;
-            } else if (currentProcessingDate != currentDate){
-                return numberOfStreaks;
-            }
-            currentProcessingDate = currentData.progressDate;
-        }
-        if (currentProcessingDate == ''){
-            currentProcessingDate = currentData.progressDate;
-        }
-        currentProcessingArray.push(currentData);
-    }
-    return numberOfStreaks;
-}
 
 var sortByDate = function(x,y){
     var firstDate = new Date(x.progressDateISO);
@@ -124,16 +106,16 @@ var sortByDate = function(x,y){
         return 1;
     }
 }
-var evaluateDay = function(dataArray){
+var isDayFull = function(dataArray){
     for (var progressData of dataArray){
         if (progressData.status != 'active'){
             continue;
         }
         if (progressData.numberOfCompletions < progressData.target){
-            return 0;
+            return False;
         }
     }
-    return 1;
+    return True;
 }
 
 var updateHabitDOMElement = function(division, elementToAdd){
@@ -574,6 +556,12 @@ var addNewHabitFromForm = function(){
     document.getElementById('new-target').value = 1;
     document.getElementById('new-is-negative-flag').checked = false;
     resetWeekDaySelector(weekDaySelector);
+    document.getElementById('priority-new').value = 1;
+    document.getElementById('is-timer-necessary-new').checked = false;
+    document.getElementById('initial-time-new').value = 0;
+    document.getElementById('is-critical-new').checked = false;
+    document.getElementById('is-suspendable-during-sickness-new').checked = false;
+    document.getElementById('is-suspendable-in-other-cases-new').checked = false;   
 
     showProgressTab();
 

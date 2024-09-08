@@ -26,7 +26,7 @@ var getPreviousElements = async function(){
 
         response = await fetchPost(url,input);
 
-        if (null != response){
+        if (null != response && response != false){
             return response;
         } else {
             return getHabitProgressJournalFromStorage();
@@ -141,14 +141,15 @@ var removeItemByKey = async function(keyName) {
         }
 
 }
+
+
+/* format of keyName is informationtype-YYYY-MM-DD. For example journal-2024-09-01. */
 var getItemByKey = async function(keyName) {
-/* todo handle case where item is not journal */
     var keyNameParts = keyName.split("-");
-    if (loggedIn){
-        var url = `journal/get`;
+    if (loggedIn && keyNameParts.length >= 4){
+        var url = keyNameParts[0]+"/get";
         var response;
         var input = {
-            /*token: applicationToken*/
             requestDate: keyNameParts[1]+"-"+keyNameParts[2]+"-"+keyNameParts[3]
         }
 
@@ -162,11 +163,16 @@ var getItemByKey = async function(keyName) {
 
     } else {
         var itemValue = window.localStorage.getItem(keyName);
-        console.log('item got from memory:'+itemValue);
-        return itemValue;
+
+        if (null != itemValue){
+            console.log('item got from memory:'+itemValue);
+        }
+        return JSON.parse(itemValue);
     }
 
 }
+
+
 var setItemWithAPI = async function(keyName, jsonValue) {
 
     var url="";
