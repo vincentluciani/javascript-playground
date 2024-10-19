@@ -76,7 +76,7 @@ const reactOnLogout = function() {
     document.getElementById("google-container-progress").style.borderColor = "#c369bc";
     document.getElementById("google-container-progress").style.borderWidth = "5px";
     document.getElementById("google-container-progress").style.background = "#fffceb";
-
+    
     document.getElementById("new-habit").classList.add("new-habit");
     document.getElementById("new-habit").classList.remove("new-habit-focused");
     /*document.getElementById("google-image").style.display="none";*/

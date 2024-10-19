@@ -1,4 +1,4 @@
-var currentApplicationVersion="29";
+var currentApplicationVersion="38";
 var versionFromServer;
 
 var currentDateTimePWA = new Date();
@@ -9,7 +9,8 @@ var checkPWA = function(){
     document.getElementById('last-current-date').innerHTML = formatDateHour(currentDateTimePWA);
     checkForDay();
 
-    /* this is in fact just in case */
+    /* this is in fact just in case (displaying a panel to the user proposing to load a new version). 
+    The new version is loaded automatically so this should not be useful */
     isNewVersion().then(
         value => {
             if (value){
@@ -182,6 +183,8 @@ var checkForDay = function(){
 
     if (newCurrentDateHour > oldCurrentDateHour){
         refreshPageUnregisterIfNewVersion(); 
+        currentDateTimePWA = newCurrentDateTimePWA;
+
     } 
     /* If the previous statement reloaded the page then we start from scratch anyway
     and the page reloads as expected. If not then this is our second chance to reload 

@@ -270,6 +270,7 @@ async function setUpRegularRefresh() {
 }
 
 var launchRefresh = function(){
+    console.log("Attempting token refresh");
     refreshToken().then(value=>{
         console.log(value);
     }, reason=>{

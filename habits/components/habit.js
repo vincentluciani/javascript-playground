@@ -73,7 +73,10 @@ var getNumberOfFullDays = function(){
     var arrayOfProgressesToAnalyze = [];
     var numberOfStreaks = 0;
     var arrayOfProgresses = dataArrays.pastProgressArray;
-    arrayOfProgresses = arrayOfProgresses.sort(sortByDate);
+
+    if (null != arrayOfProgresses && arrayOfProgresses.length > 1){
+        arrayOfProgresses = arrayOfProgresses.sort(sortByDate);
+    }
 
     for (var currentProgress of arrayOfProgresses){
         /* Date is changing, means currentProcessingArray has all progresses of the day
@@ -90,6 +93,9 @@ var getNumberOfFullDays = function(){
         /* Put the next progress in the array to analyze */
         arrayOfProgressesToAnalyze.push(currentProgress);
     }
+    if (isDayFull(arrayOfProgressesToAnalyze)){
+        numberOfStreaks++;
+    } 
     return numberOfStreaks;
 }
 
@@ -112,10 +118,10 @@ var isDayFull = function(dataArray){
             continue;
         }
         if (progressData.numberOfCompletions < progressData.target){
-            return False;
+            return false;
         }
     }
-    return True;
+    return true;
 }
 
 var updateHabitDOMElement = function(division, elementToAdd){

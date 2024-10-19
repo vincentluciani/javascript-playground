@@ -38,6 +38,60 @@ document.addEventListener("DOMContentLoaded", function(event) {
   });*/
 /* test merge from new branch*/
 
+/*onload = function(){*/
+window.addEventListener('DOMContentLoaded', function() {
+    /*var runAppRendering = function(){*/
+        "use strict";
+
+        checkPWA();
+    /* tests of service worker must be done on http://localhost:5000/ */
+    
+        /* Get the image from local storage is there 
+        if there is something go and fetch a new token */ 
+      
+
+        refreshToken().then(value=>{
+            console.log(value);
+            /*if (null != value && null != value.tokenExpiry){*/
+            if (null!=value){
+                /*setUpRegularRefresh(value.tokenExpiry);*/
+                setUpRegularRefresh();
+                refreshDOM();
+                setTimeout(renderPastProgressBoxes,500);
+            } else {
+                    reactOnLogout();
+                    renderApplicationWithLocalStorage();
+                    setTimeout(renderPastProgressBoxes,500);
+            }  
+        }, reason=>{
+            renderApplicationWithLocalStorage();
+            setTimeout(renderPastProgressBoxes,500);
+            console.error(reason);
+        })
+
+        
+
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('debug') == "true"){
+            document.getElementById("debug-section").style.display = "block";
+        }
+        apiUser = urlParams.get('user');
+        console.log('user:'+apiUser);
+        if (urlParams.get('nouser') == 'true'){
+            loggedIn=false;
+        }
+    
+        hideStartProgressButtonOnHabits();
+    
+        document.getElementById("date-filter").value=currentDate;
+        createRadialProgressBar(radialProgressParameters);
+    
+        setTimeout(placeSVGIcons,5);
+        setTimeout(showLoginBoxes,7000);
+        setTimeout(loadAudio,25);  
+
+        initializeTogglesTodayYesterday();
+    });
 
 
 function handleCredentialResponse(response) {
@@ -80,7 +134,7 @@ function handleCredentialResponse(response) {
     readQueueAPI();
 }
 
-var handleReLogin = async function() {
+async function handleReLogin() {
     var userInformation = await getDataById("retain");
     return userInformation
 }
@@ -232,63 +286,8 @@ async function refreshToken() {
  
  }
 
- /*onload = function(){*/
- window.addEventListener('DOMContentLoaded', function() {
-    /*var runAppRendering = function(){*/
-        "use strict";
-
-        checkPWA();
-    /* tests of service worker must be done on http://localhost:5000/ */
-    
-        /* Get the image from local storage is there 
-        if there is something go and fetch a new token */ 
-      
-
-        refreshToken().then(value=>{
-            console.log(value);
-            /*if (null != value && null != value.tokenExpiry){*/
-            if (null!=value){
-                /*setUpRegularRefresh(value.tokenExpiry);*/
-                setUpRegularRefresh();
-                refreshDOM();
-                setTimeout(renderPastProgressBoxes,500);
-            } else {
-                    reactOnLogout();
-                    renderApplicationWithLocalStorage();
-                    setTimeout(renderPastProgressBoxes,500);
-            }  
-        }, reason=>{
-            renderApplicationWithLocalStorage();
-            setTimeout(renderPastProgressBoxes,500);
-            console.error(reason);
-        })
-
-        
-
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('debug') == "true"){
-            document.getElementById("debug-section").style.display = "block";
-        }
-        apiUser = urlParams.get('user');
-        console.log('user:'+apiUser);
-        if (urlParams.get('nouser') == 'true'){
-            loggedIn=false;
-        }
-    
-        hideStartProgressButtonOnHabits();
-    
-        document.getElementById("date-filter").value=currentDate;
-        createRadialProgressBar(radialProgressParameters);
-    
-        setTimeout(placeSVGIcons,5);
-        setTimeout(showLoginBoxes,7000);
-        setTimeout(loadAudio,25);  
-
-        initializeTogglesTodayYesterday();
-    });
-
+ 
 var renderApplicationWithLocalStorage = function(){
-    /*dataArrays=await getHabitProgressJournal();*/
     dataArrays = getHabitProgressJournalFromStorage();
 
     /* todo: this function should only extract and not also create divs */
@@ -350,11 +349,6 @@ var saveLoop = function(){
     var thirdInterval = setInterval(checkForDay,10000);
 
 }
-
-var reloadHabitProgressJournal = async function(){
-    dataArrays=await getHabitProgressJournal();
-}
-
 
 
 var placeSVGIcons = function(){
@@ -783,7 +777,7 @@ var changeTabToHabits = function(){
 }
 
 var changeTabToSummaries = function(){
-    /*reloadHabitProgressJournal*/
+    
     getPreviousElements().then(value => {
         pastDataArrays = value;
         dataArrays.pastProgressArray = pastDataArrays.pastProgressArray;

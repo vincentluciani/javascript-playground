@@ -47,8 +47,10 @@ var updateDailyProgress = function(){
     
     setDivAppearanceBasedOnCompletion(dailySummaryDiv.parentNode,dailyPercentage);
 
-    if (personalBox){
+    if (loggedIn && personalBox){
         setDivAppearanceBasedOnCompletion(personalBox,dailyPercentage);
+    } else if (!loggedIn && personalBox){
+        personalBox.classList.add("new-habit-focused");
     }
 }
 

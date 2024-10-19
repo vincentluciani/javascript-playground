@@ -39,6 +39,7 @@
     "clean-css": "^5.2.4",
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.3.0",
+    "gulp-delete-lines": "^0.0.7",
     "typescript": "^4.7.2"
   }
 }
