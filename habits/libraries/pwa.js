@@ -1,11 +1,11 @@
-var currentApplicationVersion="38";
+var versionNumber = '38';
 var versionFromServer;
 
 var currentDateTimePWA = new Date();
 console.log("starting javascript:"+currentDateTimePWA.toString());
 
 var checkPWA = function(){
-    document.getElementById("application-version").innerHTML = "version: "+currentApplicationVersion;
+    document.getElementById("application-version").innerHTML = "version: "+versionNumber;
     document.getElementById('last-current-date').innerHTML = formatDateHour(currentDateTimePWA);
     checkForDay();
 
@@ -149,7 +149,7 @@ var isNewVersion = async function(){
     if (versionFromServer && versionFromServer.version){
         document.getElementById('sw-version').innerHTML = "software version:"+versionFromServer.version;
         
-        return (versionFromServer.version != currentApplicationVersion);
+        return (versionFromServer.version != versionNumber);
     } else {
         document.getElementById('sw-version').innerHTML = "could not find new version from server";
         

@@ -8,8 +8,12 @@ var replace = require('gulp-replace');
 var deleteLines = require('gulp-delete-lines');
 var fs = require('fs');
 
+var newVersion = '39'
+var versionNumberCodeJS = "var versionNumber = '"+newVersion+"'";
+var versionNumberCodeHTML = 'https://www.vincent-luciani.com/discipline/manifest.json?version='+newVersion;
 var newValue = '<script type="text/javascript" src="output/bundle-min.js"></script> '
 var outputFolder = '/Users/vincentluciani/Software/Web/vincent-luciani.com/apache/staging/public-html/discipline'
+
 
 gulp.task('put-client-id-html', function(){
     return gulp.src(['adding_habits.html'])
@@ -21,9 +25,9 @@ gulp.task('put-client-id-html', function(){
 gulp.task('pack-js', function () {    
     return gulp.src(['components/*.js', 'libraries/random.js', 'libraries/loadDOMAndWait.js','libraries/date.js','libraries/http.js','libraries/pwa.js','language/general.js','language/english.js', 'synchronization/*.js','habits_main.js'])
         .pipe(concat('bundle.js'))
+        .pipe(replace(/var versionNumber = '([0-9])*'/g, versionNumberCodeJS))      
         .pipe(replace('http://localhost:5001', 'https://www.vincent-luciani.com/api/discipline'))
         .pipe(replace('http://localhost:3000', 'https://www.vincent-luciani.com'))
-        /* put replacement here */
         .pipe(minify())
         .pipe(gulp.dest('output'));
 });
@@ -90,7 +94,8 @@ gulp.task('send-sw-js', function () {
         .pipe(replace('"http://localhost:3000/components/authentication.js",',''))
         .pipe(replace('"http://localhost:3000/synchronization/readQueue.js",',''))
         .pipe(replace('http://localhost:3000', 'https://www.vincent-luciani.com/discipline'))
-        .pipe(replace('http://localhost:5001', 'https://www.vincent-luciani.com/api/discipline'))    
+        .pipe(replace('http://localhost:5001', 'https://www.vincent-luciani.com/api/discipline'))  
+        .pipe(replace(/var versionNumber = '([0-9])*'/g, versionNumberCodeJS))      
         .pipe(deleteLines({"filters":[/^\s*$/]}))
         .pipe(minify())
         .pipe(rename('sw.js'))
@@ -100,9 +105,12 @@ gulp.task('send-sw-js', function () {
 
 gulp.task('process-html', function () {    
     return gulp.src(['adding_habits_transformed.html'])
-        .pipe(replace('http://localhost:3000/manifest.json','https://www.vincent-luciani.com/discipline/manifest.json'))
+        .pipe(replace(/http:\/\/localhost:3000\/manifest\.json\?version=\d+/g, versionNumberCodeHTML))
+      /*  .pipe(replace('http://localhost:3000/manifest.json','https://www.vincent-luciani.com/discipline/manifest.json')) */
+        .pipe(replace('<script type="text/javascript" src="synchronization/readQueue.js"></script>','<script>'+fs.readFileSync('output/bundle-min.js', 'utf8')+'</script>'))         
         .pipe(replace('<link rel="stylesheet" href="components/full.css">', '<style>'+fs.readFileSync('output/bundle.css', 'utf8')+'</style>'))  
-        .pipe(replace('<script type="text/javascript" src="language/general.js"></script>',''))
+        .pipe(replace(/<script\s+type="text\/javascript"\s+src="[^"]*"><\/script>/g,''))
+        /*.pipe(replace('<script type="text/javascript" src="language/general.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="language/english.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="libraries/date.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="libraries/random.js"></script>',''))
@@ -127,12 +135,12 @@ gulp.task('process-html', function () {
         .pipe(replace('<script type="text/javascript" src="synchronization/sendPost.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="synchronization/debugTools.js"></script>',''))
         .pipe(replace('<script type="text/javascript" src="components/icons.js"></script>',''))
-        .pipe(replace('<script type="text/javascript" src="components/authentication.js"></script>',''))
-        .pipe(replace('<script type="text/javascript" src="synchronization/readQueue.js"></script>','<script>'+fs.readFileSync('output/bundle-min.js', 'utf8')+'</script>'))    
+        .pipe(replace('<script type="text/javascript" src="components/authentication.js"></script>',''))*/
         .pipe(replace('http://localhost:3000', 'https://www.vincent-luciani.com/discipline'))
         .pipe(replace('http://localhost:5001', 'https://www.vincent-luciani.com/api/discipline'))
         .pipe(htmlmin({ collapseWhitespace: true }))
         .pipe(rename('index.html'))
+        /*.pipe(gulp.dest('output'));*/
         .pipe(gulp.dest(outputFolder));
 });
 gulp.task('default', gulp.series(['send-images','send-sw-js','copy-resources','copy-icons','send-manifest','put-client-id-html','pack-js','pack-css','process-html']));
