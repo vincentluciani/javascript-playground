@@ -45,6 +45,14 @@ var updateDailyProgress = function(){
         dailySummaryBox.style.display = "none";
     }
     
+    if (navigator.setAppBadge) {
+        if (dailyProgress.numberOfIncompleteDivs == 0){
+            navigator.clearAppBadge(); 
+        } else if (dailyProgress.numberOfIncompleteDivs > 0){
+            navigator.setAppBadge(dailyProgress.numberOfIncompleteDivs);
+        }
+    }
+
     setDivAppearanceBasedOnCompletion(dailySummaryDiv.parentNode,dailyPercentage);
 
     if (loggedIn && personalBox){
@@ -60,6 +68,8 @@ var getDailyProgress=function(){
 
     var fullScore = 0;
     var numberOfDivs = 0;
+    var numberOfIncompleteDivs = 0;
+
     for (const progressPercentageCompletionDiv of progressPercentageCompletionDivs){
         var progressDate = progressPercentageCompletionDiv.getAttribute("progressDate");
         var progressDetailsDiv = progressPercentageCompletionDiv.parentNode;
@@ -71,9 +81,11 @@ var getDailyProgress=function(){
                 currentScore = (currentScore > 100) ? 100 : currentScore;
                 fullScore += currentScore;
                 numberOfDivs++;
+                var isDivIncomplete = (currentScore < 100) ? 1 : 0;
+                numberOfIncompleteDivs += isDivIncomplete;
             }
         }
     }
 
-    return {fullScore,numberOfDivs};
+    return {fullScore,numberOfDivs,numberOfIncompleteDivs};
 }
