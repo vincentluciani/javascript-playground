@@ -452,21 +452,34 @@ https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio
     */
 
 
-    addAudioDiv();
+    addAudioDiv('crowd_cheering_6seconds.mp3','cheering-audio');
+    addAudioDiv('tick_sound.mp3','tick-audio');
+    addAudioDiv('positive_sound.mp3','positive-audio');
+
 }
-var addAudioDiv = function(){
+var addAudioDiv = function(audioFile,divId){
 
     const audioDiv = document.createElement("audio");
-    audioDiv.setAttribute('src','resources/crowd_cheering_6seconds.mp3');
-    audioDiv.setAttribute('id','cheering-audio');
+    audioDiv.setAttribute('src','resources/'+audioFile);
+    audioDiv.setAttribute('id',divId);
     document.body.appendChild(audioDiv);
+
 }
 var playCheers = function(){
+    playSoundInDiv("cheering-audio");
+}
+var playPositive = function(){
+    /*playSoundInDiv("positive-audio");*/
+}
+var playTick = function(){
+    /*playSoundInDiv("tick-audio");*/
+}
+var playSoundInDiv = function(divId){
     var isSound = window.localStorage.getItem("sound");
     if (isSound && isSound == "on"){
-        var audioDiv = document.getElementById("cheering-audio");
+        var audioDiv = document.getElementById(divId);
         audioDiv.play();
-    }
+    }   
 }
 var hideJournalBox = function(){
     document.getElementById("journal-container").innerHTML = "<div class='journal-container-day box'>No journal entry yet.</div>";

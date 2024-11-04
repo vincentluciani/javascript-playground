@@ -27,8 +27,8 @@ const reactOnLogin = function(apiResponse) {
     document.getElementById("google-container").classList.remove("new-habit-focused");
 
     document.getElementById("google-container-progress").style.borderColor = "lightgrey";
-    document.getElementById("google-container-progress").style.borderWidth = "1px";
-    document.getElementById("google-container-progress").style.background = "white";
+    document.getElementById("google-container-progress").style.borderWidth = "0px";
+    /*document.getElementById("google-container-progress").style.background = "white";*/
 
     document.getElementById("new-habit").classList.remove("new-habit");
     document.getElementById("new-habit").classList.add("new-habit-focused");

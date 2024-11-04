@@ -8,7 +8,7 @@ var replace = require('gulp-replace');
 var deleteLines = require('gulp-delete-lines');
 var fs = require('fs');
 
-var newVersion = '39'
+var newVersion = '47'
 var versionNumberCodeJS = "var versionNumber = '"+newVersion+"'";
 var versionNumberCodeHTML = 'https://www.vincent-luciani.com/discipline/manifest.json?version='+newVersion;
 var newValue = '<script type="text/javascript" src="output/bundle-min.js"></script> '
@@ -33,7 +33,7 @@ gulp.task('pack-js', function () {
 });
 
 gulp.task('send-images', function () {    
-    return gulp.src(['victory-big-2.webp'])
+    return gulp.src(['victory-big-4.webp'])
         .pipe(gulp.dest(outputFolder));
 });
 

@@ -43,7 +43,7 @@ var buildGraphBox = function(unitPerMonth,unitAccumulation,completionAccumulatio
 
 
     if (completionAccumulation >= 10){
-        streaksWrapper.style.background="#daffd9";
+        streaksWrapper.style.background="rgb(231 255 231)";
         /*streaksWrapper.style.border="1px solid rgb(167 211 162)"*/
     } else if (completionAccumulation >=5 ) {
         streaksWrapper.style.background="rgb(255 252 238)";

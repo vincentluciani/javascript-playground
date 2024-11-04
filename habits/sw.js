@@ -48,7 +48,7 @@ var listOfStaticFilesToCache = [
     "http://localhost:3000/synchronization/readQueue.js", 
     'http://localhost:3000/',
     'http://localhost:3000/index.html',
-    'http://localhost:3000/victory-big-2.webp',
+    'http://localhost:3000/victory-big-4.webp',
     'http://localhost:3000/manifest.json',
     'http://localhost:3000/resources/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshdTQ3j6zbXWjgeg.woff2',
     'http://localhost:3000/resources/crowd_cheering_6seconds.mp3',

@@ -198,6 +198,7 @@ var addProgressDOMElement = function(elementToAdd){
                 refreshProgress(newProgressDivision);
                 console.log("added progress:");
                 console.log(newProgressDivision);
+                playPositive();
 
                 pushProgressToQueue(newProgressDivision);
             }
@@ -239,6 +240,7 @@ var addProgressDOMElement = function(elementToAdd){
                 var progressInput = newProgressDivision.getElementsByClassName("number-of-completion")[0];         
                 if (progressInput.checked == true){
                     progressInput.setAttribute("value","1");
+                    playPositive();
                 } else {
                     progressInput.setAttribute("value","0");
                 }
@@ -301,6 +303,7 @@ var addProgressDOMElement = function(elementToAdd){
      expandButtonWrapper.addEventListener('click', function(expandButtonWrapper,detailsArea) {
         return function(){
             toggleExpandCollapse(expandButtonWrapper,detailsArea);
+            playTick();
         }
      }(expandButtonWrapper,detailsArea));
 
@@ -400,7 +403,7 @@ var putBorderBackgroundOrderBasedOnCompletion = function(currentDiv,newCompletio
         var newOrder = 180;/*parseInt(currentDiv.getAttribute('order'))+100;*/
         currentDiv.style.order=newOrder.toString();
         // currentDiv.setAttribute('order',newOrder.toString());
-        currentDiv.style.background="#daffd9";
+        currentDiv.style.background="rgb(231 255 231)";
         /*currentDiv.style.background="rgb(238 255 237)"; */ 
         /*currentDiv.style.boxShadow = "0px 6px 10px rgba(0,0,0,.2)";*/
     } else if (newCompletionPercentage>=50){
@@ -451,8 +454,9 @@ var setDivAppearanceForCritical = function(currentDiv,newCompletionPercentage){
 
         if (habitDescriptionDiv) {
             habitDescriptionDiv.style.textDecoration = "underline";
-            habitDescriptionDiv.style.textUnderlineOffset = "3px";
+            habitDescriptionDiv.style.textUnderlineOffset = "7px";
             habitDescriptionDiv.style.textDecorationColor = "rgb(255 136 193)";
+            habitDescriptionDiv.style.textDecorationStyle = 'dashed';
             habitDescriptionDiv.style.textDecorationThickness = "2.5px";
         }
         if (taskIconDiv && plusMinusDiv){
