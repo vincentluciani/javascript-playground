@@ -408,6 +408,16 @@ var loadScript = async function(scriptUrl){
 
 }
 
+var unsetWinnerImage = function(){
+    var allegoryDiv = document.getElementById('allegory');
+    allegoryDiv.setAttribute('src','hiking-in-tibet-2024-12-06-06-45-37-utc_3.webp');
+}
+
+var setWinnerImage = function(){
+    var allegoryDiv = document.getElementById('allegory');
+    allegoryDiv.setAttribute('src','reaching-the-summit-2024-12-06-02-17-12-utc _3.webp');
+
+}
 var loadAudio = function(videoUrl){
     /*
     <video
@@ -453,8 +463,8 @@ https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio
 
 
     addAudioDiv('crowd_cheering_6seconds.mp3','cheering-audio');
-    addAudioDiv('tick_sound.mp3','tick-audio');
-    addAudioDiv('positive_sound.mp3','positive-audio');
+    addAudioDiv('casual tap button 3.wav','tick-audio');
+    addAudioDiv('27637 Robot interface ready-full.mp3','positive-audio');
 
 }
 var addAudioDiv = function(audioFile,divId){
@@ -469,10 +479,10 @@ var playCheers = function(){
     playSoundInDiv("cheering-audio");
 }
 var playPositive = function(){
-    /*playSoundInDiv("positive-audio");*/
+    playSoundInDiv("positive-audio");
 }
 var playTick = function(){
-    /*playSoundInDiv("tick-audio");*/
+    playSoundInDiv("tick-audio");
 }
 var playSoundInDiv = function(divId){
     var isSound = window.localStorage.getItem("sound");

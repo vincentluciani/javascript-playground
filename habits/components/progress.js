@@ -153,7 +153,11 @@ var addProgressDOMElement = function(elementToAdd){
     habitDescriptionContainer.setAttribute("class","habit-description");
     var expandButtonWrapper = document.createElement("span");
     expandButtonWrapper.setAttribute("class","plus-minus");
-
+    // expandButtonWrapper.addEventListener('click', function() {
+    //     return function(){
+    //         playTick();
+    //     }
+    // });
    /* var expandButtonContainer = document.createElement("i");
     expandButtonContainer.setAttribute("class","fa fa-plus");
     expandButtonWrapper.appendChild(expandButtonContainer);*/
@@ -296,6 +300,7 @@ var addProgressDOMElement = function(elementToAdd){
 
      titleDiv.addEventListener('click', function(expandButtonWrapper,detailsArea) {
         return function(){
+            playTick();
             toggleExpandCollapse(expandButtonWrapper,detailsArea);
         }
      }(expandButtonWrapper,detailsArea));
@@ -361,7 +366,7 @@ function renderPastProgressBoxes(){
                 var numberOfStreaks = getNumberOfFullDays();
                /* document.getElementById('number-of-streaks').innerHTML = numberOfStreaks;*/
                 document.getElementById('number-of-streaks-bubble').style.display = "flex";
-                document.getElementById('number-of-streaks-2').innerHTML = numberOfStreaks;
+                document.getElementById('number-of-streaks-2').innerHTML = numberOfStreaks.toString()+" FD";
                 setupToggleTodayYesterday();
             }
         },

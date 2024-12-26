@@ -16,16 +16,19 @@ var updateDailyProgress = function(){
             radialProgressParameters.emptyColor = "rgb(193 236 205)";
             dailyCommentBox.innerHTML="Awesome Achievement !";
             amount=1.15;
+            setWinnerImage();
             } else if ( dailyPercentage >= 50 ){
             radialProgressParameters.progressColor = "rgb(238 230 168)";
             radialProgressParameters.emptyColor = "rgb(228 228 228)";
             dailyCommentBox.innerHTML="You are almost there !"
             amount=1;
+            unsetWinnerImage();
         } else {
             radialProgressParameters.progressColor = "#b657af";
             radialProgressParameters.emptyColor = "rgb(255 217 235)";
             dailyCommentBox.innerHTML="Good Start<br>Keep it up !"
             amount=1;
+            unsetWinnerImage();
         }
 
         if ( dailyPercentage >= 100){
