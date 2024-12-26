@@ -363,10 +363,9 @@ function renderPastProgressBoxes(){
                 }
                 applyFilters(); 
                 showSummariesTab(); 
-                var numberOfStreaks = getNumberOfFullDays();
+                /*var numberOfStreaks = getNumberOfFullDays();*/
+                
                /* document.getElementById('number-of-streaks').innerHTML = numberOfStreaks;*/
-                document.getElementById('number-of-streaks-bubble').style.display = "flex";
-                document.getElementById('number-of-streaks-2').innerHTML = numberOfStreaks.toString()+" FD";
                 setupToggleTodayYesterday();
             }
         },

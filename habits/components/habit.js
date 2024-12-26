@@ -9,6 +9,16 @@ var refreshDOM = function(callback){
         value => {
             dataArrays = value;
 
+            if (null!=dataArrays && null!=dataArrays.counts&& null!= dataArrays.counts.daysWithAllTargetsMet){
+                document.getElementById('number-of-streaks-bubble').style.display = "flex";
+                document.getElementById('number-of-streaks-2').innerHTML = dataArrays.counts.daysWithAllTargetsMet.toString()+" FD";    
+            }
+
+            if (null!=dataArrays && null!=dataArrays.counts&& null!= dataArrays.counts.xpCounting){
+                document.getElementById('number-of-xp-bubble').style.display = "flex";
+                document.getElementById('number-of-xp').innerHTML = dataArrays.counts.xpCounting.toString()+" XP";    
+            }
+
             if (null == dataArrays.habitsArray || dataArrays.habitsArray.length == 0){
                 changeTabToHabits();
                 return;
