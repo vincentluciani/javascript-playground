@@ -346,7 +346,16 @@ app.get('/uat/:image.webp', function (req, res, next) {
 
 app.get('/images/icons/:image.png', function (req, res, next) {
 
-  var fileToLoad  = fs.readFileSync('output/'+req.params.image+'.png')
+  var fileToLoad  = fs.readFileSync('output/images/icons/'+req.params.image+'.png')
+     
+  res.writeHead(200, {'Content-Type': 'image/png'});
+  res.end(fileToLoad, 'binary');
+  /* https://stackoverflow.com/questions/21235696/display-images-in-html-nodejs*/
+})
+
+app.get('/discipline/images/icons/:image.png', function (req, res, next) {
+
+  var fileToLoad  = fs.readFileSync('output/images/icons/'+req.params.image+'.png')
      
   res.writeHead(200, {'Content-Type': 'image/png'});
   res.end(fileToLoad, 'binary');

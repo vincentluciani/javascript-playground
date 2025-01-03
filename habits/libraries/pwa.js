@@ -232,17 +232,72 @@ var sendNotification = function(title,message){
             tag: 'registration',/* two notifications with the same tag replace each other*/
             renotify: true, /* do not vibrate if next notification of same tag*/
             actions:[
-                {action:'confirm',title:'ok',icon:'/pwa_test/images/icons/app-icon-96x96.png'},
-                {action:'cancel',title:'cancel',icon:'/pwa_test/images/icons/app-icon-96x96.png'},
+                {action:'confirm',title:'ok',icon:'/discipline/images/icons/app-icon-96x96.png'},
+                {action:'cancel',title:'cancel',icon:'/discipline/images/icons/app-icon-96x96.png'},
             ]
         }
+        var registrationStore;
         navigator.serviceWorker.ready
         .then(function(swreg){
+            registrationStore = swreg;
             document.getElementById('test-message').innerHTML = "{"+title+"}"+"{"+options.body.toString()+"}";
             swreg.showNotification(title,options);
         })
+        .catch(function(err){
+            console.error(err);
+        })
     }
 };
+
+var sendSubscription = function(){
+    sendSubscriptionAsync().then(function(result){
+        console.log('Completed subscription addition');
+    }
+    )
+    .catch(function(err){
+        console.error(err);
+    })
+
+}
+var sendSubscriptionAsync = async function(){
+    var registrationStore = await navigator.serviceWorker.ready
+    var subscription =  await registrationStore.pushManager.getSubscription();
+   
+    if (subscription === null){
+        var vapidPublicKey = 'BIwhKRvH0bKT-7uCb-XrerliElONrpjYtRqhVSlePkITQNQTDDpC3StyLY_LvsL08zqRGQNJihVpypYabs1WP9Y'
+        var convertedVapidPublicKey = urlBase64ToUint8Array(vapidPublicKey);
+        var newSubscription = await registrationStore.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: convertedVapidPublicKey
+        });
+        var apiResponse = await postSubscription(newSubscription);
+        return apiResponse;
+    } else {
+        return {}
+    }      
+}
+var postSubscription = async function(newSubscription) {
+    try{
+        var response = await fetch
+        (apiURL+'/subscription',{
+            method: "POST",
+            headers:{'Content-Type': 'application/json'/*,'Accept':'application/json'*/},
+            credentials:'include',
+            body: JSON.stringify(newSubscription)
+            });
+    } catch (e) {
+        console.log('could not connect to the server');
+        console.log(e);
+        response = null;
+    } 
+    var apiResponse;
+    if (response && response.status == '200'){
+            var apiResponse = await response.json();
+    } else {
+        apiResponse = null;
+    }    
+    return apiResponse;
+}
 
 var askForNotificationPermission = function(){
     Notification.requestPermission(function(result){

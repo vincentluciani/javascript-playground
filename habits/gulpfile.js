@@ -8,7 +8,7 @@ var replace = require('gulp-replace');
 var deleteLines = require('gulp-delete-lines');
 var fs = require('fs');
 
-var newVersion = '47'
+var newVersion = '48'
 var versionNumberCodeJS = "var versionNumber = '"+newVersion+"'";
 var versionNumberCodeHTML = 'https://www.vincent-luciani.com/discipline/manifest.json?version='+newVersion;
 var newValue = '<script type="text/javascript" src="output/bundle-min.js"></script> '
@@ -23,7 +23,7 @@ gulp.task('put-client-id-html', function(){
 
 })
 gulp.task('pack-js', function () {    
-    return gulp.src(['components/*.js', 'libraries/random.js', 'libraries/loadDOMAndWait.js','libraries/date.js','libraries/http.js','libraries/pwa.js','language/general.js','language/english.js', 'synchronization/*.js','habits_main.js'])
+    return gulp.src(['components/*.js', 'libraries/random.js', 'libraries/loadDOMAndWait.js','libraries/date.js','libraries/conversions.js','libraries/http.js','libraries/pwa.js','language/general.js','language/english.js', 'synchronization/*.js','habits_main.js'])
         .pipe(concat('bundle.js'))
         .pipe(replace(/var versionNumber = '([0-9])*'/g, versionNumberCodeJS))      
         .pipe(replace('http://localhost:5001', 'https://www.vincent-luciani.com/api/discipline'))
@@ -33,7 +33,7 @@ gulp.task('pack-js', function () {
 });
 
 gulp.task('send-images', function () {    
-    return gulp.src(['hiking-in-tibet-2024-12-06-06-45-37-utc_3.webp','reaching-the-summit-2024-12-06-02-17-12-utc _3.webp'])
+    return gulp.src(['hiking-in-tibet-2024-12-06-06-45-37-utc_v4.webp','reaching-the-summit-2024-12-06-02-17-12-utc _3.webp'])
         .pipe(gulp.dest(outputFolder));
 });
 
@@ -69,6 +69,7 @@ gulp.task('send-sw-js', function () {
         .pipe(replace('"http://localhost:3000/language/general.js",',''))
         .pipe(replace('"http://localhost:3000/language/english.js",',''))
         .pipe(replace('"http://localhost:3000/libraries/date.js",',''))
+        .pipe(replace('"http://localhost:3000/libraries/conversions.js",',''))
         .pipe(replace('"http://localhost:3000/libraries/random.js",',''))
         .pipe(replace('"http://localhost:3000/libraries/http.js",',''))
         .pipe(replace('"http://localhost:3000/libraries/loadDOMAndWait.js",',''))

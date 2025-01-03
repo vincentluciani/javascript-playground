@@ -1,4 +1,4 @@
-var versionNumber = '38';
+var versionNumber = '48';
 
 var CACHE_STATIC = 'static_'+versionNumber;
 var CACHE_DYNAMIC = 'dynamic_'+versionNumber;
@@ -23,6 +23,7 @@ var listOfStaticFilesToCache = [
     "http://localhost:3000/language/general.js",
     "http://localhost:3000/language/english.js",
     "http://localhost:3000/libraries/date.js",
+    "http://localhost:3000/libraries/conversions.js",
     "http://localhost:3000/libraries/random.js",
     "http://localhost:3000/libraries/http.js",
     "http://localhost:3000/libraries/loadDOMAndWait.js",
@@ -48,7 +49,7 @@ var listOfStaticFilesToCache = [
     "http://localhost:3000/synchronization/readQueue.js", 
     'http://localhost:3000/',
     'http://localhost:3000/index.html',
-    'http://localhost:3000/hiking-in-tibet-2024-12-06-06-45-37-utc_3.webp',
+    'http://localhost:3000/hiking-in-tibet-2024-12-06-06-45-37-utc_v4.webp',
     'http://localhost:3000/manifest.json',
     'http://localhost:3000/resources/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshdTQ3j6zbXWjgeg.woff2',
     'http://localhost:3000/resources/crowd_cheering_6seconds.mp3',
@@ -140,4 +141,29 @@ self.addEventListener('fetch',function(event){
         );
     }
 
+});
+
+self.addEventListener('push',function(event){
+    console.log('push notification received');
+    var data = {title:'dummy',content:'dummy',     
+    };
+    if (Notification.permission !== 'granted') {
+        Notification.requestPermission().then(function(permission) {
+            console.log('Notification permission:', permission);
+        });
+    }
+    if (event.data){
+        try {
+        data = JSON.parse(event.data.text());
+        }catch (e) {
+            console.error('Error parsing push data:', e);
+        }
+    }
+    var options = {
+        body: data.content,
+        icon:'/discipline/images/icons/app-icon-96x96.png'
+    };
+    event.waitUntil(
+        self.registration.showNotification(data.title,options)
+    );
 });

@@ -410,7 +410,7 @@ var loadScript = async function(scriptUrl){
 
 var unsetWinnerImage = function(){
     var allegoryDiv = document.getElementById('allegory');
-    allegoryDiv.setAttribute('src','hiking-in-tibet-2024-12-06-06-45-37-utc_3.webp');
+    allegoryDiv.setAttribute('src','hiking-in-tibet-2024-12-06-06-45-37-utc_v4.webp');
 }
 
 var setWinnerImage = function(){
