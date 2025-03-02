@@ -410,12 +410,12 @@ var loadScript = async function(scriptUrl){
 
 var unsetWinnerImage = function(){
     var allegoryDiv = document.getElementById('allegory');
-    allegoryDiv.setAttribute('src','hiking-in-tibet-2024-12-06-06-45-37-utc_v4.webp');
+    allegoryDiv.setAttribute('src','negoiu-peak-in-winter-2024-09-17-18-38-12-utc_v2.webp');
 }
 
 var setWinnerImage = function(){
     var allegoryDiv = document.getElementById('allegory');
-    allegoryDiv.setAttribute('src','reaching-the-summit-2024-12-06-02-17-12-utc _3.webp');
+    allegoryDiv.setAttribute('src','reaching-the-summit-2024-12-06-02-17-12-utc.webp');
 
 }
 var loadAudio = function(videoUrl){

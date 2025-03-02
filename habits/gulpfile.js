@@ -33,7 +33,7 @@ gulp.task('pack-js', function () {
 });
 
 gulp.task('send-images', function () {    
-    return gulp.src(['hiking-in-tibet-2024-12-06-06-45-37-utc_v4.webp','reaching-the-summit-2024-12-06-02-17-12-utc _3.webp'])
+    return gulp.src(['negoiu-peak-in-winter-2024-09-17-18-38-12-utc_v2.webp','reaching-the-summit-2024-12-06-02-17-12-utc.webp'])
         .pipe(gulp.dest(outputFolder));
 });
 
