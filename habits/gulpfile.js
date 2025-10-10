@@ -33,7 +33,7 @@ gulp.task('pack-js', function () {
 });
 
 gulp.task('send-images', function () {    
-    return gulp.src(['negoiu-peak-in-winter-2024-09-17-18-38-12-utc_v2.webp','reaching-the-summit-2024-12-06-02-17-12-utc.webp'])
+    return gulp.src(['envato-labs-image-edit_v3.jpeg','reaching-the-summit-2024-12-06-02-17-12-utc.webp','resources/Cool_Interface_Sound.wav'])
         .pipe(gulp.dest(outputFolder));
 });
 

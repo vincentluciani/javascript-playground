@@ -205,7 +205,7 @@ async function refreshToken() {
     console.log("calling refresh api:")
     console.log(currentDateTime)
     if ( null == userInformation ){
-        document.getElementById("google-container-progress").style.display="block"; 
+        /*document.getElementById("google-container-progress").style.display="block"; */
         reactOnLogout();
         var errorDetails = "Did not get any information from indexedDB in refreshToken";
         debugWrite(errorDetails);
@@ -410,7 +410,7 @@ var loadScript = async function(scriptUrl){
 
 var unsetWinnerImage = function(){
     var allegoryDiv = document.getElementById('allegory');
-    allegoryDiv.setAttribute('src','negoiu-peak-in-winter-2024-09-17-18-38-12-utc_v2.webp');
+    allegoryDiv.setAttribute('src','envato-labs-image-edit_v3.jpeg');
 }
 
 var setWinnerImage = function(){
@@ -463,7 +463,7 @@ https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio
 
 
     addAudioDiv('crowd_cheering_6seconds.mp3','cheering-audio');
-    addAudioDiv('casual tap button 3.wav','tick-audio');
+    addAudioDiv('Cool_Interface_Sound.wav','tick-audio');
     addAudioDiv('27637 Robot interface ready-full.mp3','positive-audio');
 
 }
@@ -1034,6 +1034,8 @@ var setMute = function(){
         // audioDiv.remove(); 
     } else {
         window.localStorage.setItem("sound",  "on");
+        playTick();
+
         document.getElementById('unmute-icon').innerHTML=muteIcon;
         var audioDiv = document.getElementById("cheering-audio");
         if (!audioDiv){

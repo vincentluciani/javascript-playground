@@ -49,7 +49,7 @@ var listOfStaticFilesToCache = [
     "http://localhost:3000/synchronization/readQueue.js", 
     'http://localhost:3000/',
     'http://localhost:3000/index.html',
-    'http://localhost:3000/negoiu-peak-in-winter-2024-09-17-18-38-12-utc_v2.webp',
+    'http://localhost:3000/envato-labs-image-edit_v3.jpeg',
     'http://localhost:3000/manifest.json',
     'http://localhost:3000/resources/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshdTQ3j6zbXWjgeg.woff2',
     'http://localhost:3000/resources/crowd_cheering_6seconds.mp3',

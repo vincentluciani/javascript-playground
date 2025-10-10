@@ -2,13 +2,14 @@
 
 const reactOnLogin = function(apiResponse) {
     var message="Discipline pumps strength in your body and mind"
+    message="One step at a time, with an insane focus"
     document.getElementById("login-text").innerHTML = message;
     document.getElementById("login-text-progress").innerHTML = message;
     
     /*document.getElementById("google-image").setAttribute("src", apiResponse.picture);*/
     /*document.getElementById("google-image-progress").setAttribute("src", apiResponse.picture);*/
-    document.getElementById('allegory').style.display='block';
-    document.getElementById('allegory-habit').style.display='block';
+    /*document.getElementById('allegory').style.display='block';
+    document.getElementById('allegory-habit').style.display='block';*/
     document.getElementById("signout_button").style.display= 'block';
     document.getElementById("signout_button_habits").style.display= 'block';
     document.getElementById('account-link').style.display='list-item';
@@ -16,7 +17,7 @@ const reactOnLogin = function(apiResponse) {
     document.getElementById("login-title-box").style.display='none';
     document.getElementById("login-title-box-habits").style.display='none';
     document.getElementById("assure-login").style.display='none';
-
+ 
     var listOfButtons = document.getElementsByClassName("g_id_signin");
 
     for (var i=0; i< listOfButtons.length;i++){
@@ -26,12 +27,16 @@ const reactOnLogin = function(apiResponse) {
     document.getElementById("google-container").classList.add("new-habit");
     document.getElementById("google-container").classList.remove("new-habit-focused");
 
-    document.getElementById("google-container-progress").style.borderColor = "lightgrey";
-    document.getElementById("google-container-progress").style.borderWidth = "0px";
+    /*document.getElementById("google-container-progress").style.borderColor = "lightgrey";
+    document.getElementById("google-container-progress").style.borderWidth = "0px";*/
     /*document.getElementById("google-container-progress").style.background = "white";*/
 
     document.getElementById("new-habit").classList.remove("new-habit");
     document.getElementById("new-habit").classList.add("new-habit-focused");
+
+    document.getElementById("google-container-progress").style.display='none';
+    document.getElementById("google-container").style.display='none';
+
     /*document.getElementById("google-image").style.display="block";*/
    /* document.getElementById("google-image-progress").style.display="block";*/
 
@@ -73,12 +78,18 @@ const reactOnLogout = function() {
     document.getElementById("google-container").classList.remove("new-habit");
     document.getElementById("google-container").classList.add("new-habit-focused");
 
-    document.getElementById("google-container-progress").style.borderColor = "#c369bc";
+    document.getElementById("google-container-progress").classList.remove("new-habit");
+    document.getElementById("google-container-progress").classList.add("new-habit-focused");
+
+    /*document.getElementById("google-container-progress").style.borderColor = "#c369bc";
     document.getElementById("google-container-progress").style.borderWidth = "5px";
-    document.getElementById("google-container-progress").style.background = "#fffceb";
+    document.getElementById("google-container-progress").style.background = "#fffceb";*/
     
     document.getElementById("new-habit").classList.add("new-habit");
     document.getElementById("new-habit").classList.remove("new-habit-focused");
+
+    document.getElementById("google-container-progress").style.display = 'block';
+    document.getElementById("google-container").style.display = 'block';
     /*document.getElementById("google-image").style.display="none";*/
     /*document.getElementById("google-image-progress").style.display="none";*/
     /*document.getElementById("streak-box").style.display="none";*/

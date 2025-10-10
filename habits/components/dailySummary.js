@@ -16,19 +16,16 @@ var updateDailyProgress = function(){
             radialProgressParameters.emptyColor = "rgb(193 236 205)";
             dailyCommentBox.innerHTML="Awesome Achievement !";
             amount=1.15;
-            setWinnerImage();
             } else if ( dailyPercentage >= 50 ){
             radialProgressParameters.progressColor = "rgb(238 230 168)";
             radialProgressParameters.emptyColor = "rgb(228 228 228)";
             dailyCommentBox.innerHTML="You are almost there !"
             amount=1;
-            unsetWinnerImage();
         } else {
             radialProgressParameters.progressColor = "#b657af";
             radialProgressParameters.emptyColor = "rgb(255 217 235)";
             dailyCommentBox.innerHTML="Good Start<br>Keep it up !"
             amount=1;
-            unsetWinnerImage();
         }
 
         if ( dailyPercentage >= 100){
@@ -41,7 +38,7 @@ var updateDailyProgress = function(){
         }
 
         updateProgressOnRadial(dailyPercentage, radialProgressParameters);
-
+        
         dailySummaryBox.style.display = "block";
     } else {
         dailyPercentage = 0;
@@ -55,16 +52,27 @@ var updateDailyProgress = function(){
             navigator.setAppBadge(dailyProgress.numberOfIncompleteDivs);
         }
     }
-
+    setAllegoryImage(dailyPercentage);
     setDivAppearanceBasedOnCompletion(dailySummaryDiv.parentNode,dailyPercentage);
 
     if (loggedIn && personalBox){
-        setDivAppearanceBasedOnCompletion(personalBox,dailyPercentage);
+        /*setDivAppearanceBasedOnCompletion(personalBox,dailyPercentage);*/
     } else if (!loggedIn && personalBox){
         personalBox.classList.add("new-habit-focused");
     }
 }
 
+var setAllegoryImage = function(dailyPercentage){
+     var isYesterdayFull = false;
+        if (null!=dataArrays && null!=dataArrays.counts&& null!= dataArrays.counts.xpCounting){
+            isYesterdayFull = dataArrays.counts.isYesterdayFull || false
+        }
+        if (isYesterdayFull || dailyPercentage >= 100) {
+            setWinnerImage();
+        } else {
+            unsetWinnerImage();
+        }
+}
 var getDailyProgress=function(){
     var progressPercentageCompletionDivs = document.getElementsByClassName("percentage-completion");
     currentDate = document.getElementById("date-filter").value;
