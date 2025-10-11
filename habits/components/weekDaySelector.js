@@ -119,11 +119,6 @@ var refreshWeekDaySelector = function(weekDaySelector,weekDay){
     weekDaySelector.innerHTML = "";
     weekDaySelector.setAttribute("weekday", weekDay);
 
-    const descriptionTextLabel = document.createElement("label");
-
-    const descriptionText = document.createTextNode("Applies to the following days of the week:");
-    descriptionTextLabel.appendChild(descriptionText);
-
     var mondayDiv = dayOfWeek("monday","M",weekDay);
     var tuesdayDiv = dayOfWeek("tuesday","T",weekDay);
     var wednesdayDiv = dayOfWeek("wednesday","W",weekDay);
@@ -141,7 +136,6 @@ var refreshWeekDaySelector = function(weekDaySelector,weekDay){
     addWeekDayListener(weekDaySelector,saturdayDiv,'saturday');
     addWeekDayListener(weekDaySelector,sundayDiv,'sunday');
 
-    weekDaySelector.appendChild(descriptionTextLabel);
     weekDaySelector.appendChild(mondayDiv);
     weekDaySelector.appendChild(tuesdayDiv);
     weekDaySelector.appendChild(wednesdayDiv);
@@ -158,11 +152,6 @@ var dynamicWeekDaySelector = function(weekDay){
     weekDaySelector.setAttribute("class","week-day-selection");
     weekDaySelector.setAttribute("weekday", weekDay);
 
-    const descriptionTextLabel = document.createElement("label");
-
-    const descriptionText = document.createTextNode("Applies to the following days of the week:");
-    descriptionTextLabel.appendChild(descriptionText);
-
     var mondayDiv = dayOfWeek("monday","M",weekDay);
     var tuesdayDiv = dayOfWeek("tuesday","T",weekDay);
     var wednesdayDiv = dayOfWeek("wednesday","W",weekDay);
@@ -180,7 +169,6 @@ var dynamicWeekDaySelector = function(weekDay){
     addWeekDayListener(weekDaySelector,saturdayDiv,'saturday');
     addWeekDayListener(weekDaySelector,sundayDiv,'sunday');
 
-    weekDaySelector.appendChild(descriptionTextLabel);
     weekDaySelector.appendChild(mondayDiv);
     weekDaySelector.appendChild(tuesdayDiv);
     weekDaySelector.appendChild(wednesdayDiv);

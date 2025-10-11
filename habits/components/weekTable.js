@@ -115,7 +115,7 @@ var buildWeekTableBox = function(weekTableObject,habitObject){
     const weekSummaryTableTitle = document.createElement("div");
     weekSummaryTableTitle.innerHTML = "This week summary:";
     weekSummaryTableTitle.setAttribute("class","subtitle");
-    const markAsCriticalDiv = document.createElement("div");
+    /*const markAsCriticalDiv = document.createElement("div");
 
     markAsCriticalDiv.setAttribute("class","critical-link");
     if (habitObject.isCritical && habitObject.isCritical==true){
@@ -124,7 +124,7 @@ var buildWeekTableBox = function(weekTableObject,habitObject){
     } else {
         markAsCriticalDiv.innerHTML = "Mark as critical";
         markAsCriticalDiv.setAttribute("onclick","setHabitAsCritical("+ habitObject.habitId +");");
-    }
+    }*/
     weekSummaryTable.setAttribute("class","table-summary");
     weekSummaryTable.innerHTML = tableCode;
 
@@ -132,7 +132,7 @@ var buildWeekTableBox = function(weekTableObject,habitObject){
 
     newCanvaWrapper.appendChild(grapTitleDiv); 
     newCanvaWrapper.appendChild(weekSummaryTable);
-    newCanvaWrapper.appendChild(markAsCriticalDiv);
+    /*ewCanvaWrapper.appendChild(markAsCriticalDiv);*/
     var brDiv = document.createElement("br");
     newCanvaWrapper.appendChild(brDiv);
     newCanvaWrapper.setAttribute("class","box canva-wrapper week-box");

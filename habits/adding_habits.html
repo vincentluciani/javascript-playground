@@ -275,16 +275,19 @@
                     <label class="label">Title:</label>
                    <!--  <textarea  rows=3 type="text" id="new-description" class="large"></textarea> -->
                    <input type="text" id="new-description"></textarea> 
+                    <div id="assure-new-habit" class="assurance">
+                        <div><div class='checked-icon'></div>The habit title will be encrypted. Only you can see it.</div>
+                    </div> 
                     <label class="label hidden">Check here if it is something you should NOT do:</label>
                     <input type="checkbox" id="new-is-negative-flag" class="hidden" value=0 />
-                    <br><div><label class="label">Daily Target:</label></div>
+                    <div><label class="label">Daily Target:</label></div>
                     <div class="target-container">
                         <div id="minus-in-add-div" class="minus-button normal">-</div>
                         <input type="number" id="new-target" class="number-of-completion" value=1 />
                         <div id="plus-in-add-div" class="plus-button normal">+</div>
                     </div>
+                    <div style="clear: left;margin-top:11px;">Applies to the following days of the week:</div>
                     <div class="week-day-selection" id="week-day-selection" weekday='monday tuesday sunday saturday friday thursday wednesday' >
-                        <label>Applies to the following days of the week:</label>
                         <div class="weekday monday selected">M</div>
                         <div class="weekday tuesday selected">T</div>
                         <div class="weekday wednesday selected">W</div>
@@ -306,7 +309,6 @@
                     </div>
                     <div onClick='addNewHabitFromForm();' id="add-button" class="add-button"><div class="action-icon-container save-icon" id="save-icon"></div>Save</div>
                     <div id="assure-new-habit" class="assurance">
-                        <div><div class='checked-icon'></div>The habit title will be encrypted. Only you can see it.</div>
                         <div><div class='checked-icon'></div>No extra step needed once you save.</div>
                     </div> 
                 </div>

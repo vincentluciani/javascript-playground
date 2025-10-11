@@ -87,7 +87,7 @@ window.addEventListener('DOMContentLoaded', function() {
         createRadialProgressBar(radialProgressParameters);
     
         setTimeout(placeSVGIcons,5);
-        setTimeout(showLoginBoxes,7000);
+        /*setTimeout(showLoginBoxes,7000);*/
         setTimeout(loadAudio,25);  
 
         initializeTogglesTodayYesterday();

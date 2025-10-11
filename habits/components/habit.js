@@ -303,7 +303,12 @@ var addHabitDOMElement = function(elementToAdd){
     newHabitDivision.appendChild(targetContainer);
     /*newHabitDivision.appendChild(targetValue);*/
 
-      
+    const descriptionTextLabel = document.createElement("div");
+    descriptionTextLabel.setAttribute("style","clear:left");
+    const weekDescriptionText = document.createTextNode("Applies to the following days of the week:");
+    descriptionTextLabel.appendChild(weekDescriptionText);
+    newHabitDivision.appendChild(descriptionTextLabel);
+
     var weekDaySelector = dynamicWeekDaySelector(elementToAdd.weekDay);
     newHabitDivision.appendChild(weekDaySelector);
 

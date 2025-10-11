@@ -54,10 +54,11 @@ body{
     margin-bottom: 7px; 
 }
 #assure-new-habit{
-    margin-top: 15px;
+    margin-top: 5px;
+    margin-bottom: 15px;
 }
 .checked-icon{
-    margin-top: 3px;
+    margin-top: 1px;
     float: left;
     margin-right: 5px;
 
@@ -66,7 +67,7 @@ body{
 .expand-collapse-link{
     color: var(--primary-color,#c369bc);
     margin-bottom: 6px;
-    margin-top: 20px;
+    margin-top: 11px;
     cursor: pointer;
 }
 .delete-account-text{
@@ -119,6 +120,7 @@ body{
 #back-to-today,#back-to-yesterday{
     color: #0458fe;
     cursor: pointer;
+    margin-left: 5px;
 }
 #back-to-today{
     display: none;
@@ -484,7 +486,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
     font-weight:bold;
 }
 .box.canva-wrapper.week-box{
-    height: 120px;
+    height: 100px;
 }
 .box.canva-wrapper.streak-box{
    /*height: 260px;*/
@@ -651,7 +653,7 @@ i{
 }
 #new-description,.habit-description-definition{
     width: 213px;
-    margin-bottom: 10px;
+    /*margin-bottom: 10px;*/
 }
 #new-description{
     height: 32px;
@@ -715,11 +717,13 @@ i{
     border-radius: 9px;
     margin-top: 16px;
     cursor:pointer;
+    margin-bottom:10px;
 }
 
 .target-container{
     width: 150px;
     height: 50px;
+    margin-top: 2px;
 }
 
 .weekday{
@@ -727,7 +731,7 @@ i{
     padding: 4px;
     cursor: pointer;
     font-size:13px;
-    width: 13px;
+    width: calc(100% / 7 - 15px);
     border-radius: 8px;
     text-align: center;
 }
@@ -739,9 +743,9 @@ i{
     color: #b5b5b5;
 }
 .week-day-selection{
-    margin-top: 13px;
-    margin-bottom: 10px;
-    max-width: 305px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 100%
 }
 .habit-description-definition{
     margin-bottom: 10px;
@@ -1260,11 +1264,11 @@ td,.red,.fa-warning{
         font-size: 18px;
     }
 
-    .box.habit-update, .box.daily-summary, .box.big-action-button,#google-container-progress,#google-container{
+    .box.habit-update, .box.daily-summary ,#google-container-progress,#google-container{
         /* width: 297px; */
         width: calc(100% - 10px);
         /*border-width: 1px;*/
-        margin: 12px 15px 0px 15px;
+        margin: 0px 15px 12px 15px;
     }
 
     .box.big-action-button{
@@ -1276,7 +1280,7 @@ td,.red,.fa-warning{
 
     .number-of-completion[type=number]{
         height: 74px;
-        margin-top: 15px;
+        margin-top: 6px;
     }
 
     .box.habit-update,#google-container-progress,#google-container {
@@ -1286,7 +1290,7 @@ td,.red,.fa-warning{
         width: 48px;
         height: 48.5px;
         font-size: 26px;
-        margin-top: 15px;
+        margin-top: 5px;
     }
     
     .minus-button{
@@ -1309,7 +1313,7 @@ td,.red,.fa-warning{
     .box.new-habit,.habit-setting,.new-habit-focused{
         width: calc(100% - 10px);
         padding: 20px;
-        margin: 15px 15px 0px 15px;
+        margin: 15px 15px 15px 15px;
     }
 
     .week-day-selection{
@@ -1323,19 +1327,18 @@ td,.red,.fa-warning{
         width: 62px;
         height: 55.5px;
         margin-bottom: 13px;
-        margin-top: 15px;
+        margin-top: 5px;
         padding-bottom:0px;
         padding-top:0px;
     }
 
     #new-description, .habit-description-definition {
-        margin-top: 12px;
+        margin-top: 5px;
         width: calc(100% - 20px);
     }
     
     .weekday{
         font-size: 23px;
-        width: 25px;
         border-radius: 8px;
         padding: 4px;
     }
