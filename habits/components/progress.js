@@ -672,3 +672,5 @@ var updateProgressStatus = function(divToUpdate,progressElement,newStatus){
     divToUpdate.setAttribute('status',newStatus)
 
 };
+
+

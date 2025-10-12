@@ -87,6 +87,7 @@ gulp.task('send-sw-js', function () {
         .pipe(replace('"http://localhost:3000/components/radialprogress.js",',''))
         .pipe(replace('"http://localhost:3000/components/encourage.js",',''))
         .pipe(replace('"http://localhost:3000/components/countdown.js",',''))
+        .pipe(replace('"http://localhost:3000/components/levels.js",',''))
         .pipe(replace('"http://localhost:3000/synchronization/pushProgressToQueue.js",',''))
         .pipe(replace('"http://localhost:3000/synchronization/storage.js",',''))
         .pipe(replace('"http://localhost:3000/synchronization/sendPost.js",',''))

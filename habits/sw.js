@@ -40,6 +40,7 @@ var listOfStaticFilesToCache = [
     "http://localhost:3000/components/radialprogress.js",
     "http://localhost:3000/components/encourage.js",
     "http://localhost:3000/components/countdown.js",
+    "http://localhost:3000/components/levels.js",
     "http://localhost:3000/synchronization/pushProgressToQueue.js", 
     "http://localhost:3000/synchronization/storage.js",
     "http://localhost:3000/synchronization/sendPost.js",

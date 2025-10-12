@@ -8,16 +8,22 @@ var refreshDOM = function(callback){
     getHabitProgressJournal().then(
         value => {
             dataArrays = value;
-
+            var XP=0;
+            var FD=0;
             if (null!=dataArrays && null!=dataArrays.counts&& null!= dataArrays.counts.daysWithAllTargetsMet){
                 document.getElementById('number-of-streaks-bubble').style.display = "flex";
-                document.getElementById('number-of-streaks-2').innerHTML = dataArrays.counts.daysWithAllTargetsMet.toString()+" FD";    
+                document.getElementById('number-of-streaks-2').innerHTML = dataArrays.counts.daysWithAllTargetsMet.toString()+" FD"; 
+                FD=dataArrays.counts.daysWithAllTargetsMet;
             }
 
             if (null!=dataArrays && null!=dataArrays.counts&& null!= dataArrays.counts.xpCounting){
                 document.getElementById('number-of-xp-bubble').style.display = "flex";
-                document.getElementById('number-of-xp').innerHTML = dataArrays.counts.xpCounting.toString()+" XP";    
-            }
+                document.getElementById('number-of-xp').innerHTML = dataArrays.counts.xpCounting.toString()+" XP"; 
+                XP=dataArrays.counts.xpCounting;
+            } 
+
+            var levelsObject = getCircleColors(XP,FD);
+            applyCircleColors(levelsObject);
 
             if (null == dataArrays.habitsArray || dataArrays.habitsArray.length == 0){
                 changeTabToHabits();
