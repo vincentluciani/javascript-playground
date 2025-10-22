@@ -30,6 +30,7 @@ var buildGraphBox = function(unitPerMonth,unitAccumulation,completionAccumulatio
 
     streaksWrapper.appendChild(grapTitleDivStreaks);
     streaksWrapper.setAttribute("id","streaks-"+habitObject.habitId);
+    streaksWrapper.setAttribute("style","order:"+(10000-completionAccumulation).toString());
     streaksWrapper.appendChild(streaksTitleDiv);
     streaksWrapper.appendChild(accumulationTitleDiv);
     streaksWrapper.appendChild(graphTitle); 

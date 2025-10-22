@@ -20,6 +20,7 @@ var refreshDOM = function(callback){
                 document.getElementById('number-of-xp-bubble').style.display = "flex";
                 document.getElementById('number-of-xp').innerHTML = dataArrays.counts.xpCounting.toString()+" XP"; 
                 XP=dataArrays.counts.xpCounting;
+                document.getElementById('ranking-section').style.display = "block";
             } 
 
             var levelsObject = getCircleColors(XP,FD);

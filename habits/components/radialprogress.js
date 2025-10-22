@@ -79,7 +79,7 @@ var createRadialProgressBar = function(parameters){
 
     percentageValue.innerHTML = "0 %";
 
-    var textMarginTop = (-1)*(parameters.containerHeight - parameters.strokeWidth - circleRadius + parameters.fontSize/1.9 + parameters.textTopAdjustment);
+    var textMarginTop = (-1)*(parameters.containerHeight - parameters.strokeWidth - circleRadius + parameters.fontSize/1.9 + parameters.textTopAdjustment) - 1;
     var textMarginLeft = (parameters.strokeWidth + circleRadius)/1.5 + parameters.textLeftAdjustment;
 
     percentageValue.style.marginTop = textMarginTop.toString()+"px";

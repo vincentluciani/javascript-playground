@@ -15,16 +15,26 @@
 .allegory-container{
         display:none;
 }
+#count-container{
+    display:flex;
+}
 #ranking-section{
-    margin-left:15px;
+    display:none;
+    background: white;
+    margin: 11px 0px 0px 13px;
+    border: 1px solid #e1dfdf;
+    height: 25px;
+    border-radius:17px;
+    padding: 3px 8px 0px 14px;
 }
 
-.ranking-icon{
-    width:20px;
-    height: 20px;
-    margin-top: 10px;
-    margin-right: 3px;
+
+.ranking-icon.primary,.ranking-icon.secondary{
+    width:16px;
+    height: 15px;
+    margin: 0px 0px 0px 0px;
 }
+
 svg.ranking-icon circle{
     stroke-width: 1px;
 }
@@ -34,8 +44,8 @@ svg.ranking-icon.whitebelt circle{
 
 }
 svg.ranking-icon.yellowbelt circle{
-    fill:#ff8e8e;
-    stroke: #ff8e8e;
+    fill: #dc9dd7;
+    stroke: #dc9dd7;
 }
 svg.ranking-icon.orangebelt circle{
     fill:rgb(253, 176, 33);
@@ -494,7 +504,7 @@ li.active a, li.active a:active, li.active a:visited, li.active a span {
     border-radius: 20px;
 }
 .box.with-countdown{
-    border-radius: 10px;
+    border-radius: 25px 5px 25px 5pxx;
 }
 .input-title{
     padding-top: 0px;
@@ -654,7 +664,7 @@ h2{
     margin-top: 3px;
     clear: both;
     padding-top: 10px;
-    margin-bottom: 0px;
+    margin-bottom: 7px;
 }
 .number-of-completion[type=number]{
     width: 69px;
@@ -1161,6 +1171,10 @@ td,.red,.fa-warning{
 /* mobile phone smartphone*/
 @media (max-width: 649px){
 
+    #count-container{
+        width: calc(100% - 5px);
+        justify-content: space-between;
+    }
     #back-to-today,#back-to-yesterday{
         margin-top: 9px;
     }
@@ -1215,10 +1229,10 @@ td,.red,.fa-warning{
         border-radius: 10px 10px 0px 0px; 
     }
     #number-of-streaks-bubble{
-        margin: 5px 0px 0px 13px;
+        margin: 11px 0px 0px 2px;
     }
     #number-of-xp-bubble{
-        margin: 5px 20px 0px 13px;
+        margin: 11px 0px 0px 13px;
     }
     .main-title-only{
         width: 100%;
@@ -1261,7 +1275,7 @@ td,.red,.fa-warning{
         margin-bottom: 2px;
     }*/
     .box, .box.with-countdown{
-        border-radius: 7px;
+        border-radius: 25px 5px 25px 5px;
     }
     .habits-container,.habits-definition-container,.filter-bar,.week-summary-container,#journal-container,.main-action-bar,#footer{
         justify-content: space-around;
@@ -1413,7 +1427,7 @@ td,.red,.fa-warning{
         padding: 10px 17px 5px 18px;
     }
     #daily-summary-container{
-        padding-bottom: 17px;
+        padding-bottom: 22px;
     }
    /* #google-container-progress{
         width: 100%;
@@ -1430,8 +1444,7 @@ td,.red,.fa-warning{
 /* desktop */
 @media (min-width: 650px){
     #ranking-section{
-        margin-left:15px;
-        margin-top: 16px;
+        margin:20px 5px 0px 13px;
     }
     .journal-container-day{
         width: 300px;
@@ -1501,7 +1514,7 @@ td,.red,.fa-warning{
         margin: 20px 0px 0px 13px;
     }
     #number-of-xp-bubble{
-        margin: 20px 20px 0px 13px;
+        margin: 20px 0px 0px 13px;
     }
     .unmute-icon svg{
         width: 77px;
@@ -1552,6 +1565,7 @@ td,.red,.fa-warning{
     }
     .box.habit-update,#daily-summary-container{
         height: 206px;
+        border-radius: 5px 25px 5px 39px;
     }
     .box.habit-update,#daily-summary-container,#google-container{
         padding: 10px 15px 10px 15px;
@@ -1575,7 +1589,7 @@ td,.red,.fa-warning{
 /*galaxy folder*/
 @media (max-width:346px){
     #number-of-streaks-bubble,#number-of-xp-bubble{
-        margin: 6px 0px 0px 8px;
+        margin: 10px 8px 0px 0px;
     }
     #back-to-today,#back-to-yesterday{
         margin-top: 7px;

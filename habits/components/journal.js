@@ -87,6 +87,7 @@ var readJournal = function(journalArray){
             var textDiv = document.createElement("div");
             textDiv.innerHTML = journalText;
             textDiv.setAttribute("class","text-label");
+            journalDiv.setAttribute("journalDate",journalEntry.journalDate.toString())
             journalDiv.appendChild(dateDiv);
             journalDiv.appendChild(textDiv);   
             document.getElementById("journal-container").appendChild(journalDiv);
