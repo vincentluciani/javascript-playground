@@ -33,9 +33,10 @@ gulp.task('pack-js', function () {
 });
 
 gulp.task('send-images', function () {    
-    return gulp.src(['envato-labs-image-edit_v3.jpeg','reaching-the-summit-2024-12-06-02-17-12-utc.webp','resources/Cool_Interface_Sound.wav'])
+    return gulp.src(['resources/Cool_Interface_Sound.wav','resources/27637 Robot interface ready-full.mp3','resources/crowd_cheering_6seconds.mp3'])
         .pipe(gulp.dest(outputFolder));
-});
+
+}); 
 
 gulp.task('send-manifest', function () {    
     return gulp.src(['manifest.json'])

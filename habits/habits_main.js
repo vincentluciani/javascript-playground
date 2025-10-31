@@ -410,12 +410,12 @@ var loadScript = async function(scriptUrl){
 
 var unsetWinnerImage = function(){
     var allegoryDiv = document.getElementById('allegory');
-    allegoryDiv.setAttribute('src','envato-labs-image-edit_v3.jpeg');
+    /*allegoryDiv.setAttribute('src','envato-labs-image-edit_v3.jpeg');*/
 }
 
 var setWinnerImage = function(){
     var allegoryDiv = document.getElementById('allegory');
-    allegoryDiv.setAttribute('src','reaching-the-summit-2024-12-06-02-17-12-utc.webp');
+    /*allegoryDiv.setAttribute('src','reaching-the-summit-2024-12-06-02-17-12-utc.webp');*/
 
 }
 var loadAudio = function(videoUrl){

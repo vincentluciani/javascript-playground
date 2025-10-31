@@ -52,7 +52,7 @@ var updateDailyProgress = function(){
             navigator.setAppBadge(dailyProgress.numberOfIncompleteDivs);
         }
     }
-    setAllegoryImage(dailyPercentage);
+    /*setAllegoryImage(dailyPercentage);*/
     setDivAppearanceBasedOnCompletion(dailySummaryDiv.parentNode,dailyPercentage);
 
     if (loggedIn && personalBox){

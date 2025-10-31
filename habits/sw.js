@@ -50,10 +50,11 @@ var listOfStaticFilesToCache = [
     "http://localhost:3000/synchronization/readQueue.js", 
     'http://localhost:3000/',
     'http://localhost:3000/index.html',
-    'http://localhost:3000/envato-labs-image-edit_v3.jpeg',
     'http://localhost:3000/manifest.json',
     'http://localhost:3000/resources/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshdTQ3j6zbXWjgeg.woff2',
     'http://localhost:3000/resources/crowd_cheering_6seconds.mp3',
+    'http://localhost:3000/resources/Cool_Interface_Sound.wav',
+    'http://localhost:3000/resources/27637%20Robot%20interface%20ready-full.mp3',
     'http://localhost:3000/resources/muted-blank.mp4',
     'http://localhost:3000/resources/muted-blank.ogg'
 ]

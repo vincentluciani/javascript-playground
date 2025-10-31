@@ -1220,7 +1220,7 @@ td,.red,.fa-warning{
     #login-text-progress{
         font-size: 21px;
     }
-    #allegory,#allegory-habit{
+    #allegory-habit{
         width: 100%;
         margin-top: 0px;
         margin-bottom:2px;
@@ -1492,7 +1492,7 @@ td,.red,.fa-warning{
     #login-text-progress{
         font-size: 18px;
     }
-    #allegory,#allegory-habit{
+    #allegory-habit{
         width: 100%;
         border-radius: 10px 10px 0px 0px;
         margin-top: 0px;
