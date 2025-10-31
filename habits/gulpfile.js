@@ -8,24 +8,41 @@ var replace = require('gulp-replace');
 var deleteLines = require('gulp-delete-lines');
 var fs = require('fs');
 
-var newVersion = '48'
+var newVersion = '49'
 var versionNumberCodeJS = "var versionNumber = '"+newVersion+"'";
 var versionNumberCodeHTML = 'https://www.vincent-luciani.com/discipline/manifest.json?version='+newVersion;
 var newValue = '<script type="text/javascript" src="output/bundle-min.js"></script> '
 var outputFolder = '/Users/vincentluciani/Software/Web/vincent-luciani.com/apache/staging/public-html/discipline'
 
+gulp.task('change-version-dev-sw', function(){
+    return gulp.src(['sw.js'])
+    .pipe(replace(/var\s+versionNumber\s+=\s+'([0-9]+)'/g, versionNumberCodeJS))    
+    .pipe(rename('sw.js'))
+    .pipe(gulp.dest('.'));
+
+})
+
+gulp.task('change-version-dev-pwa', function(){
+    return gulp.src(['libraries/pwa.js'])
+    .pipe(replace(/var\s+versionNumber\s+=\s+'[0-9]+'/g, versionNumberCodeJS))    
+    .pipe(rename('pwa.js'))
+    .pipe(gulp.dest('libraries'));
+
+})
 
 gulp.task('put-client-id-html', function(){
     return gulp.src(['adding_habits.html'])
     .pipe(replace('YOUR_GOOGLE_CLIENT_ID', fs.readFileSync('googleclientid.txt', 'utf8'))) 
+    .pipe(replace(/http:\/\/localhost:3000\/manifest\.json\?version=\d+/g, versionNumberCodeHTML))
     .pipe(rename('adding_habits_transformed.html'))
     .pipe(gulp.dest('.'));
 
 })
+
+
 gulp.task('pack-js', function () {    
     return gulp.src(['components/*.js', 'libraries/random.js', 'libraries/loadDOMAndWait.js','libraries/date.js','libraries/conversions.js','libraries/http.js','libraries/pwa.js','language/general.js','language/english.js', 'synchronization/*.js','habits_main.js'])
         .pipe(concat('bundle.js'))
-        .pipe(replace(/var versionNumber = '([0-9])*'/g, versionNumberCodeJS))      
         .pipe(replace('http://localhost:5001', 'https://www.vincent-luciani.com/api/discipline'))
         .pipe(replace('http://localhost:3000', 'https://www.vincent-luciani.com'))
         .pipe(minify())
@@ -146,4 +163,4 @@ gulp.task('process-html', function () {
         /*.pipe(gulp.dest('output'));*/
         .pipe(gulp.dest(outputFolder));
 });
-gulp.task('default', gulp.series(['send-images','send-sw-js','copy-resources','copy-icons','send-manifest','put-client-id-html','pack-js','pack-css','process-html']));
+gulp.task('default', gulp.series(['change-version-dev-sw','change-version-dev-pwa','send-images','send-sw-js','copy-resources','copy-icons','send-manifest','put-client-id-html','pack-js','pack-css','process-html']));

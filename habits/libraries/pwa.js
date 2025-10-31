@@ -1,4 +1,4 @@
-var versionNumber = '38';
+var versionNumber = '49';
 var versionFromServer;
 
 var currentDateTimePWA = new Date();

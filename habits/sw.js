@@ -1,4 +1,4 @@
-var versionNumber = '48';
+var versionNumber = '49';
 
 var CACHE_STATIC = 'static_'+versionNumber;
 var CACHE_DYNAMIC = 'dynamic_'+versionNumber;
