@@ -10,6 +10,7 @@ var fs = require('fs');
 
 var newVersion = '49'
 var versionNumberCodeJS = "var versionNumber = '"+newVersion+"'";
+var versionNumberCodeLocalHost = 'http://localhost:3000/manifest.json?version='+newVersion;
 var versionNumberCodeHTML = 'https://www.vincent-luciani.com/discipline/manifest.json?version='+newVersion;
 var newValue = '<script type="text/javascript" src="output/bundle-min.js"></script> '
 var outputFolder = '/Users/vincentluciani/Software/Web/vincent-luciani.com/apache/staging/public-html/discipline'
@@ -33,7 +34,7 @@ gulp.task('change-version-dev-pwa', function(){
 gulp.task('put-client-id-html', function(){
     return gulp.src(['adding_habits.html'])
     .pipe(replace('YOUR_GOOGLE_CLIENT_ID', fs.readFileSync('googleclientid.txt', 'utf8'))) 
-    .pipe(replace(/http:\/\/localhost:3000\/manifest\.json\?version=\d+/g, versionNumberCodeHTML))
+    .pipe(replace(/http:\/\/localhost:3000\/manifest\.json\?version=\d+/g, versionNumberCodeLocalHost))
     .pipe(rename('adding_habits_transformed.html'))
     .pipe(gulp.dest('.'));
 

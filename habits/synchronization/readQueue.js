@@ -28,7 +28,7 @@ var readQueueAPI = function() {
       readQueueAPI();
     } else {
       setItemWithAPI(elementToProcess.id, elementToProcess.value).then(value=>{
-        if (value == null || (null != value.ok && value.ok == false)){
+        if (value == null || value.ok == null || (null != value.ok && value.ok == false)){
           updateAPIQueue.unshift(elementToProcess);
         } else if (updateAPIQueue.length > 0) {
           readQueueAPI();
