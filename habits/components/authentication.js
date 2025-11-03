@@ -62,7 +62,7 @@ const reactOnLogout = function() {
     /*document.getElementById("google-image-progress").setAttribute("src", "");
     document.getElementById("google-image-progress").style.display = 'none';*/
     /*document.getElementById('allegory').style.display='none';*/
-    document.getElementById('allegory-habit').style.display='none';
+    /*document.getElementById('allegory-habit').style.display='none';*/
     // document.getElementById("signout_button_progress").style.display= 'none';
     document.getElementById("assure-login").style.display='block';
 
