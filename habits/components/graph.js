@@ -1,4 +1,4 @@
-var buildGraphBox = function(unitPerMonth,unitAccumulation,completionAccumulation,habitObject,dataToShow){
+var buildGraphBox = function(unitPerMonth,unitAccumulation,completionAccumulation,habitObject,dataToShow,thirtyDaysCompletionAccumulation){
 
     var streaksWrapper = document.createElement("div");
 
@@ -13,8 +13,13 @@ var buildGraphBox = function(unitPerMonth,unitAccumulation,completionAccumulatio
     graphIconStreaks.setAttribute("class","fa fa-bar-chart");*/
 
     const streaksTitleDiv = document.createElement("div");
-    streaksTitleDiv.innerHTML = "Number of streaks: "+ completionAccumulation.toString();
+    streaksTitleDiv.innerHTML = "10 days score: "+ completionAccumulation.toString()+" %";
     streaksTitleDiv.setAttribute("class","subtitle");
+
+    thirtyDaysCompletionAccumulation
+    const longStreaksTitleDiv = document.createElement("div");
+    longStreaksTitleDiv.innerHTML = "30 days streaks: "+ thirtyDaysCompletionAccumulation.toString();
+    longStreaksTitleDiv.setAttribute("class","subtitle");
 
     const accumulationTitleDiv = document.createElement("div");
     accumulationTitleDiv.innerHTML = "Number of units: "+ unitAccumulation.toString()+" ("+unitPerMonth+" per month)";
@@ -32,6 +37,7 @@ var buildGraphBox = function(unitPerMonth,unitAccumulation,completionAccumulatio
     streaksWrapper.setAttribute("id","streaks-"+habitObject.habitId);
     streaksWrapper.setAttribute("style","order:"+(10000-completionAccumulation).toString());
     streaksWrapper.appendChild(streaksTitleDiv);
+    streaksWrapper.appendChild(longStreaksTitleDiv);  
     streaksWrapper.appendChild(accumulationTitleDiv);
     streaksWrapper.appendChild(graphTitle); 
 
@@ -43,10 +49,10 @@ var buildGraphBox = function(unitPerMonth,unitAccumulation,completionAccumulatio
     streaksWrapper.setAttribute("class","box canva-wrapper streak-box");
 
 
-    if (completionAccumulation >= 10){
+    if (completionAccumulation == 100){
         streaksWrapper.style.background="rgb(231 255 231)";
         /*streaksWrapper.style.border="1px solid rgb(167 211 162)"*/
-    } else if (completionAccumulation >=5 ) {
+    } else if (completionAccumulation >= 50 ) {
         streaksWrapper.style.background="rgb(255 252 238)";
         /*streaksWrapper.style.border="1px solid rgb(246 223 35)"*/
     } else {

@@ -851,11 +851,14 @@ var launchHabitChart = function(fullData,habitObject){
     var unitPerMonth=0;
 
     /* Analysis */
-    var completionAccumulation = getNumberOfStreaks(dataToShow,baseline);
-
+    var completionAccumulation=0;
+    var thirtyDaysCompletionAccumulation=0; 
+    if (null!=dataArrays.counts && null!=dataArrays.counts.currentStreaksPerHabit){
+        thirtyDaysCompletionAccumulation = dataArrays.counts.currentStreaksPerHabit[habitObject.habitId];
+    } 
+    completionAccumulation = getNumberOfStreaks(dataToShow,baseline);
+    
     var j = dataToShow.length-1;
-
-
 
     if ( j < 0){
         return false;
@@ -876,7 +879,7 @@ var launchHabitChart = function(fullData,habitObject){
     }
 
     /* Graph */
-    buildGraphBox(unitPerMonth,unitAccumulation,completionAccumulation,habitObject,dataToShow);
+    buildGraphBox(unitPerMonth,unitAccumulation,completionAccumulation,habitObject,dataToShow,thirtyDaysCompletionAccumulation);
 
 }
 
@@ -927,6 +930,7 @@ var prepareDataForHabitWeekTable = function(fullData,habitObject){
 
 var getNumberOfStreaks = function(dataToShow,baseline){
     var completionAccumulation=0;
+    var numberOfMaximalPoints=0;
 
     for (var i =  dataToShow.length - 1 ; i>=0; i--){
         var dataDate = dataToShow[i].x;
@@ -947,9 +951,17 @@ var getNumberOfStreaks = function(dataToShow,baseline){
         } else {
             completionAccumulation++;
         }
+        numberOfMaximalPoints++;
 
+    } 
+    var completionAccumulationPercentage=0;
+    if (numberOfMaximalPoints > 0){            
+        completionAccumulationPercentage = completionAccumulation*100/numberOfMaximalPoints;
+    } else {
+        completionAccumulationPercentage = 0;
     }
-    return completionAccumulation;
+    
+    return completionAccumulationPercentage;
 }
 
 var subMenuGoHabits = function( targetLink){
