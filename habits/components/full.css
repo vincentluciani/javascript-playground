@@ -12,6 +12,20 @@
     --secondary-color: #f5bcff;
   }
 
+#level-information-message{
+    display: none;
+    background-color: white;
+    padding: 10px;
+    overflow-x: scroll;
+    z-index: 102;
+}
+.add-button.large{
+    width: 100px;
+    border-radius: 25px;
+    cursor: pointer;
+    margin: auto;
+}
+
 .allegory-container{
         display:none;
 }
@@ -43,7 +57,7 @@ svg.ranking-icon.whitebelt circle{
     stroke: lightgray;
 
 }
-svg.ranking-icon.yellowbelt circle{
+svg.ranking-icon.purplebelt circle{
     fill: #dc9dd7;
     stroke: #dc9dd7;
 }
@@ -1171,6 +1185,9 @@ td,.red,.fa-warning{
 /* mobile phone smartphone*/
 @media (max-width: 649px){
 
+    #interrogation-mark{
+        margin-top: 17px;
+    }
     #count-container{
         width: calc(100% - 5px);
         justify-content: space-between;
@@ -1443,6 +1460,11 @@ td,.red,.fa-warning{
 }
 /* desktop */
 @media (min-width: 650px){
+    #interrogation-mark{
+        margin-top: 24px;
+        margin-left:4px;
+        cursor: pointer;
+    }
     #ranking-section{
         margin:20px 5px 0px 13px;
     }

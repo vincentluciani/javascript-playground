@@ -1,13 +1,13 @@
 /* Shared configuration defining level thresholds and circle colors */
 const LEVELS_CONFIG = [
-  { xp: 0,     fd: 0,   colors: ["white", "white", "white", "yellow"], label: "White - Yellow" },
-  { xp: 400,   fd: 1,   colors: ["white", "white", "yellow", "yellow"], label: "Yellow" },
-  { xp: 900,   fd: 3,   colors: ["white", "yellow", "yellow", "yellow"], label: "Deep Yellow" },
-  { xp: 1500,  fd: 6,   colors: ["yellow", "yellow", "yellow", "yellow"], label: "Full Yellow" },
+  { xp: 0,     fd: 0,   colors: ["white", "white", "white", "purple"], label: "White - purple" },
+  { xp: 400,   fd: 1,   colors: ["white", "white", "purple", "purple"], label: "purple" },
+  { xp: 900,   fd: 3,   colors: ["white", "purple", "purple", "purple"], label: "Deep purple" },
+  { xp: 1500,  fd: 6,   colors: ["purple", "purple", "purple", "purple"], label: "Full purple" },
 
-  { xp: 2100,  fd: 10,  colors: ["yellow", "yellow", "yellow", "orange"], label: "Yellow-Orange" },
-  { xp: 2800,  fd: 15,  colors: ["yellow", "yellow", "orange", "orange"], label: "Orange" },
-  { xp: 3400,  fd: 20,  colors: ["yellow", "orange", "orange", "orange"], label: "Deep Orange" },
+  { xp: 2100,  fd: 10,  colors: ["purple", "purple", "purple", "orange"], label: "purple-Orange" },
+  { xp: 2800,  fd: 15,  colors: ["purple", "purple", "orange", "orange"], label: "Orange" },
+  { xp: 3400,  fd: 20,  colors: ["purple", "orange", "orange", "orange"], label: "Deep Orange" },
   { xp: 4000,  fd: 26,  colors: ["orange", "orange", "orange", "orange"], label: "Full Orange" },
 
   { xp: 4600,  fd: 33,  colors: ["orange", "orange", "orange", "green"], label: "Orange-Green" },
@@ -31,7 +31,8 @@ const LEVELS_CONFIG = [
   { xp: 26000, fd: 250, colors: ["black", "black", "black", "black"], label: "Full Black" },
 ];
 
-const FULL_DAY_BONUS_XP = 20; /* Bonus XP per full day (all goals achieved) */
+const FULL_DAY_BONUS_XP = 35; /* Bonus XP per full day (all goals achieved) */
+const XP_PER_GOAL = 10;  /* XP gained per goal */
 
 /**
  * Returns the circle colors based on XP, full-day count (FD),
@@ -57,13 +58,24 @@ function getCircleColors(xp, fd, missedFullDayThisMonth = false) {
 /**
  * Returns progress info toward the next level.
  */
-
 function getNextLevelProgress(currentXP, currentFD, goalsPerDay) {
-  const xpPerGoal = 10;  /* XP gained per goal */
-  
-  const xpPerDay = goalsPerDay * xpPerGoal;
 
-  /* Find the current and next level in LEVELS_CONFIG */
+  const xpPerDay = goalsPerDay * XP_PER_GOAL;
+
+  if (goalsPerDay == 0) {
+    return `
+      <div style="
+        padding: 20px;
+        line-height: 1.6;
+      ">
+        <h2 style="color:#d9534f;">⚠️ No Daily Goals Completed</h2>
+        <p>You are currently not completing any goals per day.</p>
+        <p>Start completing goals to earn XP and FD!</p>
+      </div>
+    `;
+  }
+
+  /* Find current and next level */
   let currentLevelIndex = 0;
   for (let i = LEVELS_CONFIG.length - 1; i >= 0; i--) {
     if (currentXP >= LEVELS_CONFIG[i].xp && currentFD >= LEVELS_CONFIG[i].fd) {
@@ -75,39 +87,89 @@ function getNextLevelProgress(currentXP, currentFD, goalsPerDay) {
   const currentLevel = LEVELS_CONFIG[currentLevelIndex];
   const nextLevel = LEVELS_CONFIG[currentLevelIndex + 1];
 
+  const okButton = '<div class="add-button large" onclick="closeLevelInfoMessage();">OK</div>';
   if (!nextLevel) {
-    return `🥋 You have achieved the highest rank: ${currentLevel.label}!`;
+    return `
+      <div style="
+        padding: 20px;
+        line-height: 1.6;
+      ">
+        <h2>🥋 Highest Rank Achieved</h2>
+        <p>You have achieved the highest rank: <strong>${currentLevel.label}</strong>!</p>
+        ${okButton}
+      </div>
+      ${okButton}
+    `;
   }
 
-  /* Calculate how much XP and FD are left */
   const remainingXP = Math.max(0, nextLevel.xp - currentXP);
   const remainingFD = Math.max(0, nextLevel.fd - currentFD);
 
-  /* Estimate days to reach next level (XP and FD may differ) */
   const effectiveXpPerDay = xpPerDay + FULL_DAY_BONUS_XP;
-
   const daysForXP = effectiveXpPerDay > 0 ? Math.ceil(remainingXP / effectiveXpPerDay) : Infinity;
   const daysForFD = Math.ceil(remainingFD);
-
-  /* must satisfy both XP & FD requirements */
   const daysToNextLevel = Math.max(daysForXP, daysForFD);
 
-  /* Format the colors display for context */
-  const colorCircles = nextLevel.colors.join(" • ");
+  const currentColorCircles = currentLevel.colors.join(" • ");
+  const nextColorCircles = nextLevel.colors.join(" • ");
 
   return `
-🏅 Current Level: ${currentLevel.label}
-➡️ Next Level: ${nextLevel.label}
-🎨 Next Belt Colors: ${colorCircles}
+    <div style="
+      padding: 24px;
+      line-height: 1.7;
+      max-width: 900px;
+      margin: auto;
+    ">
+      <h2 style="margin-bottom: 12px;color: black;">Progress Toward Next Level</h2>
 
-📈 XP: ${currentXP} / ${nextLevel.xp} (need ${remainingXP} XP)
-🔥 FD: ${currentFD} / ${nextLevel.fd} (need ${remainingFD} FD)
+      <section style="margin-bottom: 20px;">
+        <h3>🎽 Belt Status</h3>
+        <ul>
+          <li><strong>Current belt:</strong> ${currentColorCircles}</li>
+          <li><strong>Next belt:</strong> ${nextColorCircles}</li>
+        </ul>
+      </section>
 
-📅 If you complete all ${goalsPerDay} goals every day:
-   → You earn ${xpPerDay} XP and 1 FD per day
-   → You’ll reach ${nextLevel.label} in about ${daysToNextLevel} day${daysToNextLevel > 1 ? "s" : ""}
-`;
+      <section style="margin-bottom: 20px;">
+        <h3>📈 XP Progress</h3>
+        <p>You currently have <strong>${currentXP} XP</strong>.</p>
+        <ul>
+          <li>Next level requires: <strong>${nextLevel.xp} XP</strong></li>
+          <li>Remaining: <strong>${remainingXP} XP</strong></li>
+        </ul>
+      </section>
+
+      <section style="margin-bottom: 20px;">
+        <h3>🔥 Full Days (FD)</h3>
+        <p>You have achieved <strong>${currentFD} FD</strong>.</p>
+        <ul>
+          <li>Next level requires: <strong>${nextLevel.fd} FD</strong></li>
+          <li>Remaining: <strong>${remainingFD} FD</strong></li>
+        </ul>
+      </section>
+
+      <section style="margin-bottom: 20px;">
+        <h3>📅 Daily Impact</h3>
+        <ul>
+          <li>You complete an average of <strong>${goalsPerDay}</strong> goals/day.</li>
+          <li>You can earn <strong>${xpPerDay} XP</strong> (10 per achieved goal) + ${FULL_DAY_BONUS_XP} bonus per full day = ${effectiveXpPerDay} XP per day</li>
+          <li>You can earn <strong>1 FD per day</strong>.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>⏳ Estimated Time to Reach Next Belt</h3>
+        <p>
+          At your current pace, if you reach all your goals, you will reach the belt 
+          <strong>${nextColorCircles}</strong> in approximately 
+          <strong>${daysToNextLevel} day${daysToNextLevel > 1 ? "s" : ""}</strong>.
+        </p>
+      </section>
+      ${okButton}
+    </div>
+  `;
 }
+
 
 
 
@@ -128,7 +190,7 @@ function calculateDailyXP(goalsCompleted, totalGoals, baseXP = 10) {
  * This function removes old belt color classes and adds the new ones.
  */
 function applyCircleColors(colors) {
-  const allColors = ["white", "yellow", "orange", "green", "blue", "brown", "black"];
+  const allColors = ["white", "purple", "orange", "green", "blue", "brown", "black"];
   const circles = ["circle1", "circle2", "circle3", "circle4"];
 
   const circle1Color = colors[0];
@@ -151,3 +213,29 @@ function applyCircleColors(colors) {
     }
   });
 }
+
+var showNextLevel = function(){
+
+    var XP=0;
+    var FD=0;
+    goalsPerDay=0
+    if (null!=dataArrays && null!=dataArrays.counts&& null!= dataArrays.counts.daysWithAllTargetsMet){
+        FD=dataArrays.counts.daysWithAllTargetsMet;
+    }
+
+    if (null!=dataArrays && null!=dataArrays.counts&& null!= dataArrays.counts.xpCounting){
+      XP=dataArrays.counts.xpCounting;
+    } 
+
+    if (null!=dataArrays && null!=dataArrays.habitsArray){
+      goalsPerDay=dataArrays.habitsArray.length;
+    } 
+
+    document.getElementById("level-information-message").style.display="flex";
+    document.getElementById("information-message").innerHTML = getNextLevelProgress(XP, FD, goalsPerDay);
+}
+
+var closeLevelInfoMessage = function(){
+    document.getElementById("level-information-message").style.display="none";
+}
+
