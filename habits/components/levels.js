@@ -53,7 +53,7 @@ function getCircleColors(xp, fd, missedFullDayThisMonth = false) {
   }
 
   return colors;
-}
+};
 
 /**
  * Returns progress info toward the next level.
@@ -168,7 +168,7 @@ function getNextLevelProgress(currentXP, currentFD, goalsPerDay) {
       ${okButton}
     </div>
   `;
-}
+};
 
 
 
@@ -181,7 +181,7 @@ function calculateDailyXP(goalsCompleted, totalGoals, baseXP = 10) {
   let xp = goalsCompleted * baseXP;
   if (goalsCompleted === totalGoals) xp += FULL_DAY_BONUS_XP;
   return xp;
-}
+};
 
 
 
@@ -212,7 +212,7 @@ function applyCircleColors(colors) {
       el.classList.add(`${colors[index]}belt`);
     }
   });
-}
+};
 
 var showNextLevel = function(){
 
@@ -233,9 +233,9 @@ var showNextLevel = function(){
 
     document.getElementById("level-information-message").style.display="flex";
     document.getElementById("information-message").innerHTML = getNextLevelProgress(XP, FD, goalsPerDay);
-}
+};
 
 var closeLevelInfoMessage = function(){
     document.getElementById("level-information-message").style.display="none";
-}
+};
 
